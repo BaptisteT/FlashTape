@@ -71,18 +71,6 @@
     // Init player items
     self.videoPostArray = [NSMutableArray new];
     _videoIndex = 0;
-    VideoPost *post = [VideoPost new];
-    post.ressourceUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"heart_slide" ofType:@"mp4"]];
-    [self.videoPostArray addObject:post];
-    [self insertVideoInThePlayerQueue:post.ressourceUrl];
-    VideoPost *post1 = [VideoPost new];
-    post1.ressourceUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"matching_tap" ofType:@"mp4"]];
-    [self.videoPostArray addObject:post1];
-    [self insertVideoInThePlayerQueue:post1.ressourceUrl];
-    VideoPost *post2 = [VideoPost new];
-    post2.ressourceUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"blackout-end" ofType:@"mp4"]];
-    [self.videoPostArray addObject:post2];
-    [self insertVideoInThePlayerQueue:post2.ressourceUrl];
     
     // Callback
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -96,8 +84,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    self.playerLayer.hidden = NO;
-    [self.avQueueVideoPlayer play];
+    [self playVideos];
 }
 
 - (void)didEnterBackgroundCallback {
@@ -128,30 +115,36 @@
 // --------------------------------------------
 #pragma mark - Playing
 // --------------------------------------------
-// After an item is played, delete it and add a new end to the end of the queue
-- (void)playerItemDidReachEnd:(NSNotification *)notification
-{
-//    if (_videoIndex >= self.videoPostArray.count) {
-//        _videoIndex = 0;
-//    }
-
-    NSLog(@"before %lu %lu %lu",self.videoPostArray.count, self.avQueueVideoPlayer.items.count,_videoIndex);
-    
-    for (NSInteger kk=0; kk < MIN(self.videoPostArray.count,kNumberOfVidsInThePlayerQueue - self.avQueueVideoPlayer.items.count + 1); kk++) {
+- (void)playVideos {
+    if (self.videoPostArray.count == 0) {
+        return;
+    }
+    for (NSInteger kk = 0; kk < kMaxVidsInThePlayerQueue - self.avQueueVideoPlayer.items.count; kk++) {
         VideoPost *post =  self.videoPostArray[_videoIndex];
-        [self insertVideoInThePlayerQueue:post.ressourceUrl];
+        [self insertVideoInThePlayerQueue:post.localUrl];
         if (_videoIndex < self.videoPostArray.count - 1) {
             _videoIndex ++;
         } else {
             _videoIndex = 0;
         }
     }
-//    [self.avQueueVideoPlayer removeItem:self.avQueueVideoPlayer.items.firstObject];
-    NSLog(@"after %lu %lu %lu",self.videoPostArray.count, self.avQueueVideoPlayer.items.count,_videoIndex);
-//    if (self.videoPostArray.count == 1) {
-//        [self.avQueueVideoPlayer advanceToNextItem];
-//        [self.avQueueVideoPlayer play];
-//    }
+    self.playerLayer.hidden = NO;
+    [self.avQueueVideoPlayer play];
+}
+
+// After an item is played, add a new end to the end of the queue
+- (void)playerItemDidReachEnd:(NSNotification *)notification
+{
+    if (_videoIndex >= self.videoPostArray.count) {
+        _videoIndex = 0;
+    }
+    VideoPost *post =  self.videoPostArray[_videoIndex];
+    [self insertVideoInThePlayerQueue:post.localUrl];
+    if (_videoIndex < self.videoPostArray.count - 1) {
+        _videoIndex ++;
+    } else {
+        _videoIndex = 0;
+    }
 }
 
 // Insert video at the end of the queue
@@ -176,43 +169,38 @@
 }
 
 - (void)stopRecording {
-    self.playerLayer.hidden = NO;
-    [self.avQueueVideoPlayer play];
+    [self playVideos];
     [self.recorder pause:^{
-        [self saveAndAddSession:self.recorder.session];
+        [self exportAndSaveSession:self.recorder.session];
     }];
 }
 
-- (void)saveAndAddSession:(SCRecordSession *)recordSession {
-//    [[SCRecordSessionManager sharedInstance] saveRecordSession:recordSession];
-    // Merge all the segments into one file using an AVAssetExportSession
-    [recordSession mergeSegmentsUsingPreset:AVAssetExportPresetHighestQuality completionHandler:^(NSURL *url, NSError *error) {
-        if (error == nil) {
-            VideoPost *post = [VideoPost new];
-            post.ressourceUrl = url;
-            
-            [ApiManager saveBaseObject:post
-                     andExecuteSuccess:^(BaseObject *baseObject) {
-                         // todo BT;
-                         [self.videoPostArray addObject:post];
-                         [self insertVideoInThePlayerQueue:url];
-                     } failure:^(NSError *error) {
+- (void)exportAndSaveSession:(SCRecordSession *)recordSession {
+    AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:recordSession.assetRepresentingSegments presetName:AVAssetExportPresetHighestQuality];
+    exportSession.outputURL = recordSession.outputUrl;
+    exportSession.outputFileType = AVFileTypeMPEG4;
+    exportSession.shouldOptimizeForNetworkUse = YES;
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        if (exportSession.error == nil) {
+            VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
+            [ApiManager saveVideoPost:post
+                    andExecuteSuccess:^() {
+                        [self.videoPostArray addObject:post];
+                    } failure:^(NSError *error) {
                         // todo BT
-                     }];
+                        NSLog(@"fail to save video");
+                    }];
         } else {
-            NSLog(@"Bad things happened: %@", error);
+            // todo BT
+            NSLog(@"fail to export");
         }
     }];
 }
 
 - (void)prepareSession {
-    if (_recorder.session == nil) {
-        SCRecordSession *session = [SCRecordSession recordSession];
-        session.fileType = AVFileTypeQuickTimeMovie;
-        _recorder.session = session;
-    } else {
-        [_recorder.session removeAllSegments:YES];
-    }
+    SCRecordSession *session = [SCRecordSession recordSession];
+    session.fileType = AVFileTypeQuickTimeMovie;
+    _recorder.session = session;
 }
 
 // --------------------------------------------

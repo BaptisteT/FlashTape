@@ -8,14 +8,12 @@
 #import "VideoPost.h"
 
 @implementation VideoPost
-@dynamic posterName;
-@dynamic ressourceUrl;
 
-+ (VideoPost *)videoPostWith
++ (VideoPost *)createPostWithRessourceUrl:(NSURL *)url
 {
-    VideoPost *post = (VideoPost *)[PFObject objectWithClassName:@"videoPost"];
+    VideoPost *post = [VideoPost new];
     post.posterName = @"bob";
-//    post.ressourceUrl = @"";
+    post.localUrl = url;
     return post;
 }
 

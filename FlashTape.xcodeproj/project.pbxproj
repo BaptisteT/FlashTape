@@ -14,9 +14,6 @@
 		3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97F71AEBB3530098F70F /* Localizable.strings */; };
 		3C5F97FF1AEBB4620098F70F /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97FE1AEBB4620098F70F /* VideoViewController.m */; };
 		3C5F98031AEBBC560098F70F /* VideoPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98021AEBBC560098F70F /* VideoPost.m */; };
-		3C5F98051AEBBFFE0098F70F /* heart_slide.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F98041AEBBFFE0098F70F /* heart_slide.mp4 */; };
-		3C5F98071AEC0FD70098F70F /* matching_tap.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F98061AEC0FD70098F70F /* matching_tap.mp4 */; };
-		3C5F980E1AEC19A90098F70F /* blackout-end.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F980D1AEC19A90098F70F /* blackout-end.mp4 */; };
 		3C5F98111AEC1CFF0098F70F /* ConstantUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98101AEC1CFF0098F70F /* ConstantUtils.m */; };
 		3C5F98131AEC1E810098F70F /* CameraOverlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F98121AEC1E810098F70F /* CameraOverlay.xib */; };
 		3C5F982B1AECDFD30098F70F /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F982A1AECDFD30098F70F /* GLKit.framework */; };
@@ -63,6 +60,7 @@
 		3C5F98A81AED168B0098F70F /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A71AED168B0098F70F /* Accounts.framework */; };
 		3C5F98AA1AED168F0098F70F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A91AED168F0098F70F /* Social.framework */; };
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
+		3C5F98B01AED4DDC0098F70F /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AF1AED4DDC0098F70F /* BaseObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,9 +76,6 @@
 		3C5F97FE1AEBB4620098F70F /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		3C5F98011AEBBC560098F70F /* VideoPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPost.h; sourceTree = "<group>"; };
 		3C5F98021AEBBC560098F70F /* VideoPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPost.m; sourceTree = "<group>"; };
-		3C5F98041AEBBFFE0098F70F /* heart_slide.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = heart_slide.mp4; sourceTree = "<group>"; };
-		3C5F98061AEC0FD70098F70F /* matching_tap.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = matching_tap.mp4; sourceTree = "<group>"; };
-		3C5F980D1AEC19A90098F70F /* blackout-end.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "blackout-end.mp4"; sourceTree = "<group>"; };
 		3C5F980F1AEC1CFF0098F70F /* ConstantUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantUtils.h; sourceTree = "<group>"; };
 		3C5F98101AEC1CFF0098F70F /* ConstantUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConstantUtils.m; sourceTree = "<group>"; };
 		3C5F98121AEC1E810098F70F /* CameraOverlay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraOverlay.xib; sourceTree = "<group>"; };
@@ -155,6 +150,8 @@
 		3C5F98A91AED168F0098F70F /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		3C5F98AB1AED1A930098F70F /* ApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiManager.h; sourceTree = "<group>"; };
 		3C5F98AC1AED1A930098F70F /* ApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiManager.m; sourceTree = "<group>"; };
+		3C5F98AE1AED4DDC0098F70F /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseObject.h; sourceTree = "<group>"; };
+		3C5F98AF1AED4DDC0098F70F /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,9 +235,6 @@
 			children = (
 				3C5F97DA1AEBB1F30098F70F /* Main.storyboard */,
 				3C5F97DD1AEBB1F30098F70F /* Images.xcassets */,
-				3C5F98041AEBBFFE0098F70F /* heart_slide.mp4 */,
-				3C5F98061AEC0FD70098F70F /* matching_tap.mp4 */,
-				3C5F980D1AEC19A90098F70F /* blackout-end.mp4 */,
 				3C5F98121AEC1E810098F70F /* CameraOverlay.xib */,
 			);
 			name = Ressources;
@@ -260,6 +254,8 @@
 			children = (
 				3C5F98AB1AED1A930098F70F /* ApiManager.h */,
 				3C5F98AC1AED1A930098F70F /* ApiManager.m */,
+				3C5F98AE1AED4DDC0098F70F /* BaseObject.h */,
+				3C5F98AF1AED4DDC0098F70F /* BaseObject.m */,
 				3C5F98011AEBBC560098F70F /* VideoPost.h */,
 				3C5F98021AEBBC560098F70F /* VideoPost.m */,
 			);
@@ -431,11 +427,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */,
-				3C5F980E1AEC19A90098F70F /* blackout-end.mp4 in Resources */,
 				3C5F98131AEC1E810098F70F /* CameraOverlay.xib in Resources */,
 				3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */,
-				3C5F98051AEBBFFE0098F70F /* heart_slide.mp4 in Resources */,
-				3C5F98071AEC0FD70098F70F /* matching_tap.mp4 in Resources */,
 				3C5F97DE1AEBB1F30098F70F /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -456,6 +449,7 @@
 				3C5F98721AECE05E0098F70F /* SCAudioConfiguration.m in Sources */,
 				3C5F98031AEBBC560098F70F /* VideoPost.m in Sources */,
 				3C5F98821AECE05E0098F70F /* SCVideoConfiguration.m in Sources */,
+				3C5F98B01AED4DDC0098F70F /* BaseObject.m in Sources */,
 				3C5F98731AECE05E0098F70F /* SCAudioTools.m in Sources */,
 				3C5F98801AECE05E0098F70F /* SCSampleBufferHolder.m in Sources */,
 				3C5F98761AECE05E0098F70F /* SCImageView.m in Sources */,

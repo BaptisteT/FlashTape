@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Parse/parse.h>
 
-@interface VideoPost : PFObject
+#import "BaseObject.h"
 
-@property (strong, nonatomic) PFFile *videoFile;
+@interface VideoPost : BaseObject
+
 @property (strong, nonatomic) NSURL *localUrl;
-
 @property (strong, nonatomic) NSString *posterName;
 
++ (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
 
 @end

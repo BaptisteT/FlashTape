@@ -16,4 +16,4 @@
 
 // Video
 static const float kRecordSessionMaxDuration = 2.0;
-static const NSInteger kNumberOfVidsInThePlayerQueue = 5;
+static const NSInteger kMaxVidsInThePlayerQueue = 3;

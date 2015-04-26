@@ -14,7 +14,7 @@
 @interface ApiManager : NSObject
 
 + (void)saveVideoPost:(VideoPost *)post
-    andExecuteSuccess:(void(^)(VideoPost *post))successBlock
+    andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
 @end
