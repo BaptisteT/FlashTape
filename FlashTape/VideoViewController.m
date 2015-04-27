@@ -81,10 +81,12 @@
                                              selector: @selector(didEnterBackgroundCallback)
                                                  name: UIApplicationDidEnterBackgroundNotification
                                                object: nil];
-}
 
-- (void)viewDidAppear:(BOOL)animated {
-    [self playVideos];
+    // Retrieve posts
+    [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
+        self.videoPostArray = [NSMutableArray arrayWithArray:posts];
+        [self playVideos];
+    } failure:nil];
 }
 
 - (void)didEnterBackgroundCallback {
@@ -92,7 +94,9 @@
 }
 
 - (void)willBecomeActiveCallback {
-    // todo BT
+    [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
+        self.videoPostArray = [NSMutableArray arrayWithArray:posts];
+    } failure:nil];
 }
 
 // --------------------------------------------
@@ -119,31 +123,48 @@
     if (self.videoPostArray.count == 0) {
         return;
     }
-    for (NSInteger kk = 0; kk < kMaxVidsInThePlayerQueue - self.avQueueVideoPlayer.items.count; kk++) {
+    NSInteger queueCount = self.avQueueVideoPlayer.items.count;
+    for (NSInteger kk = 0; kk < kMaxVidsInThePlayerQueue - queueCount; kk++) {
         VideoPost *post =  self.videoPostArray[_videoIndex];
-        [self insertVideoInThePlayerQueue:post.localUrl];
+        if (post.localUrl) {
+            [self insertVideoInThePlayerQueue:post.localUrl];
+        }
         if (_videoIndex < self.videoPostArray.count - 1) {
             _videoIndex ++;
         } else {
             _videoIndex = 0;
         }
     }
-    self.playerLayer.hidden = NO;
-    [self.avQueueVideoPlayer play];
+    if (self.avQueueVideoPlayer.items.count != 0) {
+        [self.playerLayer setHidden:NO];
+        [self.avQueueVideoPlayer play];
+    } else {
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(playVideos) userInfo:nil repeats:NO];
+    }
 }
 
 // After an item is played, add a new end to the end of the queue
 - (void)playerItemDidReachEnd:(NSNotification *)notification
 {
+    // Security check
+    if (self.videoPostArray.count == 0) {
+        return;
+    }
     if (_videoIndex >= self.videoPostArray.count) {
         _videoIndex = 0;
     }
+    
+    // Get post and increment index
     VideoPost *post =  self.videoPostArray[_videoIndex];
-    [self insertVideoInThePlayerQueue:post.localUrl];
     if (_videoIndex < self.videoPostArray.count - 1) {
         _videoIndex ++;
     } else {
         _videoIndex = 0;
+    }
+    if (post.localUrl) {
+        [self insertVideoInThePlayerQueue:post.localUrl];
+    } else {
+        [self playerItemDidReachEnd:nil];
     }
 }
 
@@ -183,11 +204,16 @@
     [exportSession exportAsynchronouslyWithCompletionHandler:^{
         if (exportSession.error == nil) {
             VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
+            [self.videoPostArray addObject:post];
+            if (self.avQueueVideoPlayer.items.count == 0) {
+                [self playVideos];
+            }
             [ApiManager saveVideoPost:post
                     andExecuteSuccess:^() {
-                        [self.videoPostArray addObject:post];
+                        // do nothing
                     } failure:^(NSError *error) {
                         // todo BT
+                        // remove ?
                         NSLog(@"fail to save video");
                     }];
         } else {

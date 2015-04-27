@@ -9,7 +9,7 @@
 #import <Parse/parse.h>
 
 #import "ApiManager.h"
-
+#import "VideoPost.h"
 
 @implementation ApiManager
 
@@ -21,10 +21,10 @@
         failureBlock(nil);
         return;
     }
-    PFObject *fbPost = [PFObject objectWithClassName:NSStringFromClass([post class])];
+    PFObject *fbPost = [PFObject objectWithClassName:@"videoPost"];
     fbPost[@"posterName"] = post.posterName;
     NSData *data = [NSData dataWithContentsOfURL:post.localUrl];
-    PFFile *file = [PFFile fileWithName:@"video.mpeg4" data:data];
+    PFFile *file = [PFFile fileWithName:@"video.mp4" data:data];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             fbPost[@"videoFile"] = file;
@@ -33,17 +33,20 @@
                     post.objectId = fbPost.objectId;
                     post.createdAt = fbPost.createdAt;
                     post.updatedAt = fbPost.updatedAt;
-                    successBlock();
+                    if (successBlock)
+                        successBlock();
                 } else {
-                    // There was a problem, check error.description
-                    // todo BT
-                    failureBlock(error);
+                    // Log details of the failure
+                    NSLog(@"Error: %@ %@", error, [error userInfo]);
+                    if (failureBlock)
+                        failureBlock(error);
                 }
             }];
         } else {
-            // There was a problem, check error.description
-            // todo BT
-            failureBlock(error);
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
         }
     }];
 }
@@ -51,7 +54,22 @@
 + (void)getVideoPostsAndExecuteSuccess:(void(^)(NSArray *posts))successBlock
                                failure:(void(^)(NSError *error))failureBlock
 {
-    
+    PFQuery *query = [PFQuery queryWithClassName:@"videoPost"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            // The find succeeded.
+            NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
+            
+            if (successBlock) {
+                successBlock([VideoPost videoPostsFromFacebookObjects:objects]);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
 }
 
 

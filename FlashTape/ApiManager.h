@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "VideoPost.h"
+@class VideoPost;
 
 @interface ApiManager : NSObject
 
@@ -17,4 +17,6 @@
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
++ (void)getVideoPostsAndExecuteSuccess:(void(^)(NSArray *posts))successBlock
+                               failure:(void(^)(NSError *error))failureBlock;
 @end
