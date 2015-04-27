@@ -14,7 +14,9 @@
 
 #import "VideoViewController.h"
 
+#import "AVPlayerItem+VideoDate.h"
 #import "ConstantUtils.h"
+#import "GeneralUtils.h"
 
 @interface VideoViewController ()
 
@@ -26,6 +28,8 @@
 // Recording
 @property (strong, nonatomic) SCRecorder *recorder;
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressGestureRecogniser;
+@property (weak, nonatomic) IBOutlet UIView *previewView;
+@property (strong, nonatomic) UIView *recordingProgressBar;
 
 @end
 
@@ -53,12 +57,14 @@
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
     _recorder.maxRecordDuration = CMTimeMake(kRecordSessionMaxDuration, 1);
-    self.recorder.previewLayer.frame = self.view.frame;
-    [self.view.layer addSublayer:self.recorder.previewLayer];
-    // Start running the flow of buffers
-    if (![self.recorder startRunning]) {
+    if (![self.recorder startRunning]) { // Start running the flow of buffers
         NSLog(@"Something wrong there: %@", self.recorder.error);
     }
+    
+    // Recording progress bar
+    self.recordingProgressBar = [[UIView alloc] init];
+    self.recordingProgressBar.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.2];
+    [self.previewView addSubview:self.recordingProgressBar];
     
     // Video player
     self.avQueueVideoPlayer = [AVQueuePlayer new];
@@ -67,6 +73,7 @@
     self.playerLayer.frame = self.view.frame;
     [self.view.layer addSublayer:self.playerLayer];
     self.playerLayer.backgroundColor = [UIColor blackColor].CGColor;
+//    self.avQueueVideoPlayer.muted = YES;
     
     // Init player items
     self.videoPostArray = [NSMutableArray new];
@@ -85,15 +92,40 @@
     // Retrieve posts
     [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
         self.videoPostArray = [NSMutableArray arrayWithArray:posts];
+        
+        // Update index
+        NSDate *lastSeenVideoDate = [GeneralUtils getLastVideoSeenDate];
+        NSLog(@"lastSeenVideoDate : %@",lastSeenVideoDate);
+        NSInteger index = 0;
+        for (VideoPost *post in self.videoPostArray) {
+            if (post.createdAt <= lastSeenVideoDate) {
+                index ++;
+            } else {
+                break;
+            }
+        }
+        _videoIndex = index;
+             
+        // Play
         [self playVideos];
     } failure:nil];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    // Player preview
+    self.recorder.previewView = self.previewView;
+}
+
 - (void)didEnterBackgroundCallback {
-    // todo BT
+    [self.avQueueVideoPlayer pause];
 }
 
 - (void)willBecomeActiveCallback {
+    [self playVideos];
+    // todo BT
+    // handle the case some videos are too old
     [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
         self.videoPostArray = [NSMutableArray arrayWithArray:posts];
     } failure:nil];
@@ -104,6 +136,10 @@
 // --------------------------------------------
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
 {
+    // Set recorder device
+    CGPoint location = [gesture locationInView:self.view];
+    self.recorder.device = location.y > self.view.frame.size.height / 2 ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [self startRecording];
         [self.avQueueVideoPlayer pause];
@@ -124,10 +160,10 @@
         return;
     }
     NSInteger queueCount = self.avQueueVideoPlayer.items.count;
-    for (NSInteger kk = 0; kk < kMaxVidsInThePlayerQueue - queueCount; kk++) {
+    for (NSInteger kk = 0; kk < kPlayerQueueLength - queueCount; kk++) {
         VideoPost *post =  self.videoPostArray[_videoIndex];
         if (post.localUrl) {
-            [self insertVideoInThePlayerQueue:post.localUrl];
+            [self insertVideoInThePlayerQueue:post];
         }
         if (_videoIndex < self.videoPostArray.count - 1) {
             _videoIndex ++;
@@ -146,7 +182,15 @@
 // After an item is played, add a new end to the end of the queue
 - (void)playerItemDidReachEnd:(NSNotification *)notification
 {
-    // Security check
+    // Save item date
+    if (notification) {
+        AVPlayerItem *itemPlayed = (AVPlayerItem *)notification.object;
+        [GeneralUtils saveLastVideoSeenDate:itemPlayed.videoCreationDate];
+    }
+    
+    // Add new post to the queue
+    
+    // First, security check
     if (self.videoPostArray.count == 0) {
         return;
     }
@@ -162,17 +206,18 @@
         _videoIndex = 0;
     }
     if (post.localUrl) {
-        [self insertVideoInThePlayerQueue:post.localUrl];
+        [self insertVideoInThePlayerQueue:post];
     } else {
         [self playerItemDidReachEnd:nil];
     }
 }
 
 // Insert video at the end of the queue
-- (void)insertVideoInThePlayerQueue:(NSURL *)videoUrl
+- (void)insertVideoInThePlayerQueue:(VideoPost *)videoPost
 {
-    AVAsset *playerAsset = [AVAsset assetWithURL:videoUrl];
+    AVAsset *playerAsset = [AVAsset assetWithURL:videoPost.localUrl];
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:playerAsset];
+    playerItem.videoCreationDate = videoPost.createdAt;
     [self.avQueueVideoPlayer insertItem:playerItem afterItem:self.avQueueVideoPlayer.items.lastObject];
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(playerItemDidReachEnd:)
@@ -185,6 +230,17 @@
 // --------------------------------------------
 - (void)startRecording {
     [self prepareSession];
+    
+    // Start progress bar anim
+    [self.recordingProgressBar.layer removeAllAnimations];
+    self.recordingProgressBar.frame = CGRectMake(0,self.previewView.frame.size.height - kRecordTimerBarHeight, 0, kRecordTimerBarHeight);
+    [UIView animateWithDuration:kRecordSessionMaxDuration
+                          delay:0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         [self.recordingProgressBar setFrame:CGRectMake(0,self.previewView.frame.size.height - kRecordTimerBarHeight, self.previewView.frame.size.width, kRecordTimerBarHeight)];
+                     } completion:nil];
+    
     // Begin appending video/audio buffers to the session
     [self.recorder record];
 }
@@ -197,30 +253,29 @@
 }
 
 - (void)exportAndSaveSession:(SCRecordSession *)recordSession {
-    AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:recordSession.assetRepresentingSegments presetName:AVAssetExportPresetHighestQuality];
-    exportSession.outputURL = recordSession.outputUrl;
-    exportSession.outputFileType = AVFileTypeMPEG4;
-    exportSession.shouldOptimizeForNetworkUse = YES;
-    [exportSession exportAsynchronouslyWithCompletionHandler:^{
-        if (exportSession.error == nil) {
-            VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
-            [self.videoPostArray addObject:post];
-            if (self.avQueueVideoPlayer.items.count == 0) {
-                [self playVideos];
+    if (CMTimeGetSeconds(recordSession.segmentsDuration) < kRecordMinDuration) {
+        [self displayTopMessage:NSLocalizedString(@"video_too_short", nil)];
+    } else {
+        [recordSession mergeSegmentsUsingPreset:AVAssetExportPresetHighestQuality completionHandler:^(NSURL *url, NSError *error) {
+            if (error == nil) {
+                VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
+                [self.videoPostArray addObject:post];
+                if (self.avQueueVideoPlayer.items.count == 0) {
+                    [self playVideos];
+                }
+                [ApiManager saveVideoPost:post
+                        andExecuteSuccess:^() {
+                            // do nothing
+                        } failure:^(NSError *error) {
+                            // todo BT
+                            // remove ?
+                            NSLog(@"fail to save video");
+                        }];
+            } else {
+                NSLog(@"Export failed: %@", error);
             }
-            [ApiManager saveVideoPost:post
-                    andExecuteSuccess:^() {
-                        // do nothing
-                    } failure:^(NSError *error) {
-                        // todo BT
-                        // remove ?
-                        NSLog(@"fail to save video");
-                    }];
-        } else {
-            // todo BT
-            NSLog(@"fail to export");
-        }
-    }];
+        }];
+    }
 }
 
 - (void)prepareSession {
@@ -272,5 +327,39 @@
 - (void)recorder:(SCRecorder *)recorder didReconfigureVideoInput:(NSError *)videoInputError {
     NSLog(@"Reconfigured video input: %@", videoInputError);
 }
+
+// ------------------------------
+#pragma mark Message
+// ------------------------------
+- (void)displayTopMessage:(NSString *)message
+{
+    UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(0, - kTopMessageViewHeight, self.view.frame.size.width, kTopMessageViewHeight)];
+    messageView.backgroundColor = [UIColor redColor];
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, messageView.frame.size.height - kTopMessageLabelHeight - 5, messageView.frame.size.width - 20 - 5, kTopMessageLabelHeight)];
+    messageLabel.textAlignment = NSTextAlignmentCenter;
+    messageLabel.text = message;
+    messageLabel.font = [UIFont systemFontOfSize:14];
+    [messageView addSubview:messageLabel];
+    [self.view addSubview:messageView];
+    [UIView animateWithDuration:kTopMessageAnimDuration
+                     animations:^(){
+                         messageView.frame = CGRectMake(0, 0, messageView.frame.size.width, kTopMessageViewHeight);
+                     } completion:^(BOOL completed) {
+                         if (completed) {
+                             [UIView animateWithDuration:kTopMessageAnimDuration
+                                                   delay:kTopMessageAnimDelay
+                                                 options:UIViewAnimationOptionCurveLinear
+                                              animations:^(){
+                                                  messageView.frame = CGRectMake(0, - kTopMessageViewHeight, messageView.frame.size.width, kTopMessageViewHeight);
+                                              } completion:^(BOOL completed) {
+                                                  [messageView removeFromSuperview];
+                                              }];
+                         } else {
+                             [messageView removeFromSuperview];
+                         }
+
+                     }];
+}
+
 
 @end

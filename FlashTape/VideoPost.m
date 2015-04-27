@@ -26,7 +26,6 @@
     post.updatedAt = fbPost.updatedAt;
     PFFile *videoPFFile = fbPost[@"videoFile"];
     [videoPFFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        NSLog(@"hum");
         if (data) {
             post.localUrl = [post saveFileURL];
             [data writeToURL:post.localUrl options:NSAtomicWrite error:nil];

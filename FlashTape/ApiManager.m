@@ -58,7 +58,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
+            NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
             
             if (successBlock) {
                 successBlock([VideoPost videoPostsFromFacebookObjects:objects]);

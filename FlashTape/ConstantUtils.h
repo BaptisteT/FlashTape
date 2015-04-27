@@ -14,6 +14,16 @@
 @end
 
 
-// Video
+// Recording
 static const float kRecordSessionMaxDuration = 2.0;
-static const NSInteger kMaxVidsInThePlayerQueue = 3;
+static const float kRecordTimerBarHeight = 60;
+static const float kRecordMinDuration = 0.5;
+
+// Playing
+static const NSInteger kPlayerQueueLength = 3;
+
+// Top message
+static const float kTopMessageViewHeight = 40;
+static const float kTopMessageLabelHeight = 20;
+static const float kTopMessageAnimDuration = 0.5;
+static const float kTopMessageAnimDelay = 1.5;
