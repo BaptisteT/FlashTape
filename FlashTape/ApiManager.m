@@ -11,6 +11,8 @@
 #import "ApiManager.h"
 #import "VideoPost.h"
 
+#import "ConstantUtils.h"
+
 @implementation ApiManager
 
 + (void)saveVideoPost:(VideoPost *)post
@@ -55,11 +57,11 @@
                                failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:@"videoPost"];
+    [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded.
             NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
-            
             if (successBlock) {
                 successBlock([VideoPost videoPostsFromFacebookObjects:objects]);
             }

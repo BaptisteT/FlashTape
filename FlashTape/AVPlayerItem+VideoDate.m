@@ -9,17 +9,26 @@
 
 #import "AVPlayerItem+VideoDate.h"
 
-NSString const *key = @"my.very.unique.key";
+NSString const *videoCreationDateKey = @"video.creation.date.key";
+NSString const *indexInVideoArrayKey = @"index.in.array.key";
 
 @implementation AVPlayerItem (VideoDate)
 
 - (NSDate *)videoCreationDate
 {
-    return objc_getAssociatedObject(self, &key);
+    return objc_getAssociatedObject(self, &videoCreationDateKey);
 }
 
 - (void)setVideoCreationDate:(NSDate *)videoCreationDate {
-    objc_setAssociatedObject(self, &key, videoCreationDate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &videoCreationDateKey, videoCreationDate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)indexInVideoArray {
+    return [objc_getAssociatedObject(self, &indexInVideoArrayKey) integerValue];
+}
+
+- (void)setIndexInVideoArray:(NSInteger)indexInVideoArray {
+    objc_setAssociatedObject(self, &indexInVideoArrayKey, [NSNumber numberWithInteger:indexInVideoArray], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

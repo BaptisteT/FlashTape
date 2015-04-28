@@ -11,5 +11,6 @@
 @interface AVPlayerItem (VideoDate)
 
 @property (strong, nonatomic) NSDate *videoCreationDate;
+@property (nonatomic) NSInteger indexInVideoArray;
 
 @end

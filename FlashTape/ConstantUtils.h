@@ -13,10 +13,11 @@
 
 @end
 
+// Feed
+static const NSInteger kFeedHistoryInHours = 24;
 
 // Recording
 static const float kRecordSessionMaxDuration = 2.0;
-static const float kRecordTimerBarHeight = 60;
 static const float kRecordMinDuration = 0.5;
 
 // Playing
