@@ -16,6 +16,7 @@
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:date forKey:LAST_VIDEO_SEEN_DATE];
+    [prefs synchronize];
 }
 
 + (NSDate *)getLastVideoSeenDate

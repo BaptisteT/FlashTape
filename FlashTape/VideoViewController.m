@@ -24,6 +24,7 @@
 @property (strong, nonatomic) AVQueuePlayer *avQueueVideoPlayer;
 @property (strong, nonatomic) NSMutableArray *videoPostArray;
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;
+@property (weak, nonatomic) IBOutlet UILabel *playingCountLabel;
 
 // Recording
 @property (strong, nonatomic) SCRecorder *recorder;
@@ -75,6 +76,10 @@
     self.playerLayer.backgroundColor = [UIColor blackColor].CGColor;
 //    self.avQueueVideoPlayer.muted = YES;
     
+    // Playing count label
+    [self.view bringSubviewToFront:self.playingCountLabel];
+    self.playingCountLabel.hidden = YES;
+    
     // Init player items
     self.videoPostArray = [NSMutableArray new];
     _videoIndex = 0;
@@ -95,10 +100,9 @@
         
         // Update index
         NSDate *lastSeenVideoDate = [GeneralUtils getLastVideoSeenDate];
-        NSLog(@"lastSeenVideoDate : %@",lastSeenVideoDate);
         NSInteger index = 0;
         for (VideoPost *post in self.videoPostArray) {
-            if (post.createdAt <= lastSeenVideoDate) {
+            if ([post.createdAt compare:lastSeenVideoDate] == NSOrderedAscending) {
                 index ++;
             } else {
                 break;
@@ -127,6 +131,8 @@
     // todo BT
     // handle the case some videos are too old
     [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
+        // todo BT
+        // change index
         self.videoPostArray = [NSMutableArray arrayWithArray:posts];
     } failure:nil];
 }
@@ -144,6 +150,7 @@
         [self startRecording];
         [self.avQueueVideoPlayer pause];
         self.playerLayer.hidden = YES;
+        self.playingCountLabel.hidden = YES;
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         // todo BT
     } else {
@@ -172,6 +179,8 @@
         }
     }
     if (self.avQueueVideoPlayer.items.count != 0) {
+        self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",1 + _videoIndex - self.avQueueVideoPlayer.items.count,self.videoPostArray.count];
+        self.playingCountLabel.hidden = NO;
         [self.playerLayer setHidden:NO];
         [self.avQueueVideoPlayer play];
     } else {
@@ -186,6 +195,7 @@
     if (notification) {
         AVPlayerItem *itemPlayed = (AVPlayerItem *)notification.object;
         [GeneralUtils saveLastVideoSeenDate:itemPlayed.videoCreationDate];
+        [self.avQueueVideoPlayer removeItem:itemPlayed];
     }
     
     // Add new post to the queue
@@ -198,6 +208,10 @@
         _videoIndex = 0;
     }
     
+    // Playing count label
+    self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",1 + _videoIndex - self.avQueueVideoPlayer.items.count,self.videoPostArray.count];
+    
+    NSLog(@"video index : %lu. Item in the queue : %lu",_videoIndex,self.avQueueVideoPlayer.items.count);
     // Get post and increment index
     VideoPost *post =  self.videoPostArray[_videoIndex];
     if (_videoIndex < self.videoPostArray.count - 1) {
@@ -216,13 +230,20 @@
 - (void)insertVideoInThePlayerQueue:(VideoPost *)videoPost
 {
     AVAsset *playerAsset = [AVAsset assetWithURL:videoPost.localUrl];
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:playerAsset];
-    playerItem.videoCreationDate = videoPost.createdAt;
-    [self.avQueueVideoPlayer insertItem:playerItem afterItem:self.avQueueVideoPlayer.items.lastObject];
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(playerItemDidReachEnd:)
-                                                 name: AVPlayerItemDidPlayToEndTimeNotification
-                                               object: playerItem];
+    NSArray *keys = [NSArray arrayWithObject:@"playable"];
+    
+    [playerAsset loadValuesAsynchronouslyForKeys:keys completionHandler:^() {
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:playerAsset];
+        playerItem.videoCreationDate = videoPost.createdAt;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.avQueueVideoPlayer insertItem:playerItem afterItem:self.avQueueVideoPlayer.items.lastObject];
+        });
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(playerItemDidReachEnd:)
+                                                     name: AVPlayerItemDidPlayToEndTimeNotification
+                                                   object: playerItem];
+
+    }];
 }
 
 // --------------------------------------------
@@ -292,42 +313,6 @@
     [self stopRecording];
 }
 
-- (void)recorder:(SCRecorder *)recorder didInitializeAudioInSession:(SCRecordSession *)recordSession error:(NSError *)error {
-    if (error == nil) {
-        NSLog(@"Initialized audio in record session");
-    } else {
-        NSLog(@"Failed to initialize audio in record session: %@", error.localizedDescription);
-    }
-}
-
-- (void)recorder:(SCRecorder *)recorder didInitializeVideoInSession:(SCRecordSession *)recordSession error:(NSError *)error {
-    if (error == nil) {
-        NSLog(@"Initialized video in record session");
-    } else {
-        NSLog(@"Failed to initialize video in record session: %@", error.localizedDescription);
-    }
-}
-
-- (void)recorder:(SCRecorder *)recorder didBeginSegmentInSession:(SCRecordSession *)recordSession error:(NSError *)error {
-    NSLog(@"Began record segment: %@", error);
-}
-
-- (void)recorder:(SCRecorder *)recorder didCompleteSegment:(SCRecordSessionSegment *)segment inSession:(SCRecordSession *)recordSession error:(NSError *)error {
-    NSLog(@"Completed record segment at %@: %@ (frameRate: %f)", segment.url, error, segment.frameRate);
-}
-
-- (void)recorder:(SCRecorder *)recorder didSkipVideoSampleBufferInSession:(SCRecordSession *)recordSession {
-    NSLog(@"Skipped video buffer");
-}
-
-- (void)recorder:(SCRecorder *)recorder didReconfigureAudioInput:(NSError *)audioInputError {
-    NSLog(@"Reconfigured audio input: %@", audioInputError);
-}
-
-- (void)recorder:(SCRecorder *)recorder didReconfigureVideoInput:(NSError *)videoInputError {
-    NSLog(@"Reconfigured video input: %@", videoInputError);
-}
-
 // ------------------------------
 #pragma mark Message
 // ------------------------------
@@ -359,6 +344,15 @@
                          }
 
                      }];
+}
+
+// --------------------------------------------
+#pragma mark - UI
+// --------------------------------------------
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 
