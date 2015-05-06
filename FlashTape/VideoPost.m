@@ -8,6 +8,9 @@
 #import "VideoPost.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+
+#import "GeneralUtils.h"
+
 @implementation VideoPost
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url
@@ -15,6 +18,7 @@
     VideoPost *post = [VideoPost new];
     post.posterName = @"bob";
     post.localUrl = url;
+    post.thumbnail = [GeneralUtils generateThumbImage:post.localUrl];
     return post;
 }
 
@@ -29,6 +33,7 @@
         if (data) {
             post.localUrl = [post saveFileURL];
             [data writeToURL:post.localUrl options:NSAtomicWrite error:nil];
+            post.thumbnail = [GeneralUtils generateThumbImage:post.localUrl];
         } else {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
         }

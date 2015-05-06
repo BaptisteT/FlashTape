@@ -52,6 +52,39 @@
                                     <constraint firstAttribute="trailing" secondItem="ZCy-IZ-pCQ" secondAttribute="trailing" id="zRE-VZ-e3Y"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOb-67-bYR">
+                                <rect key="frame" x="276" y="50" width="48" height="30"/>
+                                <state key="normal" title="Replay">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="replayButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="VDB-lX-VAQ"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="ZJv-i8-wZi">
+                                <rect key="frame" x="0.0" y="110" width="600" height="490"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ThumbCell" textLabel="hD7-Zc-0wM" imageView="kSR-GJ-Qw7" style="IBUITableViewCellStyleDefault" id="zhl-18-fIX">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zhl-18-fIX" id="RN0-eX-nhu">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hD7-Zc-0wM">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="kSR-GJ-Qw7">
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ppQ-Zt-HGU">
                                 <rect key="frame" x="554" y="573" width="36" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -61,11 +94,17 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="hOb-67-bYR" secondAttribute="centerX" id="6mi-Oh-ZqS"/>
+                            <constraint firstItem="ZJv-i8-wZi" firstAttribute="leading" secondItem="Z0k-TD-OKj" secondAttribute="leading" id="7cf-pK-qHh"/>
                             <constraint firstItem="8ee-DQ-Tyu" firstAttribute="top" secondItem="Z0k-TD-OKj" secondAttribute="top" id="J2m-63-a1B"/>
                             <constraint firstAttribute="trailing" secondItem="ppQ-Zt-HGU" secondAttribute="trailing" constant="10" id="Rct-i2-5rJ"/>
+                            <constraint firstItem="ZJv-i8-wZi" firstAttribute="top" secondItem="hOb-67-bYR" secondAttribute="bottom" constant="30" id="Ulz-Sf-DCx"/>
                             <constraint firstAttribute="trailing" secondItem="8ee-DQ-Tyu" secondAttribute="trailing" id="Y54-q5-uAQ"/>
                             <constraint firstItem="kip-9Z-cQQ" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="bottom" id="b1f-ta-l97"/>
+                            <constraint firstItem="hOb-67-bYR" firstAttribute="top" secondItem="dVb-fN-94v" secondAttribute="bottom" constant="30" id="fg9-OE-PB6"/>
                             <constraint firstItem="8ee-DQ-Tyu" firstAttribute="leading" secondItem="Z0k-TD-OKj" secondAttribute="leading" id="gWb-WQ-6QL"/>
+                            <constraint firstItem="kip-9Z-cQQ" firstAttribute="top" secondItem="ZJv-i8-wZi" secondAttribute="bottom" id="jPc-Ce-NXO"/>
+                            <constraint firstAttribute="trailing" secondItem="ZJv-i8-wZi" secondAttribute="trailing" id="kLo-Bh-ZmE"/>
                             <constraint firstItem="kip-9Z-cQQ" firstAttribute="top" secondItem="ppQ-Zt-HGU" secondAttribute="bottom" constant="10" id="mN4-kC-1sY"/>
                             <constraint firstItem="ppQ-Zt-HGU" firstAttribute="top" secondItem="dVb-fN-94v" secondAttribute="bottom" constant="20" id="mux-j2-ksN"/>
                         </constraints>
@@ -81,6 +120,8 @@
                         <outlet property="playingCountLabel" destination="ppQ-Zt-HGU" id="wIr-EL-ryV"/>
                         <outlet property="previewView" destination="8ee-DQ-Tyu" id="X1f-CK-Zle"/>
                         <outlet property="recordingProgressContainer" destination="ZCy-IZ-pCQ" id="7RD-e5-iA7"/>
+                        <outlet property="replayButton" destination="hOb-67-bYR" id="436-1J-73J"/>
+                        <outlet property="thumbTableView" destination="ZJv-i8-wZi" id="TfB-js-EKP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6HK-3Y-Fgl" userLabel="First Responder" sceneMemberID="firstResponder"/>

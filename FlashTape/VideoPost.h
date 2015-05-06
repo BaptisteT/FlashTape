@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) NSURL *localUrl;
 @property (strong, nonatomic) NSString *posterName;
+@property (strong, nonatomic) UIImage *thumbnail;
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
 + (VideoPost *)videoPostFromFacebookObject:(PFObject *)fbPost;

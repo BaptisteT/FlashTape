@@ -6,12 +6,15 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+@import UIKit;
 
 @interface GeneralUtils : NSObject
 
 + (void)saveLastVideoSeenDate:(NSDate *)date;
 
 + (NSDate *)getLastVideoSeenDate;
+
++ (UIImage *)generateThumbImage:(NSURL *)url;
 
 @end

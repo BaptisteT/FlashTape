@@ -5,6 +5,7 @@
 //  Created by Baptiste Truchot on 4/27/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import <AVFoundation/AVFoundation.h>
 
 #import "GeneralUtils.h"
 
@@ -26,6 +27,18 @@
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     return [prefs objectForKey:LAST_VIDEO_SEEN_DATE];
+}
+
++ (UIImage *)generateThumbImage:(NSURL *)url
+{
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+    CMTime time = [asset duration];
+    time.value = 0;
+    CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
+    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);  // CGImageRef won't be released by ARC
+    return thumbnail;
 }
 
 @end
