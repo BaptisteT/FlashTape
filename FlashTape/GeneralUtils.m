@@ -41,4 +41,14 @@
     return thumbnail;
 }
 
+// Show an alert message
++ (void)showMessage:(NSString *)text withTitle:(NSString *)title
+{
+    [[[UIAlertView alloc] initWithTitle:title ? title : @""
+                                message:text ? text : @""
+                               delegate:nil
+                      cancelButtonTitle:@"OK"
+                      otherButtonTitles:nil] show];
+}
+
 @end

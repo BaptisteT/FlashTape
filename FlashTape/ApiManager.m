@@ -15,6 +15,33 @@
 
 @implementation ApiManager
 
+// --------------------------------------------
+#pragma mark - Sign up
+// --------------------------------------------
+
++ (void)requestSmsCode:(NSString *)phoneNumber
+                 retry:(BOOL)retry
+               success:(void(^)(long code))successBlock
+               failure:(void(^)())failureBlock
+{
+    [PFCloud callFunctionInBackground:@"sendVerificationCode"
+                       withParameters:@{ @"phoneNumber" : phoneNumber }
+                                block:^(id object, NSError *error) {
+                                    if (error != nil) {
+                                        if (failureBlock)
+                                            failureBlock();
+                                    } else {
+                                        if (successBlock) {
+                                            successBlock((long)object);
+                                        }
+                                    }
+                                }];
+}
+
+// --------------------------------------------
+#pragma mark - Video
+// --------------------------------------------
+
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock
@@ -23,18 +50,13 @@
         failureBlock(nil);
         return;
     }
-    PFObject *fbPost = [PFObject objectWithClassName:@"videoPost"];
-    fbPost[@"posterName"] = post.posterName;
     NSData *data = [NSData dataWithContentsOfURL:post.localUrl];
     PFFile *file = [PFFile fileWithName:@"video.mp4" data:data];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            fbPost[@"videoFile"] = file;
-            [fbPost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            post.videoFile = file;
+            [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    post.objectId = fbPost.objectId;
-                    post.createdAt = fbPost.createdAt;
-                    post.updatedAt = fbPost.updatedAt;
                     if (successBlock)
                         successBlock();
                 } else {
@@ -63,7 +85,7 @@
             // The find succeeded.
             NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
             if (successBlock) {
-                successBlock([VideoPost videoPostsFromFacebookObjects:objects]);
+//                successBlock([VideoPost videoPostsFromFacebookObjects:objects]);
             }
         } else {
             // Log details of the failure

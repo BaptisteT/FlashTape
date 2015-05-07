@@ -13,6 +13,11 @@
 
 @interface ApiManager : NSObject
 
++ (void)requestSmsCode:(NSString *)phoneNumber
+                 retry:(BOOL)retry
+               success:(void(^)(long code))successBlock
+               failure:(void(^)())failureBlock;
+
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock;

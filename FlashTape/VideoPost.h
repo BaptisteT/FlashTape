@@ -5,19 +5,20 @@
 //  Created by Baptiste Truchot on 4/25/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
-#import <Parse/parse.h>
 #import <Foundation/Foundation.h>
+#import <Parse/parse.h>
 
-#import "BaseObject.h"
+#import "User.h"
 
-@interface VideoPost : BaseObject
+@interface VideoPost : PFObject<PFSubclassing>
 
-@property (strong, nonatomic) NSURL *localUrl;
-@property (strong, nonatomic) NSString *posterName;
-@property (strong, nonatomic) UIImage *thumbnail;
+@property (retain) NSURL *localUrl;
+@property (retain) User *user;
+@property (retain) UIImage *thumbnail;
+@property (retain) PFFile *videoFile;
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
-+ (VideoPost *)videoPostFromFacebookObject:(PFObject *)fbPost;
-+ (NSArray *)videoPostsFromFacebookObjects:(NSArray *)fbObjects;
+
++ (NSString *)parseClassName;
 
 @end

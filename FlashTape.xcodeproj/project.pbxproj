@@ -7,6 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A071AFA2A1600E0E4BF /* User.m */; };
+		3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */; };
+		3C2C4A171AFA635800E0E4BF /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A161AFA635800E0E4BF /* WelcomeViewController.m */; };
+		3C2C4A1D1AFA637200E0E4BF /* RequestPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A1C1AFA637200E0E4BF /* RequestPhoneViewController.m */; };
+		3C2C4A211AFB564D00E0E4BF /* CodeConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A201AFB564D00E0E4BF /* CodeConfirmationViewController.m */; };
+		3C2C4A271AFB583B00E0E4BF /* AddressbookUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A261AFB583B00E0E4BF /* AddressbookUtils.m */; };
+		3C2C4A2B1AFB592C00E0E4BF /* RMPhoneFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A2A1AFB592C00E0E4BF /* RMPhoneFormat.m */; };
+		3C2C4A3E1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A2E1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.m */; };
+		3C2C4A3F1AFB5A3B00E0E4BF /* NBNumberFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A301AFB5A3B00E0E4BF /* NBNumberFormat.m */; };
+		3C2C4A401AFB5A3B00E0E4BF /* NBPhoneMetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A321AFB5A3B00E0E4BF /* NBPhoneMetaData.m */; };
+		3C2C4A411AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A341AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m */; };
+		3C2C4A421AFB5A3B00E0E4BF /* NBPhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A361AFB5A3B00E0E4BF /* NBPhoneNumber.m */; };
+		3C2C4A431AFB5A3B00E0E4BF /* NBPhoneNumberDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A391AFB5A3B00E0E4BF /* NBPhoneNumberDesc.m */; };
+		3C2C4A441AFB5A3B00E0E4BF /* NBPhoneNumberUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A3B1AFB5A3B00E0E4BF /* NBPhoneNumberUtil.m */; };
+		3C2C4A451AFB5A3B00E0E4BF /* NSArray+NBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A3D1AFB5A3B00E0E4BF /* NSArray+NBAdditions.m */; };
+		3C2C4A491AFB5A8600E0E4BF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A481AFB5A8600E0E4BF /* MBProgressHUD.m */; };
+		3C2C4A4C1AFB5E1800E0E4BF /* CountryCodeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A4B1AFB5E1800E0E4BF /* CountryCodeTableViewController.m */; };
+		3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A4D1AFB5EB000E0E4BF /* PhoneCountries.txt */; };
+		3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */; };
+		3C2C4A521AFB6F8E00E0E4BF /* PhoneNumberMetaData.json in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A511AFB6F8E00E0E4BF /* PhoneNumberMetaData.json */; };
+		3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A531AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json */; };
+		3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A551AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist */; };
+		3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A561AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist */; };
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
@@ -59,12 +82,52 @@
 		3C5F98A81AED168B0098F70F /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A71AED168B0098F70F /* Accounts.framework */; };
 		3C5F98AA1AED168F0098F70F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A91AED168F0098F70F /* Social.framework */; };
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
-		3C5F98B01AED4DDC0098F70F /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AF1AED4DDC0098F70F /* BaseObject.m */; };
 		3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */; };
 		3C5F98C81AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C71AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3C2C4A061AFA2A1600E0E4BF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		3C2C4A071AFA2A1600E0E4BF /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		3C2C4A091AFA5CD000E0E4BF /* ColorUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorUtils.h; sourceTree = "<group>"; };
+		3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorUtils.m; sourceTree = "<group>"; };
+		3C2C4A151AFA635800E0E4BF /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
+		3C2C4A161AFA635800E0E4BF /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
+		3C2C4A1B1AFA637200E0E4BF /* RequestPhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestPhoneViewController.h; sourceTree = "<group>"; };
+		3C2C4A1C1AFA637200E0E4BF /* RequestPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestPhoneViewController.m; sourceTree = "<group>"; };
+		3C2C4A1F1AFB564D00E0E4BF /* CodeConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodeConfirmationViewController.h; sourceTree = "<group>"; };
+		3C2C4A201AFB564D00E0E4BF /* CodeConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CodeConfirmationViewController.m; sourceTree = "<group>"; };
+		3C2C4A251AFB583B00E0E4BF /* AddressbookUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressbookUtils.h; sourceTree = "<group>"; };
+		3C2C4A261AFB583B00E0E4BF /* AddressbookUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressbookUtils.m; sourceTree = "<group>"; };
+		3C2C4A291AFB592C00E0E4BF /* RMPhoneFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMPhoneFormat.h; sourceTree = "<group>"; };
+		3C2C4A2A1AFB592C00E0E4BF /* RMPhoneFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMPhoneFormat.m; sourceTree = "<group>"; };
+		3C2C4A2D1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBAsYouTypeFormatter.h; sourceTree = "<group>"; };
+		3C2C4A2E1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBAsYouTypeFormatter.m; sourceTree = "<group>"; };
+		3C2C4A2F1AFB5A3B00E0E4BF /* NBNumberFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBNumberFormat.h; sourceTree = "<group>"; };
+		3C2C4A301AFB5A3B00E0E4BF /* NBNumberFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBNumberFormat.m; sourceTree = "<group>"; };
+		3C2C4A311AFB5A3B00E0E4BF /* NBPhoneMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneMetaData.h; sourceTree = "<group>"; };
+		3C2C4A321AFB5A3B00E0E4BF /* NBPhoneMetaData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneMetaData.m; sourceTree = "<group>"; };
+		3C2C4A331AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneMetaDataGenerator.h; sourceTree = "<group>"; };
+		3C2C4A341AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneMetaDataGenerator.m; sourceTree = "<group>"; };
+		3C2C4A351AFB5A3B00E0E4BF /* NBPhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumber.h; sourceTree = "<group>"; };
+		3C2C4A361AFB5A3B00E0E4BF /* NBPhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumber.m; sourceTree = "<group>"; };
+		3C2C4A371AFB5A3B00E0E4BF /* NBPhoneNumberDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumberDefines.h; sourceTree = "<group>"; };
+		3C2C4A381AFB5A3B00E0E4BF /* NBPhoneNumberDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumberDesc.h; sourceTree = "<group>"; };
+		3C2C4A391AFB5A3B00E0E4BF /* NBPhoneNumberDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumberDesc.m; sourceTree = "<group>"; };
+		3C2C4A3A1AFB5A3B00E0E4BF /* NBPhoneNumberUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumberUtil.h; sourceTree = "<group>"; };
+		3C2C4A3B1AFB5A3B00E0E4BF /* NBPhoneNumberUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumberUtil.m; sourceTree = "<group>"; };
+		3C2C4A3C1AFB5A3B00E0E4BF /* NSArray+NBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+NBAdditions.h"; sourceTree = "<group>"; };
+		3C2C4A3D1AFB5A3B00E0E4BF /* NSArray+NBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+NBAdditions.m"; sourceTree = "<group>"; };
+		3C2C4A471AFB5A8600E0E4BF /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		3C2C4A481AFB5A8600E0E4BF /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		3C2C4A4A1AFB5E1800E0E4BF /* CountryCodeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountryCodeTableViewController.h; sourceTree = "<group>"; };
+		3C2C4A4B1AFB5E1800E0E4BF /* CountryCodeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountryCodeTableViewController.m; sourceTree = "<group>"; };
+		3C2C4A4D1AFB5EB000E0E4BF /* PhoneCountries.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PhoneCountries.txt; sourceTree = "<group>"; };
+		3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = PhoneFormats.dat; sourceTree = "<group>"; };
+		3C2C4A511AFB6F8E00E0E4BF /* PhoneNumberMetaData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetaData.json; sourceTree = "<group>"; };
+		3C2C4A531AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetaDataForTesting.json; sourceTree = "<group>"; };
+		3C2C4A551AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = NBPhoneNumberMetadata.plist; sourceTree = "<group>"; };
+		3C2C4A561AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = NBPhoneNumberMetadataForTesting.plist; sourceTree = "<group>"; };
 		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -150,8 +213,6 @@
 		3C5F98A91AED168F0098F70F /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		3C5F98AB1AED1A930098F70F /* ApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiManager.h; sourceTree = "<group>"; };
 		3C5F98AC1AED1A930098F70F /* ApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiManager.m; sourceTree = "<group>"; };
-		3C5F98AE1AED4DDC0098F70F /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseObject.h; sourceTree = "<group>"; };
-		3C5F98AF1AED4DDC0098F70F /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseObject.m; sourceTree = "<group>"; };
 		3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralUtils.h; sourceTree = "<group>"; };
 		3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralUtils.m; sourceTree = "<group>"; };
 		3C5F98C61AEE8ECE0098F70F /* AVPlayerItem+VideoDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayerItem+VideoDate.h"; sourceTree = "<group>"; };
@@ -191,6 +252,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C2C4A281AFB592100E0E4BF /* RMPhoneFormat */ = {
+			isa = PBXGroup;
+			children = (
+				3C2C4A291AFB592C00E0E4BF /* RMPhoneFormat.h */,
+				3C2C4A2A1AFB592C00E0E4BF /* RMPhoneFormat.m */,
+			);
+			name = RMPhoneFormat;
+			sourceTree = "<group>";
+		};
+		3C2C4A2C1AFB5A2C00E0E4BF /* libPhoneNumber-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				3C2C4A551AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist */,
+				3C2C4A561AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist */,
+				3C2C4A511AFB6F8E00E0E4BF /* PhoneNumberMetaData.json */,
+				3C2C4A531AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json */,
+				3C2C4A2D1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.h */,
+				3C2C4A2E1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.m */,
+				3C2C4A2F1AFB5A3B00E0E4BF /* NBNumberFormat.h */,
+				3C2C4A301AFB5A3B00E0E4BF /* NBNumberFormat.m */,
+				3C2C4A311AFB5A3B00E0E4BF /* NBPhoneMetaData.h */,
+				3C2C4A321AFB5A3B00E0E4BF /* NBPhoneMetaData.m */,
+				3C2C4A331AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.h */,
+				3C2C4A341AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m */,
+				3C2C4A351AFB5A3B00E0E4BF /* NBPhoneNumber.h */,
+				3C2C4A361AFB5A3B00E0E4BF /* NBPhoneNumber.m */,
+				3C2C4A371AFB5A3B00E0E4BF /* NBPhoneNumberDefines.h */,
+				3C2C4A381AFB5A3B00E0E4BF /* NBPhoneNumberDesc.h */,
+				3C2C4A391AFB5A3B00E0E4BF /* NBPhoneNumberDesc.m */,
+				3C2C4A3A1AFB5A3B00E0E4BF /* NBPhoneNumberUtil.h */,
+				3C2C4A3B1AFB5A3B00E0E4BF /* NBPhoneNumberUtil.m */,
+				3C2C4A3C1AFB5A3B00E0E4BF /* NSArray+NBAdditions.h */,
+				3C2C4A3D1AFB5A3B00E0E4BF /* NSArray+NBAdditions.m */,
+			);
+			name = "libPhoneNumber-iOS";
+			sourceTree = "<group>";
+		};
+		3C2C4A461AFB5A7C00E0E4BF /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				3C2C4A471AFB5A8600E0E4BF /* MBProgressHUD.h */,
+				3C2C4A481AFB5A8600E0E4BF /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		3C5F97C11AEBB1F30098F70F = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +346,8 @@
 			children = (
 				3C5F97DA1AEBB1F30098F70F /* Main.storyboard */,
 				3C5F97DD1AEBB1F30098F70F /* Images.xcassets */,
+				3C2C4A4D1AFB5EB000E0E4BF /* PhoneCountries.txt */,
+				3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */,
 			);
 			name = Ressources;
 			sourceTree = "<group>";
@@ -246,6 +355,14 @@
 		3C5F97F91AEBB3810098F70F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3C2C4A151AFA635800E0E4BF /* WelcomeViewController.h */,
+				3C2C4A161AFA635800E0E4BF /* WelcomeViewController.m */,
+				3C2C4A1B1AFA637200E0E4BF /* RequestPhoneViewController.h */,
+				3C2C4A1C1AFA637200E0E4BF /* RequestPhoneViewController.m */,
+				3C2C4A4A1AFB5E1800E0E4BF /* CountryCodeTableViewController.h */,
+				3C2C4A4B1AFB5E1800E0E4BF /* CountryCodeTableViewController.m */,
+				3C2C4A1F1AFB564D00E0E4BF /* CodeConfirmationViewController.h */,
+				3C2C4A201AFB564D00E0E4BF /* CodeConfirmationViewController.m */,
 				3C5F97FD1AEBB4620098F70F /* VideoViewController.h */,
 				3C5F97FE1AEBB4620098F70F /* VideoViewController.m */,
 			);
@@ -257,10 +374,10 @@
 			children = (
 				3C5F98AB1AED1A930098F70F /* ApiManager.h */,
 				3C5F98AC1AED1A930098F70F /* ApiManager.m */,
-				3C5F98AE1AED4DDC0098F70F /* BaseObject.h */,
-				3C5F98AF1AED4DDC0098F70F /* BaseObject.m */,
 				3C5F98011AEBBC560098F70F /* VideoPost.h */,
 				3C5F98021AEBBC560098F70F /* VideoPost.m */,
+				3C2C4A061AFA2A1600E0E4BF /* User.h */,
+				3C2C4A071AFA2A1600E0E4BF /* User.m */,
 			);
 			name = Backend;
 			sourceTree = "<group>";
@@ -274,6 +391,10 @@
 				3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */,
 				3C5F98C61AEE8ECE0098F70F /* AVPlayerItem+VideoDate.h */,
 				3C5F98C71AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m */,
+				3C2C4A091AFA5CD000E0E4BF /* ColorUtils.h */,
+				3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */,
+				3C2C4A251AFB583B00E0E4BF /* AddressbookUtils.h */,
+				3C2C4A261AFB583B00E0E4BF /* AddressbookUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -288,6 +409,9 @@
 		3C5F98141AEC343B0098F70F /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				3C2C4A461AFB5A7C00E0E4BF /* MBProgressHUD */,
+				3C2C4A2C1AFB5A2C00E0E4BF /* libPhoneNumber-iOS */,
+				3C2C4A281AFB592100E0E4BF /* RMPhoneFormat */,
 				3C5F98401AECE04F0098F70F /* SCRecorder */,
 			);
 			name = 3rdParty;
@@ -435,7 +559,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */,
+				3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */,
 				3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */,
+				3C2C4A521AFB6F8E00E0E4BF /* PhoneNumberMetaData.json in Resources */,
+				3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */,
+				3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */,
+				3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */,
+				3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */,
 				3C5F97DE1AEBB1F30098F70F /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -448,33 +578,49 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */,
+				3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */,
 				3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */,
 				3C5F98841AECE05E0098F70F /* SCWeakSelectorTarget.m in Sources */,
 				3C5F987F1AECE05E0098F70F /* SCRecordSessionSegment.m in Sources */,
 				3C5F97D01AEBB1F30098F70F /* main.m in Sources */,
 				3C5F97FF1AEBB4620098F70F /* VideoViewController.m in Sources */,
 				3C5F98721AECE05E0098F70F /* SCAudioConfiguration.m in Sources */,
+				3C2C4A1D1AFA637200E0E4BF /* RequestPhoneViewController.m in Sources */,
+				3C2C4A431AFB5A3B00E0E4BF /* NBPhoneNumberDesc.m in Sources */,
 				3C5F98031AEBBC560098F70F /* VideoPost.m in Sources */,
 				3C5F98821AECE05E0098F70F /* SCVideoConfiguration.m in Sources */,
-				3C5F98B01AED4DDC0098F70F /* BaseObject.m in Sources */,
 				3C5F98731AECE05E0098F70F /* SCAudioTools.m in Sources */,
+				3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */,
 				3C5F98801AECE05E0098F70F /* SCSampleBufferHolder.m in Sources */,
 				3C5F98C81AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m in Sources */,
 				3C5F98761AECE05E0098F70F /* SCImageView.m in Sources */,
 				3C5F987D1AECE05E0098F70F /* SCRecorderToolsView.m in Sources */,
 				3C5F98791AECE05E0098F70F /* SCPlayer.m in Sources */,
+				3C2C4A271AFB583B00E0E4BF /* AddressbookUtils.m in Sources */,
+				3C2C4A3F1AFB5A3B00E0E4BF /* NBNumberFormat.m in Sources */,
 				3C5F98711AECE05E0098F70F /* SCAssetExportSession.m in Sources */,
 				3C5F98701AECE05E0098F70F /* CIImageRendererUtils.m in Sources */,
 				3C5F98781AECE05E0098F70F /* SCPhotoConfiguration.m in Sources */,
+				3C2C4A491AFB5A8600E0E4BF /* MBProgressHUD.m in Sources */,
+				3C2C4A411AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m in Sources */,
 				3C5F987A1AECE05E0098F70F /* SCRecorder.m in Sources */,
+				3C2C4A3E1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.m in Sources */,
+				3C2C4A451AFB5A3B00E0E4BF /* NSArray+NBAdditions.m in Sources */,
 				3C5F98751AECE05E0098F70F /* SCFilterSelectorView.m in Sources */,
 				3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */,
+				3C2C4A421AFB5A3B00E0E4BF /* NBPhoneNumber.m in Sources */,
+				3C2C4A441AFB5A3B00E0E4BF /* NBPhoneNumberUtil.m in Sources */,
 				3C5F987C1AECE05E0098F70F /* SCRecorderTools.m in Sources */,
 				3C5F98831AECE05E0098F70F /* SCVideoPlayerView.m in Sources */,
 				3C5F987B1AECE05E0098F70F /* SCRecorderFocusTargetView.m in Sources */,
+				3C2C4A401AFB5A3B00E0E4BF /* NBPhoneMetaData.m in Sources */,
 				3C5F98741AECE05E0098F70F /* SCFilter.m in Sources */,
+				3C2C4A211AFB564D00E0E4BF /* CodeConfirmationViewController.m in Sources */,
+				3C2C4A4C1AFB5E1800E0E4BF /* CountryCodeTableViewController.m in Sources */,
 				3C5F98111AEC1CFF0098F70F /* ConstantUtils.m in Sources */,
+				3C2C4A2B1AFB592C00E0E4BF /* RMPhoneFormat.m in Sources */,
 				3C5F98811AECE05E0098F70F /* SCSwipeableFilterView.m in Sources */,
+				3C2C4A171AFA635800E0E4BF /* WelcomeViewController.m in Sources */,
 				3C5F98771AECE05E0098F70F /* SCMediaTypeConfiguration.m in Sources */,
 				3C5F987E1AECE05E0098F70F /* SCRecordSession.m in Sources */,
 			);

@@ -13,42 +13,47 @@
 
 @implementation VideoPost
 
+@dynamic localUrl;
+@dynamic thumbnail;
+
++ (void)load {
+    [self registerSubclass];
+}
+
++ (NSString * __nonnull)parseClassName
+{
+    return NSStringFromClass([self class]);
+}
+
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url
 {
-    VideoPost *post = [VideoPost new];
-    post.posterName = @"bob";
+    VideoPost *post = [VideoPost object];
     post.localUrl = url;
     post.thumbnail = [GeneralUtils generateThumbImage:post.localUrl];
     return post;
 }
 
-+ (VideoPost *)videoPostFromFacebookObject:(PFObject *)fbPost
+- (void)downloadVideoFile
 {
-    VideoPost *post = [VideoPost new];
-    post.objectId = fbPost.objectId;
-    post.createdAt = fbPost.createdAt;
-    post.updatedAt = fbPost.updatedAt;
-    PFFile *videoPFFile = fbPost[@"videoFile"];
-    [videoPFFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+    [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (data) {
-            post.localUrl = [post saveFileURL];
-            [data writeToURL:post.localUrl options:NSAtomicWrite error:nil];
-            post.thumbnail = [GeneralUtils generateThumbImage:post.localUrl];
+            self.localUrl = [self saveFileURL];
+            [data writeToURL:self.localUrl options:NSAtomicWrite error:nil];
+            self.thumbnail = [GeneralUtils generateThumbImage:self.localUrl];
         } else {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
         }
     }];
-    return post;
 }
 
-+ (NSArray *)videoPostsFromFacebookObjects:(NSArray *)fbObjects
-{
-    NSMutableArray *posts = [[NSMutableArray alloc] init];
-    for (PFObject *fbPost in fbObjects) {
-        [posts addObject:[VideoPost videoPostFromFacebookObject:fbPost]];
-    }
-    return posts;
-}
+//+ (NSArray *)videoPostsFromFacebookObjects:(NSArray *)fbObjects
+//{
+//    NSMutableArray *posts = [[NSMutableArray alloc] init];
+//    for (PFObject *fbPost in fbObjects) {
+//        [posts addObject:[VideoPost videoPostFromFacebookObject:fbPost]];
+//    }
+//    return posts;
+//}
 
 - (NSURL *)saveFileURL {
     NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];

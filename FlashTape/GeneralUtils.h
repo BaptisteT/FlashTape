@@ -17,4 +17,7 @@
 
 + (UIImage *)generateThumbImage:(NSURL *)url;
 
+// Show an alert message
++ (void)showMessage:(NSString *)text withTitle:(NSString *)title;
+
 @end
