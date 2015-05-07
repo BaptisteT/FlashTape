@@ -7,7 +7,12 @@
 //
 #import <Parse/Parse.h>
 
+#import "User.h"
+
 #import "AppDelegate.h"
+#import "WelcomeViewController.h"
+
+#import "ColorUtils.h"
 
 
 @interface AppDelegate ()
@@ -21,6 +26,9 @@
 {
     // Status bar
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UINavigationBar appearance] setBackgroundColor:[ColorUtils navigationBarColor]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
 
     // Initialize Parse.
     [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
@@ -29,7 +37,10 @@
     // [Optional] Track statistics around application opens.
 //    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    
+    if ([User currentUser]) {
+        WelcomeViewController* welcomeViewController = (WelcomeViewController *)  self.window.rootViewController.childViewControllers[0];
+        [welcomeViewController performSegueWithIdentifier:@"Dashboard Push Segue From Welcome" sender:nil];
+    }
     return YES;
 }
 

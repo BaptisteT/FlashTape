@@ -17,3 +17,7 @@
 "code_resent_label_text" = "We sent a second SMS.";
 "invalid_code_error_message" = "Invalid code, please try again.";
 "sms_instruction_label" = "We have sent you an SMS";
+
+// Auth
+"authentification_error_title" = "Authentification error";
+"authentification_error_message" = "Please, sign in again";

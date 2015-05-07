@@ -5,33 +5,85 @@
 //  Created by Baptiste Truchot on 5/7/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "ApiManager.h"
 
 #import "CodeConfirmationViewController.h"
+#import "GeneralUtils.h"
+#import "MBProgressHUD.h"
 
 @interface CodeConfirmationViewController ()
+
+@property (weak, nonatomic) IBOutlet UITextField *codeTextField;
 
 @end
 
 @implementation CodeConfirmationViewController
 
+
+// --------------------------------------------
+#pragma mark - Life Cycle
+// --------------------------------------------
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.codeTextField.delegate = self;
+    
+    // Button
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"next_button"] style:UIBarButtonItemStylePlain target:self action:@selector(nextButtonClicked)];
+    [self setNextButtonColor];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [self.codeTextField becomeFirstResponder];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.codeTextField resignFirstResponder];
 }
-*/
+
+// --------------------------------------------
+#pragma mark - Actions
+// --------------------------------------------
+- (void)backButtonClicked {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)nextButtonClicked {
+    if ([self.codeTextField.text isEqualToString:self.verificationCode]) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        // todo BT
+        [ApiManager logInUser:self.phoneNumber
+                      success:^{
+                          [self performSegueWithIdentifier:@"Video From Welcome" sender:nil];
+                      } failure:^{
+                          [GeneralUtils showMessage:NSLocalizedString(@"authentification_error_message", nil) withTitle:NSLocalizedString(@"authentification_error_title", nil)];
+                      }];
+    } else {
+        [GeneralUtils showMessage:NSLocalizedString(@"invalid_code_error_message", nil) withTitle:nil];
+        self.codeTextField.text = @"";
+        [self setNextButtonColor];
+    }
+}
+
+// --------------------------------------------
+#pragma mark - Textfield Delegate
+// --------------------------------------------
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    textField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    [self setNextButtonColor];
+    return NO;
+}
+
+// --------------------------------------------
+#pragma mark - UI
+// --------------------------------------------
+- (void)setNextButtonColor {
+    BOOL activate = (self.codeTextField.text.length == self.verificationCode.length);
+    self.navigationItem.rightBarButtonItem.tintColor = [[UIColor whiteColor] colorWithAlphaComponent:activate ? 1 : 0.6];
+    self.navigationItem.rightBarButtonItem.enabled = activate;
+}
 
 @end

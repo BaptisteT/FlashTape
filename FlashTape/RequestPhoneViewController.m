@@ -46,6 +46,8 @@
     self.decimalPhoneNumber = @"";
     [self setInitialCountryInfo];
     
+    // Button
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
     self.validationButton.hidden = YES;
     
     // Textfield
@@ -81,6 +83,9 @@
 // --------------------------------------------
 #pragma mark - Action
 // --------------------------------------------
+- (void)backButtonClicked {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 - (IBAction)validateButtonClicked:(id)sender {
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
@@ -117,7 +122,7 @@
     //
     [ApiManager requestSmsCode:phoneNumber retry:NO success:^(long code) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [self performSegueWithIdentifier:@"Code From Phone" sender:@[phoneNumber,[NSString stringWithFormat:@"%lu",code]]];
+        [self performSegueWithIdentifier:@"Code From Phone" sender:@[phoneNumber,[[NSNumber numberWithLong:code] stringValue]]];
     } failure:^{
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [GeneralUtils showMessage:NSLocalizedString(@"confirmation_code_error_message",nil) withTitle:nil];

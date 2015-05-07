@@ -30,6 +30,7 @@
 		3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A531AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json */; };
 		3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A551AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist */; };
 		3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A561AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist */; };
+		3C2C4A5B1AFBD04600E0E4BF /* PushNoAnimationSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */; };
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
@@ -128,6 +129,8 @@
 		3C2C4A531AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetaDataForTesting.json; sourceTree = "<group>"; };
 		3C2C4A551AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = NBPhoneNumberMetadata.plist; sourceTree = "<group>"; };
 		3C2C4A561AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = NBPhoneNumberMetadataForTesting.plist; sourceTree = "<group>"; };
+		3C2C4A591AFBD04600E0E4BF /* PushNoAnimationSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNoAnimationSegue.h; sourceTree = "<group>"; };
+		3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNoAnimationSegue.m; sourceTree = "<group>"; };
 		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -346,6 +349,8 @@
 			children = (
 				3C5F97DA1AEBB1F30098F70F /* Main.storyboard */,
 				3C5F97DD1AEBB1F30098F70F /* Images.xcassets */,
+				3C2C4A591AFBD04600E0E4BF /* PushNoAnimationSegue.h */,
+				3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */,
 				3C2C4A4D1AFB5EB000E0E4BF /* PhoneCountries.txt */,
 				3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */,
 			);
@@ -578,6 +583,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */,
+				3C2C4A5B1AFBD04600E0E4BF /* PushNoAnimationSegue.m in Sources */,
 				3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */,
 				3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */,
 				3C5F98841AECE05E0098F70F /* SCWeakSelectorTarget.m in Sources */,
@@ -724,6 +730,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -740,6 +747,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

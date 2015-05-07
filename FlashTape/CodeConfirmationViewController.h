@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CodeConfirmationViewController : UIViewController
+@interface CodeConfirmationViewController : UIViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) NSString *phoneNumber;
 @property (strong, nonatomic) NSString *verificationCode;

@@ -12,7 +12,16 @@
 
 @implementation User
 
++ (User *)createUserWithNumber:(NSString *)phoneNumber
+{
+    User *user = (User *)[PFUser user];
+    user.username = phoneNumber;
+    user.password = @"";
+    return user;
+}
 
-
++ (User *)currentUser {
+    return (User *)[PFUser currentUser];
+}
 
 @end

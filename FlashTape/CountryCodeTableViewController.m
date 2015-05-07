@@ -18,17 +18,33 @@
 
 @implementation CountryCodeTableViewController
 
+// --------------------------------------------
+#pragma mark - Life cycle
+// --------------------------------------------
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.indexedCountries = [[NSMutableDictionary alloc] init];
     self.countryToCodes = [[NSMutableDictionary alloc] init];
-    
     [self setCountriesAndCodes];
-    
     self.sectionTitles = [[self.indexedCountries allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    // Button
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
 }
 
+
+// --------------------------------------------
+#pragma mark - Action
+// --------------------------------------------
+- (void)backButtonClicked {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+// --------------------------------------------
+#pragma mark - Table view
+// --------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
@@ -84,6 +100,10 @@
     [self.delegate updateCountryName:country code:[self.countryToCodes objectForKey:country][0] letterCode:[self.countryToCodes objectForKey:country][1]];
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+// --------------------------------------------
+#pragma mark - Init
+// --------------------------------------------
 
 - (void)setCountriesAndCodes
 {

@@ -9,6 +9,7 @@
 #import <Parse/parse.h>
 
 #import "ApiManager.h"
+#import "User.h"
 #import "VideoPost.h"
 
 #import "ConstantUtils.h"
@@ -36,6 +37,48 @@
                                         }
                                     }
                                 }];
+}
+
+// Create user if it does not exists, and log him in
++ (void)logInUser:(NSString *)phoneNumber
+          success:(void(^)())successBlock
+          failure:(void(^)())failureBlock
+{
+    PFQuery *query = [PFUser query];
+    [query whereKey:@"username" equalTo:phoneNumber];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (objects.count == 0) {
+                // create user
+                User *user = [User createUserWithNumber:phoneNumber];
+                [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (!error) {
+                        if (successBlock)
+                            successBlock();
+                    } else {
+                        if (failureBlock)
+                            failureBlock();
+                    }
+                }];
+            } else {
+                // sign in
+                [PFUser logInWithUsernameInBackground:phoneNumber
+                                             password:@""
+                                                block:^(PFUser *user, NSError *error) {
+                                                    if (user) {
+                                                        if (successBlock)
+                                                            successBlock();
+                                                    } else { 
+                                                        if (failureBlock)
+                                                            failureBlock();
+                                                    }
+                                                }];
+            }
+        } else {
+            if (failureBlock)
+                failureBlock();
+        }
+    }];
 }
 
 // --------------------------------------------

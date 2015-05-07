@@ -24,4 +24,10 @@
 
 + (void)getVideoPostsAndExecuteSuccess:(void(^)(NSArray *posts))successBlock
                                failure:(void(^)(NSError *error))failureBlock;
+
+// Create user if it does not exists, and log him in
++ (void)logInUser:(NSString *)phoneNumber
+          success:(void(^)())successBlock
+          failure:(void(^)())failureBlock;
+
 @end

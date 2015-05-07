@@ -10,4 +10,8 @@
 
 @implementation ColorUtils
 
++ (UIColor *)navigationBarColor {
+    return [UIColor colorWithRed:1 green:0.5 blue:0.5 alpha:1];
+}
+
 @end

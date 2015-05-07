@@ -11,6 +11,8 @@
 
 @interface User : PFUser <PFSubclassing>
 
-//+ (NSString *)parseClassName;
++ (User *)createUserWithNumber:(NSString *)phoneNumber;
+
++ (User *)currentUser;
 
 @end
