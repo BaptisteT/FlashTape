@@ -5,6 +5,7 @@
 //  Created by Baptiste Truchot on 4/25/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import <AddressBook/AddressBook.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -15,14 +16,17 @@
 #import "VideoViewController.h"
 
 #import "AVPlayerItem+VideoDate.h"
+#import "AddressbookUtils.h"
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
 
 @interface VideoViewController ()
 
 // Playing
-@property (strong, nonatomic) AVQueuePlayer *avQueueVideoPlayer;
 @property (strong, nonatomic) NSMutableArray *videoPostArray;
+@property (nonatomic) ABAddressBookRef addressBook;
+@property (strong, nonatomic) NSDictionary *contactDictionnary;
+@property (strong, nonatomic) AVQueuePlayer *avQueueVideoPlayer;
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;
 @property (weak, nonatomic) IBOutlet UILabel *playingCountLabel;
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
@@ -37,6 +41,7 @@
 
 // Reactions
 @property (weak, nonatomic) IBOutlet UITableView *thumbTableView;
+
 
 
 @end
@@ -101,6 +106,18 @@
     self.thumbTableView.delegate = self;
     self.thumbTableView.dataSource = self;
     
+    // Init address book
+    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
+    self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                self.contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                [AddressbookUtils saveContactDictionnary:self.contactDictionnary];
+            }
+        });
+    });
+    
     // Init player items
     self.videoPostArray = [NSMutableArray new];
     _videoIndex = 0;
@@ -116,21 +133,22 @@
                                                object: nil];
 
     // Retrieve posts
-    [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
-        self.videoPostArray = [NSMutableArray arrayWithArray:posts];
-        
-        // Update index
-        NSDate *lastSeenVideoDate = [GeneralUtils getLastVideoSeenDate];
-        NSInteger index = 0;
-//        for (VideoPost *post in self.videoPostArray) {
-//            if ([post.createdAt compare:lastSeenVideoDate] == NSOrderedAscending) {
-//                index ++;
-//            } else {
-//                break;
-//            }
-//        }
-        _videoIndex = index;
-    } failure:nil];
+//    [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
+//        self.videoPostArray = [NSMutableArray arrayWithArray:posts];
+//        
+//        // Update index
+//        NSDate *lastSeenVideoDate = [GeneralUtils getLastVideoSeenDate];
+//        NSInteger index = 0;
+////        for (VideoPost *post in self.videoPostArray) {
+////            if ([post.createdAt compare:lastSeenVideoDate] == NSOrderedAscending) {
+////                index ++;
+////            } else {
+////                break;
+////            }
+////        }
+//        _videoIndex = index;
+//    } failure:nil];
+    [self retrieveVideo];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -146,13 +164,37 @@
 
 - (void)willBecomeActiveCallback {
     [self playVideos];
-    // todo BT
-    // handle the case some videos are too old
-    [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
-        // todo BT
-        // change index
-        self.videoPostArray = [NSMutableArray arrayWithArray:posts];
-    } failure:nil];
+    [self retrieveVideo];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // Disable iOS 7 back gesture
+    [self.navigationController.navigationBar setHidden:YES];
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+}
+
+
+// --------------------------------------------
+#pragma mark - Feed
+// --------------------------------------------
+- (void)retrieveVideo {
+    // Add current user to contacts array
+    NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
+    [contactArray addObject:[User currentUser].username];
+    
+    // Get video
+    [ApiManager getVideoFromContacts:contactArray
+                             success:^(NSArray *posts) {
+                                 // todo BT
+                                 // change index
+                                 self.videoPostArray = [NSMutableArray arrayWithArray:posts];
+                             } failure:^(NSError *error) {
+                                 // todo BT
+                             }];
 }
 
 // --------------------------------------------
@@ -199,6 +241,11 @@
 - (IBAction)replayButtonClicked:(id)sender {
     _videoIndex = 0;
     [self playVideos];
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    return NO;
 }
 
 // --------------------------------------------
@@ -451,7 +498,7 @@
     VideoPost *post = (VideoPost *)self.videoPostArray[indexPath.row];
     [cell.imageView setImage:post.thumbnail];
     [cell.imageView setContentMode:UIViewContentModeScaleAspectFill];
-    cell.textLabel.text = @"Bob";
+    cell.textLabel.text = self.contactDictionnary[post.user.username];
     return cell;
 }
 

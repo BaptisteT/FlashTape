@@ -7,9 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AddressBookUI/AddressBookUI.h>
+#import <AddressBook/AddressBook.h>
 
 @interface AddressbookUtils : NSObject
 
 + (NSMutableDictionary *)getCountriesAndCallingCodesForLetterCodes;
+
++ (NSMutableDictionary *)getFormattedPhoneNumbersFromAddressBook:(ABAddressBookRef)addressBook;
+
++ (void)saveContactDictionnary:(NSDictionary *)contactDictionnary;
+
++ (NSDictionary *)getContactDictionnary;
+
++ (void)getVideoFromContacts:(NSArray *)contactsPhoneNumbers
+                     success:(void(^)(NSArray *posts))successBlock
+                     failure:(void(^)(NSError *error))failureBlock;
 
 @end

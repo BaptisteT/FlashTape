@@ -12,13 +12,15 @@
 
 @interface VideoPost : PFObject<PFSubclassing>
 
-@property (retain) NSURL *localUrl;
 @property (retain) User *user;
-@property (retain) UIImage *thumbnail;
 @property (retain) PFFile *videoFile;
+@property (retain) UIImage *thumbnail;
+@property (retain) NSURL *localUrl;
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
 
 + (NSString *)parseClassName;
+
++ (void)downloadVideoFromPosts:(NSArray *)fbPosts;
 
 @end

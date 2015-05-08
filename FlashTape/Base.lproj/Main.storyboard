@@ -233,6 +233,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="BuF-wu-TPv"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="playingCountLabel" destination="ppQ-Zt-HGU" id="wIr-EL-ryV"/>
                         <outlet property="previewView" destination="8ee-DQ-Tyu" id="X1f-CK-Zle"/>
@@ -305,6 +306,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="U6D-kt-n9L"/>
+        <segue reference="gHv-bI-hVM"/>
     </inferredMetricsTieBreakers>
 </document>

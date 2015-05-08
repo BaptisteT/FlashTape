@@ -13,8 +13,10 @@
 
 @implementation VideoPost
 
-@dynamic localUrl;
-@dynamic thumbnail;
+@synthesize localUrl;
+@synthesize thumbnail;
+@dynamic videoFile;
+@dynamic user;
 
 + (void)load {
     [self registerSubclass];
@@ -30,6 +32,7 @@
     VideoPost *post = [VideoPost object];
     post.localUrl = url;
     post.thumbnail = [GeneralUtils generateThumbImage:post.localUrl];
+    post.user = [User currentUser];
     return post;
 }
 
@@ -37,7 +40,7 @@
 {
     [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (data) {
-            self.localUrl = [self saveFileURL];
+            self.localUrl = [self videoLocalURL];
             [data writeToURL:self.localUrl options:NSAtomicWrite error:nil];
             self.thumbnail = [GeneralUtils generateThumbImage:self.localUrl];
         } else {
@@ -46,18 +49,18 @@
     }];
 }
 
-//+ (NSArray *)videoPostsFromFacebookObjects:(NSArray *)fbObjects
-//{
-//    NSMutableArray *posts = [[NSMutableArray alloc] init];
-//    for (PFObject *fbPost in fbObjects) {
-//        [posts addObject:[VideoPost videoPostFromFacebookObject:fbPost]];
-//    }
-//    return posts;
-//}
-
-- (NSURL *)saveFileURL {
+- (NSURL *)videoLocalURL {
     NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
     return [[tmpDirURL URLByAppendingPathComponent:self.objectId] URLByAppendingPathExtension:@"mp4"];
 }
+
++ (void)downloadVideoFromPosts:(NSArray *)fbPosts
+{
+    for (VideoPost *post in fbPosts) {
+        [post downloadVideoFile];
+        [post.user fetchIfNeededInBackground];
+    }
+}
+
 
 @end

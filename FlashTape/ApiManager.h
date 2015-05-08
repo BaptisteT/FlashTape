@@ -15,19 +15,22 @@
 
 + (void)requestSmsCode:(NSString *)phoneNumber
                  retry:(BOOL)retry
-               success:(void(^)(long code))successBlock
+               success:(void(^)(NSInteger code))successBlock
                failure:(void(^)())failureBlock;
-
-+ (void)saveVideoPost:(VideoPost *)post
-    andExecuteSuccess:(void(^)())successBlock
-              failure:(void(^)(NSError *error))failureBlock;
-
-+ (void)getVideoPostsAndExecuteSuccess:(void(^)(NSArray *posts))successBlock
-                               failure:(void(^)(NSError *error))failureBlock;
 
 // Create user if it does not exists, and log him in
 + (void)logInUser:(NSString *)phoneNumber
           success:(void(^)())successBlock
           failure:(void(^)())failureBlock;
+
++ (void)saveVideoPost:(VideoPost *)post
+    andExecuteSuccess:(void(^)())successBlock
+              failure:(void(^)(NSError *error))failureBlock;
+
++ (void)getVideoFromContacts:(NSArray *)contactsPhoneNumbers
+                     success:(void(^)(NSArray *posts))successBlock
+                     failure:(void(^)(NSError *error))failureBlock;
+
+
 
 @end

@@ -10,6 +10,6 @@
 
 #import "SCRecorder.h"
 
-@interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 
 @end

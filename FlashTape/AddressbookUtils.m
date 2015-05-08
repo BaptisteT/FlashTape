@@ -5,8 +5,12 @@
 //  Created by Baptiste Truchot on 5/7/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "NBPhoneNumberUtil.h"
+#import "NBPhoneNumber.h"
 
 #import "AddressbookUtils.h"
+
+#define CONTACT_DICTIONNARY_PREF @"Contact Dictionnary Pref"
 
 @implementation AddressbookUtils
 
@@ -58,6 +62,55 @@
     }
     
     return letterCodeToCountryAndCallingCode;
+}
+
++ (NSMutableDictionary *)getFormattedPhoneNumbersFromAddressBook:(ABAddressBookRef)addressBook
+{
+    NSMutableDictionary *addressBookFormattedContacts = [[NSMutableDictionary alloc] init];
+    NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
+    
+    CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    CFIndex peopleCount = CFArrayGetCount(people);
+    NSString *defaultCountry = [phoneUtil countryCodeByCarrier];
+    
+    for (CFIndex i = 0 ; i < peopleCount; i++) {
+        ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+        ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
+        for (CFIndex j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
+            NSString* phoneNumber = (__bridge_transfer NSString*) ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            NSError *aError = nil;
+            NBPhoneNumber *nbPhoneNumber = [phoneUtil parse:phoneNumber defaultRegion:defaultCountry error:&aError];
+            
+            if (aError == nil && [phoneUtil isValidNumber:nbPhoneNumber]) {
+                NSString *name = (__bridge NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+                if (!name || name.length == 0) {
+                    name = (__bridge NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);
+                    if (!name || name.length == 0) {
+                        name = @"?";
+                    }
+                }
+                // Stock potential contact
+                NSString *phoneNumber = [NSString stringWithFormat:@"+%u%llu", (unsigned int)nbPhoneNumber.countryCode, nbPhoneNumber.nationalNumber];
+                [addressBookFormattedContacts setObject:name forKey:phoneNumber];
+            }
+        }
+    }
+
+    CFRelease(people);
+    return addressBookFormattedContacts;
+}
+
++ (void)saveContactDictionnary:(NSDictionary *)contactDictionnary
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:contactDictionnary forKey:CONTACT_DICTIONNARY_PREF];
+    [prefs synchronize];
+}
+
++ (NSDictionary *)getContactDictionnary
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:CONTACT_DICTIONNARY_PREF];
 }
 
 @end

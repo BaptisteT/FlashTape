@@ -22,7 +22,7 @@
 
 + (void)requestSmsCode:(NSString *)phoneNumber
                  retry:(BOOL)retry
-               success:(void(^)(long code))successBlock
+               success:(void(^)(NSInteger code))successBlock
                failure:(void(^)())failureBlock
 {
     [PFCloud callFunctionInBackground:@"sendVerificationCode"
@@ -33,7 +33,7 @@
                                             failureBlock();
                                     } else {
                                         if (successBlock) {
-                                            successBlock((long)object);
+                                            successBlock([object integerValue]);
                                         }
                                     }
                                 }];
@@ -89,11 +89,12 @@
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock
 {
-    if (!post.localUrl) {
+    NSURL *url = post.localUrl;
+    if (!url || !post.user) {
         failureBlock(nil);
         return;
     }
-    NSData *data = [NSData dataWithContentsOfURL:post.localUrl];
+    NSData *data = [NSData dataWithContentsOfURL:url];
     PFFile *file = [PFFile fileWithName:@"video.mp4" data:data];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
@@ -118,18 +119,34 @@
     }];
 }
 
-+ (void)getVideoPostsAndExecuteSuccess:(void(^)(NSArray *posts))successBlock
-                               failure:(void(^)(NSError *error))failureBlock
++ (void)getVideoFromContacts:(NSArray *)contactsPhoneNumbers
+                     success:(void(^)(NSArray *posts))successBlock
+                     failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"videoPost"];
-    [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    PFQuery *userQuery = [PFUser query];
+    [userQuery whereKey:@"username" containedIn:contactsPhoneNumbers];
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
         if (!error) {
-            // The find succeeded.
-            NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
-            if (successBlock) {
-//                successBlock([VideoPost videoPostsFromFacebookObjects:objects]);
-            }
+            PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+            [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
+            [query whereKey:@"user" containedIn:users];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    // Download video
+                    [VideoPost downloadVideoFromPosts:objects];
+                    
+                    // Return
+                    NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
+                    if (successBlock) {
+                        successBlock(objects);
+                    }
+                } else {
+                    // Log details of the failure
+                    NSLog(@"Error: %@ %@", error, [error userInfo]);
+                    if (failureBlock)
+                        failureBlock(error);
+                }
+            }];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);

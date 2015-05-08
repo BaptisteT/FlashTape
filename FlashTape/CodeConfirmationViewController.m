@@ -51,13 +51,16 @@
 }
 
 - (void)nextButtonClicked {
+    [self.codeTextField resignFirstResponder];
     if ([self.codeTextField.text isEqualToString:self.verificationCode]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         // todo BT
         [ApiManager logInUser:self.phoneNumber
                       success:^{
-                          [self performSegueWithIdentifier:@"Video From Welcome" sender:nil];
+                          [MBProgressHUD hideHUDForView:self.view animated:YES];
+                          [self performSegueWithIdentifier:@"Video From Code" sender:nil];
                       } failure:^{
+                          [MBProgressHUD hideHUDForView:self.view animated:YES];
                           [GeneralUtils showMessage:NSLocalizedString(@"authentification_error_message", nil) withTitle:NSLocalizedString(@"authentification_error_title", nil)];
                       }];
     } else {

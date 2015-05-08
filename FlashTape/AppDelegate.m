@@ -36,10 +36,10 @@
     
     // [Optional] Track statistics around application opens.
 //    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    
+
     if ([User currentUser]) {
         WelcomeViewController* welcomeViewController = (WelcomeViewController *)  self.window.rootViewController.childViewControllers[0];
-        [welcomeViewController performSegueWithIdentifier:@"Dashboard Push Segue From Welcome" sender:nil];
+        [welcomeViewController performSegueWithIdentifier:@"Video From Welcome" sender:nil];
     }
     return YES;
 }

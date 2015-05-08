@@ -117,10 +117,8 @@
 - (void)sendCodeRequest:(NSString *)phoneNumber
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    // todo BT
-    // check if user exists, if it does, log in
-    //
-    [ApiManager requestSmsCode:phoneNumber retry:NO success:^(long code) {
+    [ApiManager requestSmsCode:phoneNumber retry:NO success:^(NSInteger code) {
+        NSLog(@"%lu",code);
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [self performSegueWithIdentifier:@"Code From Phone" sender:@[phoneNumber,[[NSNumber numberWithLong:code] stringValue]]];
     } failure:^{
