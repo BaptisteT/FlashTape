@@ -11,7 +11,7 @@
 @implementation ColorUtils
 
 + (UIColor *)navigationBarColor {
-    return [UIColor colorWithRed:1 green:0.5 blue:0.5 alpha:1];
+    return [UIColor colorWithRed:255./255. green:129./255. blue:0 alpha:1.0];
 }
 
 + (UIColor *)transparentBlack {

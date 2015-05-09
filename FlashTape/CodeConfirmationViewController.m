@@ -64,8 +64,6 @@
                       }];
     } else {
         [GeneralUtils showMessage:NSLocalizedString(@"invalid_code_error_message", nil) withTitle:nil];
-        self.codeTextField.text = @"";
-        [self setNextButtonColor];
     }
 }
 

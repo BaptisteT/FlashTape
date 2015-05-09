@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Master-->
@@ -35,8 +36,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ca5-WV-ZY2">
-                                <rect key="frame" x="281" y="306" width="38" height="30"/>
-                                <state key="normal" title="Login">
+                                <rect key="frame" x="10" y="396" width="580" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="login_button">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -47,12 +50,23 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="Ca5-WV-ZY2" secondAttribute="centerY" constant="-21" id="2hT-Dx-q1d"/>
+                            <constraint firstItem="Ca5-WV-ZY2" firstAttribute="leading" secondItem="0wt-NZ-llf" secondAttribute="leading" constant="10" id="XBl-Uq-fod"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Ca5-WV-ZY2" secondAttribute="trailing" constant="-6" id="YC2-L7-liz"/>
+                            <constraint firstAttribute="centerX" secondItem="Ca5-WV-ZY2" secondAttribute="centerX" id="h9V-dh-H6O"/>
+                            <constraint firstItem="L6a-f6-Mzh" firstAttribute="top" secondItem="Ca5-WV-ZY2" secondAttribute="bottom" constant="165" id="iBT-kK-rfH"/>
                             <constraint firstAttribute="centerX" secondItem="Ca5-WV-ZY2" secondAttribute="centerX" id="npa-tH-yEH"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2hT-Dx-q1d"/>
+                                <exclude reference="YC2-L7-liz"/>
+                                <exclude reference="npa-tH-yEH"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="uZl-C5-P1a"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
+                        <outlet property="loginButton" destination="Ca5-WV-ZY2" id="i9e-kr-Bzw"/>
                         <segue destination="ut7-PO-jUy" kind="custom" identifier="Video From Welcome" customClass="PushNoAnimationSegue" id="U6D-kt-n9L"/>
                     </connections>
                 </viewController>
@@ -293,29 +307,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZh-GS-NkX">
-                                <rect key="frame" x="16" y="285" width="94" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZh-GS-NkX">
+                                <rect key="frame" x="97" y="293" width="100" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal" title="country_code">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="countryCodeButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="0uB-2T-qqH"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UzS-vI-VNQ">
-                                <rect key="frame" x="118" y="285" width="97" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UzS-vI-VNQ">
+                                <rect key="frame" x="200" y="294" width="200" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="dfr-KW-qap"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="country" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tTs-wk-neC">
-                                <rect key="frame" x="133" y="348" width="58" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="country" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tTs-wk-neC">
+                                <rect key="frame" x="43" y="301" width="49" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Wd-rk-44x">
-                                <rect key="frame" x="64" y="383" width="46" height="30"/>
-                                <state key="normal" title="Button">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Wd-rk-44x">
+                                <rect key="frame" x="410" y="294" width="36" height="30"/>
+                                <state key="normal" title="Send">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -324,6 +344,16 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="8Wd-rk-44x" firstAttribute="leading" secondItem="UzS-vI-VNQ" secondAttribute="trailing" constant="10" id="bye-WR-8c9"/>
+                            <constraint firstItem="qZh-GS-NkX" firstAttribute="centerY" secondItem="UzS-vI-VNQ" secondAttribute="centerY" id="ejJ-6j-TdA"/>
+                            <constraint firstAttribute="centerX" secondItem="UzS-vI-VNQ" secondAttribute="centerX" id="fcw-32-Gsk"/>
+                            <constraint firstAttribute="centerY" secondItem="UzS-vI-VNQ" secondAttribute="centerY" constant="-9" id="kcA-sU-0Gr"/>
+                            <constraint firstItem="qZh-GS-NkX" firstAttribute="leading" secondItem="tTs-wk-neC" secondAttribute="trailing" constant="5" id="lph-N7-O2C"/>
+                            <constraint firstItem="qZh-GS-NkX" firstAttribute="centerY" secondItem="tTs-wk-neC" secondAttribute="centerY" id="qsz-Ra-xcM"/>
+                            <constraint firstItem="8Wd-rk-44x" firstAttribute="centerY" secondItem="UzS-vI-VNQ" secondAttribute="centerY" id="tLg-XU-xKd"/>
+                            <constraint firstItem="UzS-vI-VNQ" firstAttribute="leading" secondItem="qZh-GS-NkX" secondAttribute="trailing" constant="3" id="xr5-A0-xgn"/>
+                        </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
@@ -344,6 +374,6 @@
         <image name="camera_flip_button" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gHv-bI-hVM"/>
+        <segue reference="U6D-kt-n9L"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -113,6 +113,9 @@
             if (granted) {
                 self.contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
                 [AddressbookUtils saveContactDictionnary:self.contactDictionnary];
+                
+                // todo BT change ?
+                [self retrieveVideo];
             }
         });
     });
@@ -131,22 +134,6 @@
                                                  name: UIApplicationDidEnterBackgroundNotification
                                                object: nil];
 
-    // Retrieve posts
-//    [ApiManager getVideoPostsAndExecuteSuccess:^(NSArray *posts) {
-//        self.videoPostArray = [NSMutableArray arrayWithArray:posts];
-//        
-//        // Update index
-//        NSDate *lastSeenVideoDate = [GeneralUtils getLastVideoSeenDate];
-//        NSInteger index = 0;
-////        for (VideoPost *post in self.videoPostArray) {
-////            if ([post.createdAt compare:lastSeenVideoDate] == NSOrderedAscending) {
-////                index ++;
-////            } else {
-////                break;
-////            }
-////        }
-//        _videoIndex = index;
-//    } failure:nil];
     [self retrieveVideo];
     
     // Start with camera
@@ -169,9 +156,9 @@
     [self retrieveVideo];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     
     // Disable iOS 7 back gesture
     [self.navigationController.navigationBar setHidden:YES];
@@ -349,9 +336,9 @@
             if (error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:url];
                 [self.videoPostArray addObject:post];
+                [self setReplayButtonUI];
                 [ApiManager saveVideoPost:post
                         andExecuteSuccess:^() {
-                            [self setReplayButtonUI];
                             // do nothing
                         } failure:^(NSError *error) {
                             // todo BT error handling
@@ -473,7 +460,8 @@
     NSDate *lastSeenDate = [GeneralUtils getLastVideoSeenDate];
     int kkk = 0;
     for (int i = (int)(self.videoPostArray.count - 1) ; i >= 0 ; i--) {
-        if ([((VideoPost *)(self.videoPostArray[i])).createdAt compare:lastSeenDate] == NSOrderedDescending) {
+        NSDate *videoDate = ((VideoPost *)(self.videoPostArray[i])).createdAt ? ((VideoPost *)(self.videoPostArray[i])).createdAt : [NSDate date];
+        if ([videoDate compare:lastSeenDate] == NSOrderedDescending) {
             kkk ++;
         } else {
             break;

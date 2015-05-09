@@ -6,7 +6,9 @@
   Copyright (c) 2015 Mindie. All rights reserved.
 */
 
-"video_too_short" = "Hold Longer";
+// Welcome
+"login_button" = "Log In >";
+
 
 // Phone
 "phone_number_error_message" = "Invalid phone number.";
@@ -27,3 +29,4 @@
 "replay_label" = "Replay";
 "new_videos_label" = "new flashes";
 "new_video_label" = "new flash";
+"video_too_short" = "Hold Longer";

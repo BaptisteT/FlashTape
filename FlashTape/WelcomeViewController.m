@@ -10,13 +10,16 @@
 
 @interface WelcomeViewController ()
 
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
+
 @end
 
 @implementation WelcomeViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    [self.loginButton setTitle:NSLocalizedString(@"login_button", nil) forState:UIControlStateNormal];
 }
 
 

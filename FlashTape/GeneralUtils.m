@@ -15,6 +15,8 @@
 
 + (void)saveLastVideoSeenDate:(NSDate *)date
 {
+    if (!date)
+        return;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSDate *maxDate = [date compare:[GeneralUtils getLastVideoSeenDate]] == NSOrderedAscending ? [GeneralUtils getLastVideoSeenDate] : date;
     [prefs setObject:maxDate forKey:LAST_VIDEO_SEEN_DATE];
@@ -24,7 +26,7 @@
 + (NSDate *)getLastVideoSeenDate
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    return [prefs objectForKey:LAST_VIDEO_SEEN_DATE];
+    return [prefs objectForKey:LAST_VIDEO_SEEN_DATE] ? [prefs objectForKey:LAST_VIDEO_SEEN_DATE]: [NSDate dateWithTimeIntervalSince1970:0];
 }
 
 + (UIImage *)generateThumbImage:(NSURL *)url
