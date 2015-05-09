@@ -24,7 +24,7 @@ static const float kRecordMinDuration = 0.5;
 static const NSInteger kPlayerQueueLength = 3;
 
 // Top message
-static const float kTopMessageViewHeight = 40;
+static const float kTopMessageViewHeight = 20;
 static const float kTopMessageLabelHeight = 20;
 static const float kTopMessageAnimDuration = 0.5;
 static const float kTopMessageAnimDelay = 1.5;

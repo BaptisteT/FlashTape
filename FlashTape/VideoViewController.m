@@ -18,7 +18,9 @@
 #import "AVPlayerItem+VideoDate.h"
 #import "AddressbookUtils.h"
 #import "ConstantUtils.h"
+#import "ColorUtils.h"
 #import "GeneralUtils.h"
+#import "NSDate+DateTools.h"
 
 @interface VideoViewController ()
 
@@ -30,6 +32,8 @@
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;
 @property (weak, nonatomic) IBOutlet UILabel *playingCountLabel;
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 
 // Recording
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
@@ -38,11 +42,8 @@
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressGestureRecogniser;
 @property (weak, nonatomic) IBOutlet UIView *previewView;
 @property (strong, nonatomic) UIView *recordingProgressBar;
-
-// Reactions
-@property (weak, nonatomic) IBOutlet UITableView *thumbTableView;
-
-
+@property (weak, nonatomic) IBOutlet UILabel *recordTutoLabel;
+@property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
 
 @end
 
@@ -62,7 +63,7 @@
     
     // Init gesture
     self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-//    self.longPressGestureRecogniser.minimumPressDuration = 0;
+    self.longPressGestureRecogniser.delegate = self;
     [self.view addGestureRecognizer:self.longPressGestureRecogniser];
     self.tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     [self.view addGestureRecognizer:self.tapGestureRecogniser];
@@ -91,20 +92,18 @@
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avQueueVideoPlayer];
     self.playerLayer.frame = self.view.frame;
     [self.view.layer addSublayer:self.playerLayer];
-    self.playerLayer.backgroundColor = [UIColor whiteColor].CGColor;
+    self.playerLayer.backgroundColor = [UIColor blackColor].CGColor;
     self.playerLayer.hidden = YES;
     
-    // Playing count label & replay
+    // Labels
     [self.view bringSubviewToFront:self.playingCountLabel];
-    [self.view bringSubviewToFront:self.replayButton];
+    [self.view bringSubviewToFront:self.nameLabel];
+    [self.view bringSubviewToFront:self.timeLabel];
     self.playingCountLabel.text = @"";
+    self.nameLabel.text = @"";
+    self.timeLabel.text = @"";
+    self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
     self.replayButton.hidden = YES;
-    
-    // Thumb table view
-    [self.view bringSubviewToFront:self.thumbTableView];
-    self.thumbTableView.hidden = YES;
-    self.thumbTableView.delegate = self;
-    self.thumbTableView.dataSource = self;
     
     // Init address book
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
@@ -149,6 +148,9 @@
 //        _videoIndex = index;
 //    } failure:nil];
     [self retrieveVideo];
+    
+    // Start with camera
+    [self setPreviewMode];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -163,7 +165,7 @@
 }
 
 - (void)willBecomeActiveCallback {
-    [self playVideos];
+    [self setPreviewMode];
     [self retrieveVideo];
 }
 
@@ -189,11 +191,10 @@
     // Get video
     [ApiManager getVideoFromContacts:contactArray
                              success:^(NSArray *posts) {
-                                 // todo BT
-                                 // change index
                                  self.videoPostArray = [NSMutableArray arrayWithArray:posts];
+                                 [self setReplayButtonUI];
                              } failure:^(NSError *error) {
-                                 // todo BT
+                                 // todo BT handle error
                              }];
 }
 
@@ -206,15 +207,9 @@
         return;
     
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        if (!self.playerLayer.hidden) {
-            // Set recorder device
-            CGPoint location = [gesture locationInView:self.view];
-            self.recorder.device = location.y > self.view.frame.size.height / 2 ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
-        }
         [self startRecording];
-        [self setRecordingMode];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
-        // todo BT
+        // do nothing
     } else {
         if ([self.recorder isRecording])
             [self stopRecording];
@@ -225,34 +220,25 @@
 {
     BOOL playingMode = !self.playerLayer.hidden;
     if (playingMode) {
-        [self setRecordingMode];
-        // Set recorder device
-        CGPoint location = [gesture locationInView:self.view];
-        self.recorder.device = location.y > self.view.frame.size.height / 2 ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
-    } else {
-        if (self.avQueueVideoPlayer.items.count == 0 && _videoIndex > self.videoPostArray.count - 1) {
-            [self setInteractioMode];
-        } else {
-            [self playVideos];
-        }
+        // avance to next video
+        [self.avQueueVideoPlayer advanceToNextItem];
+        [self playerItemDidReachEnd:nil];
     }
 }
 
 - (IBAction)replayButtonClicked:(id)sender {
-    _videoIndex = 0;
     [self playVideos];
 }
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-    return NO;
+- (IBAction)flipCameraButtonClicked:(id)sender {
+    self.recorder.device = self.recorder.device == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
 }
 
 // --------------------------------------------
 #pragma mark - Playing
 // --------------------------------------------
 - (void)playVideos {
-    [self setPlayingMode];
+    [self setPlayingMode:YES];
     
     if (self.videoPostArray.count == 0) {
         return;
@@ -269,10 +255,10 @@
         _videoIndex ++;
     }
     if (self.avQueueVideoPlayer.items.count != 0) {
-        self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",((AVPlayerItem *)self.avQueueVideoPlayer.items.firstObject).indexInVideoArray,self.videoPostArray.count];
+        [self setPlayingMetaData];
         [self.avQueueVideoPlayer play];
     } else {
-        // todo
+        // todo bt make robust
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(playVideos) userInfo:nil repeats:NO];
     }
 }
@@ -283,26 +269,27 @@
     // Save item date
     if (notification) {
         AVPlayerItem *itemPlayed = (AVPlayerItem *)notification.object;
-        [GeneralUtils saveLastVideoSeenDate:itemPlayed.videoCreationDate];
+        [GeneralUtils saveLastVideoSeenDate:itemPlayed.videoPost.createdAt];
         [self.avQueueVideoPlayer removeItem:itemPlayed];
     }
     
     // Playing count label
     if (self.avQueueVideoPlayer.items.count > 0) {
-        self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",((AVPlayerItem *)self.avQueueVideoPlayer.items.firstObject).indexInVideoArray,self.videoPostArray.count];
+        [self setPlayingMetaData];
     }
     
     // Add new post to the queue
     
-    // First, security check
+    // Security check
+    // If no more video to play, return to camera
     if (self.videoPostArray.count == 0 || _videoIndex >= self.videoPostArray.count) {
         if (self.avQueueVideoPlayer.items.count == 0) {
-            [self setInteractioMode];
+            [self setPreviewMode];
         }
         return;
     }
     
-    // Get post and increment index
+    // Get post and update index
     VideoPost *post =  self.videoPostArray[_videoIndex];
     _videoIndex ++;
     if (post.localUrl) {
@@ -318,28 +305,21 @@
     AVAsset *playerAsset = [AVAsset assetWithURL:videoPost.localUrl];
     
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:playerAsset];
-    playerItem.videoCreationDate = videoPost.createdAt;
+    playerItem.videoPost = videoPost;
     playerItem.indexInVideoArray = 1 + [self.videoPostArray indexOfObject:videoPost];
     [self.avQueueVideoPlayer insertItem:playerItem afterItem:self.avQueueVideoPlayer.items.lastObject];
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(playerItemDidReachEnd:)
                                                  name: AVPlayerItemDidPlayToEndTimeNotification
                                                object: playerItem];
+}
+
+- (void)setPlayingMetaData {
+    AVPlayerItem *itemPlayed = ((AVPlayerItem *)self.avQueueVideoPlayer.items.firstObject);
+    self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",itemPlayed.indexInVideoArray,self.videoPostArray.count];
     
-//    NSArray *keys = [NSArray arrayWithObject:@"playable"];
-//    
-//    [playerAsset loadValuesAsynchronouslyForKeys:keys completionHandler:^() {
-//        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:playerAsset];
-//        playerItem.videoCreationDate = videoPost.createdAt;
-//        playerItem.indexInVideoArray = 1 + [self.videoPostArray indexOfObject:videoPost];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.avQueueVideoPlayer insertItem:playerItem afterItem:self.avQueueVideoPlayer.items.lastObject];
-//            [[NSNotificationCenter defaultCenter] addObserver: self
-//                                                     selector: @selector(playerItemDidReachEnd:)
-//                                                         name: AVPlayerItemDidPlayToEndTimeNotification
-//                                                       object: playerItem];
-//        });
-//    }];
+    self.nameLabel.text = self.contactDictionnary[itemPlayed.videoPost.user.username];
+    self.timeLabel.text = [itemPlayed.videoPost.createdAt timeAgoSinceNow];
 }
 
 // --------------------------------------------
@@ -347,28 +327,17 @@
 // --------------------------------------------
 - (void)startRecording {
     [self prepareSession];
-    
-    // Start UI + progress bar anim
-    self.recordingProgressContainer.hidden = NO;
-    [self.recordingProgressBar.layer removeAllAnimations];
-    self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
-    [UIView animateWithDuration:kRecordSessionMaxDuration
-                          delay:0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         [self.recordingProgressBar setFrame:CGRectMake(0,0,self.recordingProgressContainer.frame.size.width, self.recordingProgressContainer.frame.size.height)];
-                     } completion:nil];
+    [self setRecordingMode];
     
     // Begin appending video/audio buffers to the session
     [self.recorder record];
 }
 
 - (void)stopRecording {
-    self.recordingProgressContainer.hidden = YES;
-    [self playVideos];
     [self.recorder pause:^{
         [self exportAndSaveSession:self.recorder.session];
     }];
+    [self setPreviewMode];
 }
 
 - (void)exportAndSaveSession:(SCRecordSession *)recordSession {
@@ -380,15 +349,13 @@
             if (error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:url];
                 [self.videoPostArray addObject:post];
-                if (self.avQueueVideoPlayer.items.count == 0) {
-                    [self playVideos];
-                }
                 [ApiManager saveVideoPost:post
                         andExecuteSuccess:^() {
+                            [self setReplayButtonUI];
                             // do nothing
                         } failure:^(NSError *error) {
-                            // todo BT
-                            // remove ?
+                            // todo BT error handling
+                            // remove post / warm ?
                             NSLog(@"fail to save video");
                         }];
             } else {
@@ -419,8 +386,8 @@
 - (void)displayTopMessage:(NSString *)message
 {
     UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(0, - kTopMessageViewHeight, self.view.frame.size.width, kTopMessageViewHeight)];
-    messageView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, messageView.frame.size.height - kTopMessageLabelHeight - 5, messageView.frame.size.width - 20 - 5, kTopMessageLabelHeight)];
+    messageView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.8];
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, messageView.frame.size.height - kTopMessageLabelHeight, messageView.frame.size.width - 20 - 5, kTopMessageLabelHeight)];
     messageLabel.textAlignment = NSTextAlignmentCenter;
     messageLabel.text = message;
     messageLabel.font = [UIFont systemFontOfSize:14];
@@ -450,56 +417,88 @@
 #pragma mark - UI
 // --------------------------------------------
 
-- (void)setPlayingMode
+- (void)setPlayingMode:(BOOL)flag
 {
-    self.thumbTableView.hidden = YES;
-    self.replayButton.hidden = YES;
-    self.playingCountLabel.hidden = NO;
-    [self.playerLayer setHidden:NO];
+    self.playingCountLabel.hidden = !flag;
+    self.timeLabel.hidden = !flag;
+    self.nameLabel.hidden = !flag;
+    [self.playerLayer setHidden:!flag];
+    if (flag) {
+        self.longPressGestureRecogniser.minimumPressDuration = 0.5;
+    } else {
+        [self.avQueueVideoPlayer pause];
+    }
 }
 
-- (void)setRecordingMode
+- (void)setPreviewMode
 {
-    self.thumbTableView.hidden = YES;
-    self.replayButton.hidden = YES;
-    self.playingCountLabel.hidden = YES;
-    [self.playerLayer setHidden:YES];
-    [self.avQueueVideoPlayer pause];
-}
-
-- (void)setInteractioMode
-{
-    [self.playerLayer setHidden:NO];
-    self.playingCountLabel.text = @"";
+    [self setPlayingMode:NO];
+    
+    self.longPressGestureRecogniser.minimumPressDuration = 0;
+    self.recordingProgressContainer.hidden = YES;
     self.replayButton.hidden = NO;
-    self.thumbTableView.hidden = NO;
-    [self.thumbTableView reloadData];
+    self.recordTutoLabel.hidden = NO;
+    self.cameraSwitchButton.hidden = NO;
+    [self setReplayButtonUI];
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle
+- (void)setRecordingMode {
+    [self setPlayingMode:NO];
+    
+    self.replayButton.hidden = YES;
+    self.recordTutoLabel.hidden = YES;
+    self.cameraSwitchButton.hidden = YES;
+    // Start UI + progress bar anim
+    self.recordingProgressContainer.hidden = NO;
+    [self.recordingProgressBar.layer removeAllAnimations];
+    self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
+    [UIView animateWithDuration:kRecordSessionMaxDuration
+                          delay:0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         [self.recordingProgressBar setFrame:CGRectMake(0,0,self.recordingProgressContainer.frame.size.width, self.recordingProgressContainer.frame.size.height)];
+                     } completion:nil];
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
+- (void)setReplayButtonUI {
+    if (self.videoPostArray.count == 0) {
+        self.replayButton.hidden = YES;
+        return;
+    }
+    NSString *buttonTitle;
+    NSDate *lastSeenDate = [GeneralUtils getLastVideoSeenDate];
+    int kkk = 0;
+    for (int i = (int)(self.videoPostArray.count - 1) ; i >= 0 ; i--) {
+        if ([((VideoPost *)(self.videoPostArray[i])).createdAt compare:lastSeenDate] == NSOrderedDescending) {
+            kkk ++;
+        } else {
+            break;
+        }
+    }
+    if (kkk == 0) {
+        _videoIndex = 0;
+        self.replayButton.backgroundColor = [ColorUtils transparentBlack];
+        buttonTitle = NSLocalizedString(@"replay_label", nil);
+    } else {
+        _videoIndex = self.videoPostArray.count - kkk;
+        self.replayButton.backgroundColor = [ColorUtils transparentOrange];
+        buttonTitle = [NSString stringWithFormat:@"%d %@",kkk,kkk < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+    }
+    [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
+    self.replayButton.hidden = NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    return UIStatusBarStyleLightContent;
-}
-
-// ------------------------------
-#pragma mark TableView
-// ------------------------------
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.videoPostArray.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [self.thumbTableView dequeueReusableCellWithIdentifier:@"ThumbCell"];
-    VideoPost *post = (VideoPost *)self.videoPostArray[indexPath.row];
-    [cell.imageView setImage:post.thumbnail];
-    [cell.imageView setContentMode:UIViewContentModeScaleAspectFill];
-    cell.textLabel.text = self.contactDictionnary[post.user.username];
-    return cell;
+    // Disallow recognition of tap gestures in the segmented control.
+    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton)) {
+        return NO;
+    }
+    return YES;
 }
 
 @end

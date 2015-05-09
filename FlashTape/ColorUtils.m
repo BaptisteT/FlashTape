@@ -14,4 +14,12 @@
     return [UIColor colorWithRed:1 green:0.5 blue:0.5 alpha:1];
 }
 
++ (UIColor *)transparentBlack {
+    return [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+}
+
++ (UIColor *)transparentOrange {
+    return [UIColor colorWithRed:1 green:129./255. blue:0 alpha:0.5];
+}
+
 @end

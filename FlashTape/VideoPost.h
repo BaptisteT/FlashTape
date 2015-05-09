@@ -14,7 +14,6 @@
 
 @property (retain) User *user;
 @property (retain) PFFile *videoFile;
-@property (retain) UIImage *thumbnail;
 @property (retain) NSURL *localUrl;
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;

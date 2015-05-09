@@ -54,7 +54,6 @@
     [self.codeTextField resignFirstResponder];
     if ([self.codeTextField.text isEqualToString:self.verificationCode]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        // todo BT
         [ApiManager logInUser:self.phoneNumber
                       success:^{
                           [MBProgressHUD hideHUDForView:self.view animated:YES];

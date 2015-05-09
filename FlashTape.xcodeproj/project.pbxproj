@@ -31,6 +31,13 @@
 		3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A551AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist */; };
 		3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A561AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist */; };
 		3C2C4A5B1AFBD04600E0E4BF /* PushNoAnimationSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */; };
+		3C2C4A6F1AFE231F00E0E4BF /* DateTools.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4A601AFE231F00E0E4BF /* DateTools.bundle */; };
+		3C2C4A701AFE231F00E0E4BF /* DTError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A641AFE231F00E0E4BF /* DTError.m */; };
+		3C2C4A711AFE231F00E0E4BF /* DTTimePeriod.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A661AFE231F00E0E4BF /* DTTimePeriod.m */; };
+		3C2C4A721AFE231F00E0E4BF /* DTTimePeriodChain.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A681AFE231F00E0E4BF /* DTTimePeriodChain.m */; };
+		3C2C4A731AFE231F00E0E4BF /* DTTimePeriodCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A6A1AFE231F00E0E4BF /* DTTimePeriodCollection.m */; };
+		3C2C4A741AFE231F00E0E4BF /* DTTimePeriodGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A6C1AFE231F00E0E4BF /* DTTimePeriodGroup.m */; };
+		3C2C4A751AFE231F00E0E4BF /* NSDate+DateTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A6E1AFE231F00E0E4BF /* NSDate+DateTools.m */; };
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
@@ -131,6 +138,21 @@
 		3C2C4A561AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = NBPhoneNumberMetadataForTesting.plist; sourceTree = "<group>"; };
 		3C2C4A591AFBD04600E0E4BF /* PushNoAnimationSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNoAnimationSegue.h; sourceTree = "<group>"; };
 		3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNoAnimationSegue.m; sourceTree = "<group>"; };
+		3C2C4A601AFE231F00E0E4BF /* DateTools.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DateTools.bundle; sourceTree = "<group>"; };
+		3C2C4A611AFE231F00E0E4BF /* DateTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTools.h; sourceTree = "<group>"; };
+		3C2C4A621AFE231F00E0E4BF /* DTConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTConstants.h; sourceTree = "<group>"; };
+		3C2C4A631AFE231F00E0E4BF /* DTError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTError.h; sourceTree = "<group>"; };
+		3C2C4A641AFE231F00E0E4BF /* DTError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTError.m; sourceTree = "<group>"; };
+		3C2C4A651AFE231F00E0E4BF /* DTTimePeriod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTTimePeriod.h; sourceTree = "<group>"; };
+		3C2C4A661AFE231F00E0E4BF /* DTTimePeriod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTTimePeriod.m; sourceTree = "<group>"; };
+		3C2C4A671AFE231F00E0E4BF /* DTTimePeriodChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTTimePeriodChain.h; sourceTree = "<group>"; };
+		3C2C4A681AFE231F00E0E4BF /* DTTimePeriodChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTTimePeriodChain.m; sourceTree = "<group>"; };
+		3C2C4A691AFE231F00E0E4BF /* DTTimePeriodCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTTimePeriodCollection.h; sourceTree = "<group>"; };
+		3C2C4A6A1AFE231F00E0E4BF /* DTTimePeriodCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTTimePeriodCollection.m; sourceTree = "<group>"; };
+		3C2C4A6B1AFE231F00E0E4BF /* DTTimePeriodGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTTimePeriodGroup.h; sourceTree = "<group>"; };
+		3C2C4A6C1AFE231F00E0E4BF /* DTTimePeriodGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTTimePeriodGroup.m; sourceTree = "<group>"; };
+		3C2C4A6D1AFE231F00E0E4BF /* NSDate+DateTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+DateTools.h"; sourceTree = "<group>"; };
+		3C2C4A6E1AFE231F00E0E4BF /* NSDate+DateTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+DateTools.m"; sourceTree = "<group>"; };
 		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -301,6 +323,28 @@
 			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
+		3C2C4A5F1AFE231500E0E4BF /* DateTools */ = {
+			isa = PBXGroup;
+			children = (
+				3C2C4A601AFE231F00E0E4BF /* DateTools.bundle */,
+				3C2C4A611AFE231F00E0E4BF /* DateTools.h */,
+				3C2C4A621AFE231F00E0E4BF /* DTConstants.h */,
+				3C2C4A631AFE231F00E0E4BF /* DTError.h */,
+				3C2C4A641AFE231F00E0E4BF /* DTError.m */,
+				3C2C4A651AFE231F00E0E4BF /* DTTimePeriod.h */,
+				3C2C4A661AFE231F00E0E4BF /* DTTimePeriod.m */,
+				3C2C4A671AFE231F00E0E4BF /* DTTimePeriodChain.h */,
+				3C2C4A681AFE231F00E0E4BF /* DTTimePeriodChain.m */,
+				3C2C4A691AFE231F00E0E4BF /* DTTimePeriodCollection.h */,
+				3C2C4A6A1AFE231F00E0E4BF /* DTTimePeriodCollection.m */,
+				3C2C4A6B1AFE231F00E0E4BF /* DTTimePeriodGroup.h */,
+				3C2C4A6C1AFE231F00E0E4BF /* DTTimePeriodGroup.m */,
+				3C2C4A6D1AFE231F00E0E4BF /* NSDate+DateTools.h */,
+				3C2C4A6E1AFE231F00E0E4BF /* NSDate+DateTools.m */,
+			);
+			name = DateTools;
+			sourceTree = "<group>";
+		};
 		3C5F97C11AEBB1F30098F70F = {
 			isa = PBXGroup;
 			children = (
@@ -414,6 +458,7 @@
 		3C5F98141AEC343B0098F70F /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				3C2C4A5F1AFE231500E0E4BF /* DateTools */,
 				3C2C4A461AFB5A7C00E0E4BF /* MBProgressHUD */,
 				3C2C4A2C1AFB5A2C00E0E4BF /* libPhoneNumber-iOS */,
 				3C2C4A281AFB592100E0E4BF /* RMPhoneFormat */,
@@ -572,6 +617,7 @@
 				3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */,
 				3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */,
 				3C5F97DE1AEBB1F30098F70F /* Images.xcassets in Resources */,
+				3C2C4A6F1AFE231F00E0E4BF /* DateTools.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,11 +631,16 @@
 				3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */,
 				3C2C4A5B1AFBD04600E0E4BF /* PushNoAnimationSegue.m in Sources */,
 				3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */,
+				3C2C4A721AFE231F00E0E4BF /* DTTimePeriodChain.m in Sources */,
+				3C2C4A711AFE231F00E0E4BF /* DTTimePeriod.m in Sources */,
+				3C2C4A741AFE231F00E0E4BF /* DTTimePeriodGroup.m in Sources */,
 				3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */,
 				3C5F98841AECE05E0098F70F /* SCWeakSelectorTarget.m in Sources */,
 				3C5F987F1AECE05E0098F70F /* SCRecordSessionSegment.m in Sources */,
+				3C2C4A701AFE231F00E0E4BF /* DTError.m in Sources */,
 				3C5F97D01AEBB1F30098F70F /* main.m in Sources */,
 				3C5F97FF1AEBB4620098F70F /* VideoViewController.m in Sources */,
+				3C2C4A751AFE231F00E0E4BF /* NSDate+DateTools.m in Sources */,
 				3C5F98721AECE05E0098F70F /* SCAudioConfiguration.m in Sources */,
 				3C2C4A1D1AFA637200E0E4BF /* RequestPhoneViewController.m in Sources */,
 				3C2C4A431AFB5A3B00E0E4BF /* NBPhoneNumberDesc.m in Sources */,
@@ -616,6 +667,7 @@
 				3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */,
 				3C2C4A421AFB5A3B00E0E4BF /* NBPhoneNumber.m in Sources */,
 				3C2C4A441AFB5A3B00E0E4BF /* NBPhoneNumberUtil.m in Sources */,
+				3C2C4A731AFE231F00E0E4BF /* DTTimePeriodCollection.m in Sources */,
 				3C5F987C1AECE05E0098F70F /* SCRecorderTools.m in Sources */,
 				3C5F98831AECE05E0098F70F /* SCVideoPlayerView.m in Sources */,
 				3C5F987B1AECE05E0098F70F /* SCRecorderFocusTargetView.m in Sources */,

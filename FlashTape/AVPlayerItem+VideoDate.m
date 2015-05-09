@@ -9,18 +9,18 @@
 
 #import "AVPlayerItem+VideoDate.h"
 
-NSString const *videoCreationDateKey = @"video.creation.date.key";
+NSString const *videoPostKey = @"video.post.key";
 NSString const *indexInVideoArrayKey = @"index.in.array.key";
 
 @implementation AVPlayerItem (VideoDate)
 
-- (NSDate *)videoCreationDate
+- (VideoPost *)videoPost
 {
-    return objc_getAssociatedObject(self, &videoCreationDateKey);
+    return objc_getAssociatedObject(self, &videoPostKey);
 }
 
-- (void)setVideoCreationDate:(NSDate *)videoCreationDate {
-    objc_setAssociatedObject(self, &videoCreationDateKey, videoCreationDate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setVideoPost:(VideoPost *)videoPost {
+    objc_setAssociatedObject(self, &videoPostKey, videoPost, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSInteger)indexInVideoArray {

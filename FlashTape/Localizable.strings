@@ -21,3 +21,9 @@
 // Auth
 "authentification_error_title" = "Authentification error";
 "authentification_error_message" = "Please, sign in again";
+
+// Record
+"hold_ro_record_label" = "Hold to record";
+"replay_label" = "Replay";
+"new_videos_label" = "new flashes";
+"new_video_label" = "new flash";

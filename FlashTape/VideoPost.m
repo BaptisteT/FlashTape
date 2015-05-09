@@ -14,7 +14,6 @@
 @implementation VideoPost
 
 @synthesize localUrl;
-@synthesize thumbnail;
 @dynamic videoFile;
 @dynamic user;
 
@@ -31,7 +30,6 @@
 {
     VideoPost *post = [VideoPost object];
     post.localUrl = url;
-    post.thumbnail = [GeneralUtils generateThumbImage:post.localUrl];
     post.user = [User currentUser];
     return post;
 }
@@ -42,7 +40,6 @@
         if (data) {
             self.localUrl = [self videoLocalURL];
             [data writeToURL:self.localUrl options:NSAtomicWrite error:nil];
-            self.thumbnail = [GeneralUtils generateThumbImage:self.localUrl];
         } else {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
         }

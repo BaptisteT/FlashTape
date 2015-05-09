@@ -8,9 +8,11 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+#import "VideoPost.h"
+
 @interface AVPlayerItem (VideoDate)
 
-@property (strong, nonatomic) NSDate *videoCreationDate;
+@property (strong, nonatomic) VideoPost *videoPost;
 @property (nonatomic) NSInteger indexInVideoArray;
 
 @end

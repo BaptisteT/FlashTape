@@ -13,4 +13,8 @@
 
 + (UIColor *)navigationBarColor;
 
++ (UIColor *)transparentBlack;
+
++ (UIColor *)transparentOrange;
+
 @end

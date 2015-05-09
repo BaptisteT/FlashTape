@@ -20,8 +20,4 @@
 
 + (NSDictionary *)getContactDictionnary;
 
-+ (void)getVideoFromContacts:(NSArray *)contactsPhoneNumbers
-                     success:(void(^)(NSArray *posts))successBlock
-                     failure:(void(^)(NSError *error))failureBlock;
-
 @end

@@ -16,10 +16,8 @@
 + (void)saveLastVideoSeenDate:(NSDate *)date
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:date forKey:LAST_VIDEO_SEEN_DATE];
-
-//    NSDate *maxDate = [date compare:[GeneralUtils getLastVideoSeenDate]] == NSOrderedAscending ? [GeneralUtils getLastVideoSeenDate] : date;
-//    [prefs setObject:maxDate forKey:LAST_VIDEO_SEEN_DATE];
+    NSDate *maxDate = [date compare:[GeneralUtils getLastVideoSeenDate]] == NSOrderedAscending ? [GeneralUtils getLastVideoSeenDate] : date;
+    [prefs setObject:maxDate forKey:LAST_VIDEO_SEEN_DATE];
     [prefs synchronize];
 }
 
