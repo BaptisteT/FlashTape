@@ -125,28 +125,22 @@
 {
     PFQuery *userQuery = [PFUser query];
     [userQuery whereKey:@"username" containedIn:contactsPhoneNumbers];
-    [userQuery findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
+    [query whereKey:@"user" matchesQuery:userQuery];
+    [query orderByAscending:@"createdAt"];
+    [query includeKey:@"user"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
-            [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
-            [query whereKey:@"user" containedIn:users];
-            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error) {
-                    // Download video
-                    [VideoPost downloadVideoFromPosts:objects];
-                    
-                    // Return
-                    NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
-                    if (successBlock) {
-                        successBlock(objects);
-                    }
-                } else {
-                    // Log details of the failure
-                    NSLog(@"Error: %@ %@", error, [error userInfo]);
-                    if (failureBlock)
-                        failureBlock(error);
-                }
-            }];
+            // Download video
+            [VideoPost downloadVideoFromPosts:objects];
+            
+            // Return
+            NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
+            if (successBlock) {
+                successBlock(objects);
+            }
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);

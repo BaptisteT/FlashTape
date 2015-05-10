@@ -55,7 +55,6 @@
 {
     for (VideoPost *post in fbPosts) {
         [post downloadVideoFile];
-        [post.user fetchIfNeededInBackground];
     }
 }
 

@@ -36,7 +36,6 @@
     
     // [Optional] Track statistics around application opens.
 //    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-//    [User logOut];
     if ([User currentUser]) {
         WelcomeViewController* welcomeViewController = (WelcomeViewController *)  self.window.rootViewController.childViewControllers[0];
         [welcomeViewController performSegueWithIdentifier:@"Video From Welcome" sender:nil];

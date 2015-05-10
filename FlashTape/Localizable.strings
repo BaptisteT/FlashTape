@@ -30,3 +30,4 @@
 "new_videos_label" = "new flashes";
 "new_video_label" = "new flash";
 "video_too_short" = "Hold Longer";
+"video_sending_failed" = "Sending Failed";

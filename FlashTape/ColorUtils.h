@@ -17,4 +17,8 @@
 
 + (UIColor *)transparentOrange;
 
++ (UIColor *)transparentRed;
+
++ (UIColor *)orange;
+
 @end

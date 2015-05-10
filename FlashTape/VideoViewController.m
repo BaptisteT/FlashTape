@@ -9,6 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "MBProgressHUD.h"
 
 #import "ApiManager.h"
 #import "VideoPost.h"
@@ -34,6 +35,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UIView *metadataView;
 
 // Recording
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
@@ -44,6 +46,11 @@
 @property (strong, nonatomic) UIView *recordingProgressBar;
 @property (weak, nonatomic) IBOutlet UILabel *recordTutoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
+
+// Sending
+@property (strong, nonatomic) NSMutableArray *failedVideoPostArray;
+@property (nonatomic) NSInteger isSendingCount;
+@property (weak, nonatomic) IBOutlet UIView *sendingLoaderView;
 
 @end
 
@@ -60,6 +67,7 @@
     [super viewDidLoad];
     
     _isExporting = NO;
+    self.isSendingCount = 0;
     
     // Init gesture
     self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
@@ -76,6 +84,8 @@
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
     _recorder.maxRecordDuration = CMTimeMake(kRecordSessionMaxDuration, 1);
+    _recorder.videoConfiguration.preset = SCPresetLowQuality;
+    _recorder.audioConfiguration.preset = SCPresetLowQuality;
     if (![self.recorder startRunning]) { // Start running the flow of buffers
         NSLog(@"Something wrong there: %@", self.recorder.error);
     }
@@ -97,31 +107,35 @@
     
     // Labels
     [self.view bringSubviewToFront:self.playingCountLabel];
-    [self.view bringSubviewToFront:self.nameLabel];
-    [self.view bringSubviewToFront:self.timeLabel];
+    [self.view bringSubviewToFront:self.metadataView];
     self.playingCountLabel.text = @"";
     self.nameLabel.text = @"";
     self.timeLabel.text = @"";
     self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
     self.replayButton.hidden = YES;
     
-    // Init address book
+    // Get contacts and retrieve videos
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
+    [self retrieveVideo];
+    
+    // Init address book
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
             if (granted) {
-                self.contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                NSDictionary *newContactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                if (self.contactDictionnary.count != newContactDictionnary.count) {
+                    [self retrieveVideo];
+                }
+                self.contactDictionnary = newContactDictionnary;
                 [AddressbookUtils saveContactDictionnary:self.contactDictionnary];
-                
-                // todo BT change ?
-                [self retrieveVideo];
             }
         });
     });
     
-    // Init player items
+    // Video Post array
     self.videoPostArray = [NSMutableArray new];
+    self.failedVideoPostArray = [NSMutableArray new];
     _videoIndex = 0;
     
     // Callback
@@ -133,8 +147,6 @@
                                              selector: @selector(didEnterBackgroundCallback)
                                                  name: UIApplicationDidEnterBackgroundNotification
                                                object: nil];
-
-    [self retrieveVideo];
     
     // Start with camera
     [self setPreviewMode];
@@ -214,7 +226,11 @@
 }
 
 - (IBAction)replayButtonClicked:(id)sender {
-    [self playVideos];
+    if (self.failedVideoPostArray.count > 0) {
+        [self sendFailedVideo];
+    } else {
+        [self playVideos];
+    }
 }
 
 - (IBAction)flipCameraButtonClicked:(id)sender {
@@ -225,8 +241,6 @@
 #pragma mark - Playing
 // --------------------------------------------
 - (void)playVideos {
-    [self setPlayingMode:YES];
-    
     if (self.videoPostArray.count == 0) {
         return;
     }
@@ -242,6 +256,7 @@
         _videoIndex ++;
     }
     if (self.avQueueVideoPlayer.items.count != 0) {
+        [self setPlayingMode:YES];
         [self setPlayingMetaData];
         [self.avQueueVideoPlayer play];
     } else {
@@ -335,16 +350,7 @@
         [recordSession mergeSegmentsUsingPreset:AVAssetExportPresetHighestQuality completionHandler:^(NSURL *url, NSError *error) {
             if (error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:url];
-                [self.videoPostArray addObject:post];
-                [self setReplayButtonUI];
-                [ApiManager saveVideoPost:post
-                        andExecuteSuccess:^() {
-                            // do nothing
-                        } failure:^(NSError *error) {
-                            // todo BT error handling
-                            // remove post / warm ?
-                            NSLog(@"fail to save video");
-                        }];
+                [self sendVideoPost:post];
             } else {
                 NSLog(@"Export failed: %@", error);
             }
@@ -359,6 +365,47 @@
     _recorder.session = session;
 }
 
+// --------------------------------------------
+#pragma mark - Sending
+// --------------------------------------------
+- (void)sendVideoPost:(VideoPost *)post
+{
+    self.isSendingCount ++;
+    [ApiManager saveVideoPost:post
+            andExecuteSuccess:^() {
+                self.isSendingCount --;
+                [self.videoPostArray addObject:post];
+                [self setReplayButtonUI];
+            } failure:^(NSError *error) {
+                self.isSendingCount --;
+                [self.failedVideoPostArray addObject:post];
+                [self setReplayButtonUI];
+            }];
+}
+
+- (void)sendFailedVideo
+{
+    NSArray *tempArray = [NSArray arrayWithArray:self.failedVideoPostArray];
+    [self.failedVideoPostArray removeAllObjects];
+    for (VideoPost *post in tempArray) {
+        [self sendVideoPost:post];
+    }
+    [self setReplayButtonUI];
+}
+
+- (void)setIsSendingCount:(NSInteger)isSendingCount {
+    _isSendingCount = isSendingCount;
+    // sending anim
+    if (isSendingCount == 0) {
+        [MBProgressHUD hideHUDForView:self.sendingLoaderView animated:YES];
+    } else {
+        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
+        hud.color = [UIColor clearColor];
+        hud.activityIndicatorColor = [ColorUtils orange];
+        [self.sendingLoaderView addSubview:hud];
+        [hud show:YES];
+    }
+}
 // --------------------------------------------
 #pragma mark - SCRecorderDelegate
 // --------------------------------------------
@@ -407,8 +454,7 @@
 - (void)setPlayingMode:(BOOL)flag
 {
     self.playingCountLabel.hidden = !flag;
-    self.timeLabel.hidden = !flag;
-    self.nameLabel.hidden = !flag;
+    self.metadataView.hidden = !flag;
     [self.playerLayer setHidden:!flag];
     if (flag) {
         self.longPressGestureRecogniser.minimumPressDuration = 0.5;
@@ -452,32 +498,40 @@
 }
 
 - (void)setReplayButtonUI {
-    if (self.videoPostArray.count == 0) {
+    if (self.failedVideoPostArray.count > 0) {
+        // failed video state
+        self.replayButton.backgroundColor = [ColorUtils transparentRed];
+        [self.replayButton setTitle:NSLocalizedString(@"video_sending_failed", nil) forState:UIControlStateNormal];
+        // todo bt
+    } else if (self.videoPostArray.count == 0) {
+        // No button state
         self.replayButton.hidden = YES;
         return;
-    }
-    NSString *buttonTitle;
-    NSDate *lastSeenDate = [GeneralUtils getLastVideoSeenDate];
-    int kkk = 0;
-    for (int i = (int)(self.videoPostArray.count - 1) ; i >= 0 ; i--) {
-        NSDate *videoDate = ((VideoPost *)(self.videoPostArray[i])).createdAt ? ((VideoPost *)(self.videoPostArray[i])).createdAt : [NSDate date];
-        if ([videoDate compare:lastSeenDate] == NSOrderedDescending) {
-            kkk ++;
-        } else {
-            break;
-        }
-    }
-    if (kkk == 0) {
-        _videoIndex = 0;
-        self.replayButton.backgroundColor = [ColorUtils transparentBlack];
-        buttonTitle = NSLocalizedString(@"replay_label", nil);
     } else {
-        _videoIndex = self.videoPostArray.count - kkk;
-        self.replayButton.backgroundColor = [ColorUtils transparentOrange];
-        buttonTitle = [NSString stringWithFormat:@"%d %@",kkk,kkk < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+        // Replay or new state
+        NSString *buttonTitle;
+        NSDate *lastSeenDate = [GeneralUtils getLastVideoSeenDate];
+        int kkk = 0;
+        for (int i = (int)(self.videoPostArray.count - 1) ; i >= 0 ; i--) {
+            NSDate *videoDate = ((VideoPost *)(self.videoPostArray[i])).createdAt ? ((VideoPost *)(self.videoPostArray[i])).createdAt : [NSDate date];
+            if ([videoDate compare:lastSeenDate] == NSOrderedDescending) {
+                kkk ++;
+            } else {
+                break;
+            }
+        }
+        if (kkk == 0) {
+            _videoIndex = 0;
+            self.replayButton.backgroundColor = [ColorUtils transparentBlack];
+            buttonTitle = NSLocalizedString(@"replay_label", nil);
+        } else {
+            _videoIndex = self.videoPostArray.count - kkk;
+            self.replayButton.backgroundColor = [ColorUtils transparentOrange];
+            buttonTitle = [NSString stringWithFormat:@"%d %@",kkk,kkk < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+        }
+        [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
+        self.replayButton.hidden = NO;
     }
-    [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
-    self.replayButton.hidden = NO;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch

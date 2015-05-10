@@ -22,4 +22,12 @@
     return [UIColor colorWithRed:1 green:129./255. blue:0 alpha:0.5];
 }
 
++ (UIColor *)orange {
+    return [UIColor colorWithRed:1 green:129./255. blue:0 alpha:1];
+}
+
++ (UIColor *)transparentRed {
+    return [UIColor colorWithRed:1 green:0. blue:0 alpha:0.5];
+}
+
 @end
