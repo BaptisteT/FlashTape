@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.4.2"
+  },
+  "applications": {
+    "FlashTape": {
+      "applicationId": "mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj",
+      "masterKey": "ojpPkfBUpJJBCSyjyLIIX6frzlAC1MJm5FCRJYy0"
+    },
+    "_default": {
+      "link": "FlashTape"
+    }
+  }
+}

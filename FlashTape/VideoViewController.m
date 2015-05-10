@@ -22,6 +22,7 @@
 #import "ColorUtils.h"
 #import "GeneralUtils.h"
 #import "NSDate+DateTools.h"
+#import "TrackingUtils.h"
 
 @interface VideoViewController ()
 
@@ -178,7 +179,6 @@
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 
-
 // --------------------------------------------
 #pragma mark - Feed
 // --------------------------------------------
@@ -230,6 +230,7 @@
         [self sendFailedVideo];
     } else {
         [self playVideos];
+        [TrackingUtils trackReplayButtonClicked];
     }
 }
 
@@ -256,8 +257,8 @@
         _videoIndex ++;
     }
     if (self.avQueueVideoPlayer.items.count != 0) {
-        [self setPlayingMode:YES];
         [self setPlayingMetaData];
+        [self setPlayingMode:YES];
         [self.avQueueVideoPlayer play];
     } else {
         // todo bt make robust
@@ -268,6 +269,8 @@
 // After an item is played, add a new end to the end of the queue
 - (void)playerItemDidReachEnd:(NSNotification *)notification
 {
+    [TrackingUtils trackVideoSeen];
+    
     // Save item date
     if (notification) {
         AVPlayerItem *itemPlayed = (AVPlayerItem *)notification.object;
@@ -318,7 +321,7 @@
 
 - (void)setPlayingMetaData {
     AVPlayerItem *itemPlayed = ((AVPlayerItem *)self.avQueueVideoPlayer.items.firstObject);
-    self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",itemPlayed.indexInVideoArray,self.videoPostArray.count];
+    self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",(long)itemPlayed.indexInVideoArray,(unsigned long)self.videoPostArray.count];
     
     self.nameLabel.text = self.contactDictionnary[itemPlayed.videoPost.user.username];
     self.timeLabel.text = [itemPlayed.videoPost.createdAt timeAgoSinceNow];
@@ -376,10 +379,12 @@
                 self.isSendingCount --;
                 [self.videoPostArray addObject:post];
                 [self setReplayButtonUI];
+                [TrackingUtils trackVideoSent];
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];
                 [self setReplayButtonUI];
+                [TrackingUtils trackVideoSendingFailure];
             }];
 }
 
