@@ -560,8 +560,10 @@
     if ([device respondsToSelector:@selector(activeVideoMaxFrameDuration)]) {
         return device.activeVideoMinFrameDuration;
     }
-    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return connection.videoMinFrameDuration;
+#pragma clang diagnostic pop
 }
 
 - (SCFilter *)_transformFilterUsingBufferWidth:(size_t)bufferWidth bufferHeight:(size_t)bufferHeight mirrored:(BOOL)mirrored {
@@ -1379,7 +1381,10 @@
             framerate = deviceInput.device.activeVideoMaxFrameDuration.timescale;
         } else {
             AVCaptureConnection *videoConnection = [self videoConnection];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             framerate = videoConnection.videoMaxFrameDuration.timescale;
+#pragma clang diagnostic pop
         }
     }
     
@@ -1406,6 +1411,8 @@
                 }
             } else {
                 AVCaptureConnection *connection = [self videoConnection];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 if (connection.isVideoMaxFrameDurationSupported) {
                     connection.videoMaxFrameDuration = fps;
                 } else {
@@ -1416,6 +1423,7 @@
                 } else {
                     NSLog(@"Failed to set FrameRate into camera device");
                 }
+#pragma clang diagnostic pop
             }
         } else {
             NSLog(@"Unsupported frame rate %ld on current device format.", (long)framePerSeconds);

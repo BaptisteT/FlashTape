@@ -101,6 +101,9 @@
             post.videoFile = file;
             [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
+                    post.localUrl = [post videoLocalURL];
+                    [data writeToURL:post.localUrl options:NSAtomicWrite error:nil];
+                    
                     if (successBlock)
                         successBlock();
                 } else {

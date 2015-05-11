@@ -22,4 +22,6 @@
 
 + (void)downloadVideoFromPosts:(NSArray *)fbPosts;
 
+- (NSURL *)videoLocalURL ;
+
 @end

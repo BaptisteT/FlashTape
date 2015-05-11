@@ -26,8 +26,14 @@
 
 // Record
 "hold_ro_record_label" = "Hold to record";
-"replay_label" = "Replay";
+"replay_label" = "Replay (%lu videos)";
 "new_videos_label" = "new flashes";
 "new_video_label" = "new flash";
 "video_too_short" = "Hold Longer";
 "video_sending_failed" = "Sending Failed";
+
+// Preview
+"release_to_send" = "Release to send";
+"release_to_cancel" = "Release to cancel";
+"message_canceled" = "Message canceled";
+"move_your_finger_to_cancel" = "Move your finger here to cancel";

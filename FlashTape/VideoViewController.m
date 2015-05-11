@@ -43,15 +43,26 @@
 @property (strong, nonatomic) SCRecorder *recorder;
 @property (strong, nonatomic) UITapGestureRecognizer *tapGestureRecogniser;
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressGestureRecogniser;
-@property (weak, nonatomic) IBOutlet UIView *previewView;
+@property (weak, nonatomic) IBOutlet UIView *cameraView;
 @property (strong, nonatomic) UIView *recordingProgressBar;
 @property (weak, nonatomic) IBOutlet UILabel *recordTutoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
 
+// Preview Playing
+@property (strong, nonatomic) SCPlayer *previewPlayer;
+@property (weak, nonatomic) IBOutlet UIView *previewView;
+@property (weak, nonatomic) IBOutlet UILabel *releaseToSendTuto;
+@property (weak, nonatomic) IBOutlet UIView *cancelAreaView;
+@property (weak, nonatomic) IBOutlet UILabel *cancelTutoLabel;
+@property (weak, nonatomic) IBOutlet UIView *cancelConfirmView;
+@property (weak, nonatomic) IBOutlet UILabel *cancelConfirmTutoLabel;
+
 // Sending
+@property (strong, nonatomic) VideoPost *postToSend; // preview post
 @property (strong, nonatomic) NSMutableArray *failedVideoPostArray;
 @property (nonatomic) NSInteger isSendingCount;
 @property (weak, nonatomic) IBOutlet UIView *sendingLoaderView;
+
 
 @end
 
@@ -85,8 +96,10 @@
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
     _recorder.maxRecordDuration = CMTimeMake(kRecordSessionMaxDuration, 1);
-    _recorder.videoConfiguration.preset = SCPresetLowQuality;
-    _recorder.audioConfiguration.preset = SCPresetLowQuality;
+//    _recorder.videoConfiguration.bitrate = 2000000;
+    SCRecordSession *session = [SCRecordSession recordSession];
+    session.fileType = AVFileTypeQuickTimeMovie;
+    _recorder.session = session;
     if (![self.recorder startRunning]) { // Start running the flow of buffers
         NSLog(@"Something wrong there: %@", self.recorder.error);
     }
@@ -114,6 +127,13 @@
     self.timeLabel.text = @"";
     self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
     self.replayButton.hidden = YES;
+    
+    // Preview
+    self.previewPlayer = [SCPlayer player];
+    self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
+    self.cancelTutoLabel.text = NSLocalizedString(@"move_your_finger_to_cancel", nil);
+    self.cancelConfirmTutoLabel.text = NSLocalizedString(@"release_to_cancel", nil);
+    self.previewPlayer.loopEnabled = YES;
     
     // Get contacts and retrieve videos
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
@@ -150,14 +170,19 @@
                                                object: nil];
     
     // Start with camera
-    [self setPreviewMode];
+    [self setCameraMode];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
+    // Camera
+    self.recorder.previewView = self.cameraView;
+    
     // Player preview
-    self.recorder.previewView = self.previewView;
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.previewPlayer];
+    playerLayer.frame = self.previewView.bounds;
+    [self.previewView.layer insertSublayer:playerLayer atIndex:0];
 }
 
 - (void)didEnterBackgroundCallback {
@@ -165,7 +190,8 @@
 }
 
 - (void)willBecomeActiveCallback {
-    [self setPreviewMode];
+    [self setCameraMode];
+    [self.avQueueVideoPlayer removeAllItems];
     [self retrieveVideo];
 }
 
@@ -208,10 +234,25 @@
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [self startRecording];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
-        // do nothing
+        if ([self isPreviewMode]) {
+            BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
+            self.cancelAreaView.hidden = cancelMode;
+            self.releaseToSendTuto.hidden = cancelMode;
+            self.cancelConfirmView.hidden = !cancelMode;
+        }
     } else {
-        if ([self.recorder isRecording])
-            [self stopRecording];
+        if ([self isPreviewMode] && self.postToSend) {
+            // cancel or send, & stop
+            if (!CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView])) {
+                [self sendVideoPost:self.postToSend];
+            }
+            self.postToSend = nil;
+        } else if ([self isRecordingMode]) {
+            [self stopRecordingAndExecuteSuccess:^(VideoPost * post) {
+                [self sendVideoPost:post];
+            }];
+        }
+        [self setCameraMode];
     }
 }
 
@@ -289,7 +330,7 @@
     // If no more video to play, return to camera
     if (self.videoPostArray.count == 0 || _videoIndex >= self.videoPostArray.count) {
         if (self.avQueueVideoPlayer.items.count == 0) {
-            [self setPreviewMode];
+            [self setCameraMode];
         }
         return;
     }
@@ -308,7 +349,6 @@
 - (void)insertVideoInThePlayerQueue:(VideoPost *)videoPost
 {
     AVAsset *playerAsset = [AVAsset assetWithURL:videoPost.localUrl];
-    
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:playerAsset];
     playerItem.videoPost = videoPost;
     playerItem.indexInVideoArray = 1 + [self.videoPostArray indexOfObject:videoPost];
@@ -331,21 +371,23 @@
 #pragma mark - Recording
 // --------------------------------------------
 - (void)startRecording {
-    [self prepareSession];
+    [self.recorder.session removeAllSegments:NO];
     [self setRecordingMode];
     
     // Begin appending video/audio buffers to the session
     [self.recorder record];
 }
 
-- (void)stopRecording {
+- (void)stopRecordingAndExecuteSuccess:(void(^)(VideoPost *))successBlock {
     [self.recorder pause:^{
-        [self exportAndSaveSession:self.recorder.session];
+        [self exportAndSaveSession:self.recorder.session
+                           success:successBlock];
     }];
-    [self setPreviewMode];
 }
 
-- (void)exportAndSaveSession:(SCRecordSession *)recordSession {
+- (void)exportAndSaveSession:(SCRecordSession *)recordSession
+                     success:(void(^)(VideoPost *))successBlock
+{
     if (CMTimeGetSeconds(recordSession.segmentsDuration) < kRecordMinDuration) {
         [self displayTopMessage:NSLocalizedString(@"video_too_short", nil)];
     } else {
@@ -353,7 +395,9 @@
         [recordSession mergeSegmentsUsingPreset:AVAssetExportPresetHighestQuality completionHandler:^(NSURL *url, NSError *error) {
             if (error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:url];
-                [self sendVideoPost:post];
+                if (successBlock) {
+                    successBlock(post);
+                }
             } else {
                 NSLog(@"Export failed: %@", error);
             }
@@ -362,11 +406,6 @@
     }
 }
 
-- (void)prepareSession {
-    SCRecordSession *session = [SCRecordSession recordSession];
-    session.fileType = AVFileTypeQuickTimeMovie;
-    _recorder.session = session;
-}
 
 // --------------------------------------------
 #pragma mark - Sending
@@ -402,7 +441,7 @@
     _isSendingCount = isSendingCount;
     // sending anim
     if (isSendingCount == 0) {
-        [MBProgressHUD hideHUDForView:self.sendingLoaderView animated:YES];
+        [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
     } else {
         MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
         hud.color = [UIColor clearColor];
@@ -416,7 +455,13 @@
 // --------------------------------------------
 
 - (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
-    [self stopRecording];
+    [self stopRecordingAndExecuteSuccess:^(VideoPost *post) {
+        // Save post
+        self.postToSend = post;
+    }];
+    [self.previewPlayer setItemByAsset:recordSession.assetRepresentingSegments];
+    [self.previewPlayer play];
+    [self setPreviewMode];
 }
 
 // ------------------------------
@@ -453,8 +498,16 @@
 }
 
 // --------------------------------------------
-#pragma mark - UI
+#pragma mark - UI Mode
 // --------------------------------------------
+
+- (BOOL)isPreviewMode {
+    return !self.previewView.hidden;
+}
+
+- (BOOL)isRecordingMode {
+    return self.recorder.isRecording;
+}
 
 - (void)setPlayingMode:(BOOL)flag
 {
@@ -462,15 +515,17 @@
     self.metadataView.hidden = !flag;
     [self.playerLayer setHidden:!flag];
     if (flag) {
+        [self endPreviewMode];
         self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     } else {
         [self.avQueueVideoPlayer pause];
     }
 }
 
-- (void)setPreviewMode
+- (void)setCameraMode
 {
     [self setPlayingMode:NO];
+    [self endPreviewMode];
     
     self.longPressGestureRecogniser.minimumPressDuration = 0;
     self.recordingProgressContainer.hidden = YES;
@@ -482,6 +537,7 @@
 
 - (void)setRecordingMode {
     [self setPlayingMode:NO];
+    [self endPreviewMode];
     
     self.replayButton.hidden = YES;
     self.recordTutoLabel.hidden = YES;
@@ -498,8 +554,17 @@
                      } completion:nil];
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return YES;
+- (void)endPreviewMode {
+    self.previewView.hidden = YES;
+    [self.previewPlayer pause];
+}
+
+- (void)setPreviewMode {
+    [self setPlayingMode:NO];
+    self.cancelConfirmView.hidden = YES;
+    self.cancelAreaView.hidden = NO;
+    self.releaseToSendTuto.hidden = NO;
+    self.previewView.hidden = NO;
 }
 
 - (void)setReplayButtonUI {
@@ -528,7 +593,7 @@
         if (kkk == 0) {
             _videoIndex = 0;
             self.replayButton.backgroundColor = [ColorUtils transparentBlack];
-            buttonTitle = NSLocalizedString(@"replay_label", nil);
+            buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil),self.videoPostArray.count];
         } else {
             _videoIndex = self.videoPostArray.count - kkk;
             self.replayButton.backgroundColor = [ColorUtils transparentOrange];
@@ -537,6 +602,15 @@
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
         self.replayButton.hidden = NO;
     }
+}
+
+
+// --------------------------------------------
+#pragma mark - Details
+// --------------------------------------------
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
