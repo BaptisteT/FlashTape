@@ -32,11 +32,12 @@
 @property (strong, nonatomic) NSDictionary *contactDictionnary;
 @property (strong, nonatomic) AVQueuePlayer *avQueueVideoPlayer;
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;
-@property (weak, nonatomic) IBOutlet UILabel *playingCountLabel;
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIView *metadataView;
+@property (strong, nonatomic) UIView *playingProgressView;
+@property (strong, nonatomic) UITapGestureRecognizer *playingProgressViewTapGesture;
 
 // Recording
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
@@ -86,7 +87,7 @@
     self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
     self.longPressGestureRecogniser.delegate = self;
     [self.view addGestureRecognizer:self.longPressGestureRecogniser];
-    self.tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    self.tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGestureOnPlayer:)];
     [self.view addGestureRecognizer:self.tapGestureRecogniser];
     
     // Create the recorder
@@ -120,12 +121,18 @@
     self.playerLayer.backgroundColor = [UIColor blackColor].CGColor;
     self.playerLayer.hidden = YES;
     
-    // Labels
-    [self.view bringSubviewToFront:self.playingCountLabel];
+    // Metadata
     [self.view bringSubviewToFront:self.metadataView];
-    self.playingCountLabel.text = @"";
+    self.playingProgressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
+    self.playingProgressView.backgroundColor = [ColorUtils transparentOrange];
+    self.playingProgressView.userInteractionEnabled = NO;
+    [self.metadataView insertSubview:self.playingProgressView atIndex:0];
+    self.playingProgressViewTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGestureOnMetadataView:)];
+    [self.metadataView addGestureRecognizer:self.playingProgressViewTapGesture];
     self.nameLabel.text = @"";
     self.timeLabel.text = @"";
+    
+     // Labels
     self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
     self.replayButton.hidden = YES;
     
@@ -253,7 +260,7 @@
     }
 }
 
-- (void)handleTapGesture:(UITapGestureRecognizer *)gesture
+- (void)handleTapGestureOnPlayer:(UITapGestureRecognizer *)gesture
 {
     BOOL playingMode = !self.playerLayer.hidden;
     if (playingMode) {
@@ -261,6 +268,17 @@
         [self.avQueueVideoPlayer advanceToNextItem];
         [self playerItemDidReachEnd:nil];
     }
+}
+
+- (void)handleTapGestureOnMetadataView:(UITapGestureRecognizer *)gesture
+{
+    if (self.videoPostArray.count < 3) {
+        return;
+    }
+    float widthPosition = (float)[gesture locationInView:self.metadataView].x / self.metadataView.frame.size.width;
+    _videoIndex = (NSInteger)(self.videoPostArray.count * widthPosition);
+    [self.avQueueVideoPlayer removeAllItems];
+    [self playVideos];
 }
 
 - (IBAction)replayButtonClicked:(id)sender {
@@ -358,7 +376,17 @@
 
 - (void)setPlayingMetaData {
     AVPlayerItem *itemPlayed = ((AVPlayerItem *)self.avQueueVideoPlayer.items.firstObject);
-    self.playingCountLabel.text = [NSString stringWithFormat:@"%lu / %lu",(long)itemPlayed.indexInVideoArray,(unsigned long)self.videoPostArray.count];
+    float progressRatio = (float)itemPlayed.indexInVideoArray / self.videoPostArray.count;
+    float duration;
+    if (ABS(progressRatio - self.playingProgressView.frame.size.width / self.metadataView.frame.size.width) > 2. / self.videoPostArray.count) {
+        duration = 0;
+    } else {
+        duration = CMTimeGetSeconds([[itemPlayed asset] duration]);
+    }
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         [self.playingProgressView setFrame:CGRectMake(0, 0, progressRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+                     }];
     
     self.nameLabel.text = self.contactDictionnary[itemPlayed.videoPost.user.username];
     self.timeLabel.text = [itemPlayed.videoPost.createdAt timeAgoSinceNow];
@@ -528,7 +556,6 @@
 
 - (void)setPlayingMode:(BOOL)flag
 {
-    self.playingCountLabel.hidden = !flag;
     self.metadataView.hidden = !flag;
     [self.playerLayer setHidden:!flag];
     if (flag) {

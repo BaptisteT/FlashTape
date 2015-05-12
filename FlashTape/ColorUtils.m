@@ -30,4 +30,8 @@
     return [UIColor colorWithRed:1 green:0. blue:0 alpha:0.5];
 }
 
++ (UIColor *)transparentGreen {
+    return [UIColor colorWithRed:0 green:1. blue:0 alpha:0.5];
+}
+
 @end

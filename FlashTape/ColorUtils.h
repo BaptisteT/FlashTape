@@ -21,4 +21,6 @@
 
 + (UIColor *)orange;
 
++ (UIColor *)transparentGreen;
+
 @end
