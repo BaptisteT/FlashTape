@@ -36,14 +36,19 @@
 
 - (void)downloadVideoFile
 {
-    [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (data) {
-            self.localUrl = [self videoLocalURL];
-            [data writeToURL:self.localUrl options:NSAtomicWrite error:nil];
-        } else {
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
-        }
-    }];
+    NSError *err;
+    if ([[self videoLocalURL] checkResourceIsReachableAndReturnError:&err]) {
+        self.localUrl = [self videoLocalURL];
+    } else {
+        [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (data) {
+                self.localUrl = [self videoLocalURL];
+                [data writeToURL:self.localUrl options:NSAtomicWrite error:nil];
+            } else {
+                NSLog(@"Error: %@ %@", error, [error userInfo]);
+            }
+        }];
+    }
 }
 
 - (NSURL *)videoLocalURL {
@@ -57,6 +62,7 @@
         [post downloadVideoFile];
     }
 }
+
 
 
 @end

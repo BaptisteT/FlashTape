@@ -277,7 +277,7 @@
                                     <constraint firstAttribute="trailing" secondItem="Lji-Q6-xPe" secondAttribute="trailing" constant="10" id="yOi-89-DCQ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" restorationIdentifier="previewView" translatesAutoresizingMaskIntoConstraints="NO" id="PDc-f0-A0f">
+                            <view contentMode="scaleToFill" restorationIdentifier="previewView" translatesAutoresizingMaskIntoConstraints="NO" id="PDc-f0-A0f" customClass="SCVideoPlayerView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="release_to_send" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFv-lg-Y52">

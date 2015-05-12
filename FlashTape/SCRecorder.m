@@ -53,7 +53,7 @@
     self = [super init];
     
     if (self) {
-        _sessionQueue = dispatch_queue_create("me.corsin.SCRecorder.RecordSession", nil);
+        _sessionQueue = dispatch_queue_create("me.truchot.SCRecorder.RecordSession", nil);
         
         dispatch_queue_set_specific(_sessionQueue, kSCRecorderRecordSessionQueueKey, "true", nil);
         dispatch_set_target_queue(_sessionQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));

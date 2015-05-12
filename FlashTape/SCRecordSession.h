@@ -224,4 +224,6 @@ extern const NSString *SCRecordSessionCacheDirectory;
  */
 - (BOOL)endSegmentWithInfo:(NSDictionary *)info completionHandler:(void(^)(SCRecordSessionSegment *segment, NSError *error))completionHandler;
 
+- (BOOL)recordSegmentReady;
+
 @end

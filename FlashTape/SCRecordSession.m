@@ -103,7 +103,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
         _date = [NSDate date];
         _recordSegmentsDirectory = SCRecordSessionTemporaryDirectory;
         _identifier = [NSString stringWithFormat:@"%ld", (long)[_date timeIntervalSince1970]];
-        _audioQueue = dispatch_queue_create("me.corsin.SCRecorder.Audio", nil);
+        _audioQueue = dispatch_queue_create("me.truchot.SCRecorder.Audio", nil);
     }
     
     return self;
@@ -138,7 +138,6 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
 
 - (void)dispatchSyncOnSessionQueue:(void(^)())block {
     SCRecorder *recorder = self.recorder;
-    
     if (recorder == nil || [SCRecorder isSessionQueue]) {
         block();
     } else {

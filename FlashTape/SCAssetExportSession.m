@@ -41,7 +41,7 @@
     self = [super init];
     
     if (self) {
-        _dispatchQueue = dispatch_queue_create("me.corsin.EvAssetExportSession", nil);
+        _dispatchQueue = dispatch_queue_create("me.truchot.EvAssetExportSession", nil);
         _dispatchGroup = dispatch_group_create();
         _useGPUForRenderingFilters = YES;
         _audioConfiguration = [SCAudioConfiguration new];

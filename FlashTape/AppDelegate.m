@@ -14,6 +14,7 @@
 #import "WelcomeViewController.h"
 
 #import "ColorUtils.h"
+#import "GeneralUtils.h"
 #import "TrackingUtils.h"
 
 
@@ -53,4 +54,9 @@
     [TrackingUtils trackOpenApp];
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application {
+    if ([GeneralUtils shouldDeleteStoredData]) {
+        [GeneralUtils deleteStoredData];
+    }
+}
 @end

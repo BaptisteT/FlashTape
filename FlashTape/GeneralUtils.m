@@ -10,6 +10,7 @@
 #import "GeneralUtils.h"
 
 #define LAST_VIDEO_SEEN_DATE @"Last Video Seen Date"
+#define LAST_CLEANING_DATE @"Last Cleaning Date"
 
 @implementation GeneralUtils
 
@@ -49,6 +50,26 @@
                                delegate:nil
                       cancelButtonTitle:@"OK"
                       otherButtonTitles:nil] show];
+}
+
++ (void)deleteStoredData
+{
+    NSString *tmpDirectory = NSTemporaryDirectory();
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSArray *cacheFiles = [fileManager contentsOfDirectoryAtPath:tmpDirectory error:&error];
+    for (NSString *file in cacheFiles)
+    {
+        error = nil;
+        [fileManager removeItemAtPath:[tmpDirectory stringByAppendingPathComponent:file] error:&error];
+    }
+}
+
++ (BOOL)shouldDeleteStoredData {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSDate *previousDate = [prefs objectForKey:LAST_CLEANING_DATE] ? [prefs objectForKey:LAST_CLEANING_DATE]: [NSDate date];
+    [prefs setObject:[NSDate date] forKey:LAST_CLEANING_DATE];
+    return [[previousDate dateByAddingTimeInterval:24*3600] compare:[NSDate date]]== NSOrderedAscending;
 }
 
 @end
