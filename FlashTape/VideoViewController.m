@@ -106,6 +106,16 @@
         NSLog(@"Something wrong there: %@", self.recorder.error);
     }
     
+    // Filter
+//    SCFilter *blackAndWhite = [SCFilter filterWithCIFilterName:@"CIColorControls"];
+//    [blackAndWhite setParameterValue:@0 forKey:@"inputSaturation"];
+//    SCFilter *exposure = [SCFilter filterWithCIFilterName:@"CIExposureAdjust"];
+//    [exposure setParameterValue:@0.7 forKey:@"inputEV"];
+//    SCFilter *filter = [SCFilter emptyFilter];
+//    [filter addSubFilter:blackAndWhite];
+//    [filter addSubFilter:exposure];
+//    _recorder.videoConfiguration.filter = filter;
+    
     // Recording progress bar
     self.recordingProgressBar = [[UIView alloc] init];
     self.recordingProgressBar.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.2];
@@ -120,6 +130,7 @@
     [self.view.layer addSublayer:self.playerLayer];
     self.playerLayer.backgroundColor = [UIColor blackColor].CGColor;
     self.playerLayer.hidden = YES;
+    self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
     // Metadata
     [self.view bringSubviewToFront:self.metadataView];
@@ -141,6 +152,7 @@
     self.cancelTutoLabel.text = NSLocalizedString(@"move_your_finger_to_cancel", nil);
     self.cancelConfirmTutoLabel.text = NSLocalizedString(@"release_to_cancel", nil);
     self.previewView.player.loopEnabled = YES;
+    self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
     // Get contacts and retrieve videos
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
@@ -230,10 +242,11 @@
 // --------------------------------------------
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
 {
-    if (_isExporting)
-        return;
     if (gesture.state == UIGestureRecognizerStateBegan) {
         _longPressRunning = YES;
+        if (_isExporting) {
+            return;
+        }
         [self startRecording];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         if ([self isPreviewMode]) {
@@ -244,17 +257,26 @@
         }
     } else {
         _longPressRunning = NO;
-        if ([self isPreviewMode] && self.postToSend) {
+        if ([self isPreviewMode]) {
             // cancel or send, & stop
             if (!CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView])) {
-                [self sendVideoPost:self.postToSend];
+                if (self.postToSend) {
+                    [self sendVideoPost:self.postToSend];
+                }
+            } else {
+                if (_isExporting) {
+                    // boolean not to send
+                    // avoid bug iphone 4
+                }
             }
             self.postToSend = nil;
         } else {
-            [self stopRecordingAndExecuteSuccess:^(VideoPost * post) {
-                [self sendVideoPost:post];
-                _isExporting = NO;
-            }];
+            if (!_isExporting) {
+                [self stopRecordingAndExecuteSuccess:^(VideoPost * post) {
+                    [self sendVideoPost:post];
+                    _isExporting = NO;
+                }];
+            }
         }
         [self setCameraMode];
     }
@@ -265,8 +287,10 @@
     BOOL playingMode = !self.playerLayer.hidden;
     if (playingMode) {
         // avance to next video
+        AVPlayerItem *itemPlayed = [self.avQueueVideoPlayer currentItem];
         [self.avQueueVideoPlayer advanceToNextItem];
         [self playerItemDidReachEnd:nil];
+        [GeneralUtils saveLastVideoSeenDate:itemPlayed.videoPost.createdAt];
     }
 }
 
@@ -275,6 +299,9 @@
     if (self.videoPostArray.count < 3) {
         return;
     }
+    AVPlayerItem *itemPlayed = [self.avQueueVideoPlayer currentItem];
+    [GeneralUtils saveLastVideoSeenDate:itemPlayed.videoPost.createdAt];
+    
     float widthPosition = (float)[gesture locationInView:self.metadataView].x / self.metadataView.frame.size.width;
     _videoIndex = (NSInteger)(self.videoPostArray.count * widthPosition);
     [self.avQueueVideoPlayer removeAllItems];
@@ -375,15 +402,11 @@
 }
 
 - (void)setPlayingMetaData {
-    AVPlayerItem *itemPlayed = ((AVPlayerItem *)self.avQueueVideoPlayer.items.firstObject);
+    AVPlayerItem *itemPlayed = ((AVPlayerItem *)[self.avQueueVideoPlayer currentItem]);
+    float startRatio = (float)(itemPlayed.indexInVideoArray - 1 )/ self.videoPostArray.count;
     float progressRatio = (float)itemPlayed.indexInVideoArray / self.videoPostArray.count;
-    float duration;
-    if (ABS(progressRatio - self.playingProgressView.frame.size.width / self.metadataView.frame.size.width) > 2. / self.videoPostArray.count) {
-        duration = 0;
-    } else {
-        duration = CMTimeGetSeconds([[itemPlayed asset] duration]);
-    }
-    [UIView animateWithDuration:duration
+    [self.playingProgressView setFrame:CGRectMake(0, 0, startRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+    [UIView animateWithDuration:CMTimeGetSeconds([[itemPlayed asset] duration])
                      animations:^{
                          [self.playingProgressView setFrame:CGRectMake(0, 0, progressRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
                      }];
@@ -436,7 +459,6 @@
                 }
             } else {
                 NSLog(@"Export failed: %@", assetExportSession.error);
-
             }
         }];
     }

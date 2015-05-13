@@ -343,7 +343,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="PDc-f0-A0f" secondAttribute="trailing" id="2qd-KK-9co"/>
-                            <constraint firstItem="PDc-f0-A0f" firstAttribute="top" secondItem="dVb-fN-94v" secondAttribute="bottom" id="Bld-TI-M8c"/>
+                            <constraint firstItem="PDc-f0-A0f" firstAttribute="top" secondItem="dVb-fN-94v" secondAttribute="top" id="Bld-TI-M8c"/>
                             <constraint firstItem="8ee-DQ-Tyu" firstAttribute="top" secondItem="Z0k-TD-OKj" secondAttribute="top" id="J2m-63-a1B"/>
                             <constraint firstItem="kip-9Z-cQQ" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="bottom" id="QdI-YH-nPp"/>
                             <constraint firstAttribute="trailing" secondItem="8ee-DQ-Tyu" secondAttribute="trailing" id="Y54-q5-uAQ"/>
@@ -379,6 +379,30 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6HK-3Y-Fgl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2702" y="64"/>
+        </scene>
+        <!--Friends View Controller-->
+        <scene sceneID="BOR-DC-kuX">
+            <objects>
+                <viewController id="gUo-G0-jbW" customClass="FriendsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xSU-N2-FLc"/>
+                        <viewControllerLayoutGuide type="bottom" id="igD-iK-8Qa"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RIw-BT-qC9">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="LqB-To-ITe">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LZr-cM-H0D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3288" y="-379"/>
         </scene>
         <!--Request Phone View Controller-->
         <scene sceneID="8gp-9B-RHl">

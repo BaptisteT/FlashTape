@@ -40,6 +40,7 @@
 		3C2C4A751AFE231F00E0E4BF /* NSDate+DateTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A6E1AFE231F00E0E4BF /* NSDate+DateTools.m */; };
 		3C2C4A771AFFE2D600E0E4BF /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A761AFFE2D600E0E4BF /* libstdc++.6.0.9.dylib */; };
 		3C2C4A7B1AFFECB600E0E4BF /* TrackingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A7A1AFFECB600E0E4BF /* TrackingUtils.m */; };
+		3C2C4A821B036F7500E0E4BF /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A811B036F7500E0E4BF /* FriendsViewController.m */; };
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
@@ -158,6 +159,8 @@
 		3C2C4A761AFFE2D600E0E4BF /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		3C2C4A791AFFECB600E0E4BF /* TrackingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackingUtils.h; sourceTree = "<group>"; };
 		3C2C4A7A1AFFECB600E0E4BF /* TrackingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackingUtils.m; sourceTree = "<group>"; };
+		3C2C4A801B036F7500E0E4BF /* FriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsViewController.h; sourceTree = "<group>"; };
+		3C2C4A811B036F7500E0E4BF /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsViewController.m; sourceTree = "<group>"; };
 		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -420,6 +423,8 @@
 				3C2C4A201AFB564D00E0E4BF /* CodeConfirmationViewController.m */,
 				3C5F97FD1AEBB4620098F70F /* VideoViewController.h */,
 				3C5F97FE1AEBB4620098F70F /* VideoViewController.m */,
+				3C2C4A801B036F7500E0E4BF /* FriendsViewController.h */,
+				3C2C4A811B036F7500E0E4BF /* FriendsViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -591,7 +596,7 @@
 				TargetAttributes = {
 					3C5F97C91AEBB1F30098F70F = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 86N86JY2JG;
+						DevelopmentTeam = U4TN2H6FNK;
 					};
 				};
 			};
@@ -707,6 +712,7 @@
 				3C2C4A4C1AFB5E1800E0E4BF /* CountryCodeTableViewController.m in Sources */,
 				3C5F98111AEC1CFF0098F70F /* ConstantUtils.m in Sources */,
 				3C2C4A2B1AFB592C00E0E4BF /* RMPhoneFormat.m in Sources */,
+				3C2C4A821B036F7500E0E4BF /* FriendsViewController.m in Sources */,
 				3C5F98811AECE05E0098F70F /* SCSwipeableFilterView.m in Sources */,
 				3C2C4A171AFA635800E0E4BF /* WelcomeViewController.m in Sources */,
 				3C5F98771AECE05E0098F70F /* SCMediaTypeConfiguration.m in Sources */,
@@ -745,7 +751,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -764,7 +771,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -788,7 +795,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -801,7 +809,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -813,7 +821,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -822,7 +831,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "680fdfd0-b43a-4d98-aa6b-1c5d6d2bf4e4";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -831,7 +840,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -840,7 +850,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "680fdfd0-b43a-4d98-aa6b-1c5d6d2bf4e4";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
