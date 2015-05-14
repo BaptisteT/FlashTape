@@ -12,16 +12,28 @@
 
 @implementation User
 
+@dynamic score;
+
++ (void)load {
+    [self registerSubclass];
+}
+
 + (User *)createUserWithNumber:(NSString *)phoneNumber
 {
     User *user = (User *)[PFUser user];
     user.username = phoneNumber;
     user.password = @"";
+    user.score = 0;
     return user;
 }
 
 + (User *)currentUser {
     return (User *)[PFUser currentUser];
+}
+
+
+- (NSInteger)score {
+    return [[self objectForKey:@"score"] integerValue];
 }
 
 @end

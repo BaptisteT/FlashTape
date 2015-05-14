@@ -44,7 +44,7 @@
           success:(void(^)())successBlock
           failure:(void(^)())failureBlock
 {
-    PFQuery *query = [PFUser query];
+    PFQuery *query = [User query];
     [query whereKey:@"username" equalTo:phoneNumber];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -62,7 +62,7 @@
                 }];
             } else {
                 // sign in
-                [PFUser logInWithUsernameInBackground:phoneNumber
+                [User logInWithUsernameInBackground:phoneNumber
                                              password:@""
                                                 block:^(PFUser *user, NSError *error) {
                                                     if (user) {
@@ -81,6 +81,26 @@
     }];
 }
 
++ (void)getListOfFriends:(NSArray *)contactsPhoneNumbers
+                 success:(void(^)(NSArray *friends))successBlock
+                 failure:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *query = [User query];
+    [query whereKey:@"username" containedIn:contactsPhoneNumbers];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (successBlock) {
+                successBlock(objects);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
+}
+
 // --------------------------------------------
 #pragma mark - Video
 // --------------------------------------------
@@ -94,16 +114,25 @@
         failureBlock(nil);
         return;
     }
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    PFFile *file = [PFFile fileWithName:@"video.mp4" data:data];
+    // Upload data
+    if (!post.videoData)
+        post.videoData = [NSData dataWithContentsOfURL:url];
+    PFFile *file = [PFFile fileWithName:@"video.mp4" data:post.videoData];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             post.videoFile = file;
             [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
+                    // save the data to a permanent url and release it
                     post.localUrl = [post videoLocalURL];
-                    [data writeToURL:post.localUrl options:NSAtomicWrite error:nil];
+                    [post.videoData writeToURL:post.localUrl options:NSAtomicWrite error:nil];
+                    post.videoData = nil;
                     
+                    // Increment user score
+                    [post.user incrementKey:@"score"];
+                    [post.user saveInBackground];
+                    
+                    // Success block
                     if (successBlock)
                         successBlock();
                 } else {
@@ -126,7 +155,7 @@
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *userQuery = [PFUser query];
+    PFQuery *userQuery = [User query];
     [userQuery whereKey:@"username" containedIn:contactsPhoneNumbers];
     
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];

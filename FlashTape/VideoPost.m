@@ -13,6 +13,7 @@
 
 @implementation VideoPost
 
+@synthesize videoData;
 @synthesize localUrl;
 @dynamic videoFile;
 @dynamic user;

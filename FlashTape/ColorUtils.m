@@ -15,7 +15,7 @@
 }
 
 + (UIColor *)transparentBlack {
-    return [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    return [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
 }
 
 + (UIColor *)transparentOrange {

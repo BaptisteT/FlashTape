@@ -11,8 +11,11 @@
 
 @interface User : PFUser <PFSubclassing>
 
+@property (nonatomic) NSInteger score;
+
 + (User *)createUserWithNumber:(NSString *)phoneNumber;
 
 + (User *)currentUser;
+
 
 @end

@@ -15,6 +15,7 @@
 @property (retain) User *user;
 @property (retain) PFFile *videoFile;
 @property (retain) NSURL *localUrl;
+@property (retain) NSData *videoData; // use for failure (url is reused for other videos..)
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
 

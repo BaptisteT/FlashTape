@@ -14,6 +14,7 @@
 #import "ApiManager.h"
 #import "VideoPost.h"
 
+#import "FriendsViewController.h"
 #import "VideoViewController.h"
 
 #import "AVPlayerItem+VideoDate.h"
@@ -48,6 +49,7 @@
 @property (strong, nonatomic) UIView *recordingProgressBar;
 @property (weak, nonatomic) IBOutlet UILabel *recordTutoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
+@property (weak, nonatomic) IBOutlet UIButton *friendListButton;
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
@@ -165,6 +167,7 @@
             if (granted) {
                 NSDictionary *newContactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
                 if (self.contactDictionnary.count != newContactDictionnary.count) {
+                    self.contactDictionnary = newContactDictionnary;
                     [self retrieveVideo];
                 }
                 self.contactDictionnary = newContactDictionnary;
@@ -192,6 +195,16 @@
     [self setCameraMode];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // Disable iOS 7 back gesture
+    [self.navigationController.navigationBar setHidden:YES];
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
@@ -209,15 +222,15 @@
     [self retrieveVideo];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    // Disable iOS 7 back gesture
-    [self.navigationController.navigationBar setHidden:YES];
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSString * segueName = segue.identifier;
+    if ([segueName isEqualToString: @"Friends From Video"]) {
+        [self hideUIElementOnCamera:YES];
+        ((FriendsViewController *) [segue destinationViewController]).delegate = self;
+        ((FriendsViewController *) [segue destinationViewController]).contactDictionnary = self.contactDictionnary;
+    }
 }
+
 
 // --------------------------------------------
 #pragma mark - Feed
@@ -242,12 +255,12 @@
 // --------------------------------------------
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
 {
+    static BOOL isExporting;
     if (gesture.state == UIGestureRecognizerStateBegan) {
         _longPressRunning = YES;
-        if (_isExporting) {
-            return;
-        }
-        [self startRecording];
+        isExporting = _isExporting;
+        if (!isExporting)
+            [self startRecording];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         if ([self isPreviewMode]) {
             BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
@@ -265,18 +278,18 @@
                 }
             } else {
                 if (_isExporting) {
+                    // todo bt
                     // boolean not to send
                     // avoid bug iphone 4
                 }
             }
             self.postToSend = nil;
-        } else {
-            if (!_isExporting) {
-                [self stopRecordingAndExecuteSuccess:^(VideoPost * post) {
-                    [self sendVideoPost:post];
-                    _isExporting = NO;
-                }];
-            }
+        } else if (!isExporting) {
+            [self stopRecordingAndExecuteSuccess:^(VideoPost * post) {
+                [self sendVideoPost:post];
+                _isExporting = NO;
+                NSLog(@"a");
+            }];
         }
         [self setCameraMode];
     }
@@ -319,6 +332,10 @@
 
 - (IBAction)flipCameraButtonClicked:(id)sender {
     self.recorder.device = self.recorder.device == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+}
+
+- (IBAction)friendsButtonClicked:(id)sender {
+    [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
 }
 
 // --------------------------------------------
@@ -419,6 +436,7 @@
 #pragma mark - Recording
 // --------------------------------------------
 - (void)startRecording {
+    NSLog(@"start recording");
     [self.recorder.session removeAllSegments];
     [self setRecordingMode];
     
@@ -595,9 +613,7 @@
     
     self.longPressGestureRecogniser.minimumPressDuration = 0;
     self.recordingProgressContainer.hidden = YES;
-    self.replayButton.hidden = NO;
-    self.recordTutoLabel.hidden = NO;
-    self.cameraSwitchButton.hidden = NO;
+    [self hideUIElementOnCamera:NO];
     [self setReplayButtonUI];
 }
 
@@ -605,9 +621,7 @@
     [self setPlayingMode:NO];
     [self endPreviewMode];
     
-    self.replayButton.hidden = YES;
-    self.recordTutoLabel.hidden = YES;
-    self.cameraSwitchButton.hidden = YES;
+    [self hideUIElementOnCamera:YES];
     // Start UI + progress bar anim
     self.recordingProgressContainer.hidden = NO;
     [self.recordingProgressBar.layer removeAllAnimations];
@@ -670,6 +684,12 @@
     }
 }
 
+- (void)hideUIElementOnCamera:(BOOL)flag {
+    self.replayButton.hidden = flag;
+    self.recordTutoLabel.hidden = flag;
+    self.cameraSwitchButton.hidden = flag;
+    self.friendListButton.hidden = flag;
+}
 
 // --------------------------------------------
 #pragma mark - Details
@@ -682,7 +702,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     // Disallow recognition of tap gestures in the segmented control.
-    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton)) {
+    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton) {
         return NO;
     }
     return YES;

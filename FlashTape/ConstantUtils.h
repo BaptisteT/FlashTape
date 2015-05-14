@@ -13,6 +13,9 @@
 
 @end
 
+// System
+static NSString * const kFlashTapeAppLinkUrl = @"https://www.mydomain.com/myapplink";
+
 // Feed
 static const NSInteger kFeedHistoryInHours = 24;
 
