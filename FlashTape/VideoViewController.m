@@ -348,6 +348,12 @@
         VideoPost *post =  self.videoPostArray[_videoIndex];
         if (post.localUrl) {
             [self insertVideoInThePlayerQueue:post];
+        } else {
+            // todo BT
+            // handle this case
+            [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),post.downloadProgress] forState:UIControlStateNormal];
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setReplayButtonUI) userInfo:nil repeats:NO];
+            return;
         }
         _videoIndex ++;
     }

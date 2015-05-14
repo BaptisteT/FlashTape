@@ -61,7 +61,9 @@
     for (NSString *file in cacheFiles)
     {
         error = nil;
-        [fileManager removeItemAtPath:[tmpDirectory stringByAppendingPathComponent:file] error:&error];
+        if (![fileManager removeItemAtPath:[tmpDirectory stringByAppendingPathComponent:file] error:&error]) {
+            NSLog(@"Error deleting: %@",error);
+        }
     }
 }
 

@@ -125,7 +125,9 @@
                 if (succeeded) {
                     // save the data to a permanent url and release it
                     post.localUrl = [post videoLocalURL];
-                    [post.videoData writeToURL:post.localUrl options:NSAtomicWrite error:nil];
+                    if (![post.videoData writeToURL:post.localUrl options:NSAtomicWrite error:nil]) {
+                        NSLog(@"Failure saving created post");
+                    }
                     post.videoData = nil;
                     
                     // Increment user score

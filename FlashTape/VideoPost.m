@@ -13,6 +13,7 @@
 
 @implementation VideoPost
 
+@synthesize downloadProgress;
 @synthesize videoData;
 @synthesize localUrl;
 @dynamic videoFile;
@@ -42,12 +43,17 @@
         self.localUrl = [self videoLocalURL];
     } else {
         [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            NSError * savingError = nil;
             if (data) {
                 self.localUrl = [self videoLocalURL];
-                [data writeToURL:self.localUrl options:NSAtomicWrite error:nil];
+                if (![data writeToURL:self.localUrl options:NSAtomicWrite error:&savingError]) {
+                    NSLog(@"Could not remove old files. Error:%@",savingError);
+                }
             } else {
                 NSLog(@"Error: %@ %@", error, [error userInfo]);
             }
+        } progressBlock:^(int percentDone) {
+            self.downloadProgress = percentDone;
         }];
     }
 }
