@@ -48,6 +48,7 @@
 		3C2C4B7B1B04B08700E0E4BF /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A8A1B04B08600E0E4BF /* FBSDKLoginKit.framework */; };
 		3C2C4B7C1B04B08700E0E4BF /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A8B1B04B08600E0E4BF /* FBSDKMessengerShareKit.framework */; };
 		3C2C4B7D1B04B08700E0E4BF /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A8C1B04B08600E0E4BF /* FBSDKShareKit.framework */; };
+		3C2C4C1D1B04DB2000E0E4BF /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4C181B04DB2000E0E4BF /* green.png */; };
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
@@ -175,6 +176,7 @@
 		3C2C4A8A1B04B08600E0E4BF /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		3C2C4A8B1B04B08600E0E4BF /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
 		3C2C4A8C1B04B08600E0E4BF /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		3C2C4C181B04DB2000E0E4BF /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green.png; sourceTree = "<group>"; };
 		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -440,6 +442,7 @@
 				3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */,
 				3C2C4A4D1AFB5EB000E0E4BF /* PhoneCountries.txt */,
 				3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */,
+				3C2C4C181B04DB2000E0E4BF /* green.png */,
 			);
 			name = Ressources;
 			sourceTree = "<group>";
@@ -663,6 +666,7 @@
 				3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */,
 				3C2C4A521AFB6F8E00E0E4BF /* PhoneNumberMetaData.json in Resources */,
 				3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */,
+				3C2C4C1D1B04DB2000E0E4BF /* green.png in Resources */,
 				3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */,
 				3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */,
 				3C2C4B771B04B08700E0E4BF /* FacebookSDK.strings in Resources */,

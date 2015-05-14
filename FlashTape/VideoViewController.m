@@ -109,14 +109,10 @@
     }
     
     // Filter
-//    SCFilter *blackAndWhite = [SCFilter filterWithCIFilterName:@"CIColorControls"];
-//    [blackAndWhite setParameterValue:@0 forKey:@"inputSaturation"];
-//    SCFilter *exposure = [SCFilter filterWithCIFilterName:@"CIExposureAdjust"];
-//    [exposure setParameterValue:@0.7 forKey:@"inputEV"];
-//    SCFilter *filter = [SCFilter emptyFilter];
-//    [filter addSubFilter:blackAndWhite];
-//    [filter addSubFilter:exposure];
-//    _recorder.videoConfiguration.filter = filter;
+    SCFilter *testFilter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
+    [testFilter setParameterValue:@64 forKey:@"inputCubeDimension"];
+    [testFilter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
+    self.recorder.videoConfiguration.filter = testFilter;
     
     // Recording progress bar
     self.recordingProgressBar = [[UIView alloc] init];
@@ -288,7 +284,6 @@
             [self stopRecordingAndExecuteSuccess:^(VideoPost * post) {
                 [self sendVideoPost:post];
                 _isExporting = NO;
-                NSLog(@"a");
             }];
         }
         [self setCameraMode];
@@ -436,7 +431,6 @@
 #pragma mark - Recording
 // --------------------------------------------
 - (void)startRecording {
-    NSLog(@"start recording");
     [self.recorder.session removeAllSegments];
     [self setRecordingMode];
     
@@ -466,9 +460,25 @@
         SCAssetExportSession *assetExportSession = [[SCAssetExportSession alloc] initWithAsset:asset];
         assetExportSession.outputUrl = recordSession.outputUrl;
         assetExportSession.outputFileType = AVFileTypeMPEG4;
-        assetExportSession.videoConfiguration.bitrate = 2000000;
         assetExportSession.videoConfiguration.preset = SCPresetMediumQuality;
         assetExportSession.audioConfiguration.preset = SCPresetMediumQuality;
+        
+        // Audio fade in
+        CGFloat fadeLength = 0.5;
+        CMTime fadeDuration = CMTimeMakeWithSeconds(fadeLength, 100);
+        CMTimeRange fadeInTimeRange = CMTimeRangeMake(kCMTimeZero, fadeDuration);
+        CMTime startFadeOutTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(asset.duration) - fadeLength, 100);
+        CMTimeRange fadeOutTimeRange = CMTimeRangeMake(startFadeOutTime, fadeDuration);
+        AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeAudio].firstObject;
+        AVMutableAudioMixInputParameters *exportAudioMixInputParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:track];
+        exportAudioMixInputParameters.trackID = [track trackID];
+        [exportAudioMixInputParameters setVolumeRampFromStartVolume:0. toEndVolume:1.0 timeRange:fadeInTimeRange];
+        [exportAudioMixInputParameters setVolumeRampFromStartVolume:1.0 toEndVolume:0. timeRange:fadeOutTimeRange];
+        AVMutableAudioMix *exportAudioMix = [AVMutableAudioMix audioMix];
+        exportAudioMix.inputParameters = [NSArray arrayWithObject:exportAudioMixInputParameters];
+        assetExportSession.audioConfiguration.audioMix = exportAudioMix;
+        
+        // Export
         [assetExportSession exportAsynchronouslyWithCompletionHandler: ^{
             if (assetExportSession.error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
