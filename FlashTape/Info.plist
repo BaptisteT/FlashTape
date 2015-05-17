@@ -42,6 +42,12 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>NHaasGroteskDSPro-75Bd.ttf</string>
+		<string>NHaasGroteskDSPro-65Md.ttf</string>
+		<string>NHaasGroteskDSPro-55Rg.ttf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

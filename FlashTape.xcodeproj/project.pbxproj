@@ -103,6 +103,10 @@
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
 		3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */; };
 		3C5F98C81AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C71AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m */; };
+		A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */; };
+		A4CE875A1B0913DE00DC20DC /* NHaasGroteskDSPro-65Md.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87561B09133200DC20DC /* NHaasGroteskDSPro-65Md.ttf */; };
+		A4CE875B1B0913DE00DC20DC /* NHaasGroteskDSPro-75Bd.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87571B09133200DC20DC /* NHaasGroteskDSPro-75Bd.ttf */; };
+		A4CE87671B0920A900DC20DC /* UICustomLineLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CE87661B0920A900DC20DC /* UICustomLineLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -266,6 +270,11 @@
 		3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralUtils.m; sourceTree = "<group>"; };
 		3C5F98C61AEE8ECE0098F70F /* AVPlayerItem+VideoDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayerItem+VideoDate.h"; sourceTree = "<group>"; };
 		3C5F98C71AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVPlayerItem+VideoDate.m"; sourceTree = "<group>"; };
+		A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-55Rg.ttf"; sourceTree = "<group>"; };
+		A4CE87561B09133200DC20DC /* NHaasGroteskDSPro-65Md.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-65Md.ttf"; sourceTree = "<group>"; };
+		A4CE87571B09133200DC20DC /* NHaasGroteskDSPro-75Bd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-75Bd.ttf"; sourceTree = "<group>"; };
+		A4CE87651B0920A900DC20DC /* UICustomLineLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICustomLineLabel.h; sourceTree = "<group>"; };
+		A4CE87661B0920A900DC20DC /* UICustomLineLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICustomLineLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -436,6 +445,7 @@
 		3C5F97F61AEBB3140098F70F /* Ressources */ = {
 			isa = PBXGroup;
 			children = (
+				A4CE87581B09133800DC20DC /* Fonts */,
 				3C5F97DA1AEBB1F30098F70F /* Main.storyboard */,
 				3C5F97DD1AEBB1F30098F70F /* Images.xcassets */,
 				3C2C4A591AFBD04600E0E4BF /* PushNoAnimationSegue.h */,
@@ -508,6 +518,8 @@
 		3C5F98141AEC343B0098F70F /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				A4CE87651B0920A900DC20DC /* UICustomLineLabel.h */,
+				A4CE87661B0920A900DC20DC /* UICustomLineLabel.m */,
 				3C2C4A5F1AFE231500E0E4BF /* DateTools */,
 				3C2C4A461AFB5A7C00E0E4BF /* MBProgressHUD */,
 				3C2C4A2C1AFB5A2C00E0E4BF /* libPhoneNumber-iOS */,
@@ -602,6 +614,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A4CE87581B09133800DC20DC /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */,
+				A4CE87561B09133200DC20DC /* NHaasGroteskDSPro-65Md.ttf */,
+				A4CE87571B09133200DC20DC /* NHaasGroteskDSPro-75Bd.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -634,7 +656,7 @@
 				TargetAttributes = {
 					3C5F97C91AEBB1F30098F70F = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = U4TN2H6FNK;
+						DevelopmentTeam = 86N86JY2JG;
 					};
 				};
 			};
@@ -661,6 +683,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */,
+				A4CE875A1B0913DE00DC20DC /* NHaasGroteskDSPro-65Md.ttf in Resources */,
+				A4CE875B1B0913DE00DC20DC /* NHaasGroteskDSPro-75Bd.ttf in Resources */,
 				3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */,
 				3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */,
 				3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */,
@@ -733,6 +758,7 @@
 				3C5F98711AECE05E0098F70F /* SCAssetExportSession.m in Sources */,
 				3C5F98701AECE05E0098F70F /* CIImageRendererUtils.m in Sources */,
 				3C5F98781AECE05E0098F70F /* SCPhotoConfiguration.m in Sources */,
+				A4CE87671B0920A900DC20DC /* UICustomLineLabel.m in Sources */,
 				3C2C4A491AFB5A8600E0E4BF /* MBProgressHUD.m in Sources */,
 				3C2C4A411AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m in Sources */,
 				3C5F987A1AECE05E0098F70F /* SCRecorder.m in Sources */,
@@ -861,7 +887,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -872,7 +898,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f6f2f75b-c211-455b-a1a8-fa2a6d7ff5f8";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -881,8 +907,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -892,7 +918,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f6f2f75b-c211-455b-a1a8-fa2a6d7ff5f8";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
