@@ -39,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UIView *metadataView;
 @property (strong, nonatomic) UIView *playingProgressView;
 @property (strong, nonatomic) UITapGestureRecognizer *playingProgressViewTapGesture;
+@property (strong, nonatomic) AVAudioPlayer *whiteNoisePlayer;
 
 // Recording
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
@@ -92,6 +93,15 @@
     self.tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGestureOnPlayer:)];
     [self.view addGestureRecognizer:self.tapGestureRecogniser];
     
+    // Audio session
+    AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+    BOOL success; NSError* error;
+    success = [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
+                             error:&error];
+    if (!success)
+        NSLog(@"AVAudioSession error setting category:%@",error);
+    [audioSession setActive:YES error:nil];
+    
     // Create the recorder
     self.recorder = [SCRecorder recorder];
     _recorder.captureSessionPreset = [SCRecorderTools bestCaptureSessionPresetCompatibleWithAllDevices];
@@ -129,6 +139,13 @@
     self.playerLayer.backgroundColor = [UIColor blackColor].CGColor;
     self.playerLayer.hidden = YES;
     self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    
+    // White noise player
+    NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"whiteNoise" ofType:@".wav"];
+    NSURL *soundURL = [NSURL fileURLWithPath:soundPath];
+    self.whiteNoisePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundURL error:nil];
+    self.whiteNoisePlayer.volume = 0.002;
+    self.whiteNoisePlayer.numberOfLoops = -1;
     
     // Metadata
     [self.view bringSubviewToFront:self.metadataView];
@@ -186,6 +203,10 @@
                                              selector: @selector(willResignActive)
                                                  name: UIApplicationWillResignActiveNotification
                                                object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(routeChangeCallback:)
+                                                 name: AVAudioSessionRouteChangeNotification
+                                               object: nil];
     
     // Start with camera
     [self setCameraMode];
@@ -224,6 +245,12 @@
         [self hideUIElementOnCamera:YES];
         ((FriendsViewController *) [segue destinationViewController]).delegate = self;
         ((FriendsViewController *) [segue destinationViewController]).contactDictionnary = self.contactDictionnary;
+    }
+}
+
+-(void)routeChangeCallback:(NSNotification*)notification {
+    if ([self isPlayingMode]) {
+        [self.avQueueVideoPlayer play];
     }
 }
 
@@ -351,7 +378,7 @@
         } else {
             // todo BT
             // handle this case
-            [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),post.downloadProgress] forState:UIControlStateNormal];
+            [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)post.downloadProgress] forState:UIControlStateNormal];
             [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setReplayButtonUI) userInfo:nil repeats:NO];
             return;
         }
@@ -470,7 +497,7 @@
         assetExportSession.audioConfiguration.preset = SCPresetMediumQuality;
         
         // Audio fade in
-        CGFloat fadeLength = 0.5;
+        CGFloat fadeLength = 0.25;
         CMTime fadeDuration = CMTimeMakeWithSeconds(fadeLength, 100);
         CMTimeRange fadeInTimeRange = CMTimeRangeMake(kCMTimeZero, fadeDuration);
         CMTime startFadeOutTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(asset.duration) - fadeLength, 100);
@@ -602,6 +629,10 @@
 #pragma mark - UI Mode
 // --------------------------------------------
 
+- (BOOL)isPlayingMode {
+    return !self.playerLayer.hidden;
+}
+
 - (BOOL)isPreviewMode {
     return !self.previewView.hidden;
 }
@@ -613,11 +644,13 @@
 - (void)setPlayingMode:(BOOL)flag
 {
     self.metadataView.hidden = !flag;
-    [self.playerLayer setHidden:!flag];
+    self.playerLayer.hidden = !flag;
     if (flag) {
+        [self.whiteNoisePlayer play];
         [self endPreviewMode];
         self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     } else {
+        [self.whiteNoisePlayer pause];
         [self.avQueueVideoPlayer pause];
     }
 }

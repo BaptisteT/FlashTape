@@ -75,7 +75,7 @@
         cell.backgroundColor = [UIColor clearColor];
         User *friend = (User *)self.friends[indexPath.row -1];
         cell.textLabel.text = self.contactDictionnary[friend.username];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"Score : %lu",friend.score ? friend.score : 0];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"Score : %lu",(long)(friend.score ? friend.score : 0)];
     }
     return cell;
 }
