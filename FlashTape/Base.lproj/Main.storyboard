@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14A379a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+        </mutableArray>
+    </customFonts>
     <scenes>
         <!--Master-->
         <scene sceneID="cUi-kZ-frf">
@@ -175,50 +181,48 @@
                                             <constraint firstAttribute="height" constant="50" id="2nB-Lz-VdK"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ge-nO-IT1">
-                                        <rect key="frame" x="540" y="0.0" width="50" height="50"/>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dZH-8B-oA5" userLabel="FriendButton">
+                                        <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="8bR-Ad-aDp"/>
-                                            <constraint firstAttribute="height" constant="50" id="Qwc-Zv-t2H"/>
+                                            <constraint firstAttribute="height" constant="32" id="Qly-HI-DVZ"/>
+                                            <constraint firstAttribute="width" constant="32" id="pHB-Sw-oX0"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                        <state key="normal" image="camera_flip_button">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="flipCameraButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="azK-zR-grx"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oXO-Mg-REE">
-                                        <rect key="frame" x="10" y="0.0" width="50" height="50"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="XI9-xV-NxA"/>
-                                            <constraint firstAttribute="height" constant="50" id="vU6-27-Efn"/>
-                                        </constraints>
-                                        <inset key="contentEdgeInsets" minX="13" minY="13" maxX="13" maxY="13"/>
                                         <state key="normal" image="friends_button">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="friendsButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="TJr-7K-tmU"/>
+                                            <action selector="friendsButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="yhW-fZ-7jj"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hold_to_record_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="1" translatesAutoresizingMaskIntoConstraints="NO" id="ZrJ-X2-Mtw">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jbZ-6p-eMN" userLabel="SwitchCameraButton">
+                                        <rect key="frame" x="569" y="0.0" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="Gjh-Hd-ua0"/>
+                                            <constraint firstAttribute="width" constant="32" id="Q95-gq-0h1"/>
+                                        </constraints>
+                                        <state key="normal" image="camera_flip_button">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="flipCameraButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="SnA-eq-I2V"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="hold_to_record_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="1" translatesAutoresizingMaskIntoConstraints="NO" id="ZrJ-X2-Mtw" customClass="UICustomLineLabel">
                                         <rect key="frame" x="70" y="14" width="460" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="30"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOb-67-bYR">
-                                        <rect key="frame" x="5" y="550" width="590" height="45"/>
+                                        <rect key="frame" x="10" y="545" width="580" height="45"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="KPk-oi-ii4"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <state key="normal" title="Replay">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
                                             <action selector="replayButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="VDB-lX-VAQ"/>
@@ -237,19 +241,19 @@
                                 <constraints>
                                     <constraint firstItem="ePW-Ve-NCZ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="5" id="1Wn-3m-QOB"/>
                                     <constraint firstAttribute="centerX" secondItem="hOb-67-bYR" secondAttribute="centerX" id="BHk-Gk-ofu"/>
-                                    <constraint firstItem="1ge-nO-IT1" firstAttribute="leading" secondItem="ZrJ-X2-Mtw" secondAttribute="trailing" constant="10" id="CqJ-of-g9W"/>
+                                    <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="BnX-DW-x71"/>
                                     <constraint firstAttribute="centerX" secondItem="ZrJ-X2-Mtw" secondAttribute="centerX" id="G6z-SD-eAZ"/>
                                     <constraint firstItem="ZCy-IZ-pCQ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="GgM-m0-dK5"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="width" secondItem="8ee-DQ-Tyu" secondAttribute="width" id="L0p-h3-N0a"/>
-                                    <constraint firstAttribute="bottom" secondItem="hOb-67-bYR" secondAttribute="bottom" constant="5" id="Qh5-nj-O1F"/>
-                                    <constraint firstItem="oXO-Mg-REE" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" id="V3d-6C-ZCs"/>
+                                    <constraint firstItem="dZH-8B-oA5" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="NQt-to-G8E"/>
+                                    <constraint firstAttribute="bottom" secondItem="hOb-67-bYR" secondAttribute="bottom" constant="10" id="Qh5-nj-O1F"/>
+                                    <constraint firstItem="dZH-8B-oA5" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="S1j-Y6-JEE"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="YI8-op-pzm"/>
-                                    <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="5" id="a3J-Ht-ZTL"/>
-                                    <constraint firstItem="1ge-nO-IT1" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" id="ffv-rl-Hfe"/>
-                                    <constraint firstItem="oXO-Mg-REE" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="qgI-Fi-dH9"/>
-                                    <constraint firstItem="ZrJ-X2-Mtw" firstAttribute="centerY" secondItem="1ge-nO-IT1" secondAttribute="centerY" id="s7l-Ll-XaJ"/>
-                                    <constraint firstAttribute="trailing" secondItem="1ge-nO-IT1" secondAttribute="trailing" constant="10" id="tNw-he-Q8N"/>
+                                    <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="a3J-Ht-ZTL"/>
+                                    <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="cAH-hE-KeG"/>
+                                    <constraint firstAttribute="centerY" secondItem="ZrJ-X2-Mtw" secondAttribute="centerY" id="qil-IO-mQz"/>
                                     <constraint firstAttribute="bottom" secondItem="ePW-Ve-NCZ" secondAttribute="bottom" constant="5" id="uIs-um-DSv"/>
+                                    <constraint firstAttribute="trailing" secondItem="jbZ-6p-eMN" secondAttribute="trailing" constant="10" id="wWN-I1-NG8"/>
                                     <constraint firstAttribute="bottom" secondItem="ZCy-IZ-pCQ" secondAttribute="bottom" id="whw-31-fB7"/>
                                     <constraint firstAttribute="trailing" secondItem="ZCy-IZ-pCQ" secondAttribute="trailing" id="zRE-VZ-e3Y"/>
                                 </constraints>
@@ -294,9 +298,9 @@
                             <view contentMode="scaleToFill" restorationIdentifier="previewView" translatesAutoresizingMaskIntoConstraints="NO" id="PDc-f0-A0f" customClass="SCVideoPlayerView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="release_to_send" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFv-lg-Y52">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="release_to_send" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFv-lg-Y52">
                                         <rect key="frame" x="10" y="24" width="580" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -330,7 +334,7 @@
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="release_to_cancel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="1" translatesAutoresizingMaskIntoConstraints="NO" id="lPg-dS-xws">
                                                 <rect key="frame" x="10" y="380" width="580" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -379,13 +383,13 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
-                        <outlet property="cameraSwitchButton" destination="1ge-nO-IT1" id="8iO-49-FC6"/>
+                        <outlet property="cameraSwitchButton" destination="jbZ-6p-eMN" id="UbY-f9-zC1"/>
                         <outlet property="cameraView" destination="8ee-DQ-Tyu" id="6dX-6e-MOy"/>
                         <outlet property="cancelAreaView" destination="lDu-56-nFj" id="Ai1-8y-x3d"/>
                         <outlet property="cancelConfirmTutoLabel" destination="lPg-dS-xws" id="0t1-9X-7GC"/>
                         <outlet property="cancelConfirmView" destination="97c-R3-Rzb" id="Ole-H5-VH1"/>
                         <outlet property="cancelTutoLabel" destination="qiD-Qr-Yah" id="t7Y-lT-eFh"/>
-                        <outlet property="friendListButton" destination="oXO-Mg-REE" id="t6t-dF-Cf1"/>
+                        <outlet property="friendListButton" destination="dZH-8B-oA5" id="NRc-MR-GTy"/>
                         <outlet property="metadataView" destination="7AN-Sl-wRh" id="Ede-wF-OLm"/>
                         <outlet property="nameLabel" destination="Lji-Q6-xPe" id="jPx-JL-xE3"/>
                         <outlet property="previewView" destination="PDc-f0-A0f" id="ksQ-iw-KOK"/>
@@ -582,9 +586,9 @@
     </scenes>
     <resources>
         <image name="bin_icon" width="100" height="100"/>
-        <image name="camera_flip_button" width="50" height="50"/>
+        <image name="camera_flip_button" width="32" height="32"/>
         <image name="close_button" width="50" height="50"/>
-        <image name="friends_button" width="40" height="40"/>
+        <image name="friends_button" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="U6D-kt-n9L"/>

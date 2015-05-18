@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "MBProgressHUD.h"
+#import "UICustomLineLabel.h"
 
 #import "ApiManager.h"
 #import "VideoPost.h"
@@ -48,7 +49,7 @@
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressGestureRecogniser;
 @property (weak, nonatomic) IBOutlet UIView *cameraView;
 @property (strong, nonatomic) UIView *recordingProgressBar;
-@property (weak, nonatomic) IBOutlet UILabel *recordTutoLabel;
+@property (weak, nonatomic) IBOutlet UICustomLineLabel *recordTutoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
 @property (weak, nonatomic) IBOutlet UIButton *friendListButton;
 
@@ -160,7 +161,9 @@
     
      // Labels
     self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
-    self.replayButton.hidden = YES;
+    self.recordTutoLabel.lineType = LineTypeDown;
+    self.recordTutoLabel.lineHeight = 4.0f;
+    self.replayButton.hidden = YES;    
     
     // Preview
     self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
@@ -497,7 +500,7 @@
         assetExportSession.audioConfiguration.preset = SCPresetMediumQuality;
         
         // Audio fade in
-        CGFloat fadeLength = 0.25;
+        CGFloat fadeLength = 0.2;
         CMTime fadeDuration = CMTimeMakeWithSeconds(fadeLength, 100);
         CMTimeRange fadeInTimeRange = CMTimeRangeMake(kCMTimeZero, fadeDuration);
         CMTime startFadeOutTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(asset.duration) - fadeLength, 100);
@@ -721,8 +724,8 @@
         }
         if (kkk == 0) {
             _videoIndex = 0;
-            self.replayButton.backgroundColor = [ColorUtils transparentBlack];
-            buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil),self.videoPostArray.count];
+            self.replayButton.backgroundColor = [ColorUtils black];
+            buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
             _videoIndex = self.videoPostArray.count - kkk;
             self.replayButton.backgroundColor = [ColorUtils transparentOrange];
