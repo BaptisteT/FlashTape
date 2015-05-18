@@ -103,7 +103,6 @@
 		3C5F98AA1AED168F0098F70F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A91AED168F0098F70F /* Social.framework */; };
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
 		3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */; };
-		3C5F98C81AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C71AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m */; };
 		A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */; };
 		A4CE875A1B0913DE00DC20DC /* NHaasGroteskDSPro-65Md.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87561B09133200DC20DC /* NHaasGroteskDSPro-65Md.ttf */; };
 		A4CE875B1B0913DE00DC20DC /* NHaasGroteskDSPro-75Bd.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87571B09133200DC20DC /* NHaasGroteskDSPro-75Bd.ttf */; };
@@ -270,8 +269,6 @@
 		3C5F98AC1AED1A930098F70F /* ApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiManager.m; sourceTree = "<group>"; };
 		3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralUtils.h; sourceTree = "<group>"; };
 		3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralUtils.m; sourceTree = "<group>"; };
-		3C5F98C61AEE8ECE0098F70F /* AVPlayerItem+VideoDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayerItem+VideoDate.h"; sourceTree = "<group>"; };
-		3C5F98C71AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVPlayerItem+VideoDate.m"; sourceTree = "<group>"; };
 		A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-55Rg.ttf"; sourceTree = "<group>"; };
 		A4CE87561B09133200DC20DC /* NHaasGroteskDSPro-65Md.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-65Md.ttf"; sourceTree = "<group>"; };
 		A4CE87571B09133200DC20DC /* NHaasGroteskDSPro-75Bd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-75Bd.ttf"; sourceTree = "<group>"; };
@@ -508,8 +505,6 @@
 				3C5F98101AEC1CFF0098F70F /* ConstantUtils.m */,
 				3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */,
 				3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */,
-				3C5F98C61AEE8ECE0098F70F /* AVPlayerItem+VideoDate.h */,
-				3C5F98C71AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m */,
 				3C2C4A091AFA5CD000E0E4BF /* ColorUtils.h */,
 				3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */,
 				3C2C4A251AFB583B00E0E4BF /* AddressbookUtils.h */,
@@ -761,7 +756,6 @@
 				3C5F98731AECE05E0098F70F /* SCAudioTools.m in Sources */,
 				3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */,
 				3C5F98801AECE05E0098F70F /* SCSampleBufferHolder.m in Sources */,
-				3C5F98C81AEE8ECE0098F70F /* AVPlayerItem+VideoDate.m in Sources */,
 				3C5F98761AECE05E0098F70F /* SCImageView.m in Sources */,
 				3C5F987D1AECE05E0098F70F /* SCRecorderToolsView.m in Sources */,
 				3C5F98791AECE05E0098F70F /* SCPlayer.m in Sources */,

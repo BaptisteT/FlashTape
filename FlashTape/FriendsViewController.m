@@ -49,8 +49,8 @@
 }
 
 - (void)dismissFriendsController {
-    [self dismissViewControllerAnimated:NO completion:nil];
     [self.delegate hideUIElementOnCamera:NO];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)closeButtonClicked:(id)sender {
