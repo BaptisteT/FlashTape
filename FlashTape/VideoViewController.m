@@ -259,7 +259,7 @@
 // --------------------------------------------
 - (void)retrieveVideo {
     // Add current user to contacts array
-    NSMutableArray *contactArray = [NSMutableArray new];//[NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
+    NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
     [contactArray addObject:[User currentUser].username];
     
     // Get video

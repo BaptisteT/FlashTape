@@ -45,7 +45,7 @@
         [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             NSError * savingError = nil;
             if (data) {
-                if (![data writeToURL:self.localUrl options:NSAtomicWrite error:&savingError] || savingError) {
+                if (![data writeToURL:[self videoLocalURL] options:NSAtomicWrite error:&savingError] || savingError) {
                     NSLog(@"Could not remove old files. Error:%@",savingError);
                 }
                 self.localUrl = [self videoLocalURL];
@@ -53,7 +53,7 @@
                 if ([self.videoFile isDataAvailable]) {
                     NSData *data = [self.videoFile getData];
                     NSError * savingError = nil;
-                    if (![data writeToURL:self.localUrl options:NSAtomicWrite error:&savingError] || savingError) {
+                    if (![data writeToURL:[self videoLocalURL] options:NSAtomicWrite error:&savingError] || savingError) {
                         NSLog(@"Could not Get Available Data. Error:%@",savingError);
                     }
                     self.localUrl = [self videoLocalURL];
