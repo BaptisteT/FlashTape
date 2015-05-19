@@ -141,7 +141,7 @@
     NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"whiteNoise" ofType:@".wav"];
     NSURL *soundURL = [NSURL fileURLWithPath:soundPath];
     self.whiteNoisePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundURL error:nil];
-    self.whiteNoisePlayer.volume = 0.0005;
+    self.whiteNoisePlayer.volume = 0.001;
     self.whiteNoisePlayer.numberOfLoops = -1;
     
     // Metadata
@@ -323,6 +323,7 @@
     [self.friendVideoView.player seekToTime:CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoView.player.itemDuration) * widthRatio, self.friendVideoView.player.itemDuration.timescale)];
     [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
     if (gesture.state == UIGestureRecognizerStateBegan) {
+        [self showMetaData:NO];
         [self.friendVideoView.player pause];
         [self.whiteNoisePlayer pause];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
@@ -333,7 +334,7 @@
         
         [UIView animateWithDuration:CMTimeGetSeconds(self.friendVideoComposition.duration) * (1 - widthRatio)
                               delay:0
-                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
+                            options:UIViewAnimationOptionCurveLinear
                          animations:^{
                              [self.playingProgressView setFrame:CGRectMake(0, 0, self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
                          } completion:nil];
@@ -411,11 +412,11 @@
     [self.friendVideoView.player play];
     // UI
     [self setPlayingMode:YES];
-    [self setPlayingMetaDataForVideoPost:self.videoPostArray.firstObject];
+    [self setPlayingMetaDataForVideoPost:self.videoPostArray[_videoIndex]];
     [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
     [UIView animateWithDuration:CMTimeGetSeconds(self.friendVideoComposition.duration)
                           delay:0
-                        options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
+                        options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          [self.playingProgressView setFrame:CGRectMake(0, 0, self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
                      } completion:nil];
@@ -483,8 +484,14 @@
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
+    [self showMetaData:YES];
     self.nameLabel.text = self.contactDictionnary[post.user.username];
     self.timeLabel.text = [post.createdAt timeAgoSinceNow];
+}
+
+- (void)showMetaData:(BOOL)flag {
+    self.nameLabel.hidden = !flag;
+    self.timeLabel.hidden = !flag;
 }
 
 // --------------------------------------------
@@ -515,6 +522,7 @@
         if (CMTimeGetSeconds(recordSession.segmentsDuration) != 0) // to avoid pb segment not ready
             [self displayTopMessage:NSLocalizedString(@"video_too_short", nil)];
         _isExporting = NO;
+        NSLog(@"too short");
     } else {
         AVAsset *asset = recordSession.assetRepresentingSegments;
         SCAssetExportSession *assetExportSession = [[SCAssetExportSession alloc] initWithAsset:asset];
@@ -697,7 +705,7 @@
     self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
     [UIView animateWithDuration:kRecordSessionMaxDuration
                           delay:0
-                        options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
+                        options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          [self.recordingProgressBar setFrame:CGRectMake(0,0,self.recordingProgressContainer.frame.size.width, self.recordingProgressContainer.frame.size.height)];
                      } completion:nil];
