@@ -42,29 +42,32 @@
     if ([[self videoLocalURL] checkResourceIsReachableAndReturnError:&err]) {
         self.localUrl = [self videoLocalURL];
     } else {
-        [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            NSError * savingError = nil;
-            if (data) {
-                if (![data writeToURL:[self videoLocalURL] options:NSAtomicWrite error:&savingError] || savingError) {
-                    NSLog(@"Could not remove old files. Error:%@",savingError);
-                }
-                self.localUrl = [self videoLocalURL];
-            } else {
-                if ([self.videoFile isDataAvailable]) {
-                    NSData *data = [self.videoFile getData];
-                    NSError * savingError = nil;
-                    if (![data writeToURL:[self videoLocalURL] options:NSAtomicWrite error:&savingError] || savingError) {
-                        NSLog(@"Could not Get Available Data. Error:%@",savingError);
-                    }
-                    self.localUrl = [self videoLocalURL];
+        if ([self.videoFile isDataAvailable]) {
+            [self saveDataToLocalURL:[self.videoFile getData]];
+        } else {
+            [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                if (data) {
+                    [self saveDataToLocalURL:[self.videoFile getData]];
                 } else {
-                    NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                    if ([self.videoFile isDataAvailable]) {
+                        [self saveDataToLocalURL:[self.videoFile getData]];
+                    } else {
+                        NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                    }
                 }
-            }
-        } progressBlock:^(int percentDone) {
-            self.downloadProgress = percentDone;
-        }];
+            } progressBlock:^(int percentDone) {
+                self.downloadProgress = percentDone;
+            }];
+        }
     }
+}
+
+- (void)saveDataToLocalURL:(NSData *)data {
+    NSError * savingError = nil;
+    if (![data writeToURL:[self videoLocalURL] options:NSAtomicWrite error:&savingError] || savingError) {
+        NSLog(@"Could not Get Available Data. Error:%@",savingError);
+    }
+    self.localUrl = [self videoLocalURL];
 }
 
 - (NSURL *)videoLocalURL {

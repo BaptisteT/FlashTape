@@ -32,7 +32,8 @@
 "new_videos_label" = "new flashes";
 "new_video_label" = "new flash";
 "video_too_short" = "Hold Longer";
-"video_sending_failed" = "Sending Failed";
+"video_sending_failed" = "1 Video Failed to Send";
+"videos_sending_failed" = "%lu Videos Failed To Send";
 
 // Preview
 "release_to_send" = "Release to send";

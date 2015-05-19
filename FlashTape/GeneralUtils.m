@@ -74,4 +74,16 @@
     return [[previousDate dateByAddingTimeInterval:3*24*3600] compare:[NSDate date]]== NSOrderedAscending;
 }
 
++ (void)removeFile:(NSURL *)fileURL
+{
+    NSString *filePath = [fileURL path];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:filePath]) {
+        NSError *error;
+        if ([fileManager removeItemAtPath:filePath error:&error] == NO) {
+            NSLog(@"removeItemAtPath %@ error:%@", filePath, error);
+        }
+    }
+}
+
 @end

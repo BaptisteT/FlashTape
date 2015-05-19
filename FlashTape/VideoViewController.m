@@ -112,8 +112,6 @@
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
-//    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
-//    _recorder.audioConfiguration.preset = SCPresetMediumQuality;
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeQuickTimeMovie;
     _recorder.session = session;
@@ -259,7 +257,7 @@
 // --------------------------------------------
 - (void)retrieveVideo {
     // Add current user to contacts array
-    NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
+    NSMutableArray *contactArray = [NSMutableArray new];//[NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
     [contactArray addObject:[User currentUser].username];
     
     // Get video
@@ -464,18 +462,18 @@
 
 - (void)insertVideoAtTheEndOfTheComposition:(VideoPost *)videoPost {
     if (videoPost.localUrl) {
-        AVAsset* sourceAsset = [AVAsset assetWithURL:videoPost.videoLocalURL];
+        AVURLAsset* sourceAsset = [AVURLAsset assetWithURL:videoPost.videoLocalURL];
         CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(CMTimeGetSeconds(sourceAsset.duration) - kVideoEndCutDuration, sourceAsset.duration.timescale));
         NSError *editError;
         [self.friendVideoComposition insertTimeRange:assetTimeRange
                                              ofAsset:sourceAsset
                                               atTime:[self friendCompositionEndCMTime]
                                                error:&editError];
-        [self.observedTimesArray addObject:[NSValue valueWithCMTime:[self friendCompositionEndCMTime]]];
         if (editError) {
             // todo BT handle error
             NSLog(@"%@",editError.description);
         }
+        [self.observedTimesArray addObject:[NSValue valueWithCMTime:[self friendCompositionEndCMTime]]];
     }
 }
 
@@ -524,26 +522,119 @@
         _isExporting = NO;
         NSLog(@"too short");
     } else {
+        ////////////
+        // 2 - Create AVMutableComposition object. This object will hold your AVMutableCompositionTrack instances.
+        AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];
+
+//        // 3 - Video track
+        AVMutableCompositionTrack *videoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
+                                                                            preferredTrackID:kCMPersistentTrackID_Invalid];
+        [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,recordSession.assetRepresentingSegments.duration)
+                            ofTrack:[[recordSession.assetRepresentingSegments tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
+                             atTime:kCMTimeZero error:nil];
+        
+        // 3.1 - Create AVMutableVideoCompositionInstruction
+        AVMutableVideoCompositionInstruction *mainInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+        mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, recordSession.assetRepresentingSegments.duration);
+        
+        // 3.2 - Create an AVMutableVideoCompositionLayerInstruction for the video track and fix the orientation.
+        AVMutableVideoCompositionLayerInstruction *videolayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
+        AVAssetTrack *videoAssetTrack = [[recordSession.assetRepresentingSegments tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+        UIImageOrientation videoAssetOrientation_  = UIImageOrientationUp;
+        BOOL isVideoAssetPortrait_  = NO;
+        CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
+        if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
+            videoAssetOrientation_ = UIImageOrientationRight;
+            isVideoAssetPortrait_ = YES;
+        }
+        if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
+            videoAssetOrientation_ =  UIImageOrientationLeft;
+            isVideoAssetPortrait_ = YES;
+        }
+        if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0) {
+            videoAssetOrientation_ =  UIImageOrientationUp;
+        }
+        if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0) {
+            videoAssetOrientation_ = UIImageOrientationDown;
+        }
+        [videolayerInstruction setTransform:videoAssetTrack.preferredTransform atTime:kCMTimeZero];
+        [videolayerInstruction setOpacity:0.0 atTime:recordSession.assetRepresentingSegments.duration];
+        
+        // 3.3 - Add instructions
+        mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
+        
+        AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
+        
+        CGSize naturalSize;
+        if(isVideoAssetPortrait_){
+            naturalSize = CGSizeMake(videoAssetTrack.naturalSize.height, videoAssetTrack.naturalSize.width);
+        } else {
+            naturalSize = videoAssetTrack.naturalSize;
+        }
+        
+        float renderWidth, renderHeight;
+        renderWidth = naturalSize.width;
+        renderHeight = naturalSize.height;
+        mainCompositionInst.renderSize = CGSizeMake(renderWidth, renderHeight);
+        mainCompositionInst.instructions = [NSArray arrayWithObject:mainInstruction];
+        mainCompositionInst.frameDuration = CMTimeMake(1, 30);
+        
+        [self applyVideoEffectsToComposition:mainCompositionInst size:naturalSize];
+        
+        ///////////
         AVAsset *asset = recordSession.assetRepresentingSegments;
-        SCAssetExportSession *assetExportSession = [[SCAssetExportSession alloc] initWithAsset:asset];
-        assetExportSession.outputUrl = recordSession.outputUrl;
-        assetExportSession.outputFileType = AVFileTypeMPEG4;
-        assetExportSession.videoConfiguration.preset = SCPresetMediumQuality;
-        assetExportSession.audioConfiguration.preset = SCPresetLowQuality;
+        AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:asset
+                                                                          presetName:AVAssetExportPresetMediumQuality];
+        [GeneralUtils removeFile:recordSession.outputUrl];
+        exporter.outputURL = recordSession.outputUrl;
+        exporter.outputFileType = AVFileTypeMPEG4;
+        exporter.shouldOptimizeForNetworkUse = YES;
+        exporter.videoComposition = mainCompositionInst;
 
         // Export
-        [assetExportSession exportAsynchronouslyWithCompletionHandler: ^{
-            if (assetExportSession.error == nil) {
+        [exporter exportAsynchronouslyWithCompletionHandler: ^{
+            if (exporter.error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
                 if (successBlock) {
                     successBlock(post);
                 }
             } else {
-                NSLog(@"Export failed: %@", assetExportSession.error);
+                _isExporting = NO;
+                NSLog(@"Export failed: %@", exporter.error);
             }
         }];
     }
 }
+
+- (void)applyVideoEffectsToComposition:(AVMutableVideoComposition *)composition size:(CGSize)size
+{
+    // 1 - Set up the text layer
+    CATextLayer *subtitle1Text = [[CATextLayer alloc] init];
+    [subtitle1Text setFont:@"Helvetica-Bold"];
+    [subtitle1Text setFontSize:36];
+    [subtitle1Text setFrame:CGRectMake(0, 0, size.width, 200)];
+    [subtitle1Text setString:@"yo yo caption"];
+    [subtitle1Text setAlignmentMode:kCAAlignmentCenter];
+    [subtitle1Text setForegroundColor:[[UIColor whiteColor] CGColor]];
+    
+    // 2 - The usual overlay
+    CALayer *overlayLayer = [CALayer layer];
+    [overlayLayer addSublayer:subtitle1Text];
+    overlayLayer.frame = CGRectMake(0, 0, size.width, size.height);
+    [overlayLayer setMasksToBounds:YES];
+
+    CALayer *parentLayer = [CALayer layer];
+    CALayer *videoLayer = [CALayer layer];
+    parentLayer.frame = CGRectMake(0, 0, size.width, size.height);
+    videoLayer.frame = CGRectMake(0, 0, size.width, size.height);
+    [parentLayer addSublayer:videoLayer];
+    [parentLayer addSublayer:overlayLayer];
+    
+    composition.animationTool = [AVVideoCompositionCoreAnimationTool
+                                 videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
+    
+}
+
 
 
 // --------------------------------------------
@@ -578,16 +669,17 @@
 }
 
 - (void)setIsSendingCount:(NSInteger)isSendingCount {
-    _isSendingCount = isSendingCount;
     // sending anim
-    [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
-    if (isSendingCount != 0) {
-        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
-        hud.color = [UIColor clearColor];
-        hud.activityIndicatorColor = [ColorUtils orange];
-        [self.sendingLoaderView addSubview:hud];
-        [hud show:YES];
-    }
+//    if (_isSendingCount != 0 && isSendingCount == 0) {
+//        [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
+//    } else if (_isSendingCount == 0 && isSendingCount != 0) {
+//        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
+//        hud.color = [UIColor clearColor];
+//        hud.activityIndicatorColor = [ColorUtils orange];
+//        [self.sendingLoaderView addSubview:hud];
+//        [hud show:YES];
+//    }
+    _isSendingCount = isSendingCount;
 }
 // --------------------------------------------
 #pragma mark - SCRecorderDelegate
@@ -728,7 +820,8 @@
     if (self.failedVideoPostArray.count > 0) {
         // failed video state
         self.replayButton.backgroundColor = [ColorUtils transparentRed];
-        [self.replayButton setTitle:NSLocalizedString(@"video_sending_failed", nil) forState:UIControlStateNormal];
+        NSString *title = self.failedVideoPostArray.count > 1 ? [NSString stringWithFormat:NSLocalizedString(@"videos_sending_failed", nil),self.failedVideoPostArray.count] : NSLocalizedString(@"video_sending_failed", nil);
+        [self.replayButton setTitle:title forState:UIControlStateNormal];
     } else if (self.videoPostArray.count == 0) {
         // No button state
         self.replayButton.hidden = YES;

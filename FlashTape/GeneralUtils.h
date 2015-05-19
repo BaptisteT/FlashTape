@@ -24,4 +24,6 @@
 
 + (BOOL)shouldDeleteStoredData;
 
++ (void)removeFile:(NSURL *)fileURL;
+
 @end

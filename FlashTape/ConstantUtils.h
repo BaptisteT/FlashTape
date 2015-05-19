@@ -24,7 +24,7 @@ static const NSInteger kFeedHistoryInHours = 24;
 // Recording
 static const float kRecordSessionMaxDuration = 2.0;
 static const float kRecordMinDuration = 0.5;
-static const float kVideoEndCutDuration = 0.05;
+static const float kVideoEndCutDuration = 0.1;
 
 // Playing
 static const NSInteger kPlayerQueueLength = 3;
