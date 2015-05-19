@@ -14,15 +14,17 @@
 @end
 
 // System
+static NSString * const kFlashTapeAppStoreLink = @"";
+static NSString * const kFlashTapeWebsiteLink = @"";
 static NSString * const kFlashTapeAppLinkUrl = @"https://www.mydomain.com/myapplink";
 
 // Feed
 static const NSInteger kFeedHistoryInHours = 24;
 
 // Recording
-static const float kRecordSessionMaxDuration = 2.1;
+static const float kRecordSessionMaxDuration = 2.0;
 static const float kRecordMinDuration = 0.5;
-static const float kVideoEndCutDuration = 0.1;
+static const float kVideoEndCutDuration = 0.05;
 
 // Playing
 static const NSInteger kPlayerQueueLength = 3;

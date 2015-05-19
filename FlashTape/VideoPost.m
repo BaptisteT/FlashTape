@@ -45,12 +45,21 @@
         [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             NSError * savingError = nil;
             if (data) {
-                self.localUrl = [self videoLocalURL];
-                if (![data writeToURL:self.localUrl options:NSAtomicWrite error:&savingError]) {
+                if (![data writeToURL:self.localUrl options:NSAtomicWrite error:&savingError] || savingError) {
                     NSLog(@"Could not remove old files. Error:%@",savingError);
                 }
+                self.localUrl = [self videoLocalURL];
             } else {
-                NSLog(@"Error: %@ %@", error, [error userInfo]);
+                if ([self.videoFile isDataAvailable]) {
+                    NSData *data = [self.videoFile getData];
+                    NSError * savingError = nil;
+                    if (![data writeToURL:self.localUrl options:NSAtomicWrite error:&savingError] || savingError) {
+                        NSLog(@"Could not Get Available Data. Error:%@",savingError);
+                    }
+                    self.localUrl = [self videoLocalURL];
+                } else {
+                    NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                }
             }
         } progressBlock:^(int percentDone) {
             self.downloadProgress = percentDone;

@@ -177,7 +177,7 @@
             }
         } else {
             // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            NSLog(@"Get Video Error: %@ %@", error, [error userInfo]);
             if (failureBlock)
                 failureBlock(error);
         }

@@ -43,7 +43,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIView *metadataView;
 @property (strong, nonatomic) UIView *playingProgressView;
-@property (strong, nonatomic) UITapGestureRecognizer *playingProgressViewTapGesture;
+@property (strong, nonatomic) UILongPressGestureRecognizer *playingProgressViewLongPressGesture;
 @property (strong, nonatomic) AVAudioPlayer *whiteNoisePlayer;
 
 // Recording
@@ -111,8 +111,9 @@
     _recorder.delegate = self;
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
-    _recorder.maxRecordDuration = CMTimeMake(kRecordSessionMaxDuration, 1);
-    _recorder.videoConfiguration.bitrate = 2000000;
+    _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
+//    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
+//    _recorder.audioConfiguration.preset = SCPresetMediumQuality;
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeQuickTimeMovie;
     _recorder.session = session;
@@ -140,7 +141,7 @@
     NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"whiteNoise" ofType:@".wav"];
     NSURL *soundURL = [NSURL fileURLWithPath:soundPath];
     self.whiteNoisePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundURL error:nil];
-    self.whiteNoisePlayer.volume = 0.001;
+    self.whiteNoisePlayer.volume = 0.0005;
     self.whiteNoisePlayer.numberOfLoops = -1;
     
     // Metadata
@@ -149,8 +150,9 @@
     self.playingProgressView.backgroundColor = [ColorUtils transparentOrange];
     self.playingProgressView.userInteractionEnabled = NO;
     [self.metadataView insertSubview:self.playingProgressView atIndex:0];
-    self.playingProgressViewTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGestureOnMetadataView:)];
-    [self.metadataView addGestureRecognizer:self.playingProgressViewTapGesture];
+    self.playingProgressViewLongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGestureOnMetaDataView:)];
+    self.playingProgressViewLongPressGesture.minimumPressDuration = 0;
+    [self.metadataView addGestureRecognizer:self.playingProgressViewLongPressGesture];
     self.nameLabel.text = @"";
     self.timeLabel.text = @"";
     
@@ -257,7 +259,7 @@
 // --------------------------------------------
 - (void)retrieveVideo {
     // Add current user to contacts array
-    NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
+    NSMutableArray *contactArray = [NSMutableArray new];//[NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
     [contactArray addObject:[User currentUser].username];
     
     // Get video
@@ -267,6 +269,7 @@
                                  [self setReplayButtonUI];
                              } failure:^(NSError *error) {
                                  // todo BT handle error
+                                 // display already downloaded video ? fron last 24h
                              }];
 }
 
@@ -314,19 +317,27 @@
     }
 }
 
-- (void)handleTapGestureOnMetadataView:(UITapGestureRecognizer *)gesture
-{
+- (void)handleLongPressGestureOnMetaDataView:(UILongPressGestureRecognizer *)gesture {
     float widthRatio = (float)[gesture locationInView:self.metadataView].x / self.metadataView.frame.size.width;
     [self.playingProgressView.layer removeAllAnimations];
-    [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
     [self.friendVideoView.player seekToTime:CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoView.player.itemDuration) * widthRatio, self.friendVideoView.player.itemDuration.timescale)];
-    
-    [UIView animateWithDuration:CMTimeGetSeconds(self.friendVideoComposition.duration) * (1 - widthRatio)
-                          delay:0
-                        options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
-                     animations:^{
-                         [self.playingProgressView setFrame:CGRectMake(0, 0, self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
-                     } completion:nil];
+    [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        [self.friendVideoView.player pause];
+        [self.whiteNoisePlayer pause];
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
+
+    } else {
+        [self.friendVideoView.player play];
+        [self.whiteNoisePlayer play];
+        
+        [UIView animateWithDuration:CMTimeGetSeconds(self.friendVideoComposition.duration) * (1 - widthRatio)
+                              delay:0
+                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
+                         animations:^{
+                             [self.playingProgressView setFrame:CGRectMake(0, 0, self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+                         } completion:nil];
+    }
 }
 
 - (IBAction)replayButtonClicked:(id)sender {
@@ -355,7 +366,7 @@
     // Case where video not yet downloaded
     if (self.videoPostArray.count == 0 || !self.friendVideoComposition) return;
     if (self.friendVideoComposition.duration.value <= 0) {
-        [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)self.videoPostArray.firstObject).downloadProgress] forState:UIControlStateNormal];
+        [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)self.videoPostArray[_videoIndex]).downloadProgress] forState:UIControlStateNormal];
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setReplayButtonUI) userInfo:nil repeats:NO];
         return;
     }
@@ -364,31 +375,35 @@
     [self.friendVideoView.player setItemByAsset:self.friendVideoComposition];
     [self.friendVideoView.player seekToTime:kCMTimeZero];
     
+    // Time observer
+    if (self.compositionTimerObserverArray) {
+        for (id observer in self.compositionTimerObserverArray) {
+            [self.friendVideoView.player removeTimeObserver:observer];
+        }
+    }
+    self.compositionTimerObserverArray = [NSMutableArray new];
+    for (int ii = 0; ii < self.observedTimesArray.count; ii++) {
+        [self.compositionTimerObserverArray addObject:[self.friendVideoView.player addBoundaryTimeObserverForTimes:[NSArray arrayWithObject:self.observedTimesArray[ii]] queue:dispatch_get_main_queue() usingBlock:^{
+            [TrackingUtils trackVideoSeen];
+
+            if (_videoIndex + ii >= self.videoPostArray.count) return;
+            
+            // Save item date
+            [GeneralUtils saveLastVideoSeenDate:((VideoPost *)self.videoPostArray[_videoIndex + ii]).createdAt];
+       
+            // update metadata & last seen date
+            if (ii < self.observedTimesArray.count - 1 && self.videoPostArray.count > _videoIndex + ii + 1) {
+                [self setPlayingMetaDataForVideoPost:self.videoPostArray[_videoIndex + ii + 1]];
+            } else {
+                [self setCameraMode];
+            }
+        }]];
+    }
+    
     if (self.friendVideoView.player.status == AVPlayerStatusReadyToPlay) {
         [self playVideos];
     } else {
         [self.friendVideoView.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
-    }
-    
-    // Time observer
-    self.compositionTimerObserverArray = [NSMutableArray new];
-    for (int ii = 0; ii < self.observedTimesArray.count; ii++) {
-        [self.compositionTimerObserverArray addObject:[self.friendVideoView.player addBoundaryTimeObserverForTimes:[NSArray arrayWithObject:self.observedTimesArray[ii]] queue:dispatch_get_main_queue() usingBlock:^{
-                                                              [TrackingUtils trackVideoSeen];
-                                                              // Save item date
-                                                              [GeneralUtils saveLastVideoSeenDate:((VideoPost *)self.videoPostArray[_videoIndex + ii]).createdAt];
-                                                       
-                                                              // update metadata & last seen date
-                                                              if (ii < self.observedTimesArray.count - 1) {
-                                                                  [self setPlayingMetaDataForVideoPost:self.videoPostArray[_videoIndex + ii + 1]];
-                                                              } else {
-                                                                  [self setCameraMode];
-                                                              }
-                                                              
-                                                              // Save item date
-                                                              [GeneralUtils saveLastVideoSeenDate:((VideoPost *)self.videoPostArray[ii]).createdAt];
-                                                              }
-                                                          ]];
     }
 }
 
@@ -506,23 +521,8 @@
         assetExportSession.outputUrl = recordSession.outputUrl;
         assetExportSession.outputFileType = AVFileTypeMPEG4;
         assetExportSession.videoConfiguration.preset = SCPresetMediumQuality;
-        assetExportSession.audioConfiguration.preset = SCPresetMediumQuality;
-        
-        // Audio fade in
-//        CGFloat fadeLength = 0.2;
-//        CMTime fadeDuration = CMTimeMakeWithSeconds(fadeLength, 100);
-//        CMTimeRange fadeInTimeRange = CMTimeRangeMake(kCMTimeZero, fadeDuration);
-//        CMTime startFadeOutTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(asset.duration) - fadeLength, 100);
-//        CMTimeRange fadeOutTimeRange = CMTimeRangeMake(startFadeOutTime, fadeDuration);
-//        AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeAudio].firstObject;
-//        AVMutableAudioMixInputParameters *exportAudioMixInputParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:track];
-//        exportAudioMixInputParameters.trackID = [track trackID];
-//        [exportAudioMixInputParameters setVolumeRampFromStartVolume:0. toEndVolume:1.0 timeRange:fadeInTimeRange];
-//        [exportAudioMixInputParameters setVolumeRampFromStartVolume:1.0 toEndVolume:0. timeRange:fadeOutTimeRange];
-//        AVMutableAudioMix *exportAudioMix = [AVMutableAudioMix audioMix];
-//        exportAudioMix.inputParameters = [NSArray arrayWithObject:exportAudioMixInputParameters];
-//        assetExportSession.audioConfiguration.audioMix = exportAudioMix;
-        
+        assetExportSession.audioConfiguration.preset = SCPresetLowQuality;
+
         // Export
         [assetExportSession exportAsynchronouslyWithCompletionHandler: ^{
             if (assetExportSession.error == nil) {
@@ -548,8 +548,9 @@
             andExecuteSuccess:^() {
                 self.isSendingCount --;
                 [self.videoPostArray addObject:post];
-                [self setReplayButtonUI];
                 [TrackingUtils trackVideoSent];
+                if (![self isPlayingMode])
+                    [self setReplayButtonUI];
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];
@@ -571,9 +572,8 @@
 - (void)setIsSendingCount:(NSInteger)isSendingCount {
     _isSendingCount = isSendingCount;
     // sending anim
-    if (isSendingCount == 0) {
-        [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
-    } else {
+    [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
+    if (isSendingCount != 0) {
         MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
         hud.color = [UIColor clearColor];
         hud.activityIndicatorColor = [ColorUtils orange];
@@ -589,18 +589,6 @@
     if (_isExporting) {
         return;
     }
-//    AVMutableComposition *composition = [AVMutableComposition new];
-//    AVAsset* sourceAsset = recordSession.assetRepresentingSegments;
-//    CMTimeRange editRange = CMTimeRangeMake(CMTimeMake(0, 600), CMTimeMake(sourceAsset.duration.value, sourceAsset.duration.timescale));
-//    NSError *editError;
-//    BOOL result = [composition insertTimeRange:editRange ofAsset:sourceAsset atTime:composition.duration error:&editError];
-//    if (result) {
-//        for (int i = 0; i < 10; i++) {
-//            [composition insertTimeRange:editRange ofAsset:sourceAsset atTime:CMTimeMakeWithSeconds(CMTimeGetSeconds(composition.duration)-i*0.1,composition.duration.timescale) error:&editError];
-//        }
-//    } else {
-//        NSLog(@"preview compo error");
-//    }
     [self.previewView.player setItemByAsset:recordSession.assetRepresentingSegments];
     if (self.previewView.player.status == AVPlayerStatusReadyToPlay) {
         [self playPreview];
@@ -709,7 +697,7 @@
     self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
     [UIView animateWithDuration:kRecordSessionMaxDuration
                           delay:0
-                        options:UIViewAnimationOptionCurveLinear
+                        options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
                          [self.recordingProgressBar setFrame:CGRectMake(0,0,self.recordingProgressContainer.frame.size.width, self.recordingProgressContainer.frame.size.height)];
                      } completion:nil];
@@ -733,7 +721,6 @@
         // failed video state
         self.replayButton.backgroundColor = [ColorUtils transparentRed];
         [self.replayButton setTitle:NSLocalizedString(@"video_sending_failed", nil) forState:UIControlStateNormal];
-        // todo bt
     } else if (self.videoPostArray.count == 0) {
         // No button state
         self.replayButton.hidden = YES;

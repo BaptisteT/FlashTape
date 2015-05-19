@@ -71,7 +71,7 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSDate *previousDate = [prefs objectForKey:LAST_CLEANING_DATE] ? [prefs objectForKey:LAST_CLEANING_DATE]: [NSDate date];
     [prefs setObject:[NSDate date] forKey:LAST_CLEANING_DATE];
-    return [[previousDate dateByAddingTimeInterval:7*24*3600] compare:[NSDate date]]== NSOrderedAscending;
+    return [[previousDate dateByAddingTimeInterval:3*24*3600] compare:[NSDate date]]== NSOrderedAscending;
 }
 
 @end

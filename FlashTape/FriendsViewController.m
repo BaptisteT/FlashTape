@@ -13,6 +13,7 @@
 
 #import "ColorUtils.h"
 #import "ConstantUtils.h"
+#import "GeneralUtils.h"
 
 @interface FriendsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -82,19 +83,36 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-//        [self showFBInviteDialog];
+        // Redirect to sms
+        if(![MFMessageComposeViewController canSendText]) {
+            [GeneralUtils showMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
+            return;
+        }
+        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+        messageController.messageComposeDelegate = self;
+        [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeAppStoreLink]];
+        [self presentViewController:messageController animated:YES completion:nil];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
+// ----------------------------------------------------------
+#pragma mark SMS controller
+// ----------------------------------------------------------
+// Dismiss message after finish
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 // --------------------------------------------
-#pragma mark - FB App invite
+#pragma mark - FB App invite (not used today)
 // --------------------------------------------
 - (void)showFBInviteDialog {
     FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] init];
     content.appLinkURL = [NSURL URLWithString:kFlashTapeAppLinkUrl];
     //optionally set previewImageURL
-//    content.previewImageURL = [NSURL URLWithString:@"https://www.mydomain.com/my_invite_image.jpg"];
+    content.previewImageURL = [NSURL URLWithString:@"https://www.mydomain.com/my_invite_image.jpg"];
     
     // present the dialog. Assumes self implements protocol `FBSDKAppInviteDialogDelegate`
     [FBSDKAppInviteDialog showWithContent:content
@@ -102,11 +120,9 @@
 }
 
 - (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didFailWithError:(NSError *)error {
-    // todo bt
 }
 
 - (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didCompleteWithResults:(NSDictionary *)results  {
-    // todo bt
 }
 
 // --------------------------------------------
