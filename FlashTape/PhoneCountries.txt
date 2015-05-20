@@ -231,5 +231,5 @@
 20;EG;Egypt
 7;RU;Russia
 7;KZ;Kazakhstan
-1;US;USA
+1;US;United States
 1;CA;Canada

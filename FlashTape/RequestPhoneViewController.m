@@ -27,12 +27,12 @@
 
 @interface RequestPhoneViewController ()
 
-@property (weak, nonatomic) IBOutlet UIButton *countryCodeButton;
+@property (weak, nonatomic) IBOutlet UILabel *countryCodeLabel;
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UIButton *validationButton;
 @property (nonatomic, strong) NSString *decimalPhoneNumber;
 @property (nonatomic, strong) RMPhoneFormat *phoneFormat;
-@property (weak, nonatomic) IBOutlet UILabel *countryNameLabel;
+@property (weak, nonatomic) IBOutlet UIButton *countryNameButton;
 @property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UITextView *disclaimerTextView;
@@ -103,7 +103,7 @@
 - (IBAction)validateButtonClicked:(id)sender {
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     NSError *aError = nil;
-    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeButton.titleLabel.text substringFromIndex:1], self.decimalPhoneNumber];
+    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.text substringFromIndex:1], self.decimalPhoneNumber];
     NBPhoneNumber *myNumber = [phoneUtil parse:internationalPhoneNumber
                                  defaultRegion:nil error:&aError];
     
@@ -165,9 +165,10 @@
 {
     self.phoneFormat = [[RMPhoneFormat alloc] initWithDefaultCountry:letterCode];
     
-    [self.countryCodeButton setTitle:[NSString stringWithFormat:@"+%@", code] forState: UIControlStateNormal];
+    self.countryCodeLabel.text = [NSString stringWithFormat:@"+%@", code];
     self.numberTextField.text = [self.phoneFormat format:self.decimalPhoneNumber];
-    self.countryNameLabel.text = [letterCode uppercaseString];
+    self.countryNameButton.titleLabel.text = [NSString stringWithFormat:@"%@ ❯",countryName];
+    [self.countryNameButton setTitle:[NSString stringWithFormat:@"%@ ❯",countryName] forState:UIControlStateNormal];
 }
 
 
@@ -196,7 +197,7 @@
     
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     NSError *aError = nil;
-    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeButton.titleLabel.text substringFromIndex:1], self.decimalPhoneNumber];
+    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.text substringFromIndex:1], self.decimalPhoneNumber];
     NBPhoneNumber *myNumber = [phoneUtil parse:internationalPhoneNumber
                                  defaultRegion:nil error:&aError];
     
