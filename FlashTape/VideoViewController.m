@@ -15,6 +15,7 @@
 #import "ApiManager.h"
 #import "VideoPost.h"
 
+#import "CaptionTextView.h"
 #import "FriendsViewController.h"
 #import "VideoViewController.h"
 
@@ -37,7 +38,6 @@
 @property (strong, nonatomic) AVMutableComposition *friendVideoComposition;
 @property (strong, nonatomic) NSMutableArray *observedTimesArray;
 @property (strong, nonatomic) NSMutableArray *compositionTimerObserverArray;
-
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -55,6 +55,8 @@
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *recordTutoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
 @property (weak, nonatomic) IBOutlet UIButton *friendListButton;
+@property (weak, nonatomic) IBOutlet UIButton *captionButton;
+@property (weak, nonatomic) IBOutlet CaptionTextView *captionTextView;
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
@@ -91,10 +93,15 @@
     _longPressRunning = NO;
     self.isSendingCount = 0;
     
-    // Init gesture
+    // Recording gesture
     self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
     self.longPressGestureRecogniser.delegate = self;
     [self.view addGestureRecognizer:self.longPressGestureRecogniser];
+    
+    // Caption
+    self.captionTextView.hidden = YES;
+    self.captionTextView.text = @"";// todo bt memory of last caption ?
+    self.captionTextView.delegate = self;
     
     // Audio session
     AVAudioSession* audioSession = [AVAudioSession sharedInstance];
@@ -280,8 +287,12 @@
     if (gesture.state == UIGestureRecognizerStateBegan) {
         _longPressRunning = YES;
         isExporting = _isExporting;
-        if (!isExporting)
+        if (!isExporting) {
             [self startRecording];
+        }
+        if ([self.captionTextView isFirstResponder]) {
+            [self.captionTextView resignFirstResponder];
+        }
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         if ([self isPreviewMode]) {
             BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
@@ -354,6 +365,14 @@
 
 - (IBAction)friendsButtonClicked:(id)sender {
     [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
+}
+
+- (IBAction)captionButtonClicked:(id)sender {
+    self.recordTutoLabel.hidden = YES;
+    self.captionTextView.hidden = NO;
+    [self.captionTextView becomeFirstResponder];
+    // todo BT
+    // keyboard will show to position
 }
 
 // --------------------------------------------
@@ -858,6 +877,7 @@
     self.recordTutoLabel.hidden = flag;
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;
+    self.captionButton.hidden = flag;
 }
 
 // --------------------------------------------
@@ -871,7 +891,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     // Disallow recognition of tap gestures in the segmented control.
-    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton) {
+    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.captionButton || touch.view == self.captionTextView) {
         return NO;
     }
     return YES;

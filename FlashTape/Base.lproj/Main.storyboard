@@ -209,6 +209,25 @@
                                             <action selector="flipCameraButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="SnA-eq-I2V"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUk-ak-rpt">
+                                        <rect key="frame" x="277" y="285" width="46" height="30"/>
+                                        <state key="normal" title="Button">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="captionButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="LO2-3q-ope"/>
+                                        </connections>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="caption_text_view" translatesAutoresizingMaskIntoConstraints="NO" id="aVe-aV-39H" customClass="CaptionTextView">
+                                        <rect key="frame" x="150" y="275" width="300" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="7f8-LI-fM9"/>
+                                            <constraint firstAttribute="width" constant="300" id="rk7-Pt-VWb"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hold_to_record_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="1" translatesAutoresizingMaskIntoConstraints="NO" id="ZrJ-X2-Mtw" customClass="UICustomLineLabel">
                                         <rect key="frame" x="164" y="282" width="272" height="36"/>
                                         <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="30"/>
@@ -246,12 +265,14 @@
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="BnX-DW-x71"/>
                                     <constraint firstAttribute="centerX" secondItem="ZrJ-X2-Mtw" secondAttribute="centerX" id="G6z-SD-eAZ"/>
                                     <constraint firstItem="ZCy-IZ-pCQ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="GgM-m0-dK5"/>
+                                    <constraint firstAttribute="centerY" secondItem="aVe-aV-39H" secondAttribute="centerY" id="Hsd-Wc-Qnr"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="width" secondItem="8ee-DQ-Tyu" secondAttribute="width" id="L0p-h3-N0a"/>
                                     <constraint firstItem="dZH-8B-oA5" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="6" id="NQt-to-G8E"/>
                                     <constraint firstAttribute="bottom" secondItem="hOb-67-bYR" secondAttribute="bottom" constant="10" id="Qh5-nj-O1F"/>
                                     <constraint firstItem="dZH-8B-oA5" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="S1j-Y6-JEE"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="YI8-op-pzm"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="a3J-Ht-ZTL"/>
+                                    <constraint firstAttribute="centerX" secondItem="aVe-aV-39H" secondAttribute="centerX" id="b5R-KP-ejA"/>
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="cAH-hE-KeG"/>
                                     <constraint firstAttribute="centerY" secondItem="ZrJ-X2-Mtw" secondAttribute="centerY" id="qil-IO-mQz"/>
                                     <constraint firstAttribute="bottom" secondItem="ePW-Ve-NCZ" secondAttribute="bottom" constant="5" id="uIs-um-DSv"/>
@@ -404,6 +425,8 @@
                         <outlet property="cancelConfirmTutoLabel" destination="lPg-dS-xws" id="0t1-9X-7GC"/>
                         <outlet property="cancelConfirmView" destination="97c-R3-Rzb" id="Ole-H5-VH1"/>
                         <outlet property="cancelTutoLabel" destination="qiD-Qr-Yah" id="t7Y-lT-eFh"/>
+                        <outlet property="captionButton" destination="AUk-ak-rpt" id="2nw-2q-IqH"/>
+                        <outlet property="captionTextView" destination="aVe-aV-39H" id="Pn8-0A-6LH"/>
                         <outlet property="friendListButton" destination="dZH-8B-oA5" id="NRc-MR-GTy"/>
                         <outlet property="friendVideoView" destination="zj4-3e-BD0" id="iyw-zj-3NG"/>
                         <outlet property="metadataView" destination="7AN-Sl-wRh" id="Ede-wF-OLm"/>

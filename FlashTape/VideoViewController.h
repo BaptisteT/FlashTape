@@ -12,6 +12,6 @@
 
 #import "FriendsViewController.h"
 
-@interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol>
+@interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol, UITextViewDelegate>
 
 @end
