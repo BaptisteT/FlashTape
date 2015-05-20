@@ -14,6 +14,8 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -556,7 +558,24 @@
                             </label>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fqE-Wo-oLJ">
                                 <rect key="frame" x="74" y="366" width="452" height="64"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="+234" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7gV-cD-zTY">
+                                        <rect key="frame" x="0.0" y="0.0" width="69" height="64"/>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
+                                        <color key="textColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qyJ-2F-08X">
+                                        <rect key="frame" x="71" y="0.0" width="310" height="64"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                                    </textField>
+                                </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="qyJ-2F-08X" secondAttribute="centerX" id="whu-Qf-2e5"/>
+                                </constraints>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="disclaimer_phone_number" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="buI-A1-hbb">
                                 <rect key="frame" x="74" y="202" width="452" height="53"/>
@@ -602,8 +621,10 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="colorView" destination="fqE-Wo-oLJ" id="gQW-r3-UxV"/>
+                        <outlet property="countryCodeLabel" destination="7gV-cD-zTY" id="yfU-oJ-uRA"/>
                         <outlet property="countryNameButton" destination="slU-4K-Im5" id="njg-1f-unP"/>
                         <outlet property="disclaimerTextView" destination="buI-A1-hbb" id="w2V-9D-sq5"/>
+                        <outlet property="numberTextField" destination="qyJ-2F-08X" id="Ehl-2g-TkT"/>
                         <outlet property="titleLabel" destination="exc-aI-9fM" id="Zmh-Rc-oOu"/>
                         <segue destination="XoT-i2-a1B" kind="show" identifier="Code From Phone" id="PP8-Fr-6yV"/>
                         <segue destination="NAH-h2-oWK" kind="show" identifier="Country From Phone" id="fRs-6t-rDJ"/>

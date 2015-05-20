@@ -47,7 +47,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     //ColorView
     [self doBackgroundColorAnimation];
     
