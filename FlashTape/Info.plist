@@ -48,6 +48,8 @@
 		<string>NHaasGroteskDSPro-65Md.ttf</string>
 		<string>NHaasGroteskDSPro-55Rg.ttf</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

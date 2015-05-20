@@ -23,4 +23,12 @@
 
 + (UIColor *)transparentGreen;
 
++ (UIColor *)purple;
+
++ (UIColor *)blue;
+
++ (UIColor *)pink;
+
++ (UIColor *)green;
+
 @end

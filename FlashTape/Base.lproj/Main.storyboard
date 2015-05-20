@@ -6,7 +6,14 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <mutableArray key="NHaasGroteskDSPro-55Rg.ttf">
+            <string>NHaasGroteskDSPro-55Rg</string>
+        </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
@@ -41,9 +48,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ca5-WV-ZY2">
-                                <rect key="frame" x="10" y="396" width="580" height="39"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mbS-NP-txz" userLabel="ColorView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Flashtape" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5P-zP-7gE">
+                                <rect key="frame" x="193" y="264" width="214" height="71"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="34"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ca5-WV-ZY2">
+                                <rect key="frame" x="10" y="498" width="580" height="62"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="GF1-9C-22x"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="19"/>
                                 <state key="normal" title="login_button">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -53,14 +74,21 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.56862745098039214" green="0.22352941176470587" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="Ca5-WV-ZY2" secondAttribute="centerY" constant="-21" id="2hT-Dx-q1d"/>
+                            <constraint firstAttribute="centerY" secondItem="y5P-zP-7gE" secondAttribute="centerY" id="5kf-pe-EYn"/>
+                            <constraint firstItem="mbS-NP-txz" firstAttribute="leading" secondItem="0wt-NZ-llf" secondAttribute="leading" id="BeP-Ec-Fay"/>
+                            <constraint firstItem="L6a-f6-Mzh" firstAttribute="top" secondItem="mbS-NP-txz" secondAttribute="bottom" id="KcS-Nx-X7R"/>
+                            <constraint firstAttribute="trailing" secondItem="mbS-NP-txz" secondAttribute="trailing" id="QBW-Eo-qZg"/>
                             <constraint firstItem="Ca5-WV-ZY2" firstAttribute="leading" secondItem="0wt-NZ-llf" secondAttribute="leading" constant="10" id="XBl-Uq-fod"/>
+                            <constraint firstAttribute="centerX" secondItem="y5P-zP-7gE" secondAttribute="centerX" id="XlC-Fx-EsU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Ca5-WV-ZY2" secondAttribute="trailing" constant="-6" id="YC2-L7-liz"/>
+                            <constraint firstItem="mbS-NP-txz" firstAttribute="top" secondItem="0wt-NZ-llf" secondAttribute="top" id="d2m-YY-Ht4"/>
                             <constraint firstAttribute="centerX" secondItem="Ca5-WV-ZY2" secondAttribute="centerX" id="h9V-dh-H6O"/>
-                            <constraint firstItem="L6a-f6-Mzh" firstAttribute="top" secondItem="Ca5-WV-ZY2" secondAttribute="bottom" constant="165" id="iBT-kK-rfH"/>
+                            <constraint firstItem="L6a-f6-Mzh" firstAttribute="top" secondItem="Ca5-WV-ZY2" secondAttribute="bottom" constant="10" id="iBT-kK-rfH"/>
                             <constraint firstAttribute="centerX" secondItem="Ca5-WV-ZY2" secondAttribute="centerX" id="npa-tH-yEH"/>
+                            <constraint firstAttribute="centerX" secondItem="mbS-NP-txz" secondAttribute="centerX" id="slH-gv-GHg"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -72,6 +100,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="uZl-C5-P1a"/>
                     <connections>
+                        <outlet property="colorView" destination="mbS-NP-txz" id="ywq-6v-fsw"/>
                         <outlet property="loginButton" destination="Ca5-WV-ZY2" id="i9e-kr-Bzw"/>
                         <segue destination="ut7-PO-jUy" kind="custom" identifier="Video From Welcome" customClass="PushNoAnimationSegue" id="U6D-kt-n9L"/>
                     </connections>
@@ -521,60 +550,58 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZh-GS-NkX">
-                                <rect key="frame" x="97" y="293" width="100" height="32"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <state key="normal" title="country_code">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="countryCodeButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="0uB-2T-qqH"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UzS-vI-VNQ">
-                                <rect key="frame" x="200" y="294" width="200" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="dfr-KW-qap"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="country" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tTs-wk-neC">
-                                <rect key="frame" x="43" y="301" width="49" height="17"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n7T-lP-vQc">
+                                <rect key="frame" x="125" y="343" width="350" height="69"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="555-555-555" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M5K-m1-sO9">
+                                        <rect key="frame" x="-21" y="0.0" width="392" height="69"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Your phone number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exc-aI-9fM" customClass="UICustomLineLabel">
+                                <rect key="frame" x="171" y="160" width="258" height="46"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="30"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Wd-rk-44x">
-                                <rect key="frame" x="410" y="294" width="36" height="30"/>
-                                <state key="normal" title="Send">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="validateButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="lzH-V2-hNh"/>
-                                </connections>
-                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" text="disclaimer_phone_number" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Ydr-3V-GF8">
+                                <rect key="frame" x="41" y="214" width="519" height="63"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="500" id="Mpv-A0-QhH"/>
+                                </constraints>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-55Rg" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="8Wd-rk-44x" firstAttribute="leading" secondItem="UzS-vI-VNQ" secondAttribute="trailing" constant="10" id="bye-WR-8c9"/>
-                            <constraint firstItem="qZh-GS-NkX" firstAttribute="centerY" secondItem="UzS-vI-VNQ" secondAttribute="centerY" id="ejJ-6j-TdA"/>
-                            <constraint firstAttribute="centerX" secondItem="UzS-vI-VNQ" secondAttribute="centerX" id="fcw-32-Gsk"/>
-                            <constraint firstAttribute="centerY" secondItem="UzS-vI-VNQ" secondAttribute="centerY" constant="-9" id="kcA-sU-0Gr"/>
-                            <constraint firstItem="qZh-GS-NkX" firstAttribute="leading" secondItem="tTs-wk-neC" secondAttribute="trailing" constant="5" id="lph-N7-O2C"/>
-                            <constraint firstItem="qZh-GS-NkX" firstAttribute="centerY" secondItem="tTs-wk-neC" secondAttribute="centerY" id="qsz-Ra-xcM"/>
-                            <constraint firstItem="8Wd-rk-44x" firstAttribute="centerY" secondItem="UzS-vI-VNQ" secondAttribute="centerY" id="tLg-XU-xKd"/>
-                            <constraint firstItem="UzS-vI-VNQ" firstAttribute="leading" secondItem="qZh-GS-NkX" secondAttribute="trailing" constant="3" id="xr5-A0-xgn"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="n7T-lP-vQc" secondAttribute="trailing" id="8vx-2a-6n0"/>
+                            <constraint firstAttribute="centerX" secondItem="Ydr-3V-GF8" secondAttribute="centerX" id="DxP-eN-Cdj"/>
+                            <constraint firstAttribute="centerX" secondItem="exc-aI-9fM" secondAttribute="centerX" id="GPh-Fq-dts"/>
+                            <constraint firstItem="n7T-lP-vQc" firstAttribute="top" secondItem="Ydr-3V-GF8" secondAttribute="bottom" constant="47" id="QRe-St-shv"/>
+                            <constraint firstAttribute="centerX" secondItem="n7T-lP-vQc" secondAttribute="centerX" id="aCx-Ei-yiP"/>
+                            <constraint firstItem="Ydr-3V-GF8" firstAttribute="top" secondItem="n7T-lP-vQc" secondAttribute="top" constant="50" id="k7E-pC-DVB"/>
+                            <constraint firstItem="exc-aI-9fM" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="96" id="m6q-jm-A34"/>
+                            <constraint firstItem="n7T-lP-vQc" firstAttribute="leading" secondItem="cOx-So-beR" secondAttribute="leadingMargin" id="rF5-AD-t63"/>
+                            <constraint firstItem="Ydr-3V-GF8" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="150" id="wlG-00-D4y"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="k7E-pC-DVB"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
-                        <outlet property="countryCodeButton" destination="qZh-GS-NkX" id="MIF-6s-Nsm"/>
-                        <outlet property="countryNameLabel" destination="tTs-wk-neC" id="px0-Pg-CWO"/>
-                        <outlet property="numberTextField" destination="UzS-vI-VNQ" id="i0Z-7Y-5J5"/>
-                        <outlet property="validationButton" destination="8Wd-rk-44x" id="4VV-YV-546"/>
+                        <outlet property="colorView" destination="n7T-lP-vQc" id="7FS-LA-XBa"/>
+                        <outlet property="numberTextField" destination="M5K-m1-sO9" id="gPw-1X-VWr"/>
+                        <outlet property="titleLabel" destination="exc-aI-9fM" id="Zmh-Rc-oOu"/>
                         <segue destination="XoT-i2-a1B" kind="show" identifier="Code From Phone" id="PP8-Fr-6yV"/>
                         <segue destination="NAH-h2-oWK" kind="show" identifier="Country From Phone" id="fRs-6t-rDJ"/>
                     </connections>

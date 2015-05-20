@@ -9,6 +9,7 @@
 #import "NBPhoneNumberUtil.h"
 #import "NBPhoneNumber.h"
 #import "RMPhoneFormat.h"
+#import "UICustomLineLabel.h"
 
 #import "ApiManager.h"
 
@@ -18,6 +19,7 @@
 
 #import "AddressbookUtils.h"
 #import "GeneralUtils.h"
+#import "ColorUtils.h"
 
 #define DEFAULT_COUNTRY @"USA"
 #define DEFAULT_COUNTRY_CODE 1
@@ -31,6 +33,9 @@
 @property (nonatomic, strong) NSString *decimalPhoneNumber;
 @property (nonatomic, strong) RMPhoneFormat *phoneFormat;
 @property (weak, nonatomic) IBOutlet UILabel *countryNameLabel;
+@property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
+@property (strong, nonatomic) IBOutlet UIView *colorView;
+@property (strong, nonatomic) IBOutlet UITextView *disclaimerTextView;
 
 @end
 
@@ -43,8 +48,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //ColorView
+    [self doBackgroundColorAnimation];
+    
     self.decimalPhoneNumber = @"";
     [self setInitialCountryInfo];
+    
+    //Label
+    self.titleLabel.lineType = LineTypeDown;
+    self.titleLabel.lineHeight = 4.0f;
+    self.disclaimerTextView.text = NSLocalizedString(@"disclaimer_phone_number", nil);
     
     // Button
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
@@ -196,5 +209,30 @@
     
     return NO;
 }
+
+
+// --------------------------------------------
+#pragma mark - Background Color Cycle
+// --------------------------------------------
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f animations:^{
+        self.colorView.backgroundColor = [colors objectAtIndex:i];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
+    
+}
+
 
 @end
