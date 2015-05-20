@@ -36,6 +36,8 @@
 @property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UITextView *disclaimerTextView;
+@property (strong, nonatomic) IBOutlet UIImageView *separatorImage;
+@property (strong, nonatomic) IBOutlet UIButton *doneI4Button;
 
 @end
 
@@ -47,21 +49,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
-    //ColorView
-    [self doBackgroundColorAnimation];
     
     self.decimalPhoneNumber = @"";
     [self setInitialCountryInfo];
     
+    //ColorView
+    [self doBackgroundColorAnimation];
+
     //Label
     self.titleLabel.lineType = LineTypeDown;
     self.titleLabel.lineHeight = 4.0f;
     self.disclaimerTextView.text = NSLocalizedString(@"disclaimer_phone_number", nil);
     
     // Button
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
     self.validationButton.hidden = YES;
+    self.doneI4Button.hidden = YES;
     
     // Textfield
     self.numberTextField.placeholder = NSLocalizedString(@"number_text_field_placeholder", nil);
@@ -70,12 +72,26 @@
         UIColor *color = [UIColor lightTextColor];
         self.numberTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.numberTextField.placeholder attributes:@{NSForegroundColorAttributeName: color}];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self.numberTextField becomeFirstResponder];
+    
+    if ([[UIScreen mainScreen] bounds].size.height == 480)
+    {
+        self.separatorImage.hidden = YES;
+        self.titleLabel.hidden = YES;
+        self.doneI4Button.hidden = NO;
+        CGRect frame = self.view.frame;
+        frame.origin.y -= 120;
+        self.view.frame = frame;
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -96,7 +112,7 @@
 // --------------------------------------------
 #pragma mark - Action
 // --------------------------------------------
-- (void)backButtonClicked {
+- (IBAction)backButtonClicked:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -211,6 +227,21 @@
     return NO;
 }
 
+- (void)keyboardWasShown:(NSNotification *)notification
+{
+    
+    // Get the size of the keyboard.
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    //Given size may not account for screen rotation
+    int height = MIN(keyboardSize.height,keyboardSize.width);
+    int width = MAX(keyboardSize.height,keyboardSize.width);
+    
+    //Show the separator
+    CGRect frame = self.separatorImage.frame;
+    frame.origin.y -= height;
+    self.separatorImage.frame = frame;
+}
 
 // --------------------------------------------
 #pragma mark - Background Color Cycle

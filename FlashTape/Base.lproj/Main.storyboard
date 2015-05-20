@@ -16,6 +16,9 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -567,6 +570,7 @@
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qyJ-2F-08X">
                                         <rect key="frame" x="71" y="0.0" width="310" height="64"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
                                         <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
@@ -601,21 +605,67 @@
                                     <action selector="countryCodeButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="rGt-KH-fE4"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tBx-dD-vLW">
+                                <rect key="frame" x="21" y="89" width="53" height="44"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
+                                <state key="normal" title="Back">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="wqI-bF-Cpv"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCZ-te-5Wo">
+                                <rect key="frame" x="526" y="89" width="53" height="44"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="validateButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="FA9-Qn-vzn"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="separator-black" translatesAutoresizingMaskIntoConstraints="NO" id="VQw-9i-I42">
+                                <rect key="frame" x="0.0" y="599" width="600" height="1"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kgr-By-jJK">
+                                <rect key="frame" x="273" y="452" width="55" height="30"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="validateButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="99Y-DU-sEE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="VQw-9i-I42" secondAttribute="trailing" constant="-16" id="0I4-fl-xht"/>
                             <constraint firstItem="buI-A1-hbb" firstAttribute="leading" secondItem="cOx-So-beR" secondAttribute="leadingMargin" constant="20" id="3by-gJ-IM7"/>
+                            <constraint firstItem="YCZ-te-5Wo" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="15" id="6Jv-Mu-TB1"/>
                             <constraint firstItem="fqE-Wo-oLJ" firstAttribute="leading" secondItem="cOx-So-beR" secondAttribute="leadingMargin" constant="2" id="E5b-2S-r62"/>
                             <constraint firstAttribute="trailingMargin" secondItem="buI-A1-hbb" secondAttribute="trailing" constant="20" id="KIt-dX-m2S"/>
                             <constraint firstAttribute="centerX" secondItem="slU-4K-Im5" secondAttribute="centerX" id="KVd-kw-bfl"/>
+                            <constraint firstAttribute="centerX" secondItem="VQw-9i-I42" secondAttribute="centerX" id="M5q-bY-Z5P"/>
                             <constraint firstAttribute="centerX" secondItem="buI-A1-hbb" secondAttribute="centerX" id="Mzg-Ot-lrG"/>
-                            <constraint firstItem="buI-A1-hbb" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="138" id="OYV-pC-rNu"/>
+                            <constraint firstItem="buI-A1-hbb" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="118" id="OYV-pC-rNu"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="YCZ-te-5Wo" secondAttribute="trailing" constant="5" id="XNn-a0-dr6"/>
                             <constraint firstAttribute="centerX" secondItem="exc-aI-9fM" secondAttribute="centerX" id="YdR-aD-TVJ"/>
                             <constraint firstItem="slU-4K-Im5" firstAttribute="top" secondItem="buI-A1-hbb" secondAttribute="bottom" constant="30" id="auf-Ku-HAw"/>
+                            <constraint firstItem="8oh-o8-vS6" firstAttribute="top" secondItem="VQw-9i-I42" secondAttribute="bottom" id="cTI-DP-v1E"/>
                             <constraint firstAttribute="centerX" secondItem="fqE-Wo-oLJ" secondAttribute="centerX" id="ct5-XD-zdL"/>
+                            <constraint firstItem="VQw-9i-I42" firstAttribute="leading" secondItem="cOx-So-beR" secondAttribute="leadingMargin" constant="-16" id="eIa-dd-jta"/>
+                            <constraint firstItem="tBx-dD-vLW" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="15" id="f9f-bA-JrC"/>
+                            <constraint firstAttribute="centerX" secondItem="kgr-By-jJK" secondAttribute="centerX" id="gUg-Co-DKe"/>
                             <constraint firstItem="fqE-Wo-oLJ" firstAttribute="top" secondItem="slU-4K-Im5" secondAttribute="bottom" constant="40" id="hLe-Oj-rX9"/>
+                            <constraint firstItem="kgr-By-jJK" firstAttribute="top" secondItem="fqE-Wo-oLJ" secondAttribute="bottom" constant="15" id="l20-ho-ybx"/>
+                            <constraint firstItem="tBx-dD-vLW" firstAttribute="leading" secondItem="cOx-So-beR" secondAttribute="leadingMargin" constant="5" id="to5-FY-apM"/>
                             <constraint firstAttribute="trailingMargin" secondItem="fqE-Wo-oLJ" secondAttribute="trailing" constant="20" id="u2g-rK-g7x"/>
-                            <constraint firstItem="exc-aI-9fM" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="96" id="xlI-Z1-6pZ"/>
+                            <constraint firstItem="exc-aI-9fM" firstAttribute="top" secondItem="G6b-zf-7dm" secondAttribute="bottom" constant="76" id="xlI-Z1-6pZ"/>
                         </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
@@ -624,8 +674,11 @@
                         <outlet property="countryCodeLabel" destination="7gV-cD-zTY" id="yfU-oJ-uRA"/>
                         <outlet property="countryNameButton" destination="slU-4K-Im5" id="njg-1f-unP"/>
                         <outlet property="disclaimerTextView" destination="buI-A1-hbb" id="w2V-9D-sq5"/>
+                        <outlet property="doneI4Button" destination="kgr-By-jJK" id="cat-qw-pvB"/>
                         <outlet property="numberTextField" destination="qyJ-2F-08X" id="Ehl-2g-TkT"/>
+                        <outlet property="separatorImage" destination="VQw-9i-I42" id="vYw-pM-Phc"/>
                         <outlet property="titleLabel" destination="exc-aI-9fM" id="Zmh-Rc-oOu"/>
+                        <outlet property="validationButton" destination="YCZ-te-5Wo" id="GIB-FB-zOK"/>
                         <segue destination="XoT-i2-a1B" kind="show" identifier="Code From Phone" id="PP8-Fr-6yV"/>
                         <segue destination="NAH-h2-oWK" kind="show" identifier="Country From Phone" id="fRs-6t-rDJ"/>
                     </connections>
@@ -640,6 +693,7 @@
         <image name="camera_flip_button" width="32" height="32"/>
         <image name="close_button" width="50" height="50"/>
         <image name="friends_button" width="32" height="32"/>
+        <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="U6D-kt-n9L"/>
