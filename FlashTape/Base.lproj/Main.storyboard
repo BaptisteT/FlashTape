@@ -372,22 +372,6 @@
                             <view contentMode="scaleToFill" restorationIdentifier="CameraView" translatesAutoresizingMaskIntoConstraints="NO" id="8ee-DQ-Tyu">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZCy-IZ-pCQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
-                                        <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="2nB-Lz-VdK"/>
-                                        </constraints>
-                                    </view>
-=======
->>>>>>> origin/master
-=======
->>>>>>> origin/master
->>>>>>> Stashed changes
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dZH-8B-oA5" userLabel="FriendButton">
                                         <rect key="frame" x="10" y="10" width="40" height="40"/>
                                         <constraints>
