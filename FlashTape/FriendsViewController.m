@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSArray *friends;
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
+@property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 @end
 
 @implementation FriendsViewController
@@ -66,52 +67,67 @@
 #pragma mark - Tableview
 // --------------------------------------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.friends.count + 1;
+    return self.friends.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
-    if (indexPath.row == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"InviteFriendsCell"];
-        cell.textLabel.text = NSLocalizedString(@"invite_friends_cell_title", nil);
-        cell.textLabel.textColor = [ColorUtils orange];
-    } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-        cell.backgroundColor = [UIColor clearColor];
-        User *friend = (User *)self.friends[indexPath.row -1];
-        cell.textLabel.text = self.contactDictionnary[friend.username];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"Score : %lu",(long)(friend.score ? friend.score : 0)];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)];
-    }
+    cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+    cell.backgroundColor = [UIColor clearColor];
+    User *friend = (User *)self.friends[indexPath.row];
+    cell.textLabel.text = self.contactDictionnary[friend.username];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"Score : %lu",(long)(friend.score ? friend.score : 0)];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)];
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        // Redirect to sms
-        if(![MFMessageComposeViewController canSendText]) {
-            [GeneralUtils showMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
-            return;
-        }
-        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-        messageController.messageComposeDelegate = self;
-        [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeAppStoreLink]];
-        [self presentViewController:messageController animated:YES completion:nil];
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        return 44;
-    } else {
-        return 60;
+-(void)viewDidLayoutSubviews
+{
+    if ([self.friendsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.friendsTableView setSeparatorInset:UIEdgeInsetsZero];
     }
+    
+    if ([self.friendsTableView
+         respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (indexPath.row == 0) {
+//        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+        return 80;
 }
 
 // ----------------------------------------------------------
 #pragma mark SMS controller
 // ----------------------------------------------------------
+- (IBAction)inviteButtonClicked:(id)sender{
+    // Redirect to sms
+    if(![MFMessageComposeViewController canSendText]) {
+        [GeneralUtils showMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
+        return;
+    }
+    MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+    messageController.messageComposeDelegate = self;
+    [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeAppStoreLink]];
+    [self presentViewController:messageController animated:YES completion:nil];
+}
 // Dismiss message after finish
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
 {
@@ -162,6 +178,7 @@
     
     [UIView animateWithDuration:1.5f animations:^{
         self.colorView.backgroundColor = [colors objectAtIndex:i];
+        [self.inviteButton setTitleColor:[colors objectAtIndex:i] forState:UIControlStateNormal];
     } completion:^(BOOL finished) {
         ++i;
         [self doBackgroundColorAnimation];

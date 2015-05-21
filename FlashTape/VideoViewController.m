@@ -67,11 +67,11 @@
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
-@property (weak, nonatomic) IBOutlet UILabel *releaseToSendTuto;
+@property (weak, nonatomic) IBOutlet UICustomLineLabel *releaseToSendTuto;
 @property (weak, nonatomic) IBOutlet UIView *cancelAreaView;
 @property (weak, nonatomic) IBOutlet UILabel *cancelTutoLabel;
 @property (weak, nonatomic) IBOutlet UIView *cancelConfirmView;
-@property (weak, nonatomic) IBOutlet UILabel *cancelConfirmTutoLabel;
+@property (weak, nonatomic) IBOutlet UICustomLineLabel *cancelConfirmTutoLabel;
 
 // Sending
 @property (strong, nonatomic) VideoPost *postToSend; // preview post
@@ -156,7 +156,7 @@
     
     // Recording progress bar
     self.recordingProgressBar = [[UIView alloc] init];
-    self.recordingProgressBar.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.2];
+    self.recordingProgressBar.backgroundColor = [UIColor whiteColor];
     [self.recordingProgressContainer addSubview:self.recordingProgressBar];
     self.recordingProgressContainer.hidden = YES;
     
@@ -191,8 +191,12 @@
     
     // Preview
     self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
+    self.releaseToSendTuto.lineType = LineTypeDown;
+    self.releaseToSendTuto.lineHeight = 4.0f;
     self.cancelTutoLabel.text = NSLocalizedString(@"move_your_finger_to_cancel", nil);
     self.cancelConfirmTutoLabel.text = NSLocalizedString(@"release_to_cancel", nil);
+    self.cancelConfirmTutoLabel.lineType = LineTypeDown;
+    self.cancelConfirmTutoLabel.lineHeight = 4.0f;
     self.previewView.player.loopEnabled = YES;
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     

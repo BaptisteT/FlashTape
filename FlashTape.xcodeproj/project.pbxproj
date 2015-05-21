@@ -54,7 +54,6 @@
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
-		3C5F97DE1AEBB1F30098F70F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DD1AEBB1F30098F70F /* Images.xcassets */; };
 		3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97F71AEBB3530098F70F /* Localizable.strings */; };
 		3C5F97FF1AEBB4620098F70F /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97FE1AEBB4620098F70F /* VideoViewController.m */; };
 		3C5F98031AEBBC560098F70F /* VideoPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98021AEBBC560098F70F /* VideoPost.m */; };
@@ -104,6 +103,8 @@
 		3C5F98AA1AED168F0098F70F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A91AED168F0098F70F /* Social.framework */; };
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
 		3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */; };
+		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
+		A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4A087EF1B0E4F5700292202 /* Images.xcassets */; };
 		A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */; };
 		A4CE875A1B0913DE00DC20DC /* NHaasGroteskDSPro-65Md.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87561B09133200DC20DC /* NHaasGroteskDSPro-65Md.ttf */; };
 		A4CE875B1B0913DE00DC20DC /* NHaasGroteskDSPro-75Bd.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87571B09133200DC20DC /* NHaasGroteskDSPro-75Bd.ttf */; };
@@ -191,7 +192,6 @@
 		3C5F97D11AEBB1F30098F70F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3C5F97D21AEBB1F30098F70F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3C5F97DB1AEBB1F30098F70F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		3C5F97DD1AEBB1F30098F70F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		3C5F97F71AEBB3530098F70F /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		3C5F97FD1AEBB4620098F70F /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
 		3C5F97FE1AEBB4620098F70F /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
@@ -272,6 +272,8 @@
 		3C5F98AC1AED1A930098F70F /* ApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiManager.m; sourceTree = "<group>"; };
 		3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralUtils.h; sourceTree = "<group>"; };
 		3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralUtils.m; sourceTree = "<group>"; };
+		A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
+		A4A087EF1B0E4F5700292202 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-55Rg.ttf"; sourceTree = "<group>"; };
 		A4CE87561B09133200DC20DC /* NHaasGroteskDSPro-65Md.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-65Md.ttf"; sourceTree = "<group>"; };
 		A4CE87571B09133200DC20DC /* NHaasGroteskDSPro-75Bd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-75Bd.ttf"; sourceTree = "<group>"; };
@@ -457,7 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				3C5F97DA1AEBB1F30098F70F /* Main.storyboard */,
-				3C5F97DD1AEBB1F30098F70F /* Images.xcassets */,
+				A4A087EF1B0E4F5700292202 /* Images.xcassets */,
 				3C2C4A591AFBD04600E0E4BF /* PushNoAnimationSegue.h */,
 				3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */,
 				3C2C4A4D1AFB5EB000E0E4BF /* PhoneCountries.txt */,
@@ -465,6 +467,7 @@
 				3C2C4C181B04DB2000E0E4BF /* green.png */,
 				3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */,
 				A4CE87581B09133800DC20DC /* Fonts */,
+				A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */,
 			);
 			name = Ressources;
 			sourceTree = "<group>";
@@ -703,11 +706,12 @@
 				3C2C4A521AFB6F8E00E0E4BF /* PhoneNumberMetaData.json in Resources */,
 				3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */,
 				3C2C4C1D1B04DB2000E0E4BF /* green.png in Resources */,
+				A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */,
 				3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */,
+				A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */,
 				3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */,
 				3C2C4B771B04B08700E0E4BF /* FacebookSDK.strings in Resources */,
 				3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */,
-				3C5F97DE1AEBB1F30098F70F /* Images.xcassets in Resources */,
 				3C2C4A6F1AFE231F00E0E4BF /* DateTools.bundle in Resources */,
 				3C2C4C221B05F73A00E0E4BF /* whiteNoise.wav in Resources */,
 			);
