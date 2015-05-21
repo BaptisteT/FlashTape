@@ -19,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>15</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
@@ -48,17 +48,11 @@
 			<false/>
 		</dict>
 	</dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>NHaasGroteskDSPro-75Bd.ttf</string>
-		<string>NHaasGroteskDSPro-65Md.ttf</string>
-		<string>NHaasGroteskDSPro-55Rg.ttf</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

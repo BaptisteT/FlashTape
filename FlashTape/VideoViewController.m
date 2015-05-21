@@ -562,9 +562,7 @@
         exporter.outputFileType = AVFileTypeMPEG4;
         exporter.shouldOptimizeForNetworkUse = YES;
         
-        if (self.captionTextView.text.length != 0) {
-            exporter.videoComposition = [self addCaptionToVideo:asset];
-        }
+        exporter.videoComposition = [self addCaptionToVideo:asset];
 
         // Export
         [exporter exportAsynchronouslyWithCompletionHandler: ^{
