@@ -76,6 +76,7 @@
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
+    [[UITextField appearance] setTintColor:[UIColor whiteColor]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
