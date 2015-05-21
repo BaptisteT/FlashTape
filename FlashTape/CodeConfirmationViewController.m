@@ -42,11 +42,13 @@
     //Color View
     [self doBackgroundColorAnimation];
     
-    //TextField delegate
+    //TextField
     self.codeTextField1.delegate = self;
     self.codeTextField2.delegate = self;
     self.codeTextField3.delegate = self;
     self.codeTextField4.delegate = self;
+    [[UITextField appearance] setTintColor:[UIColor whiteColor]];
+
     
     //Label
     self.titleLabel.lineType = LineTypeDown;
@@ -122,6 +124,7 @@
         }
         return NO;
     }
+    
     return YES;
 }
 

@@ -164,7 +164,7 @@
     // Metadata
     [self.friendVideoView bringSubviewToFront:self.metadataView];
     self.playingProgressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
-    self.playingProgressView.backgroundColor = [ColorUtils transparentOrange];
+    self.playingProgressView.backgroundColor = [UIColor whiteColor];
     self.playingProgressView.userInteractionEnabled = NO;
     [self.metadataView insertSubview:self.playingProgressView atIndex:0];
     self.playingProgressViewLongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGestureOnMetaDataView:)];
@@ -386,6 +386,9 @@
 
 - (IBAction)captionButtonClicked:(id)sender {
     [self.captionTextView becomeFirstResponder];
+}
+-(IBAction)backToCameraButtonClicked:(id)sender {
+    [self setCameraMode];
 }
 
 // --------------------------------------------
@@ -834,28 +837,6 @@
         return NO;
     }
     return YES;
-}
-
-// --------------------------------------------
-#pragma mark - Background Color Cycle
-// --------------------------------------------
-- (void) doBackgroundColorAnimation {
-    static NSInteger i = 0;
-    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
-                       [ColorUtils purple],
-                       [ColorUtils blue],
-                       [ColorUtils green],
-                       [ColorUtils orange], nil];
-    if(i >= [colors count]) {
-        i = 0;
-    }
-    
-    [UIView animateWithDuration:1.5f animations:^{
-        self.replayButton.backgroundColor = [colors objectAtIndex:i];
-    } completion:^(BOOL finished) {
-        ++i;
-        [self doBackgroundColorAnimation];
-    }];
 }
 
 // --------------------------------------------
