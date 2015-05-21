@@ -82,6 +82,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
     _isExporting = NO;
     _longPressRunning = NO;
     self.isSendingCount = 0;
@@ -695,7 +697,7 @@
             buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
             _videoIndex = self.videoPostArray.count - kkk;
-            self.replayButton.backgroundColor = [ColorUtils transparentOrange];
+            self.replayButton.backgroundColor = [ColorUtils purple];
             buttonTitle = [NSString stringWithFormat:@"%d %@",kkk,kkk < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
@@ -725,6 +727,29 @@
         return NO;
     }
     return YES;
+}
+
+// --------------------------------------------
+#pragma mark - Background Color Cycle
+// --------------------------------------------
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f animations:^{
+        self.replayButton.backgroundColor = [colors objectAtIndex:i];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
+    
 }
 
 @end

@@ -18,12 +18,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) NSArray *friends;
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
+@property (strong, nonatomic) IBOutlet UIView *colorView;
 @end
 
 @implementation FriendsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self doBackgroundColorAnimation];
+    self.colorView.alpha = 0.5;
     
     // Tableview
     self.friendsTableView.dataSource = self;
@@ -75,7 +79,7 @@
         cell.backgroundColor = [UIColor clearColor];
         User *friend = (User *)self.friends[indexPath.row -1];
         cell.textLabel.text = self.contactDictionnary[friend.username];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"Score : %lu",friend.score ? friend.score : 0];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu",friend.score ? friend.score : 0];
     }
     return cell;
 }
@@ -116,5 +120,29 @@
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }
+
+// --------------------------------------------
+#pragma mark - Background Color Cycle
+// --------------------------------------------
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f animations:^{
+        self.colorView.backgroundColor = [colors objectAtIndex:i];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
+    
+}
+
 
 @end
