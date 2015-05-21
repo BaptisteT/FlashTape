@@ -387,6 +387,7 @@
 - (IBAction)captionButtonClicked:(id)sender {
     [self.captionTextView becomeFirstResponder];
 }
+
 -(IBAction)backToCameraButtonClicked:(id)sender {
     [self setCameraMode];
 }
@@ -717,6 +718,7 @@
         [self endPreviewMode];
         self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     } else {
+        [self.playingProgressView.layer removeAllAnimations];
         [self.whiteNoisePlayer pause];
         [self.friendVideoView.player pause];
         [self.friendVideoView.player seekToTime:kCMTimeZero];
