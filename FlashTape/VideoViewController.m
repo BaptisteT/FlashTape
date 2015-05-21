@@ -26,6 +26,9 @@
 #import "NSDate+DateTools.h"
 #import "TrackingUtils.h"
 
+// Degrees to radians
+#define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
+
 @interface VideoViewController ()
 
 // Contacts
@@ -75,6 +78,7 @@
 @property (strong, nonatomic) NSMutableArray *failedVideoPostArray;
 @property (nonatomic) NSInteger isSendingCount;
 @property (weak, nonatomic) IBOutlet UIView *sendingLoaderView;
+@property (strong, nonatomic) MBProgressHUD* sendingHud;
 
 
 @end
@@ -98,6 +102,12 @@
     _isExporting = NO;
     _longPressRunning = NO;
     self.isSendingCount = 0;
+    
+    // HUD
+    self.sendingHud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
+    self.sendingHud.color = [UIColor clearColor];
+    self.sendingHud.activityIndicatorColor = [ColorUtils orange];
+    [self.sendingLoaderView addSubview:self.sendingHud];
     
     // Recording gesture
     self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
@@ -618,18 +628,15 @@
 }
 
 - (void)setIsSendingCount:(NSInteger)isSendingCount {
-    // sending anim
-    if (_isSendingCount != 0 && isSendingCount == 0) {
-        [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
-    } else if (_isSendingCount == 0 && isSendingCount != 0) {
-        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
-        hud.color = [UIColor clearColor];
-        hud.activityIndicatorColor = [ColorUtils orange];
-        [self.sendingLoaderView addSubview:hud];
-        [hud show:YES];
-    }
     _isSendingCount = isSendingCount;
+    // sending anim
+    if (_isSendingCount !=0) {
+        [self.sendingHud show:YES];
+    } else {
+        [self.sendingHud hide:YES];
+    }
 }
+
 // --------------------------------------------
 #pragma mark - SCRecorderDelegate
 // --------------------------------------------
@@ -932,10 +939,15 @@
         videoAssetOrientation_ = UIImageOrientationDown;
     }
     
-    //
-    CGAffineTransform t1 = CGAffineTransformTranslate(CGAffineTransformIdentity, isVideoAssetPortrait_ ? 0 : videoAssetTrack.naturalSize.width, isVideoAssetPortrait_? videoAssetTrack.naturalSize.height : 0);
-    CGAffineTransform t2 = CGAffineTransformScale(t1, isVideoAssetPortrait_? 1 : -1, isVideoAssetPortrait_ ? -1 : 1);
-    [videolayerInstruction setTransform:t2 atTime:kCMTimeZero];
+    // todo bt
+    BOOL isFront = self.recorder.device == AVCaptureDevicePositionFront;
+    if (isFront) {
+        CGAffineTransform t = CGAffineTransformMakeScale(-1.0f, 1.0f);
+        t = CGAffineTransformTranslate(t, -videoAssetTrack.naturalSize.width, 0);
+        t = CGAffineTransformRotate(t, (DEGREES_TO_RADIANS(90.0)));
+        t = CGAffineTransformTranslate(t, 0.0f, -videoAssetTrack.naturalSize.width);
+        [videolayerInstruction setTransform:t atTime:kCMTimeZero];
+    }
     //
     
     mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
