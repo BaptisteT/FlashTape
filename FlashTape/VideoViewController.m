@@ -593,11 +593,13 @@
                 [TrackingUtils trackVideoSent];
                 if (![self isPlayingMode])
                     [self setReplayButtonUI];
+                self.captionTextView.text = @"";
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];
                 [self setReplayButtonUI];
                 [TrackingUtils trackVideoSendingFailure];
+                self.captionTextView.text = @"";
             }];
 }
 
@@ -881,6 +883,12 @@
     return YES;
 }
 
+- (void)textViewDidChange:(UITextView *)textView {
+    CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(self.view.frame.size.width, 1000)];
+    CGRect previousFrame = self.captionTextView.frame;
+    self.captionTextView.frame = CGRectMake(previousFrame.origin.x + (previousFrame.size.width - size.width) / 2, previousFrame.origin.y + previousFrame.size.height - size.height, size.width, size.height);
+}
+
 
 // ----------------------------------------------------------
 #pragma mark Keyboard
@@ -897,8 +905,8 @@
     CGRect keyboardRect = [aValue CGRectValue];
     self.captionTextView.transform = CGAffineTransformIdentity;
     CGFloat width = self.view.frame.size.width;
-    CGFloat height = [self.captionTextView sizeThatFits:CGSizeMake(width, 1000)].height;
-    self.captionTextView.frame = CGRectMake(0, keyboardRect.origin.y - height, width, height);
+    CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(width, 1000)];
+    self.captionTextView.frame = CGRectMake(self.view.frame.size.width/2 - size.width/2, keyboardRect.origin.y - size.height, size.width, size.height);
 }
 
 // Caption transformed UI
