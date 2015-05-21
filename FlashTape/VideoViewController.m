@@ -913,6 +913,7 @@
     mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
     AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
     AVMutableVideoCompositionLayerInstruction *videolayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoAssetTrack];
+    
     UIImageOrientation videoAssetOrientation_  = UIImageOrientationUp;
     BOOL isVideoAssetPortrait_  = NO;
     CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
@@ -930,6 +931,12 @@
     if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0) {
         videoAssetOrientation_ = UIImageOrientationDown;
     }
+    
+    //
+    CGAffineTransform t1 = CGAffineTransformTranslate(CGAffineTransformIdentity, isVideoAssetPortrait_ ? 0 : videoAssetTrack.naturalSize.width, isVideoAssetPortrait_? videoAssetTrack.naturalSize.height : 0);
+    CGAffineTransform t2 = CGAffineTransformScale(t1, isVideoAssetPortrait_? 1 : -1, isVideoAssetPortrait_ ? -1 : 1);
+    [videolayerInstruction setTransform:t2 atTime:kCMTimeZero];
+    //
     
     mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
     AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
