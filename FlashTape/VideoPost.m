@@ -47,10 +47,10 @@
         } else {
             [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                 if (data) {
-                    [self saveDataToLocalURL:[self.videoFile getData]];
+                    [self saveDataToLocalURL:data];
                 } else {
                     if ([self.videoFile isDataAvailable]) {
-                        [self saveDataToLocalURL:[self.videoFile getData]];
+                        [self saveDataToLocalURL:data];
                     } else {
                         NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
                     }

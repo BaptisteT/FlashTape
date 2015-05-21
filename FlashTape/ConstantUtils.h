@@ -14,9 +14,9 @@
 @end
 
 // System
-static NSString * const kFlashTapeAppStoreLink = @"";
-static NSString * const kFlashTapeWebsiteLink = @"";
-static NSString * const kFlashTapeAppLinkUrl = @"https://www.mydomain.com/myapplink";
+static NSString * const kFlashTapeAppStoreLink = @""; // todo BT
+static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
+static NSString * const kFlashTapeAppLinkUrl = @"https://www.mydomain.com/myapplink"; // todo BT
 
 // Feed
 static const NSInteger kFeedHistoryInHours = 24;

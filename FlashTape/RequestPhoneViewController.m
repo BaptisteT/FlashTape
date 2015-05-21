@@ -9,6 +9,7 @@
 #import "NBPhoneNumberUtil.h"
 #import "NBPhoneNumber.h"
 #import "RMPhoneFormat.h"
+#import "UICustomLineLabel.h"
 
 #import "ApiManager.h"
 
@@ -18,6 +19,7 @@
 
 #import "AddressbookUtils.h"
 #import "GeneralUtils.h"
+#import "ColorUtils.h"
 
 #define DEFAULT_COUNTRY @"USA"
 #define DEFAULT_COUNTRY_CODE 1
@@ -25,12 +27,17 @@
 
 @interface RequestPhoneViewController ()
 
-@property (weak, nonatomic) IBOutlet UIButton *countryCodeButton;
+@property (weak, nonatomic) IBOutlet UILabel *countryCodeLabel;
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UIButton *validationButton;
 @property (nonatomic, strong) NSString *decimalPhoneNumber;
 @property (nonatomic, strong) RMPhoneFormat *phoneFormat;
-@property (weak, nonatomic) IBOutlet UILabel *countryNameLabel;
+@property (weak, nonatomic) IBOutlet UIButton *countryNameButton;
+@property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
+@property (strong, nonatomic) IBOutlet UIView *colorView;
+@property (strong, nonatomic) IBOutlet UITextView *disclaimerTextView;
+@property (strong, nonatomic) IBOutlet UIImageView *separatorImage;
+@property (strong, nonatomic) IBOutlet UIButton *doneI4Button;
 
 @end
 
@@ -46,9 +53,17 @@
     self.decimalPhoneNumber = @"";
     [self setInitialCountryInfo];
     
+    //ColorView
+    [self doBackgroundColorAnimation];
+
+    //Label
+    self.titleLabel.lineType = LineTypeDown;
+    self.titleLabel.lineHeight = 4.0f;
+    self.disclaimerTextView.text = NSLocalizedString(@"disclaimer_phone_number", nil);
+    
     // Button
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain target:self action:@selector(backButtonClicked)];
     self.validationButton.hidden = YES;
+    self.doneI4Button.hidden = YES;
     
     // Textfield
     self.numberTextField.placeholder = NSLocalizedString(@"number_text_field_placeholder", nil);
@@ -57,12 +72,26 @@
         UIColor *color = [UIColor lightTextColor];
         self.numberTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.numberTextField.placeholder attributes:@{NSForegroundColorAttributeName: color}];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self.numberTextField becomeFirstResponder];
+    
+    if ([[UIScreen mainScreen] bounds].size.height == 480)
+    {
+        self.separatorImage.hidden = YES;
+        self.titleLabel.hidden = YES;
+        self.doneI4Button.hidden = NO;
+        CGRect frame = self.view.frame;
+        frame.origin.y -= 120;
+        self.view.frame = frame;
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -83,14 +112,14 @@
 // --------------------------------------------
 #pragma mark - Action
 // --------------------------------------------
-- (void)backButtonClicked {
+- (IBAction)backButtonClicked:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)validateButtonClicked:(id)sender {
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     NSError *aError = nil;
-    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeButton.titleLabel.text substringFromIndex:1], self.decimalPhoneNumber];
+    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.text substringFromIndex:1], self.decimalPhoneNumber];
     NBPhoneNumber *myNumber = [phoneUtil parse:internationalPhoneNumber
                                  defaultRegion:nil error:&aError];
     
@@ -152,9 +181,10 @@
 {
     self.phoneFormat = [[RMPhoneFormat alloc] initWithDefaultCountry:letterCode];
     
-    [self.countryCodeButton setTitle:[NSString stringWithFormat:@"+%@", code] forState: UIControlStateNormal];
+    self.countryCodeLabel.text = [NSString stringWithFormat:@"+%@", code];
     self.numberTextField.text = [self.phoneFormat format:self.decimalPhoneNumber];
-    self.countryNameLabel.text = [letterCode uppercaseString];
+    self.countryNameButton.titleLabel.text = [NSString stringWithFormat:@"%@ ❯",countryName];
+    [self.countryNameButton setTitle:[NSString stringWithFormat:@"%@ ❯",countryName] forState:UIControlStateNormal];
 }
 
 
@@ -183,7 +213,7 @@
     
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     NSError *aError = nil;
-    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeButton.titleLabel.text substringFromIndex:1], self.decimalPhoneNumber];
+    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.text substringFromIndex:1], self.decimalPhoneNumber];
     NBPhoneNumber *myNumber = [phoneUtil parse:internationalPhoneNumber
                                  defaultRegion:nil error:&aError];
     
@@ -196,5 +226,44 @@
     
     return NO;
 }
+
+- (void)keyboardWasShown:(NSNotification *)notification
+{
+    
+    // Get the size of the keyboard.
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    //Given size may not account for screen rotation
+    int height = MIN(keyboardSize.height,keyboardSize.width);
+    
+    //Show the separator
+    CGRect frame = self.separatorImage.frame;
+    frame.origin.y -= height;
+    self.separatorImage.frame = frame;
+}
+
+// --------------------------------------------
+#pragma mark - Background Color Cycle
+// --------------------------------------------
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f animations:^{
+        self.colorView.backgroundColor = [colors objectAtIndex:i];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
+    
+}
+
 
 @end

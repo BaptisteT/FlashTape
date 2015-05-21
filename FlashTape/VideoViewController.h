@@ -10,8 +10,9 @@
 
 #import "SCRecorder.h"
 
+#import "CaptionTextView.h"
 #import "FriendsViewController.h"
 
-@interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol, UITextViewDelegate>
+@interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol, UITextViewDelegate, CaptionTextViewProtocol>
 
 @end

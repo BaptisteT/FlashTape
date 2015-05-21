@@ -55,8 +55,12 @@
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *recordTutoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
 @property (weak, nonatomic) IBOutlet UIButton *friendListButton;
+
+// Caption
 @property (weak, nonatomic) IBOutlet UIButton *captionButton;
-@property (weak, nonatomic) IBOutlet CaptionTextView *captionTextView;
+@property (strong, nonatomic) CaptionTextView *captionTextView;
+@property (nonatomic) CGAffineTransform captionTransform;
+@property (nonatomic) CGPoint captionCenter;
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
@@ -87,8 +91,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     _videoIndex = 0;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+
     _isExporting = NO;
     _longPressRunning = NO;
     self.isSendingCount = 0;
@@ -99,9 +105,13 @@
     [self.view addGestureRecognizer:self.longPressGestureRecogniser];
     
     // Caption
+    self.captionTextView = [[CaptionTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
+    [self.cameraView insertSubview:self.captionTextView belowSubview:self.replayButton];
     self.captionTextView.hidden = YES;
     self.captionTextView.text = @"";// todo bt memory of last caption ?
     self.captionTextView.delegate = self;
+    self.captionTextView.captionDelegate = self;
+    self.captionTransform = CGAffineTransformIdentity;
     
     // Audio session
     AVAudioSession* audioSession = [AVAudioSession sharedInstance];
@@ -119,6 +129,8 @@
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
+    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
+    _recorder.audioConfiguration.preset = SCPresetLowQuality;
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeQuickTimeMovie;
     _recorder.session = session;
@@ -150,7 +162,7 @@
     self.whiteNoisePlayer.numberOfLoops = -1;
     
     // Metadata
-    [self.view bringSubviewToFront:self.metadataView];
+    [self.friendVideoView bringSubviewToFront:self.metadataView];
     self.playingProgressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
     self.playingProgressView.backgroundColor = [ColorUtils transparentOrange];
     self.playingProgressView.userInteractionEnabled = NO;
@@ -211,6 +223,14 @@
                                              selector: @selector(routeChangeCallback:)
                                                  name: AVAudioSessionRouteChangeNotification
                                                object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
     
     // Start with camera
     [self setCameraMode];
@@ -228,7 +248,6 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
     // Camera
     self.recorder.previewView = self.cameraView;
 }
@@ -264,7 +283,7 @@
 // --------------------------------------------
 - (void)retrieveVideo {
     // Add current user to contacts array
-    NSMutableArray *contactArray = [NSMutableArray new];//[NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
+    NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
     [contactArray addObject:[User currentUser].username];
     
     // Get video
@@ -290,9 +309,7 @@
         if (!isExporting) {
             [self startRecording];
         }
-        if ([self.captionTextView isFirstResponder]) {
-            [self.captionTextView resignFirstResponder];
-        }
+        [self.captionTextView resignFirstResponder];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         if ([self isPreviewMode]) {
             BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
@@ -368,11 +385,7 @@
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
-    self.recordTutoLabel.hidden = YES;
-    self.captionTextView.hidden = NO;
     [self.captionTextView becomeFirstResponder];
-    // todo BT
-    // keyboard will show to position
 }
 
 // --------------------------------------------
@@ -541,66 +554,6 @@
         _isExporting = NO;
         NSLog(@"too short");
     } else {
-        ////////////
-        // 2 - Create AVMutableComposition object. This object will hold your AVMutableCompositionTrack instances.
-        AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];
-
-//        // 3 - Video track
-        AVMutableCompositionTrack *videoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
-                                                                            preferredTrackID:kCMPersistentTrackID_Invalid];
-        [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,recordSession.assetRepresentingSegments.duration)
-                            ofTrack:[[recordSession.assetRepresentingSegments tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
-                             atTime:kCMTimeZero error:nil];
-        
-        // 3.1 - Create AVMutableVideoCompositionInstruction
-        AVMutableVideoCompositionInstruction *mainInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-        mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, recordSession.assetRepresentingSegments.duration);
-        
-        // 3.2 - Create an AVMutableVideoCompositionLayerInstruction for the video track and fix the orientation.
-        AVMutableVideoCompositionLayerInstruction *videolayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
-        AVAssetTrack *videoAssetTrack = [[recordSession.assetRepresentingSegments tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-        UIImageOrientation videoAssetOrientation_  = UIImageOrientationUp;
-        BOOL isVideoAssetPortrait_  = NO;
-        CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
-        if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
-            videoAssetOrientation_ = UIImageOrientationRight;
-            isVideoAssetPortrait_ = YES;
-        }
-        if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
-            videoAssetOrientation_ =  UIImageOrientationLeft;
-            isVideoAssetPortrait_ = YES;
-        }
-        if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0) {
-            videoAssetOrientation_ =  UIImageOrientationUp;
-        }
-        if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0) {
-            videoAssetOrientation_ = UIImageOrientationDown;
-        }
-        [videolayerInstruction setTransform:videoAssetTrack.preferredTransform atTime:kCMTimeZero];
-        [videolayerInstruction setOpacity:0.0 atTime:recordSession.assetRepresentingSegments.duration];
-        
-        // 3.3 - Add instructions
-        mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
-        
-        AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
-        
-        CGSize naturalSize;
-        if(isVideoAssetPortrait_){
-            naturalSize = CGSizeMake(videoAssetTrack.naturalSize.height, videoAssetTrack.naturalSize.width);
-        } else {
-            naturalSize = videoAssetTrack.naturalSize;
-        }
-        
-        float renderWidth, renderHeight;
-        renderWidth = naturalSize.width;
-        renderHeight = naturalSize.height;
-        mainCompositionInst.renderSize = CGSizeMake(renderWidth, renderHeight);
-        mainCompositionInst.instructions = [NSArray arrayWithObject:mainInstruction];
-        mainCompositionInst.frameDuration = CMTimeMake(1, 30);
-        
-        [self applyVideoEffectsToComposition:mainCompositionInst size:naturalSize];
-        
-        ///////////
         AVAsset *asset = recordSession.assetRepresentingSegments;
         AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:asset
                                                                           presetName:AVAssetExportPresetMediumQuality];
@@ -608,7 +561,10 @@
         exporter.outputURL = recordSession.outputUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
         exporter.shouldOptimizeForNetworkUse = YES;
-        exporter.videoComposition = mainCompositionInst;
+        
+        if (self.captionTextView.text.length != 0) {
+            exporter.videoComposition = [self addCaptionToVideo:asset];
+        }
 
         // Export
         [exporter exportAsynchronouslyWithCompletionHandler: ^{
@@ -624,36 +580,6 @@
         }];
     }
 }
-
-- (void)applyVideoEffectsToComposition:(AVMutableVideoComposition *)composition size:(CGSize)size
-{
-    // 1 - Set up the text layer
-    CATextLayer *subtitle1Text = [[CATextLayer alloc] init];
-    [subtitle1Text setFont:@"Helvetica-Bold"];
-    [subtitle1Text setFontSize:36];
-    [subtitle1Text setFrame:CGRectMake(0, 0, size.width, 200)];
-    [subtitle1Text setString:@"yo yo caption"];
-    [subtitle1Text setAlignmentMode:kCAAlignmentCenter];
-    [subtitle1Text setForegroundColor:[[UIColor whiteColor] CGColor]];
-    
-    // 2 - The usual overlay
-    CALayer *overlayLayer = [CALayer layer];
-    [overlayLayer addSublayer:subtitle1Text];
-    overlayLayer.frame = CGRectMake(0, 0, size.width, size.height);
-    [overlayLayer setMasksToBounds:YES];
-
-    CALayer *parentLayer = [CALayer layer];
-    CALayer *videoLayer = [CALayer layer];
-    parentLayer.frame = CGRectMake(0, 0, size.width, size.height);
-    videoLayer.frame = CGRectMake(0, 0, size.width, size.height);
-    [parentLayer addSublayer:videoLayer];
-    [parentLayer addSublayer:overlayLayer];
-    
-    composition.animationTool = [AVVideoCompositionCoreAnimationTool
-                                 videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
-    
-}
-
 
 
 // --------------------------------------------
@@ -689,15 +615,15 @@
 
 - (void)setIsSendingCount:(NSInteger)isSendingCount {
     // sending anim
-//    if (_isSendingCount != 0 && isSendingCount == 0) {
-//        [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
-//    } else if (_isSendingCount == 0 && isSendingCount != 0) {
-//        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
-//        hud.color = [UIColor clearColor];
-//        hud.activityIndicatorColor = [ColorUtils orange];
-//        [self.sendingLoaderView addSubview:hud];
-//        [hud show:YES];
-//    }
+    if (_isSendingCount != 0 && isSendingCount == 0) {
+        [MBProgressHUD hideAllHUDsForView:self.sendingLoaderView animated:YES];
+    } else if (_isSendingCount == 0 && isSendingCount != 0) {
+        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
+        hud.color = [UIColor clearColor];
+        hud.activityIndicatorColor = [ColorUtils orange];
+        [self.sendingLoaderView addSubview:hud];
+        [hud show:YES];
+    }
     _isSendingCount = isSendingCount;
 }
 // --------------------------------------------
@@ -707,12 +633,6 @@
 - (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
     if (_isExporting) {
         return;
-    }
-    [self.previewView.player setItemByAsset:recordSession.assetRepresentingSegments];
-    if (self.previewView.player.status == AVPlayerStatusReadyToPlay) {
-        [self playPreview];
-    } else {
-        [self.previewView.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
     }
     [self stopRecordingAndExecuteSuccess:^(VideoPost *post) {
         _isExporting = NO;
@@ -724,8 +644,14 @@
             self.postToSend = post;
         }
     }];
+    [self.previewView.player setItemByAsset:recordSession.assetRepresentingSegments];
+    if (self.previewView.player.status == AVPlayerStatusReadyToPlay) {
+        [self playPreview];
+    } else {
+        [self.previewView.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
+    }
 }
-        
+
 - (void)playPreview {
     [self.previewView.player play];
     [self setPreviewMode];
@@ -810,6 +736,10 @@
     [self endPreviewMode];
     
     [self hideUIElementOnCamera:YES];
+    
+    // Show caption on camera
+    self.captionTextView.hidden = (self.captionTextView.text.length == 0);
+    
     // Start UI + progress bar anim
     self.recordingProgressContainer.hidden = NO;
     [self.recordingProgressBar.layer removeAllAnimations];
@@ -823,6 +753,7 @@
 }
 
 - (void)endPreviewMode {
+    [self.cameraView insertSubview:self.captionTextView belowSubview:self.replayButton];
     self.previewView.hidden = YES;
     [self.previewView.player pause];
 }
@@ -833,6 +764,7 @@
     self.cancelAreaView.hidden = NO;
     self.releaseToSendTuto.hidden = NO;
     self.previewView.hidden = NO;
+    [self.previewView insertSubview:self.captionTextView belowSubview:self.cancelConfirmView];
 }
 
 - (void)setReplayButtonUI {
@@ -864,7 +796,7 @@
             buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
             _videoIndex = self.videoPostArray.count - kkk;
-            self.replayButton.backgroundColor = [ColorUtils transparentOrange];
+            self.replayButton.backgroundColor = [ColorUtils purple];
             buttonTitle = [NSString stringWithFormat:@"%d %@",kkk,kkk < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
@@ -873,8 +805,15 @@
 }
 
 - (void)hideUIElementOnCamera:(BOOL)flag {
-    self.replayButton.hidden = flag;
-    self.recordTutoLabel.hidden = flag;
+    if (flag) {
+        self.replayButton.hidden = YES;
+        self.recordTutoLabel.hidden = YES;
+        self.captionTextView.hidden = YES;
+    } else {
+        [self setReplayButtonUI];
+        self.captionTextView.hidden = (self.captionTextView.text.length == 0);
+        self.recordTutoLabel.hidden = !(self.captionTextView.text.length == 0);
+    }
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;
     self.captionButton.hidden = flag;
@@ -897,4 +836,178 @@
     return YES;
 }
 
+// --------------------------------------------
+#pragma mark - Background Color Cycle
+// --------------------------------------------
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f animations:^{
+        self.replayButton.backgroundColor = [colors objectAtIndex:i];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
+}
+
+// --------------------------------------------
+#pragma mark - Caption TextView delegate
+// --------------------------------------------
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    self.recordTutoLabel.hidden = YES;
+    self.captionTextView.hidden = NO;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if (self.captionTextView.text.length == 0) {
+        self.captionTextView.hidden = YES;
+        self.recordTutoLabel.hidden = NO;
+        self.captionTextView.transform = CGAffineTransformIdentity;
+        self.captionTextView.center = self.view.center;
+    }
+}
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]) {
+        [self.captionTextView resignFirstResponder];
+        return NO;
+    }
+    return YES;
+}
+
+
+// ----------------------------------------------------------
+#pragma mark Keyboard
+// ----------------------------------------------------------
+// Caption editing UI
+- (void)keyboardWillShow:(NSNotification *)notification {
+    // Save current frame
+    self.captionTransform = self.captionTextView.transform;
+    self.captionCenter = self.captionTextView.center;
+    
+    // Editing UI
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    self.captionTextView.transform = CGAffineTransformIdentity;
+    CGFloat width = self.view.frame.size.width;
+    CGFloat height = [self.captionTextView sizeThatFits:CGSizeMake(width, 1000)].height;
+    self.captionTextView.frame = CGRectMake(0, keyboardRect.origin.y - height, width, height);
+}
+
+// Caption transformed UI
+- (void)keyboardWillHide:(NSNotification *)notification {
+    self.captionTextView.transform = self.captionTransform;
+    self.captionTextView.center = self.captionCenter;
+}
+
+// Close keyboard when caption moved
+- (void)gestureOnCaptionDetected {
+    if ([self.captionTextView isFirstResponder]) {
+        self.captionTransform = self.captionTextView.transform;
+        self.captionCenter = self.captionTextView.center;
+        [self.captionTextView resignFirstResponder];
+    }
+}
+
+//
+- (AVMutableVideoComposition *)addCaptionToVideo:(AVAsset *)asset {
+    AVMutableVideoCompositionInstruction *mainInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
+    AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+    AVMutableVideoCompositionLayerInstruction *videolayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoAssetTrack];
+    UIImageOrientation videoAssetOrientation_  = UIImageOrientationUp;
+    BOOL isVideoAssetPortrait_  = NO;
+    CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
+    if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
+        videoAssetOrientation_ = UIImageOrientationRight;
+        isVideoAssetPortrait_ = YES;
+    }
+    if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
+        videoAssetOrientation_ =  UIImageOrientationLeft;
+        isVideoAssetPortrait_ = YES;
+    }
+    if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0) {
+        videoAssetOrientation_ =  UIImageOrientationUp;
+    }
+    if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0) {
+        videoAssetOrientation_ = UIImageOrientationDown;
+    }
+    
+    mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
+    AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
+    CGSize naturalSize;
+    if(isVideoAssetPortrait_){
+        naturalSize = CGSizeMake(videoAssetTrack.naturalSize.height, videoAssetTrack.naturalSize.width);
+    } else {
+        naturalSize = videoAssetTrack.naturalSize;
+    }
+    float renderWidth, renderHeight;
+    renderWidth = naturalSize.width;
+    renderHeight = naturalSize.height;
+    mainCompositionInst.renderSize = CGSizeMake(renderWidth, renderHeight);
+    
+    [videolayerInstruction setTransform:videoAssetTrack.preferredTransform atTime:kCMTimeZero];
+    [videolayerInstruction setOpacity:0.0 atTime:asset.duration];
+    mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
+    mainCompositionInst.renderSize = naturalSize;
+    mainCompositionInst.instructions = [NSArray arrayWithObject:mainInstruction];
+    mainCompositionInst.frameDuration = CMTimeMake(1, 30);
+    
+    [self applyVideoEffectsToComposition:mainCompositionInst size:naturalSize];
+    return mainCompositionInst;
+}
+
+// Screenschot caption
+- (UIImage *)getImageFromCaption
+{
+    UIView *containerView = [[UIView alloc] initWithFrame:self.view.frame];
+    containerView.backgroundColor = [UIColor clearColor];
+    UIView *superView = self.captionTextView.superview;
+    NSInteger index = [superView.subviews indexOfObject:self.captionTextView];
+    [superView insertSubview:containerView belowSubview:self.captionTextView];
+    [containerView addSubview:self.captionTextView];
+    
+    UIGraphicsBeginImageContextWithOptions(containerView.bounds.size, NO, 0.0);
+    [containerView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    [superView insertSubview:self.captionTextView atIndex:index];
+    [containerView removeFromSuperview];
+    return img;
+}
+
+// Add caption image to video composition
+- (void)applyVideoEffectsToComposition:(AVMutableVideoComposition *)composition size:(CGSize)size
+{
+    // 1 - set up the overlay
+    CALayer *overlayLayer = [CALayer layer];
+    UIImage *overlayImage =[self getImageFromCaption];
+    
+    [overlayLayer setContents:(id)[overlayImage CGImage]];
+    overlayLayer.frame = CGRectMake(0, 0, size.width, size.height);
+    [overlayLayer setMasksToBounds:YES];
+    
+    // 2 - set up the parent layer
+    CALayer *parentLayer = [CALayer layer];
+    CALayer *videoLayer = [CALayer layer];
+    parentLayer.frame = CGRectMake(0, 0, size.width, size.height);
+    videoLayer.frame = CGRectMake(0, 0, size.width, size.height);
+    [parentLayer addSublayer:videoLayer];
+    [parentLayer addSublayer:overlayLayer];
+    
+    // 3 - apply magic
+    composition.animationTool = [AVVideoCompositionCoreAnimationTool
+                                 videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
+}
 @end
