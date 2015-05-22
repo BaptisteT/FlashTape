@@ -16,7 +16,7 @@
 #import "GeneralUtils.h"
 
 @interface FriendsViewController ()
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (strong, nonatomic) NSArray *friends;
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
@@ -46,7 +46,8 @@
                          }];
     
     // Labels
-    self.titleLabel.text = NSLocalizedString(@"friend_controller_title", nil);
+    [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
+    self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
     
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(dismissFriendsController)

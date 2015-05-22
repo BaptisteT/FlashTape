@@ -48,6 +48,7 @@
 @property (strong, nonatomic) UIView *playingProgressView;
 @property (strong, nonatomic) UILongPressGestureRecognizer *playingProgressViewLongPressGesture;
 @property (strong, nonatomic) AVAudioPlayer *whiteNoisePlayer;
+@property (strong, nonatomic) UITapGestureRecognizer *videoTapGestureRecogniser;
 
 // Recording
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
@@ -106,19 +107,20 @@
     // HUD
     self.sendingHud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
     self.sendingHud.color = [UIColor clearColor];
-    self.sendingHud.activityIndicatorColor = [ColorUtils orange];
+    self.sendingHud.activityIndicatorColor = [ColorUtils purple];
     [self.sendingLoaderView addSubview:self.sendingHud];
     
     // Recording gesture
     self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
     self.longPressGestureRecogniser.delegate = self;
-    [self.view addGestureRecognizer:self.longPressGestureRecogniser];
+    self.longPressGestureRecogniser.minimumPressDuration = 0;
+    [self.cameraView addGestureRecognizer:self.longPressGestureRecogniser];
     
     // Caption
     self.captionTextView = [[CaptionTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
     [self.cameraView insertSubview:self.captionTextView belowSubview:self.replayButton];
     self.captionTextView.hidden = YES;
-    self.captionTextView.text = @"";// todo bt memory of last caption ?
+    self.captionTextView.text = @"";
     self.captionTextView.delegate = self;
     self.captionTextView.captionDelegate = self;
     self.captionTransform = CGAffineTransformIdentity;
@@ -163,6 +165,10 @@
     // Video player
     self.friendVideoView.player.loopEnabled = NO;
     self.friendVideoView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    
+    // Video tap gesture
+    self.videoTapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnVideo)];
+    [self.friendVideoView addGestureRecognizer:self.videoTapGestureRecogniser];
     
     // White noise player
     NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"whiteNoise" ofType:@".wav"];
@@ -407,6 +413,20 @@
     [self setCameraMode];
 }
 
+- (void)handleTapOnVideo {
+    if (![self isPlayingMode] || self.observedTimesArray.count < 2) {
+        return;
+    }
+    CMTime observedTime;
+    for (NSValue *observedValue in self.observedTimesArray) {
+        [observedValue getValue:&observedTime];
+        if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
+            [self.friendVideoView.player seekToTime:observedTime];
+            break;
+        }
+    }
+}
+
 // --------------------------------------------
 #pragma mark - Playing
 // --------------------------------------------
@@ -521,7 +541,6 @@
                                               atTime:[self friendCompositionEndCMTime]
                                                error:&editError];
         if (editError) {
-            // todo BT handle error
             NSLog(@"%@",editError.description);
         }
         [self.observedTimesArray addObject:[NSValue valueWithCMTime:[self friendCompositionEndCMTime]]];
@@ -726,7 +745,7 @@
     if (flag) {
         [self.whiteNoisePlayer play];
         [self endPreviewMode];
-        self.longPressGestureRecogniser.minimumPressDuration = 0.5;
+//        self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     } else {
         [self.playingProgressView.layer removeAllAnimations];
         [self.whiteNoisePlayer pause];
@@ -740,7 +759,7 @@
     [self setPlayingMode:NO];
     [self endPreviewMode];
     
-    self.longPressGestureRecogniser.minimumPressDuration = 0;
+//    self.longPressGestureRecogniser.minimumPressDuration = 0;
     self.recordingProgressContainer.hidden = YES;
     [self hideUIElementOnCamera:NO];
     [self setReplayButtonUI];

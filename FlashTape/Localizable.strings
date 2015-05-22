@@ -45,6 +45,6 @@
 "move_your_finger_to_cancel" = "Move your finger here to cancel";
 
 // Friends
-"invite_friends_cell_title" = "Invite more friends";
-"friend_controller_title" = "Friends";
+"friend_controller_title" = "Invite your friends";
+"friend_score_label" = "Increase your scrore for more fun";
 "sharing_wording" = "Join me on Flash and watch my life second by second: %@";

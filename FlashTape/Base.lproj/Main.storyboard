@@ -435,8 +435,8 @@
                                             <action selector="replayButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="VDB-lX-VAQ"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePW-Ve-NCZ">
-                                        <rect key="frame" x="5" y="555" width="40" height="40"/>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePW-Ve-NCZ">
+                                        <rect key="frame" x="20" y="547" width="40" height="40"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="ZgN-gV-LIb"/>
@@ -454,6 +454,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="ePW-Ve-NCZ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="5" id="1Wn-3m-QOB"/>
+                                    <constraint firstItem="hOb-67-bYR" firstAttribute="centerY" secondItem="ePW-Ve-NCZ" secondAttribute="centerY" id="5dj-wS-v3E"/>
                                     <constraint firstAttribute="centerX" secondItem="AUk-ak-rpt" secondAttribute="centerX" id="6WD-aI-qWG"/>
                                     <constraint firstAttribute="centerX" secondItem="hOb-67-bYR" secondAttribute="centerX" id="BHk-Gk-ofu"/>
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="BnX-DW-x71"/>
@@ -464,6 +465,7 @@
                                     <constraint firstItem="dZH-8B-oA5" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="NQt-to-G8E"/>
                                     <constraint firstAttribute="bottom" secondItem="hOb-67-bYR" secondAttribute="bottom" constant="10" id="Qh5-nj-O1F"/>
                                     <constraint firstItem="dZH-8B-oA5" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="S1j-Y6-JEE"/>
+                                    <constraint firstItem="ePW-Ve-NCZ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="20" id="WoF-uS-5oy"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="YI8-op-pzm"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="a3J-Ht-ZTL"/>
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="cAH-hE-KeG"/>
@@ -477,9 +479,11 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="whw-31-fB7"/>
+                                        <exclude reference="BnX-DW-x71"/>
+                                        <exclude reference="1Wn-3m-QOB"/>
+                                        <exclude reference="uIs-um-DSv"/>
                                         <exclude reference="L0p-h3-N0a"/>
                                         <exclude reference="YI8-op-pzm"/>
-                                        <exclude reference="BnX-DW-x71"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -715,7 +719,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
                                 <inset key="contentEdgeInsets" minX="0.0" minY="25" maxX="0.0" maxY="0.0"/>
-                                <state key="normal" title="Invite your friends!">
+                                <state key="normal" title="invite_your_friends">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
@@ -723,7 +727,7 @@
                                     <action selector="inviteButtonClicked:" destination="gUo-G0-jbW" eventType="touchUpInside" id="KyF-e7-AZU"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Increase your score for more fun!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WUl-fI-ihe">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="increase_your_score_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WUl-fI-ihe">
                                 <rect key="frame" x="16" y="47" width="568" height="20"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -777,6 +781,7 @@
                         <outlet property="colorView" destination="YBS-wd-gmG" id="GoW-nH-ey7"/>
                         <outlet property="friendsTableView" destination="LqB-To-ITe" id="5Y1-lY-uQr"/>
                         <outlet property="inviteButton" destination="bO2-dF-h7J" id="KZm-EF-ZrD"/>
+                        <outlet property="scoreLabel" destination="WUl-fI-ihe" id="r0a-eX-m9N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LZr-cM-H0D" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -87,6 +87,7 @@
 {
     PFQuery *query = [User query];
     [query whereKey:@"username" containedIn:contactsPhoneNumbers];
+    [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             if (successBlock) {
@@ -165,6 +166,7 @@
     [query whereKey:@"user" matchesQuery:userQuery];
     [query orderByAscending:@"createdAt"];
     [query includeKey:@"user"];
+    [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // Download video
