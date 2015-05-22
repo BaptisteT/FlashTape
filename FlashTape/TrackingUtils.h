@@ -20,4 +20,6 @@
 
 + (void)trackOpenApp;
 
++ (void)trackInviteButtonClicked;
+
 @end

@@ -42,23 +42,19 @@
     if ([[self videoLocalURL] checkResourceIsReachableAndReturnError:&err]) {
         self.localUrl = [self videoLocalURL];
     } else {
-        if ([self.videoFile isDataAvailable]) {
-            [self saveDataToLocalURL:[self.videoFile getData]];
-        } else {
-            [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                if (data) {
-                    [self saveDataToLocalURL:data];
+        [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (data) {
+                [self saveDataToLocalURL:data];
+            } else {
+                if ([self.videoFile isDataAvailable]) {
+                    [self saveDataToLocalURL:[self.videoFile getData]];
                 } else {
-                    if ([self.videoFile isDataAvailable]) {
-                        [self saveDataToLocalURL:data];
-                    } else {
-                        NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
-                    }
+                    NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
                 }
-            } progressBlock:^(int percentDone) {
-                self.downloadProgress = percentDone;
-            }];
-        }
+            }
+        } progressBlock:^(int percentDone) {
+            self.downloadProgress = percentDone;
+        }];
     }
 }
 

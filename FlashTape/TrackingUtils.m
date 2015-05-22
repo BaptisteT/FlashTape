@@ -32,4 +32,9 @@
     [PFAnalytics trackEvent:@"app.open"];
 }
 
++ (void)trackInviteButtonClicked
+{
+    [PFAnalytics trackEvent:@"invite.clicked"];
+}
+
 @end

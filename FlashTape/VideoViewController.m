@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import <AddressBook/AddressBook.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -141,20 +142,24 @@
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
-    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
-    _recorder.audioConfiguration.preset = SCPresetLowQuality;
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeQuickTimeMovie;
     _recorder.session = session;
-    if (![self.recorder startRunning]) { // Start running the flow of buffers
+
+    // Filter
+    if (![GeneralUtils isiPhone4]) {
+        SCFilter *testFilter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
+        [testFilter setParameterValue:@64 forKey:@"inputCubeDimension"];
+        [testFilter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
+        self.recorder.videoConfiguration.filter = testFilter;
+    }
+//    else {
+//        _recorder.fastRecordMethodEnabled = YES;
+//    }
+    // Start running the flow of buffers
+    if (![self.recorder startRunning]) {
         NSLog(@"Something wrong there: %@", self.recorder.error);
     }
-    
-    // Filter
-    SCFilter *testFilter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
-    [testFilter setParameterValue:@64 forKey:@"inputCubeDimension"];
-    [testFilter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
-    self.recorder.videoConfiguration.filter = testFilter;
     
     // Recording progress bar
     self.recordingProgressBar = [[UIView alloc] init];
@@ -348,8 +353,7 @@
                 }
             } else {
                 if (_isExporting) {
-                    // todo bt
-                    // boolean not to send
+                    // todo bt boolean not to send
                     // avoid bug iphone 4
                 }
             }
@@ -597,7 +601,7 @@
                                                                           presetName:AVAssetExportPresetMediumQuality];
         [GeneralUtils removeFile:recordSession.outputUrl];
         exporter.outputURL = recordSession.outputUrl;
-        exporter.outputFileType = AVFileTypeMPEG4;
+        exporter.outputFileType = AVFileTypeQuickTimeMovie;
         exporter.shouldOptimizeForNetworkUse = YES;
         
         exporter.videoComposition = [self addCaptionToVideo:asset];
@@ -965,15 +969,15 @@
         videoAssetOrientation_ = UIImageOrientationDown;
     }
     
-    // todo bt
-    BOOL isFront = self.recorder.device == AVCaptureDevicePositionFront;
-    if (isFront) {
-        CGAffineTransform t = CGAffineTransformMakeScale(-1.0f, 1.0f);
-        t = CGAffineTransformTranslate(t, -videoAssetTrack.naturalSize.width, 0);
-        t = CGAffineTransformRotate(t, (DEGREES_TO_RADIANS(90.0)));
-        t = CGAffineTransformTranslate(t, 0.0f, -videoAssetTrack.naturalSize.width);
-        [videolayerInstruction setTransform:t atTime:kCMTimeZero];
-    }
+    // todo bt mirror front video
+//    BOOL isFront = self.recorder.device == AVCaptureDevicePositionFront;
+//    if (isFront) {
+//        CGAffineTransform t = CGAffineTransformMakeScale(-1.0f, 1.0f);
+//        t = CGAffineTransformTranslate(t, -videoAssetTrack.naturalSize.width, 0);
+//        t = CGAffineTransformRotate(t, (DEGREES_TO_RADIANS(90.0)));
+//        t = CGAffineTransformTranslate(t, 0.0f, -videoAssetTrack.naturalSize.width);
+//        [videolayerInstruction setTransform:t atTime:kCMTimeZero];
+//    }
     //
     
     mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
@@ -1044,4 +1048,47 @@
     composition.animationTool = [AVVideoCompositionCoreAnimationTool
                                  videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
 }
+
+// --------------------------------------------
+#pragma mark - Saving / Sharing
+// --------------------------------------------
+- (void)saveVideoToCameraRoll {
+    //
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
+    
+    // Recompute with all videos
+    _videoIndex = 0;
+    [self createCompositionFromVideoPosts];
+
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:self.friendVideoComposition presetName:AVAssetExportPresetHighestQuality];
+    NSString *exportVideoPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/FinishedVideo.m4v"];
+    NSURL *exportURL = [NSURL fileURLWithPath:exportVideoPath];
+    [[NSFileManager defaultManager] removeItemAtPath:exportVideoPath error:nil];
+    exportSession.outputURL = exportURL;
+    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        switch (exportSession.status) {
+            case AVAssetExportSessionStatusCompleted: {
+                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                [library writeVideoAtPathToSavedPhotosAlbum:exportURL
+                                            completionBlock:^(NSURL *assetURL, NSError *error) {
+                                                NSLog (@"SAVE SUCCESS");
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                                                });
+                                            }];
+                NSLog (@"SUCCESS");
+                break;
+            }
+            default: {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                });
+                NSLog (@"FAIL");
+            }
+        };
+    }]; 
+
+}
+
 @end

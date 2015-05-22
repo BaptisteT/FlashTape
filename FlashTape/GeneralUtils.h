@@ -26,4 +26,6 @@
 
 + (void)removeFile:(NSURL *)fileURL;
 
++ (BOOL)isiPhone4;
+
 @end

@@ -14,6 +14,7 @@
 #import "ColorUtils.h"
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
+#import "TrackingUtils.h"
 
 @interface FriendsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
@@ -119,6 +120,8 @@
 #pragma mark SMS controller
 // ----------------------------------------------------------
 - (IBAction)inviteButtonClicked:(id)sender{
+    [TrackingUtils trackInviteButtonClicked];
+    
     // Redirect to sms
     if(![MFMessageComposeViewController canSendText]) {
         [GeneralUtils showMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
