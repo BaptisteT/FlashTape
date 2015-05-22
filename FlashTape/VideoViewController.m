@@ -328,7 +328,8 @@
         if ([self isPreviewMode]) {
             BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
             self.cancelAreaView.hidden = cancelMode;
-            self.releaseToSendTuto.hidden = cancelMode;
+            self.releaseToSendTuto.hidden = cancelMode || self.captionTextView.text.length != 0;
+            self.captionTextView.hidden = cancelMode || self.captionTextView.text.length == 0;
             self.cancelConfirmView.hidden = !cancelMode;
         }
     } else {
@@ -611,13 +612,11 @@
                 [TrackingUtils trackVideoSent];
                 if (![self isPlayingMode])
                     [self setReplayButtonUI];
-                self.captionTextView.text = @"";
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];
                 [self setReplayButtonUI];
                 [TrackingUtils trackVideoSendingFailure];
-                self.captionTextView.text = @"";
             }];
 }
 
@@ -778,9 +777,13 @@
     [self setPlayingMode:NO];
     self.cancelConfirmView.hidden = YES;
     self.cancelAreaView.hidden = NO;
-    self.releaseToSendTuto.hidden = NO;
     self.previewView.hidden = NO;
-    [self.previewView insertSubview:self.captionTextView belowSubview:self.cancelConfirmView];
+    if (self.captionTextView.text != 0) {
+        self.releaseToSendTuto.hidden = YES;
+        [self.previewView insertSubview:self.captionTextView belowSubview:self.cancelConfirmView];
+    } else {
+        self.releaseToSendTuto.hidden = NO;
+    }
 }
 
 - (void)setReplayButtonUI {
