@@ -7,6 +7,7 @@
 //
 #import <AVFoundation/AVFoundation.h>
 
+#import "ConstantUtils.h"
 #import "GeneralUtils.h"
 
 #define LAST_VIDEO_SEEN_DATE @"Last Video Seen Date"
@@ -71,7 +72,7 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSDate *previousDate = [prefs objectForKey:LAST_CLEANING_DATE] ? [prefs objectForKey:LAST_CLEANING_DATE]: [NSDate date];
     [prefs setObject:[NSDate date] forKey:LAST_CLEANING_DATE];
-    return [[previousDate dateByAddingTimeInterval:3*24*3600] compare:[NSDate date]]== NSOrderedAscending;
+    return [[previousDate dateByAddingTimeInterval:kDaysBetweenCashCleaning*24*3600] compare:[NSDate date]]== NSOrderedAscending;
 }
 
 + (void)removeFile:(NSURL *)fileURL

@@ -18,6 +18,9 @@ static NSString * const kFlashTapeAppStoreLink = @"https://itunes.apple.com/us/a
 static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 static NSString * const kFlashTapeAppLinkUrl = @"https://www.mydomain.com/myapplink"; // todo BT
 
+// Cleaning
+static const NSInteger kDaysBetweenCashCleaning = 3;
+
 // Feed
 static const NSInteger kFeedHistoryInHours = 24;
 

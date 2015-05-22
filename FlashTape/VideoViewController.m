@@ -143,6 +143,7 @@
     _recorder.device = AVCaptureDevicePositionFront;
     _recorder.videoConfiguration.preset = SCPresetMediumQuality;
     _recorder.audioConfiguration.preset = SCPresetLowQuality;
+     _recorder.autoSetVideoOrientation = NO;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeMPEG4;
