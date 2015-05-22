@@ -108,7 +108,7 @@
     // HUD
     self.sendingHud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
     self.sendingHud.color = [UIColor clearColor];
-    self.sendingHud.activityIndicatorColor = [ColorUtils purple];
+    self.sendingHud.activityIndicatorColor = [UIColor whiteColor];
     [self.sendingLoaderView addSubview:self.sendingHud];
     
     // Recording gesture
@@ -141,9 +141,11 @@
     _recorder.delegate = self;
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = AVCaptureDevicePositionFront;
+    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
+    _recorder.audioConfiguration.preset = SCPresetLowQuality;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
-    session.fileType = AVFileTypeQuickTimeMovie;
+    session.fileType = AVFileTypeMPEG4;
     _recorder.session = session;
 
     // Filter
@@ -153,9 +155,10 @@
         [testFilter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
         self.recorder.videoConfiguration.filter = testFilter;
     }
-//    else {
+    else {
 //        _recorder.fastRecordMethodEnabled = YES;
-//    }
+    }
+    
     // Start running the flow of buffers
     if (![self.recorder startRunning]) {
         NSLog(@"Something wrong there: %@", self.recorder.error);
@@ -601,7 +604,7 @@
                                                                           presetName:AVAssetExportPresetMediumQuality];
         [GeneralUtils removeFile:recordSession.outputUrl];
         exporter.outputURL = recordSession.outputUrl;
-        exporter.outputFileType = AVFileTypeQuickTimeMovie;
+        exporter.outputFileType = AVFileTypeMPEG4;
         exporter.shouldOptimizeForNetworkUse = YES;
         
         exporter.videoComposition = [self addCaptionToVideo:asset];
@@ -655,12 +658,14 @@
 
 - (void)setIsSendingCount:(NSInteger)isSendingCount {
     _isSendingCount = isSendingCount;
-    // sending anim
-    if (_isSendingCount !=0) {
-        [self.sendingHud show:YES];
-    } else {
-        [self.sendingHud hide:YES];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // sending anim
+        if (_isSendingCount !=0) {
+            [self.sendingHud show:YES];
+        } else {
+            [self.sendingHud hide:YES];
+        }
+    });
 }
 
 // --------------------------------------------
@@ -675,7 +680,9 @@
         _isExporting = NO;
         if (!_longPressRunning) { // to handle the case of simultaneity
             [self sendVideoPost:post];
-            [self setCameraMode];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setCameraMode];
+            });
         } else {
             // Save post to be sent after long press
             self.postToSend = post;
@@ -749,7 +756,6 @@
     if (flag) {
         [self.whiteNoisePlayer play];
         [self endPreviewMode];
-//        self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     } else {
         [self.playingProgressView.layer removeAllAnimations];
         [self.whiteNoisePlayer pause];
@@ -762,8 +768,6 @@
 {
     [self setPlayingMode:NO];
     [self endPreviewMode];
-    
-//    self.longPressGestureRecogniser.minimumPressDuration = 0;
     self.recordingProgressContainer.hidden = YES;
     [self hideUIElementOnCamera:NO];
     [self setReplayButtonUI];
@@ -1065,7 +1069,7 @@
     NSURL *exportURL = [NSURL fileURLWithPath:exportVideoPath];
     [[NSFileManager defaultManager] removeItemAtPath:exportVideoPath error:nil];
     exportSession.outputURL = exportURL;
-    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+    exportSession.outputFileType = AVFileTypeMPEG4;
     [exportSession exportAsynchronouslyWithCompletionHandler:^{
         switch (exportSession.status) {
             case AVAssetExportSessionStatusCompleted: {
