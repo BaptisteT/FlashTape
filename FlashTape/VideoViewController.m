@@ -154,9 +154,8 @@
         [testFilter setParameterValue:@64 forKey:@"inputCubeDimension"];
         [testFilter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
         self.recorder.videoConfiguration.filter = testFilter;
-    }
-    else {
-//        _recorder.fastRecordMethodEnabled = YES;
+    } else {
+        self.recorder.videoConfiguration.filter = nil;
     }
     
     // Start running the flow of buffers
@@ -644,6 +643,10 @@
                 [self setReplayButtonUI];
                 [TrackingUtils trackVideoSendingFailure];
             }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.captionTextView.text = @"";
+        self.captionTextView.hidden = YES;
+    });
 }
 
 - (void)sendFailedVideo
@@ -680,9 +683,7 @@
         _isExporting = NO;
         if (!_longPressRunning) { // to handle the case of simultaneity
             [self sendVideoPost:post];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setCameraMode];
-            });
+            [self setCameraMode];
         } else {
             // Save post to be sent after long press
             self.postToSend = post;
@@ -766,11 +767,13 @@
 
 - (void)setCameraMode
 {
-    [self setPlayingMode:NO];
-    [self endPreviewMode];
-    self.recordingProgressContainer.hidden = YES;
-    [self hideUIElementOnCamera:NO];
-    [self setReplayButtonUI];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setPlayingMode:NO];
+        [self endPreviewMode];
+        self.recordingProgressContainer.hidden = YES;
+        [self hideUIElementOnCamera:NO];
+        [self setReplayButtonUI];
+    });
 }
 
 - (void)setRecordingMode {
