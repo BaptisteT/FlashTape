@@ -150,14 +150,14 @@
     _recorder.session = session;
 
     // Filter
-    if (![GeneralUtils isiPhone4]) {
+//    if (![GeneralUtils isiPhone4]) {
         SCFilter *testFilter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
         [testFilter setParameterValue:@64 forKey:@"inputCubeDimension"];
         [testFilter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
         self.recorder.videoConfiguration.filter = testFilter;
-    } else {
-        self.recorder.videoConfiguration.filter = nil;
-    }
+//    } else {
+//        self.recorder.videoConfiguration.filter = nil;
+//    }
     
     // Start running the flow of buffers
     if (![self.recorder startRunning]) {

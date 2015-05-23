@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 // With Parse, an API manager is not necessary. However I build this layer to be able to switch to our own backend in the future
+#import <Bolts/Bolts.h>
 #import <Parse/parse.h>
 
 #import "ApiManager.h"
@@ -90,12 +91,36 @@
     [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            [[PFObject unpinAllObjectsInBackgroundWithName:@"Friends"] continueWithSuccessBlock:^id(BFTask *ignored) {
+                // Cache the new results.
+                return [PFObject pinAllInBackground:objects withName:@"Friends"];
+            }];
             if (successBlock) {
                 successBlock(objects);
             }
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
+}
+
++ (void)getFriendsLocalDatastoreSuccess:(void(^)(NSArray *friends))successBlock
+                                failure:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *query = [User query];
+    [query fromLocalDatastore];
+    [query orderByDescending:@"score"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (successBlock) {
+                successBlock(objects);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error in friends from local datastore: %@ %@", error, [error userInfo]);
             if (failureBlock)
                 failureBlock(error);
         }

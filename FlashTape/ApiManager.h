@@ -27,6 +27,9 @@
                  success:(void(^)(NSArray *friends))successBlock
                  failure:(void(^)(NSError *error))failureBlock;
 
++ (void)getFriendsLocalDatastoreSuccess:(void(^)(NSArray *friends))successBlock
+                                failure:(void(^)(NSError *error))failureBlock;
+
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock;

@@ -38,13 +38,19 @@
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     self.friends = [NSArray new];
+    
+    // Get friends from local datastore
+    [ApiManager getFriendsLocalDatastoreSuccess:^(NSArray *friends) {
+                                                    self.friends = friends;
+                                                    [self.friendsTableView reloadData];
+                                                } failure:nil];
+    
+    // Get friends from server
     [ApiManager getListOfFriends:[self.contactDictionnary allKeys]
                          success:^(NSArray *friends) {
                              self.friends = friends;
                              [self.friendsTableView reloadData];
-                         } failure:^(NSError *error) {
-                             // todo bt handle error
-                         }];
+                         } failure:nil];
     
     // Labels
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
@@ -104,12 +110,6 @@
          respondsToSelector:@selector(setLayoutMargins:)]) {
         [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
     }
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if (indexPath.row == 0) {
-//        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
