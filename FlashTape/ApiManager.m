@@ -91,9 +91,9 @@
     [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            [PFObject unpinAllObjectsInBackgroundWithName:@"Friends" block:^void(BOOL success, NSError *error) {
+            [PFObject unpinAllObjectsInBackgroundWithName:kParseFriendName block:^void(BOOL success, NSError *error) {
                 // Cache the new results.
-                [PFObject pinAllInBackground:objects withName:@"Friends"];
+                [PFObject pinAllInBackground:objects withName:kParseFriendName];
             }];
             if (successBlock) {
                 successBlock(objects);
@@ -142,7 +142,7 @@
                     [post.user saveInBackground];
                     
                     // Pin
-                    [post pinInBackgroundWithName:@"Posts"];
+                    [post pinInBackgroundWithName:kParsePostName];
                     
                     // Success block
                     if (successBlock)
@@ -179,7 +179,7 @@
             [VideoPost downloadVideoFromPosts:objects];
             
             // Cache the new results.
-            [VideoPost pinAllInBackground:objects withName:@"Posts"];
+            [VideoPost pinAllInBackground:objects withName:kParsePostName];
             
             // Return
             if (successBlock) {

@@ -221,6 +221,7 @@
     self.cancelConfirmTutoLabel.lineHeight = 4.0f;
     self.previewView.player.loopEnabled = YES;
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    self.previewView.hidden = YES;
     
     // Get local videos
     self.videoPostArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:nil]];

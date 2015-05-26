@@ -71,10 +71,12 @@
     [DatastoreUtils getExpiredVideoFromLocalDataStoreAndExecute:^(NSArray *posts) {
         NSError *error;
         for (VideoPost *post in posts) {
-            if (![fileManager removeItemAtURL:[post videoLocalURL] error:&error]) {
+            if (![fileManager fileExistsAtPath:[post videoLocalURL].path]) {
+                 [post unpinInBackgroundWithName:kParsePostName];
+            } else if (![fileManager removeItemAtURL:[post videoLocalURL] error:&error]) {
                  NSLog(@"Error deleting: %@",error);
             } else {
-                [post unpinInBackground];
+                [post unpinInBackgroundWithName:kParsePostName];
             }
         }
     }];

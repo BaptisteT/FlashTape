@@ -103,6 +103,7 @@
 		3C5F98AA1AED168F0098F70F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A91AED168F0098F70F /* Social.framework */; };
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
 		3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */; };
+		3C62A5951B14E01B009CCD2A /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */; };
 		3CAC4D021B146F8B0064FA76 /* NotifUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D011B146F8B0064FA76 /* NotifUtils.m */; };
 		3CAC4D051B14D92E0064FA76 /* DatastoreUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D041B14D92E0064FA76 /* DatastoreUtils.m */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
@@ -274,6 +275,8 @@
 		3C5F98AC1AED1A930098F70F /* ApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiManager.m; sourceTree = "<group>"; };
 		3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralUtils.h; sourceTree = "<group>"; };
 		3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralUtils.m; sourceTree = "<group>"; };
+		3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTableViewCell.h; sourceTree = "<group>"; };
+		3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 		3CAC4D001B146F8B0064FA76 /* NotifUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotifUtils.h; sourceTree = "<group>"; };
 		3CAC4D011B146F8B0064FA76 /* NotifUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifUtils.m; sourceTree = "<group>"; };
 		3CAC4D031B14D92E0064FA76 /* DatastoreUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatastoreUtils.h; sourceTree = "<group>"; };
@@ -536,6 +539,8 @@
 			children = (
 				3C1ECE4A1B0BD4D7004F7F02 /* CaptionTextView.h */,
 				3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */,
+				3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */,
+				3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -802,6 +807,7 @@
 				3C5F987B1AECE05E0098F70F /* SCRecorderFocusTargetView.m in Sources */,
 				3C2C4A401AFB5A3B00E0E4BF /* NBPhoneMetaData.m in Sources */,
 				3C5F98741AECE05E0098F70F /* SCFilter.m in Sources */,
+				3C62A5951B14E01B009CCD2A /* FriendTableViewCell.m in Sources */,
 				3C2C4A211AFB564D00E0E4BF /* CodeConfirmationViewController.m in Sources */,
 				3C2C4A4C1AFB5E1800E0E4BF /* CountryCodeTableViewController.m in Sources */,
 				3C5F98111AEC1CFF0098F70F /* ConstantUtils.m in Sources */,

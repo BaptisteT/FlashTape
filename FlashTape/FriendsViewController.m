@@ -9,8 +9,10 @@
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
 #import "User.h"
+#import "VideoPost.h"
 
 #import "FriendsViewController.h"
+#import "FriendTableViewCell.h"
 
 #import "ColorUtils.h"
 #import "ConstantUtils.h"
@@ -22,6 +24,9 @@
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UIButton *inviteButton;
+
+@property (strong, nonatomic) NSArray *currentUserPosts;
+
 @end
 
 @implementation FriendsViewController
@@ -31,6 +36,13 @@
     
     [self doBackgroundColorAnimation];
     self.colorView.alpha = 0.5;
+    
+    // Refresh current User posts
+    self.currentUserPosts = [DatastoreUtils getVideoLocallyFromUser:[User currentUser]];
+    [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
+        [self.friendsTableView reloadData];
+    }];
+    
     
     // Tableview
     self.friendsTableView.dataSource = self;
@@ -64,13 +76,13 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
-    cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-    cell.backgroundColor = [UIColor clearColor];
+    FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
     User *friend = (User *)self.friends[indexPath.row];
-    cell.textLabel.text = self.contactDictionnary[friend.username];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"Score : %lu",(long)(friend.score ? friend.score : 0)];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)];
+    BOOL hasSeenVideo = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ([((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : YES;
+    
+    [cell initWithName:self.contactDictionnary[friend.username]
+                 score:[NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)]
+         hasSeenVideos:hasSeenVideo];
     return cell;
 }
 

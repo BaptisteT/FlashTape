@@ -682,32 +682,58 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="LqB-To-ITe">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="LqB-To-ITe">
                                 <rect key="frame" x="0.0" y="90" width="600" height="460"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FriendCell" textLabel="P5U-WJ-XHp" detailTextLabel="wov-bT-Q90" rowHeight="80" style="IBUITableViewCellStyleValue1" id="Y8i-4U-BMg">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FriendCell" rowHeight="80" id="Y8i-4U-BMg" customClass="FriendTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Y8i-4U-BMg" id="bDY-Zb-eof">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="P5U-WJ-XHp">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y1L-4Y-drw">
+                                                    <rect key="frame" x="20" y="20" width="54" height="27"/>
                                                     <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wov-bT-Q90">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="score" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XLB-UB-kNZ">
+                                                    <rect key="frame" x="20" y="51" width="40" height="20"/>
                                                     <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="seen_image" translatesAutoresizingMaskIntoConstraints="NO" id="DQR-Th-awv">
+                                                    <rect key="frame" x="560" y="30" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="2G9-B9-B8p"/>
+                                                        <constraint firstAttribute="width" constant="20" id="PhC-Q2-6Yo"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="y1L-4Y-drw" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="HUd-DI-Feb"/>
+                                                <constraint firstAttribute="centerY" secondItem="DQR-Th-awv" secondAttribute="centerY" constant="-0.5" id="Yxn-wK-6Tx"/>
+                                                <constraint firstItem="XLB-UB-kNZ" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="aO8-i6-tv2"/>
+                                                <constraint firstItem="XLB-UB-kNZ" firstAttribute="top" secondItem="y1L-4Y-drw" secondAttribute="bottom" constant="4" id="guN-Vi-lv6"/>
+                                                <constraint firstAttribute="centerY" secondItem="y1L-4Y-drw" secondAttribute="centerY" constant="6.5" id="gvx-nV-xYA"/>
+                                                <constraint firstAttribute="centerY" secondItem="XLB-UB-kNZ" secondAttribute="centerY" constant="-15" id="k5b-a2-1eV"/>
+                                                <constraint firstAttribute="trailing" secondItem="DQR-Th-awv" secondAttribute="trailing" constant="20" id="r8g-35-Trr"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="k5b-a2-1eV"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="nameLabel" destination="y1L-4Y-drw" id="xrF-rr-81H"/>
+                                            <outlet property="scoreLabel" destination="XLB-UB-kNZ" id="MwL-xE-gef"/>
+                                            <outlet property="seenImageView" destination="DQR-Th-awv" id="3El-QI-459"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -962,6 +988,7 @@
         <image name="camera_flip_button" width="32" height="32"/>
         <image name="caption_button" width="32" height="32"/>
         <image name="friends_button" width="32" height="32"/>
+        <image name="seen_image" width="30" height="30"/>
         <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
