@@ -20,10 +20,6 @@
 // Show an alert message
 + (void)showMessage:(NSString *)text withTitle:(NSString *)title;
 
-+ (void)deleteStoredData;
-
-+ (BOOL)shouldDeleteStoredData;
-
 + (void)removeFile:(NSURL *)fileURL;
 
 + (BOOL)isiPhone4;

@@ -14,6 +14,7 @@
 #import "UICustomLineLabel.h"
 
 #import "ApiManager.h"
+#import "DatastoreUtils.h"
 #import "VideoPost.h"
 
 #import "CaptionTextView.h"
@@ -222,12 +223,12 @@
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
     // Get local videos
-    self.videoPostArray = [NSMutableArray arrayWithArray:[ApiManager getVideoLocallyFromUser:nil]];
+    self.videoPostArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:nil]];
     self.failedVideoPostArray = [NSMutableArray new];
     
     // Retrieve friends from local datastore
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
-    [ApiManager getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
+    [DatastoreUtils getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
         self.friends = friends;
         [self retrieveVideo];
     } failure:nil];

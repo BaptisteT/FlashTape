@@ -28,9 +28,6 @@
                  success:(void(^)(NSArray *friends))successBlock
                  failure:(void(^)(NSError *error))failureBlock;
 
-+ (void)getFriendsFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
-                                failure:(void(^)(NSError *error))failureBlock;
-
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock;
@@ -38,10 +35,6 @@
 + (void)getVideoFromContacts:(NSArray *)friends
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock;
-
-+ (NSArray *)getVideoLocallyFromUser:(User *)user;
-
-+ (void)getExpiredVideoFromLocalDataStoreAndExecute:(void(^)(NSArray *posts))block;
 
 + (void)updateVideoPosts:(NSArray *)videoPosts;
 

@@ -14,6 +14,7 @@
 #import "WelcomeViewController.h"
 
 #import "ColorUtils.h"
+#import "DatastoreUtils.h"
 #import "GeneralUtils.h"
 #import "TrackingUtils.h"
 
@@ -40,6 +41,9 @@
     // Track statistics around application opens.
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
+    // Clean data
+    [DatastoreUtils deleteExpiredPosts];
+    
     if ([User currentUser]) {
         WelcomeViewController* welcomeViewController = (WelcomeViewController *)  self.window.rootViewController.childViewControllers[0];
         [welcomeViewController performSegueWithIdentifier:@"Video From Welcome" sender:nil];
@@ -51,9 +55,4 @@
     [TrackingUtils trackOpenApp];
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
-    if ([GeneralUtils shouldDeleteStoredData]) {
-        [GeneralUtils deleteStoredData];
-    }
-}
 @end

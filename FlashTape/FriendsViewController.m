@@ -7,6 +7,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import "ApiManager.h"
+#import "DatastoreUtils.h"
 #import "User.h"
 
 #import "FriendsViewController.h"
@@ -103,7 +104,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.view.userInteractionEnabled = NO;
     
-    NSArray *videos = [ApiManager getVideoLocallyFromUser:(User *)self.friends[indexPath.row]];
+    NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.row]];
     if (!videos || videos.count == 0) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         self.view.userInteractionEnabled = YES;

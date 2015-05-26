@@ -7,11 +7,12 @@
 //
 #import <AVFoundation/AVFoundation.h>
 
+#import "ApiManager.h"
+
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
 
 #define LAST_VIDEO_SEEN_DATE @"Last Video Seen Date"
-#define LAST_CLEANING_DATE @"Last Cleaning Date"
 #define LAST_VIDEO_SELFIE_MODE @"Last Video Selfie Mode"
 
 @implementation GeneralUtils
@@ -67,13 +68,6 @@
             NSLog(@"Error deleting: %@",error);
         }
     }
-}
-
-+ (BOOL)shouldDeleteStoredData {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSDate *previousDate = [prefs objectForKey:LAST_CLEANING_DATE] ? [prefs objectForKey:LAST_CLEANING_DATE]: [NSDate date];
-    [prefs setObject:[NSDate date] forKey:LAST_CLEANING_DATE];
-    return [[previousDate dateByAddingTimeInterval:kDaysBetweenCashCleaning*24*3600] compare:[NSDate date]]== NSOrderedAscending;
 }
 
 + (void)removeFile:(NSURL *)fileURL
