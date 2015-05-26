@@ -12,6 +12,7 @@
 
 #define LAST_VIDEO_SEEN_DATE @"Last Video Seen Date"
 #define LAST_CLEANING_DATE @"Last Cleaning Date"
+#define LAST_VIDEO_SELFIE_MODE @"Last Video Selfie Mode"
 
 @implementation GeneralUtils
 
@@ -90,6 +91,19 @@
 + (BOOL)isiPhone4
 {
     return [[UIScreen mainScreen] bounds].size.height == 480;
+}
+
++ (void)saveLastVideoSelfieModePref:(BOOL)selfieMode
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithBool:selfieMode] forKey:LAST_VIDEO_SELFIE_MODE];
+    [prefs synchronize];
+}
+
++ (BOOL)getLastVideoSelfieModePref
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:LAST_VIDEO_SELFIE_MODE] ? [[prefs objectForKey:LAST_VIDEO_SELFIE_MODE ] boolValue] : YES;
 }
 
 @end

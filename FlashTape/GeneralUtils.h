@@ -28,4 +28,8 @@
 
 + (BOOL)isiPhone4;
 
++ (void)saveLastVideoSelfieModePref:(BOOL)selfieMode;
+
++ (BOOL)getLastVideoSelfieModePref;
+
 @end

@@ -91,9 +91,9 @@
     [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            [[PFObject unpinAllObjectsInBackgroundWithName:@"Friends"] continueWithSuccessBlock:^id(BFTask *ignored) {
+            [PFObject unpinAllObjectsInBackgroundWithName:@"Friends" block:^void(BOOL success, NSError *error) {
                 // Cache the new results.
-                return [PFObject pinAllInBackground:objects withName:@"Friends"];
+                [PFObject pinAllInBackground:objects withName:@"Friends"];
             }];
             if (successBlock) {
                 successBlock(objects);
@@ -107,7 +107,7 @@
     }];
 }
 
-+ (void)getFriendsLocalDatastoreSuccess:(void(^)(NSArray *friends))successBlock
++ (void)getFriendsFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
                                 failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [User query];
@@ -160,6 +160,9 @@
                     [post.user incrementKey:@"score"];
                     [post.user saveInBackground];
                     
+                    // Pin
+                    [post pinInBackgroundWithName:@"Posts"];
+                    
                     // Success block
                     if (successBlock)
                         successBlock();
@@ -179,16 +182,13 @@
     }];
 }
 
-+ (void)getVideoFromContacts:(NSArray *)contactsPhoneNumbers
++ (void)getVideoFromContacts:(NSArray *)friends
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *userQuery = [User query];
-    [userQuery whereKey:@"username" containedIn:contactsPhoneNumbers];
-    
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
     [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
-    [query whereKey:@"user" matchesQuery:userQuery];
+    [query whereKey:@"user" containedIn:friends];
     [query orderByAscending:@"createdAt"];
     [query includeKey:@"user"];
     [query setLimit:1000];
@@ -197,11 +197,14 @@
             // Download video
             [VideoPost downloadVideoFromPosts:objects];
             
+            // Cache the new results.
+            [VideoPost pinAllInBackground:objects withName:@"Posts"];
+            
             // Return
-            NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
             if (successBlock) {
                 successBlock(objects);
             }
+            NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
         } else {
             // Log details of the failure
             NSLog(@"Get Video Error: %@ %@", error, [error userInfo]);
@@ -211,5 +214,40 @@
     }];
 }
 
+
++ (NSArray *)getVideoLocallyFromUser:(User *)user
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    [query fromLocalDatastore];
+    [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
+    if (user) {
+        [query whereKey:@"user"  equalTo:user];
+    }
+    [query orderByAscending:@"createdAt"];
+    [query includeKey:@"user"];
+    [query setLimit:1000];
+    NSArray *results = [query findObjects];
+    [VideoPost downloadVideoFromPosts:results];
+    return results;
+}
+     
++ (void)getExpiredVideoFromLocalDataStoreAndExecute:(void(^)(NSArray *posts))block
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    [query fromLocalDatastore];
+    [query whereKey:@"createdAt" lessThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
+    [query setLimit:1000];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error == nil) {
+            block(objects);
+        } else {
+            NSLog(@"Local Datastore Expired Video Error: %@ %@", error, [error userInfo]);
+        }
+    }];
+}
+
++ (void)updateVideoPosts:(NSArray *)videoPosts {
+    [VideoPost saveAllInBackground:videoPosts];
+}
 
 @end

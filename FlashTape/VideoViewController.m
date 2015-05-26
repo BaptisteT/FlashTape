@@ -35,9 +35,11 @@
 // Contacts
 @property (nonatomic) ABAddressBookRef addressBook;
 @property (strong, nonatomic) NSDictionary *contactDictionnary;
+@property (strong, nonatomic) NSArray *friends;
 
 // Playing
 @property (strong, nonatomic) NSMutableArray *videoPostArray;
+@property (strong, nonatomic) NSArray *videoToPlayArray;
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *friendVideoView;
 @property (strong, nonatomic) AVMutableComposition *friendVideoComposition;
 @property (strong, nonatomic) NSMutableArray *observedTimesArray;
@@ -140,9 +142,9 @@
     _recorder.captureSessionPreset = [SCRecorderTools bestCaptureSessionPresetCompatibleWithAllDevices];
     _recorder.delegate = self;
     _recorder.autoSetVideoOrientation = YES;
-    _recorder.device = AVCaptureDevicePositionFront;
+    _recorder.device = [GeneralUtils getLastVideoSelfieModePref] ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
     _recorder.videoConfiguration.preset = SCPresetMediumQuality;
-    _recorder.audioConfiguration.preset = SCPresetLowQuality;
+    _recorder.audioConfiguration.preset = SCPresetMediumQuality;
      _recorder.autoSetVideoOrientation = NO;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
@@ -198,10 +200,15 @@
     self.timeLabel.text = @"";
     
      // Labels
-    self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
-    self.recordTutoLabel.lineType = LineTypeDown;
-    self.recordTutoLabel.lineHeight = 4.0f;
-    self.replayButton.hidden = YES;    
+    if ([User currentUser].score >= kMaxScoreBeforeHidingTuto) {
+        [self.recordTutoLabel removeFromSuperview];
+        [self.releaseToSendTuto removeFromSuperview];
+    } else {
+        self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
+        self.recordTutoLabel.lineType = LineTypeDown;
+        self.recordTutoLabel.lineHeight = 4.0f;
+    }
+    self.replayButton.hidden = YES;
     
     // Preview
     self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
@@ -214,29 +221,36 @@
     self.previewView.player.loopEnabled = YES;
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
-    // Get contacts and retrieve videos
-    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
-    [self retrieveVideo];
+    // Get local videos
+    self.videoPostArray = [NSMutableArray arrayWithArray:[ApiManager getVideoLocallyFromUser:nil]];
+    self.failedVideoPostArray = [NSMutableArray new];
     
-    // Init address book
+    // Retrieve friends from local datastore
+    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
+    [ApiManager getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
+        self.friends = friends;
+        [self retrieveVideo];
+    } failure:nil];
+    
+    // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
             if (granted) {
-                NSDictionary *newContactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-                if (self.contactDictionnary.count != newContactDictionnary.count) {
-                    self.contactDictionnary = newContactDictionnary;
-                    [self retrieveVideo];
-                }
-                self.contactDictionnary = newContactDictionnary;
+                self.contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
+                [contactArray addObject:[User currentUser].username];
+                [ApiManager getListOfFriends:contactArray
+                                     success:^(NSArray *friends) {
+                                         if (friends.count != self.friends.count) {
+                                             [self retrieveVideo];
+                                         }
+                                         self.friends = friends;
+                                     } failure:nil];
                 [AddressbookUtils saveContactDictionnary:self.contactDictionnary];
             }
         });
     });
-    
-    // Video Post array
-    self.videoPostArray = [NSMutableArray new];
-    self.failedVideoPostArray = [NSMutableArray new];
     
     // Callback
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -294,6 +308,7 @@
     if ([segueName isEqualToString: @"Friends From Video"]) {
         [self hideUIElementOnCamera:YES];
         ((FriendsViewController *) [segue destinationViewController]).delegate = self;
+        ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
         ((FriendsViewController *) [segue destinationViewController]).contactDictionnary = self.contactDictionnary;
     }
 }
@@ -310,19 +325,16 @@
 #pragma mark - Feed
 // --------------------------------------------
 - (void)retrieveVideo {
-    // Add current user to contacts array
-    NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
-    [contactArray addObject:[User currentUser].username];
-    
     // Get video
-    [ApiManager getVideoFromContacts:contactArray
+    [ApiManager getVideoFromContacts:self.friends
                              success:^(NSArray *posts) {
-                                 self.videoPostArray = [NSMutableArray arrayWithArray:posts];
-                                 [self setReplayButtonUI];
-                             } failure:^(NSError *error) {
-                                 // todo BT handle error
-                                 // display already downloaded video ? fron last 24h
-                             }];
+                                 [self setVideoArray:posts];
+                             } failure:nil];
+}
+
+- (void)setVideoArray:(NSArray *)videoPostArray {
+    self.videoPostArray = [NSMutableArray arrayWithArray:videoPostArray];
+    [self setReplayButtonUI];
 }
 
 // --------------------------------------------
@@ -385,13 +397,7 @@
     } else {
         [self.friendVideoView.player play];
         [self.whiteNoisePlayer play];
-        
-        [UIView animateWithDuration:CMTimeGetSeconds(self.friendVideoComposition.duration) * (1 - widthRatio)
-                              delay:0
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             [self.playingProgressView setFrame:CGRectMake(0, 0, self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
-                         } completion:nil];
+        [self animatePlayingProgressBar:CMTimeGetSeconds(self.friendVideoComposition.duration) * (1 - widthRatio)];
     }
 }
 
@@ -399,13 +405,14 @@
     if (self.failedVideoPostArray.count > 0) {
         [self sendFailedVideo];
     } else {
-        [self prepareToPlayVideos];
+        [self createCompositionAndPlayVideos:self.videoPostArray];
         [TrackingUtils trackReplayButtonClicked];
     }
 }
 
 - (IBAction)flipCameraButtonClicked:(id)sender {
     self.recorder.device = self.recorder.device == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    [GeneralUtils saveLastVideoSelfieModePref:(self.recorder.device == AVCaptureDevicePositionFront)];
 }
 
 - (IBAction)friendsButtonClicked:(id)sender {
@@ -417,7 +424,7 @@
 }
 
 -(IBAction)backToCameraButtonClicked:(id)sender {
-    [self setCameraMode];
+    [self returnToCameraMode];
 }
 
 - (void)handleTapOnVideo {
@@ -429,6 +436,11 @@
         [observedValue getValue:&observedTime];
         if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
             [self.friendVideoView.player seekToTime:observedTime];
+            CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoComposition.duration);
+            CGFloat currentTime = CMTimeGetSeconds(observedTime);
+            [self.playingProgressView.layer removeAllAnimations];
+            [self.playingProgressView setFrame:CGRectMake(0, 0, currentTime / videoDuration * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+            [self animatePlayingProgressBar:videoDuration - currentTime];
             break;
         }
     }
@@ -437,13 +449,14 @@
 // --------------------------------------------
 #pragma mark - Playing
 // --------------------------------------------
-- (void)prepareToPlayVideos {
+- (void)createCompositionAndPlayVideos:(NSArray *)videoArray {
+    self.videoToPlayArray = videoArray;
     [self createCompositionFromVideoPosts];
     
     // Case where video not yet downloaded
-    if (self.videoPostArray.count == 0 || !self.friendVideoComposition) return;
+    if (videoArray.count == 0 || !self.friendVideoComposition) return;
     if (self.friendVideoComposition.duration.value <= 0) {
-        [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)self.videoPostArray[_videoIndex]).downloadProgress] forState:UIControlStateNormal];
+        [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)self.videoToPlayArray[_videoIndex]).downloadProgress] forState:UIControlStateNormal];
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setReplayButtonUI) userInfo:nil repeats:NO];
         return;
     }
@@ -463,17 +476,21 @@
         [self.compositionTimerObserverArray addObject:[self.friendVideoView.player addBoundaryTimeObserverForTimes:[NSArray arrayWithObject:self.observedTimesArray[ii]] queue:dispatch_get_main_queue() usingBlock:^{
             [TrackingUtils trackVideoSeen];
 
-            if (_videoIndex + ii >= self.videoPostArray.count) return;
+            if (_videoIndex + ii >= self.videoToPlayArray.count) return;
             
-            // Save item date
-            [GeneralUtils saveLastVideoSeenDate:((VideoPost *)self.videoPostArray[_videoIndex + ii]).createdAt];
-       
-            // update metadata & last seen date
-            if (ii < self.observedTimesArray.count - 1 && self.videoPostArray.count > _videoIndex + ii + 1) {
-                [self setPlayingMetaDataForVideoPost:self.videoPostArray[_videoIndex + ii + 1]];
-            } else {
-                [self setCameraMode];
+            // Update viewer ids and last video seen date
+            VideoPost *videoSeen = (VideoPost *)self.videoToPlayArray[_videoIndex + ii];
+            [GeneralUtils saveLastVideoSeenDate:videoSeen.createdAt];
+            if (videoSeen.user != [User currentUser]) {
+                [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
             }
+            
+            // update metadata & last seen date
+            if (ii < self.observedTimesArray.count - 1 && self.videoToPlayArray.count > _videoIndex + ii + 1) {
+                [self setPlayingMetaDataForVideoPost:self.videoToPlayArray[_videoIndex + ii + 1]];
+            } else {
+                [self returnToCameraMode];
+            };
         }]];
     }
     
@@ -488,14 +505,9 @@
     [self.friendVideoView.player play];
     // UI
     [self setPlayingMode:YES];
-    [self setPlayingMetaDataForVideoPost:self.videoPostArray[_videoIndex]];
+    [self setPlayingMetaDataForVideoPost:self.videoToPlayArray[_videoIndex]];
     [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
-    [UIView animateWithDuration:CMTimeGetSeconds(self.friendVideoComposition.duration)
-                          delay:0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         [self.playingProgressView setFrame:CGRectMake(0, 0, self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
-                     } completion:nil];
+    [self animatePlayingProgressBar:CMTimeGetSeconds(self.friendVideoComposition.duration)];
 }
 
 // and then we implement the observation callback
@@ -528,8 +540,8 @@
 {
     self.friendVideoComposition = [AVMutableComposition new];
     self.observedTimesArray = [NSMutableArray new];
-    for (NSInteger kk = _videoIndex; kk < self.videoPostArray.count; kk++) {
-        VideoPost *post = self.videoPostArray[kk];
+    for (NSInteger kk = _videoIndex; kk < self.videoToPlayArray.count; kk++) {
+        VideoPost *post = self.videoToPlayArray[kk];
         if (post.localUrl) {
             [self insertVideoAtTheEndOfTheComposition:post];
         } else {
@@ -567,6 +579,11 @@
 - (void)showMetaData:(BOOL)flag {
     self.nameLabel.hidden = !flag;
     self.timeLabel.hidden = !flag;
+}
+
+- (void)returnToCameraMode {
+    [self setCameraMode];
+    [ApiManager updateVideoPosts:self.videoToPlayArray];
 }
 
 // --------------------------------------------
@@ -854,6 +871,20 @@
     }
 }
 
+- (void)animatePlayingProgressBar:(float)duration {
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         [self.playingProgressView setFrame:CGRectMake(0, 0, self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+                     } completion:nil];
+}
+
+
+// --------------------------------------------
+#pragma mark - Friends VC Delegate
+// --------------------------------------------
+
 - (void)hideUIElementOnCamera:(BOOL)flag {
     if (flag) {
         self.replayButton.hidden = YES;
@@ -867,6 +898,11 @@
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;
     self.captionButton.hidden = flag;
+}
+
+- (void)playOneFriendVideos:(NSArray *)videoArray {
+    _videoIndex = 0;
+    [self createCompositionAndPlayVideos:videoArray];
 }
 
 // --------------------------------------------

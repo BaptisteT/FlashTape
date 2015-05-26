@@ -13,11 +13,16 @@
 
 @implementation VideoPost
 
+// Local
 @synthesize downloadProgress;
 @synthesize videoData;
 @synthesize localUrl;
+@synthesize isDownloading;
+
+// Variable saved on parse
 @dynamic videoFile;
 @dynamic user;
+@dynamic viewerIdsArray;
 
 + (void)load {
     [self registerSubclass];
@@ -39,22 +44,28 @@
 - (void)downloadVideoFile
 {
     NSError *err;
-    if ([[self videoLocalURL] checkResourceIsReachableAndReturnError:&err]) {
+    if (self.localUrl) {
+        return;
+    } else if ([[self videoLocalURL] checkResourceIsReachableAndReturnError:&err]) {
         self.localUrl = [self videoLocalURL];
     } else {
-        [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            if (data) {
-                [self saveDataToLocalURL:data];
-            } else {
-                if ([self.videoFile isDataAvailable]) {
-                    [self saveDataToLocalURL:[self.videoFile getData]];
+        if (!self.isDownloading) {
+            self.isDownloading = YES;
+            [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                self.isDownloading = NO;
+                if (data) {
+                    [self saveDataToLocalURL:data];
                 } else {
-                    NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                    if ([self.videoFile isDataAvailable]) {
+                        [self saveDataToLocalURL:[self.videoFile getData]];
+                    } else {
+                        NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                    }
                 }
-            }
-        } progressBlock:^(int percentDone) {
-            self.downloadProgress = percentDone;
-        }];
+            } progressBlock:^(int percentDone) {
+                self.downloadProgress = percentDone;
+            }];
+        }
     }
 }
 

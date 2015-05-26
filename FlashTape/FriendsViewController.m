@@ -18,7 +18,6 @@
 
 @interface FriendsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (strong, nonatomic) NSArray *friends;
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UIButton *inviteButton;
@@ -36,21 +35,6 @@
     self.friendsTableView.dataSource = self;
     self.friendsTableView.delegate = self;
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    self.friends = [NSArray new];
-    
-    // Get friends from local datastore
-    [ApiManager getFriendsLocalDatastoreSuccess:^(NSArray *friends) {
-                                                    self.friends = friends;
-                                                    [self.friendsTableView reloadData];
-                                                } failure:nil];
-    
-    // Get friends from server
-    [ApiManager getListOfFriends:[self.contactDictionnary allKeys]
-                         success:^(NSArray *friends) {
-                             self.friends = friends;
-                             [self.friendsTableView reloadData];
-                         } failure:nil];
     
     // Labels
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
@@ -114,6 +98,19 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         return 80;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.view.userInteractionEnabled = NO;
+    
+    NSArray *videos = [ApiManager getVideoLocallyFromUser:(User *)self.friends[indexPath.row]];
+    if (!videos || videos.count == 0) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        self.view.userInteractionEnabled = YES;
+    } else {
+        [self dismissFriendsController];
+        [self.delegate playOneFriendVideos:videos];
+    }
 }
 
 // ----------------------------------------------------------
