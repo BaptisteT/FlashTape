@@ -430,23 +430,24 @@
 }
 
 - (void)handleTapOnVideo {
-    if (![self isPlayingMode] || self.videoPlayingObservedTimesArray.count < 2) {
+    if (![self isPlayingMode]) {
         return;
     }
     CMTime observedTime;
-    
-    //todo bt
-    // handle last one
     for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
-        [observedValue getValue:&observedTime];
-        if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
-            [self.friendVideoView.player seekToTime:observedTime];
-            CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
-            CGFloat currentTime = CMTimeGetSeconds(observedTime);
-            [self.playingProgressView.layer removeAllAnimations];
-            [self.playingProgressView setFrame:CGRectMake(0, 0, currentTime / videoDuration * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
-            [self animatePlayingProgressBar:videoDuration - currentTime];
-            break;
+        if (observedValue == self.videoPlayingObservedTimesArray.lastObject) {
+            [self returnToCameraMode];
+        } else {
+            [observedValue getValue:&observedTime];
+            if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
+                [self.friendVideoView.player seekToTime:observedTime];
+                CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
+                CGFloat currentTime = CMTimeGetSeconds(observedTime);
+                [self.playingProgressView.layer removeAllAnimations];
+                [self.playingProgressView setFrame:CGRectMake(0, 0, currentTime / videoDuration * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+                [self animatePlayingProgressBar:videoDuration - currentTime];
+                return;
+            }
         }
     }
 }
@@ -523,40 +524,6 @@
         }
     }
 }
-
-//- (void)createCompositionFromVideoPosts:(NSArray *)posts
-//{
-//    self.friendVideoComposition = [AVMutableComposition new];
-//    self.observedTimesArray = [NSMutableArray new];
-//    for (NSInteger kk = 0; kk < posts.count; kk++) {
-//        VideoPost *post = posts[kk];
-//        if (post.localUrl) {
-//            [self insertVideoAtTheEndOfTheComposition:post];
-//        } else {
-//            return;
-//        }
-//    }
-//}
-//
-//- (void)insertVideoAtTheEndOfTheComposition:(VideoPost *)videoPost {
-//    if (videoPost.localUrl) {
-//        AVURLAsset* sourceAsset = [AVURLAsset assetWithURL:videoPost.videoLocalURL];
-//        CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(CMTimeGetSeconds(sourceAsset.duration) - kVideoEndCutDuration, sourceAsset.duration.timescale));
-//        NSError *editError;
-//        [self.friendVideoComposition insertTimeRange:assetTimeRange
-//                                             ofAsset:sourceAsset
-//                                              atTime:[self friendCompositionEndCMTime]
-//                                               error:&editError];
-//        if (editError) {
-//            NSLog(@"%@",editError.description);
-//        }
-//        [self.observedTimesArray addObject:[NSValue valueWithCMTime:[self friendCompositionEndCMTime]]];
-//    }
-//}
-//
-//- (CMTime)friendCompositionEndCMTime {
-//    return CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoComposition.duration),self.friendVideoComposition.duration.timescale);
-//}
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
     [self showMetaData:YES];
