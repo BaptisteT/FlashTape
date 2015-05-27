@@ -52,3 +52,5 @@
 // My story
 "delete_flash_error_title" = "";
 "delete_flash_error_message" = "Sorry, we could not delete your flash";
+"save_story_error_title" = "";
+"save_story_error_message" = "Sorry, we could not save your flashes";

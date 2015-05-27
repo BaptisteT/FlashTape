@@ -54,7 +54,10 @@
     return CMTimeMakeWithSeconds(CMTimeGetSeconds(composition.duration),composition.duration.timescale);
 }
 
-+ (void)saveVideoCompositionToCameraRoll:(AVComposition *)composition {
++ (void)saveVideoCompositionToCameraRoll:(AVComposition *)composition
+                                 success:(void(^)())successBlock
+                                 failure:(void(^)())failureBlock
+{
     AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetHighestQuality];
     NSString *exportVideoPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/FinishedVideo.m4v"];
     NSURL *exportURL = [NSURL fileURLWithPath:exportVideoPath];
@@ -67,13 +70,23 @@
                 ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
                 [library writeVideoAtPathToSavedPhotosAlbum:exportURL
                                             completionBlock:^(NSURL *assetURL, NSError *error) {
-                                                NSLog (@"SAVE SUCCESS");
+                                                if (error == nil) {
+                                                    if (successBlock) {
+                                                        successBlock();
+                                                    }
+                                                } else {
+                                                    if (failureBlock) {
+                                                        failureBlock();
+                                                    }
+                                                }
                                             }];
                 NSLog (@"SUCCESS");
                 break;
             }
             default: {
-                NSLog (@"FAIL");
+                if (failureBlock) {
+                    failureBlock();
+                }
             }
         };
     }];

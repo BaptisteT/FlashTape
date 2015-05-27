@@ -41,6 +41,7 @@
     [self.delegate expandCurrentUserStoryButtonClicked];
 }
 - (IBAction)saveButtonClicked:(id)sender {
+    self.saveButton.enabled = NO;
     [self.delegate saveCurrentUserStoryButtonClicked];
 }
 

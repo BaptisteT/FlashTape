@@ -125,7 +125,7 @@
                                  defaultRegion:nil error:&aError];
     
     if (aError || ![phoneUtil isValidNumber:myNumber]) {
-        [GeneralUtils showMessage:NSLocalizedString(@"phone_number_error_message",nil) withTitle:nil];
+        [GeneralUtils showAlertMessage:NSLocalizedString(@"phone_number_error_message",nil) withTitle:nil];
         return;
     } else {
         [self.numberTextField resignFirstResponder];
@@ -153,7 +153,7 @@
         [self performSegueWithIdentifier:@"Code From Phone" sender:@[phoneNumber,[[NSNumber numberWithLong:code] stringValue]]];
     } failure:^{
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [GeneralUtils showMessage:NSLocalizedString(@"confirmation_code_error_message",nil) withTitle:nil];
+        [GeneralUtils showAlertMessage:NSLocalizedString(@"confirmation_code_error_message",nil) withTitle:nil];
     }];
 }
 

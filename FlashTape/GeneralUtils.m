@@ -46,7 +46,7 @@
 }
 
 // Show an alert message
-+ (void)showMessage:(NSString *)text withTitle:(NSString *)title
++ (void)showAlertMessage:(NSString *)text withTitle:(NSString *)title
 {
     [[[UIAlertView alloc] initWithTitle:title ? title : @""
                                 message:text ? text : @""

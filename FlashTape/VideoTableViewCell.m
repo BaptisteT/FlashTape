@@ -25,10 +25,16 @@
 
 - (void)initWithPost:(VideoPost *)post {
     self.post = post;
-    if (!post.thumbmail) {
-        post.thumbmail = [GeneralUtils generateThumbImage:post.localUrl];
-    }
-    self.videoThumbmail.image = post.thumbmail;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!post.thumbmail) {
+            post.thumbmail = [GeneralUtils generateThumbImage:post.localUrl];
+        }
+        // update UI on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.videoThumbmail.image = post.thumbmail;
+        });
+    });
     self.videoThumbmail.contentMode = UIViewContentModeScaleAspectFill;
     self.videoThumbmail.layer.cornerRadius = self.videoThumbmail.frame.size.height / 2;
     self.videoThumbmail.clipsToBounds = YES;

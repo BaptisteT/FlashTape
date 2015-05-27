@@ -90,10 +90,10 @@
                           [self performSegueWithIdentifier:@"Video From Code" sender:nil];
                       } failure:^{
                           [MBProgressHUD hideHUDForView:self.view animated:YES];
-                          [GeneralUtils showMessage:NSLocalizedString(@"authentification_error_message", nil) withTitle:NSLocalizedString(@"authentification_error_title", nil)];
+                          [GeneralUtils showAlertMessage:NSLocalizedString(@"authentification_error_message", nil) withTitle:NSLocalizedString(@"authentification_error_title", nil)];
                       }];
     } else {
-        [GeneralUtils showMessage:NSLocalizedString(@"invalid_code_error_message", nil) withTitle:nil];
+        [GeneralUtils showAlertMessage:NSLocalizedString(@"invalid_code_error_message", nil) withTitle:nil];
     }
 }
 

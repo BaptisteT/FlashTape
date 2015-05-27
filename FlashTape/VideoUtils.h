@@ -13,6 +13,9 @@
 + (NSMutableArray *)fillComposition:(AVMutableComposition *)composition
                      withVideoPosts:(NSArray *)posts;
 
-+ (void)saveVideoCompositionToCameraRoll:(AVComposition *)composition;
++ (void)saveVideoCompositionToCameraRoll:(AVComposition *)composition
+                                 success:(void(^)())successBlock
+                                 failure:(void(^)())failureBlock;
+
 
 @end

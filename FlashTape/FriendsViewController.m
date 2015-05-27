@@ -20,6 +20,7 @@
 #import "GeneralUtils.h"
 #import "MBProgressHUD.h"
 #import "TrackingUtils.h"
+#import "VideoUtils.h"
 
 @interface FriendsViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
@@ -47,7 +48,6 @@
     [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
         [self.friendsTableView reloadData];
     }];
-    
     
     // Tableview
     self.friendsTableView.dataSource = self;
@@ -133,15 +133,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    self.view.userInteractionEnabled = NO;
-    
-    NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.section]];
-    if (!videos || videos.count == 0) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        self.view.userInteractionEnabled = YES;
-    } else {
-        [self dismissFriendsController];
-        [self.delegate playOneFriendVideos:videos];
+    if (indexPath.row == 0) {
+        self.view.userInteractionEnabled = NO;
+        NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.section]];
+        if (!videos || videos.count == 0) {
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+            self.view.userInteractionEnabled = YES;
+        } else {
+            [self dismissFriendsController];
+            [self.delegate playOneFriendVideos:videos];
+        }
     }
 }
 
@@ -162,7 +163,7 @@
     
     // Redirect to sms
     if(![MFMessageComposeViewController canSendText]) {
-        [GeneralUtils showMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
+        [GeneralUtils showAlertMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
         return;
     }
     MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
@@ -218,7 +219,14 @@
 }
 
 - (void)saveCurrentUserStoryButtonClicked {
-    // todo BT
+    AVMutableComposition *compo = [AVMutableComposition new];
+    [VideoUtils fillComposition:compo withVideoPosts:self.currentUserPosts];
+    [VideoUtils saveVideoCompositionToCameraRoll:compo success:^{
+        [self.friendsTableView reloadData];
+    } failure:^{
+        [self.friendsTableView reloadData];
+        [GeneralUtils showAlertMessage:NSLocalizedString(@"save_story_error_message", nil) withTitle:NSLocalizedString(@"save_story_error_title", nil)];
+    }];
 }
 
 // --------------------------------------------
@@ -234,7 +242,7 @@
                        [self reloadCurrentUserSection];
                    } failure:^(NSError *error) {
                        [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                       [GeneralUtils showMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
+                       [GeneralUtils showAlertMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
                    }];
 }
 

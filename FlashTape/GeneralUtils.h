@@ -18,7 +18,7 @@
 + (UIImage *)generateThumbImage:(NSURL *)url;
 
 // Show an alert message
-+ (void)showMessage:(NSString *)text withTitle:(NSString *)title;
++ (void)showAlertMessage:(NSString *)text withTitle:(NSString *)title;
 
 + (void)removeFile:(NSURL *)fileURL;
 
