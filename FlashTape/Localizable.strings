@@ -48,3 +48,7 @@
 "friend_controller_title" = "Invite your friends";
 "friend_score_label" = "Increase your score for more fun";
 "sharing_wording" = "Join me on Flash and watch my life second by second: %@";
+
+// My story
+"delete_flash_error_title" = "";
+"delete_flash_error_message" = "Sorry, we could not delete your flash";

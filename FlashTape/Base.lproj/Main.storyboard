@@ -6,6 +6,9 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <mutableArray key="NHaasGroteskDSPro-55Rg.ttf">
+            <string>NHaasGroteskDSPro-55Rg</string>
+        </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
@@ -682,12 +685,12 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="LqB-To-ITe">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="LqB-To-ITe">
                                 <rect key="frame" x="0.0" y="90" width="600" height="460"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FriendCell" rowHeight="80" id="Y8i-4U-BMg" customClass="FriendTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="FriendCell" rowHeight="80" id="Y8i-4U-BMg" customClass="FriendTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Y8i-4U-BMg" id="bDY-Zb-eof">
@@ -712,6 +715,29 @@
                                                         <constraint firstAttribute="width" constant="20" id="PhC-Q2-6Yo"/>
                                                     </constraints>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b7j-ap-eIf">
+                                                    <rect key="frame" x="553" y="22" width="35" height="35"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="35" id="Fdm-LF-9cy"/>
+                                                        <constraint firstAttribute="height" constant="35" id="X0O-fu-GAm"/>
+                                                    </constraints>
+                                                    <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                                    <state key="normal" image="three_dots_button">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="expandButtonClicked:" destination="Y8i-4U-BMg" eventType="touchUpInside" id="lMA-nT-9KX"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZK-D3-zfC">
+                                                    <rect key="frame" x="501" y="25" width="32" height="30"/>
+                                                    <state key="normal" title="save">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="saveButtonClicked:" destination="Y8i-4U-BMg" eventType="touchUpInside" id="aoB-q4-YjX"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="y1L-4Y-drw" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="HUd-DI-Feb"/>
@@ -719,8 +745,12 @@
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="aO8-i6-tv2"/>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="top" secondItem="y1L-4Y-drw" secondAttribute="bottom" constant="4" id="guN-Vi-lv6"/>
                                                 <constraint firstAttribute="centerY" secondItem="y1L-4Y-drw" secondAttribute="centerY" constant="6.5" id="gvx-nV-xYA"/>
+                                                <constraint firstAttribute="centerY" secondItem="b7j-ap-eIf" secondAttribute="centerY" id="jdv-7l-B2W"/>
                                                 <constraint firstAttribute="centerY" secondItem="XLB-UB-kNZ" secondAttribute="centerY" constant="-15" id="k5b-a2-1eV"/>
                                                 <constraint firstAttribute="trailing" secondItem="DQR-Th-awv" secondAttribute="trailing" constant="20" id="r8g-35-Trr"/>
+                                                <constraint firstItem="b7j-ap-eIf" firstAttribute="centerX" secondItem="DQR-Th-awv" secondAttribute="centerX" constant="0.5" id="vhb-Aj-ZcP"/>
+                                                <constraint firstItem="b7j-ap-eIf" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" constant="20" id="x5p-5H-hTT"/>
+                                                <constraint firstAttribute="centerY" secondItem="CZK-D3-zfC" secondAttribute="centerY" constant="-0.5" id="yLP-hv-AuJ"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -729,10 +759,58 @@
                                             </variation>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
+                                            <outlet property="expandButton" destination="b7j-ap-eIf" id="CIu-vf-6Xr"/>
                                             <outlet property="nameLabel" destination="y1L-4Y-drw" id="xrF-rr-81H"/>
+                                            <outlet property="saveButton" destination="CZK-D3-zfC" id="ARm-oF-k6L"/>
                                             <outlet property="scoreLabel" destination="XLB-UB-kNZ" id="MwL-xE-gef"/>
                                             <outlet property="seenImageView" destination="DQR-Th-awv" id="3El-QI-459"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VideoCell" id="ZIp-cc-i6H" customClass="VideoTableViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZIp-cc-i6H" id="8FS-Qg-JZE">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lmI-ga-N82">
+                                                    <rect key="frame" x="20" y="4" width="35" height="35"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="35" id="GPC-qV-gnA"/>
+                                                        <constraint firstAttribute="height" constant="35" id="gN2-yC-nPF"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NNL-iu-UQy">
+                                                    <rect key="frame" x="65" y="15" width="26" height="13"/>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-55Rg" family="Neue Haas Grotesk Display Pro" pointSize="11"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K6O-uu-sHK">
+                                                    <rect key="frame" x="549" y="6" width="43" height="30"/>
+                                                    <state key="normal" title="delete">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="deletButtonClicked:" destination="ZIp-cc-i6H" eventType="touchUpInside" id="z64-nk-mLO"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="K6O-uu-sHK" firstAttribute="trailing" secondItem="8FS-Qg-JZE" secondAttribute="trailingMargin" id="JiW-XM-VPr"/>
+                                                <constraint firstItem="NNL-iu-UQy" firstAttribute="leading" secondItem="lmI-ga-N82" secondAttribute="trailing" constant="10" id="Lkg-Y0-KyS"/>
+                                                <constraint firstItem="lmI-ga-N82" firstAttribute="leading" secondItem="8FS-Qg-JZE" secondAttribute="leading" constant="20" id="rhV-9Y-H9C"/>
+                                                <constraint firstAttribute="centerY" secondItem="K6O-uu-sHK" secondAttribute="centerY" id="tt8-49-Lb2"/>
+                                                <constraint firstAttribute="centerY" secondItem="NNL-iu-UQy" secondAttribute="centerY" id="xDI-lB-OVc"/>
+                                                <constraint firstAttribute="centerY" secondItem="lmI-ga-N82" secondAttribute="centerY" id="ytC-Wo-sbk"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="deleteButton" destination="K6O-uu-sHK" id="oBt-jx-ppP"/>
+                                            <outlet property="timeLabel" destination="NNL-iu-UQy" id="As8-N2-5Jv"/>
+                                            <outlet property="videoThumbmail" destination="lmI-ga-N82" id="vWj-eR-O8c"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -990,6 +1068,7 @@
         <image name="friends_button" width="32" height="32"/>
         <image name="seen_image" width="30" height="30"/>
         <image name="separator-black" width="1" height="1"/>
+        <image name="three_dots_button" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="U6D-kt-n9L"/>

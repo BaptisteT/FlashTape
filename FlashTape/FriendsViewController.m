@@ -13,10 +13,12 @@
 
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
+#import "VideoTableViewCell.h"
 
 #import "ColorUtils.h"
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
+#import "MBProgressHUD.h"
 #import "TrackingUtils.h"
 
 @interface FriendsViewController ()
@@ -25,20 +27,23 @@
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 
-@property (strong, nonatomic) NSArray *currentUserPosts;
+@property (strong, nonatomic) NSMutableArray *currentUserPosts;
 
 @end
 
-@implementation FriendsViewController
+@implementation FriendsViewController {
+    BOOL _expandMyStory;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _expandMyStory = NO;
     [self doBackgroundColorAnimation];
     self.colorView.alpha = 0.5;
     
     // Refresh current User posts
-    self.currentUserPosts = [DatastoreUtils getVideoLocallyFromUser:[User currentUser]];
+    self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:[User currentUser]]];
     [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
         [self.friendsTableView reloadData];
     }];
@@ -48,6 +53,8 @@
     self.friendsTableView.dataSource = self;
     self.friendsTableView.delegate = self;
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.friendsTableView.separatorInset = UIEdgeInsetsZero;
+    self.friendsTableView.layoutMargins = UIEdgeInsetsZero;
     
     // Labels
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
@@ -71,19 +78,40 @@
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.friends.count;
 }
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if ((User *)self.friends[section] == [User currentUser]) {
+        return 1 + (_expandMyStory ? self.currentUserPosts.count : 0);
+    } else {
+        return 1;
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-    User *friend = (User *)self.friends[indexPath.row];
-    BOOL hasSeenVideo = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ([((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : YES;
-    
-    [cell initWithName:self.contactDictionnary[friend.username]
-                 score:[NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)]
-         hasSeenVideos:hasSeenVideo];
-    return cell;
+    if (indexPath.row == 0) {
+        FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+        User *friend = (User *)self.friends[indexPath.section];
+        
+        NSArray *viewerIdsArray = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray : nil;
+        BOOL hasSeenVideo = (viewerIdsArray) ? ([viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : NO;
+        
+        [cell initWithName:self.contactDictionnary[friend.username]
+                     score:[NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)]
+             hasSeenVideos:hasSeenVideo
+             isCurrentUser:([User currentUser] == friend)];
+        cell.delegate = self;
+        return cell;
+    } else {
+        VideoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoCell"];
+        VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
+        [cell initWithPost:post];
+        cell.delegate = self;
+        return cell;
+    }
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -91,38 +119,38 @@
     if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
         [cell setSeparatorInset:UIEdgeInsetsZero];
     }
-    
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
 }
 
--(void)viewDidLayoutSubviews
-{
-    if ([self.friendsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-        [self.friendsTableView setSeparatorInset:UIEdgeInsetsZero];
-    }
-    
-    if ([self.friendsTableView
-         respondsToSelector:@selector(setLayoutMargins:)]) {
-        [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
-    }
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
         return 80;
+    } else {
+        return 44;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.view.userInteractionEnabled = NO;
     
-    NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.row]];
+    NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.section]];
     if (!videos || videos.count == 0) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         self.view.userInteractionEnabled = YES;
     } else {
         [self dismissFriendsController];
         [self.delegate playOneFriendVideos:videos];
+    }
+}
+
+- (void)reloadCurrentUserSection {
+    NSInteger section = [self.friends indexOfObject:[User currentUser]];
+    if (section != NSNotFound) {
+        NSRange range = NSMakeRange(section, 1);
+        NSIndexSet *sectionToReload = [NSIndexSet indexSetWithIndexesInRange:range];
+        [self.friendsTableView reloadSections:sectionToReload withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
@@ -148,25 +176,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-// --------------------------------------------
-#pragma mark - FB App invite (not used today)
-// --------------------------------------------
-- (void)showFBInviteDialog {
-    FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] init];
-    content.appLinkURL = [NSURL URLWithString:kFlashTapeAppLinkUrl];
-    //optionally set previewImageURL
-    content.previewImageURL = [NSURL URLWithString:@"https://www.mydomain.com/my_invite_image.jpg"];
-    
-    // present the dialog. Assumes self implements protocol `FBSDKAppInviteDialogDelegate`
-    [FBSDKAppInviteDialog showWithContent:content
-                                 delegate:self];
-}
-
-- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didFailWithError:(NSError *)error {
-}
-
-- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didCompleteWithResults:(NSDictionary *)results  {
-}
 
 // --------------------------------------------
 #pragma mark - Details
@@ -200,5 +209,33 @@
     
 }
 
+// --------------------------------------------
+#pragma mark - Friend TVC Delegate
+// --------------------------------------------
+- (void)expandCurrentUserStoryButtonClicked {
+    _expandMyStory = !_expandMyStory;
+    [self reloadCurrentUserSection];
+}
+
+- (void)saveCurrentUserStoryButtonClicked {
+    // todo BT
+}
+
+// --------------------------------------------
+#pragma mark - Video TVC Delegate
+// --------------------------------------------
+- (void)deletePost:(VideoPost *)post {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ApiManager deletePost:post
+                   success:^{
+                       [self.currentUserPosts removeObject:post];
+                       [self.delegate removeVideoFromVideosArray:post];
+                       [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                       [self reloadCurrentUserSection];
+                   } failure:^(NSError *error) {
+                       [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                       [GeneralUtils showMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
+                   }];
+}
 
 @end

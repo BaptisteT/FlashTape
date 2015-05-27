@@ -15,10 +15,12 @@
 @property (retain) User *user;
 @property (retain) PFFile *videoFile;
 @property (retain) NSArray *viewerIdsArray;
+
 @property (retain) NSURL *localUrl;
 @property (retain) NSData *videoData; // use for failure (url is reused for other videos..)
 @property (nonatomic) NSInteger downloadProgress;
 @property (nonatomic) BOOL isDownloading;
+@property (retain) UIImage *thumbmail;
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
 

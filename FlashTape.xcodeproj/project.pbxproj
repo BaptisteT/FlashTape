@@ -104,6 +104,8 @@
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
 		3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */; };
 		3C62A5951B14E01B009CCD2A /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */; };
+		3C7BF5261B15B84700E66537 /* VideoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */; };
+		3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5281B15D93700E66537 /* VideoUtils.m */; };
 		3CAC4D021B146F8B0064FA76 /* NotifUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D011B146F8B0064FA76 /* NotifUtils.m */; };
 		3CAC4D051B14D92E0064FA76 /* DatastoreUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D041B14D92E0064FA76 /* DatastoreUtils.m */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
@@ -277,6 +279,10 @@
 		3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralUtils.m; sourceTree = "<group>"; };
 		3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTableViewCell.h; sourceTree = "<group>"; };
 		3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
+		3C7BF5241B15B84700E66537 /* VideoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTableViewCell.h; sourceTree = "<group>"; };
+		3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTableViewCell.m; sourceTree = "<group>"; };
+		3C7BF5271B15D93700E66537 /* VideoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoUtils.h; sourceTree = "<group>"; };
+		3C7BF5281B15D93700E66537 /* VideoUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoUtils.m; sourceTree = "<group>"; };
 		3CAC4D001B146F8B0064FA76 /* NotifUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotifUtils.h; sourceTree = "<group>"; };
 		3CAC4D011B146F8B0064FA76 /* NotifUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifUtils.m; sourceTree = "<group>"; };
 		3CAC4D031B14D92E0064FA76 /* DatastoreUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatastoreUtils.h; sourceTree = "<group>"; };
@@ -530,6 +536,8 @@
 				3C2C4A7A1AFFECB600E0E4BF /* TrackingUtils.m */,
 				3CAC4D001B146F8B0064FA76 /* NotifUtils.h */,
 				3CAC4D011B146F8B0064FA76 /* NotifUtils.m */,
+				3C7BF5271B15D93700E66537 /* VideoUtils.h */,
+				3C7BF5281B15D93700E66537 /* VideoUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -541,6 +549,8 @@
 				3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */,
 				3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */,
 				3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */,
+				3C7BF5241B15B84700E66537 /* VideoTableViewCell.h */,
+				3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -800,9 +810,11 @@
 				3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */,
 				3C2C4A421AFB5A3B00E0E4BF /* NBPhoneNumber.m in Sources */,
 				3CAC4D021B146F8B0064FA76 /* NotifUtils.m in Sources */,
+				3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */,
 				3C2C4A441AFB5A3B00E0E4BF /* NBPhoneNumberUtil.m in Sources */,
 				3C2C4A731AFE231F00E0E4BF /* DTTimePeriodCollection.m in Sources */,
 				3C5F987C1AECE05E0098F70F /* SCRecorderTools.m in Sources */,
+				3C7BF5261B15B84700E66537 /* VideoTableViewCell.m in Sources */,
 				3C5F98831AECE05E0098F70F /* SCVideoPlayerView.m in Sources */,
 				3C5F987B1AECE05E0098F70F /* SCRecorderFocusTargetView.m in Sources */,
 				3C2C4A401AFB5A3B00E0E4BF /* NBPhoneMetaData.m in Sources */,

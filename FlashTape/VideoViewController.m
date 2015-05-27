@@ -27,6 +27,7 @@
 #import "GeneralUtils.h"
 #import "NSDate+DateTools.h"
 #import "TrackingUtils.h"
+#import "VideoUtils.h"
 
 // Degrees to radians
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
@@ -40,10 +41,8 @@
 
 // Playing
 @property (strong, nonatomic) NSMutableArray *videoPostArray;
-@property (strong, nonatomic) NSArray *videoToPlayArray;
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *friendVideoView;
-@property (strong, nonatomic) AVMutableComposition *friendVideoComposition;
-@property (strong, nonatomic) NSMutableArray *observedTimesArray;
+@property (strong, nonatomic) NSMutableArray *videoPlayingObservedTimesArray;
 @property (strong, nonatomic) NSMutableArray *compositionTimerObserverArray;
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
@@ -399,7 +398,7 @@
     } else {
         [self.friendVideoView.player play];
         [self.whiteNoisePlayer play];
-        [self animatePlayingProgressBar:CMTimeGetSeconds(self.friendVideoComposition.duration) * (1 - widthRatio)];
+        [self animatePlayingProgressBar:CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration) * (1 - widthRatio)];
     }
 }
 
@@ -407,7 +406,7 @@
     if (self.failedVideoPostArray.count > 0) {
         [self sendFailedVideo];
     } else {
-        [self createCompositionAndPlayVideos:self.videoPostArray];
+        [self createCompositionAndPlayVideos:[self.videoPostArray subarrayWithRange:NSMakeRange(_videoIndex, self.videoPostArray.count - _videoIndex)]];
         [TrackingUtils trackReplayButtonClicked];
     }
 }
@@ -418,6 +417,7 @@
 }
 
 - (IBAction)friendsButtonClicked:(id)sender {
+    [self.captionTextView resignFirstResponder];
     [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
 }
 
@@ -430,15 +430,18 @@
 }
 
 - (void)handleTapOnVideo {
-    if (![self isPlayingMode] || self.observedTimesArray.count < 2) {
+    if (![self isPlayingMode] || self.videoPlayingObservedTimesArray.count < 2) {
         return;
     }
     CMTime observedTime;
-    for (NSValue *observedValue in self.observedTimesArray) {
+    
+    //todo bt
+    // handle last one
+    for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
         [observedValue getValue:&observedTime];
         if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
             [self.friendVideoView.player seekToTime:observedTime];
-            CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoComposition.duration);
+            CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
             CGFloat currentTime = CMTimeGetSeconds(observedTime);
             [self.playingProgressView.layer removeAllAnimations];
             [self.playingProgressView setFrame:CGRectMake(0, 0, currentTime / videoDuration * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
@@ -452,19 +455,19 @@
 #pragma mark - Playing
 // --------------------------------------------
 - (void)createCompositionAndPlayVideos:(NSArray *)videoArray {
-    self.videoToPlayArray = videoArray;
-    [self createCompositionFromVideoPosts];
+    AVMutableComposition *composition = [AVMutableComposition new];
+    self.videoPlayingObservedTimesArray = [VideoUtils fillComposition:composition withVideoPosts:videoArray];
     
     // Case where video not yet downloaded
-    if (videoArray.count == 0 || !self.friendVideoComposition) return;
-    if (self.friendVideoComposition.duration.value <= 0) {
-        [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)self.videoToPlayArray[_videoIndex]).downloadProgress] forState:UIControlStateNormal];
+    if (videoArray.count == 0 || !composition) return;
+    if (composition.duration.value <= 0) {
+        [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)videoArray[0]).downloadProgress] forState:UIControlStateNormal];
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setReplayButtonUI) userInfo:nil repeats:NO];
         return;
     }
     
     // Set item
-    [self.friendVideoView.player setItemByAsset:self.friendVideoComposition];
+    [self.friendVideoView.player setItemByAsset:composition];
     [self.friendVideoView.player seekToTime:kCMTimeZero];
     
     // Time observer
@@ -474,58 +477,41 @@
         }
     }
     self.compositionTimerObserverArray = [NSMutableArray new];
-    for (int ii = 0; ii < self.observedTimesArray.count; ii++) {
-        [self.compositionTimerObserverArray addObject:[self.friendVideoView.player addBoundaryTimeObserverForTimes:[NSArray arrayWithObject:self.observedTimesArray[ii]] queue:dispatch_get_main_queue() usingBlock:^{
+    for (int ii = 0; ii < self.videoPlayingObservedTimesArray.count; ii++) {
+        [self.compositionTimerObserverArray addObject:[self.friendVideoView.player addBoundaryTimeObserverForTimes:[NSArray arrayWithObject:self.videoPlayingObservedTimesArray[ii]] queue:dispatch_get_main_queue() usingBlock:^{
             [TrackingUtils trackVideoSeen];
 
-            if (_videoIndex + ii >= self.videoToPlayArray.count) return;
+            if (ii >= videoArray.count) return;
             
             // Update viewer ids and last video seen date
-            VideoPost *videoSeen = (VideoPost *)self.videoToPlayArray[_videoIndex + ii];
+            VideoPost *videoSeen = (VideoPost *)videoArray[ii];
             [GeneralUtils saveLastVideoSeenDate:videoSeen.createdAt];
             if (videoSeen.user != [User currentUser]) {
                 [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
             }
             
             // update metadata & last seen date
-            if (ii < self.observedTimesArray.count - 1 && self.videoToPlayArray.count > _videoIndex + ii + 1) {
-                [self setPlayingMetaDataForVideoPost:self.videoToPlayArray[_videoIndex + ii + 1]];
+            if (ii < self.videoPlayingObservedTimesArray.count - 1 && videoArray.count > ii + 1) {
+                [self setPlayingMetaDataForVideoPost:videoArray[ii + 1]];
             } else {
                 [self returnToCameraMode];
             };
         }]];
     }
     
-    if (self.friendVideoView.player.status == AVPlayerStatusReadyToPlay) {
-        [self playVideos];
-    } else {
-        [self.friendVideoView.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
-    }
+    // Play
+    [self.friendVideoView.player play];
+    [self setPlayingMode:YES];
+    [self setPlayingMetaDataForVideoPost:videoArray[0]];
+    [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
+    [self animatePlayingProgressBar:CMTimeGetSeconds(composition.duration)];
 }
 
-- (void)playVideos {
-    [self.friendVideoView.player play];
-    // UI
-    [self setPlayingMode:YES];
-    [self setPlayingMetaDataForVideoPost:self.videoToPlayArray[_videoIndex]];
-    [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
-    [self animatePlayingProgressBar:CMTimeGetSeconds(self.friendVideoComposition.duration)];
-}
 
 // and then we implement the observation callback
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     AVPlayer *player = (AVPlayer *)object;
-    if(object==self.friendVideoView.player) {
-        if(player.status==AVPlayerStatusFailed) {
-            NSLog(@"player status failure");
-        } else if(player.status==AVPlayerStatusReadyToPlay) {
-            NSLog(@"ready to play");
-            [self playVideos];
-            [self.friendVideoView.player removeObserver:self forKeyPath:@"status"];
-        } else if(player.status==AVPlayerStatusUnknown) {
-            NSLog(@"player status unknown");
-        }
-    } else if(object==self.previewView.player) {
+    if(object==self.previewView.player) {
         if(player.status==AVPlayerStatusFailed) {
             NSLog(@"player status failure");
         } else if(player.status==AVPlayerStatusReadyToPlay) {
@@ -538,39 +524,39 @@
     }
 }
 
-- (void)createCompositionFromVideoPosts
-{
-    self.friendVideoComposition = [AVMutableComposition new];
-    self.observedTimesArray = [NSMutableArray new];
-    for (NSInteger kk = _videoIndex; kk < self.videoToPlayArray.count; kk++) {
-        VideoPost *post = self.videoToPlayArray[kk];
-        if (post.localUrl) {
-            [self insertVideoAtTheEndOfTheComposition:post];
-        } else {
-            return;
-        }
-    }
-}
-
-- (void)insertVideoAtTheEndOfTheComposition:(VideoPost *)videoPost {
-    if (videoPost.localUrl) {
-        AVURLAsset* sourceAsset = [AVURLAsset assetWithURL:videoPost.videoLocalURL];
-        CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(CMTimeGetSeconds(sourceAsset.duration) - kVideoEndCutDuration, sourceAsset.duration.timescale));
-        NSError *editError;
-        [self.friendVideoComposition insertTimeRange:assetTimeRange
-                                             ofAsset:sourceAsset
-                                              atTime:[self friendCompositionEndCMTime]
-                                               error:&editError];
-        if (editError) {
-            NSLog(@"%@",editError.description);
-        }
-        [self.observedTimesArray addObject:[NSValue valueWithCMTime:[self friendCompositionEndCMTime]]];
-    }
-}
-
-- (CMTime)friendCompositionEndCMTime {
-    return CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoComposition.duration),self.friendVideoComposition.duration.timescale);
-}
+//- (void)createCompositionFromVideoPosts:(NSArray *)posts
+//{
+//    self.friendVideoComposition = [AVMutableComposition new];
+//    self.observedTimesArray = [NSMutableArray new];
+//    for (NSInteger kk = 0; kk < posts.count; kk++) {
+//        VideoPost *post = posts[kk];
+//        if (post.localUrl) {
+//            [self insertVideoAtTheEndOfTheComposition:post];
+//        } else {
+//            return;
+//        }
+//    }
+//}
+//
+//- (void)insertVideoAtTheEndOfTheComposition:(VideoPost *)videoPost {
+//    if (videoPost.localUrl) {
+//        AVURLAsset* sourceAsset = [AVURLAsset assetWithURL:videoPost.videoLocalURL];
+//        CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(CMTimeGetSeconds(sourceAsset.duration) - kVideoEndCutDuration, sourceAsset.duration.timescale));
+//        NSError *editError;
+//        [self.friendVideoComposition insertTimeRange:assetTimeRange
+//                                             ofAsset:sourceAsset
+//                                              atTime:[self friendCompositionEndCMTime]
+//                                               error:&editError];
+//        if (editError) {
+//            NSLog(@"%@",editError.description);
+//        }
+//        [self.observedTimesArray addObject:[NSValue valueWithCMTime:[self friendCompositionEndCMTime]]];
+//    }
+//}
+//
+//- (CMTime)friendCompositionEndCMTime {
+//    return CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoComposition.duration),self.friendVideoComposition.duration.timescale);
+//}
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
     [self showMetaData:YES];
@@ -585,7 +571,7 @@
 
 - (void)returnToCameraMode {
     [self setCameraMode];
-    [ApiManager updateVideoPosts:self.videoToPlayArray];
+    [ApiManager updateVideoPosts:self.videoPostArray];
 }
 
 // --------------------------------------------
@@ -903,10 +889,12 @@
 }
 
 - (void)playOneFriendVideos:(NSArray *)videoArray {
-    _videoIndex = 0;
     [self createCompositionAndPlayVideos:videoArray];
 }
 
+- (void)removeVideoFromVideosArray:(VideoPost *)video {
+    [self.videoPostArray removeObject:video];
+}
 // --------------------------------------------
 #pragma mark - Details
 // --------------------------------------------
@@ -1098,43 +1086,43 @@
 // --------------------------------------------
 #pragma mark - Saving / Sharing
 // --------------------------------------------
-- (void)saveVideoToCameraRoll {
-    //
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
-    
-    // Recompute with all videos
-    _videoIndex = 0;
-    [self createCompositionFromVideoPosts];
-
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:self.friendVideoComposition presetName:AVAssetExportPresetHighestQuality];
-    NSString *exportVideoPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/FinishedVideo.m4v"];
-    NSURL *exportURL = [NSURL fileURLWithPath:exportVideoPath];
-    [[NSFileManager defaultManager] removeItemAtPath:exportVideoPath error:nil];
-    exportSession.outputURL = exportURL;
-    exportSession.outputFileType = AVFileTypeMPEG4;
-    [exportSession exportAsynchronouslyWithCompletionHandler:^{
-        switch (exportSession.status) {
-            case AVAssetExportSessionStatusCompleted: {
-                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                [library writeVideoAtPathToSavedPhotosAlbum:exportURL
-                                            completionBlock:^(NSURL *assetURL, NSError *error) {
-                                                NSLog (@"SAVE SUCCESS");
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                                                });
-                                            }];
-                NSLog (@"SUCCESS");
-                break;
-            }
-            default: {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                });
-                NSLog (@"FAIL");
-            }
-        };
-    }]; 
-
-}
+//- (void)saveVideoToCameraRoll {
+//    //
+//    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
+//    
+//    // Recompute with all videos
+//    _videoIndex = 0;
+//    [self createCompositionFromVideoPosts];
+//
+//    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:self.friendVideoComposition presetName:AVAssetExportPresetHighestQuality];
+//    NSString *exportVideoPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/FinishedVideo.m4v"];
+//    NSURL *exportURL = [NSURL fileURLWithPath:exportVideoPath];
+//    [[NSFileManager defaultManager] removeItemAtPath:exportVideoPath error:nil];
+//    exportSession.outputURL = exportURL;
+//    exportSession.outputFileType = AVFileTypeMPEG4;
+//    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+//        switch (exportSession.status) {
+//            case AVAssetExportSessionStatusCompleted: {
+//                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+//                [library writeVideoAtPathToSavedPhotosAlbum:exportURL
+//                                            completionBlock:^(NSURL *assetURL, NSError *error) {
+//                                                NSLog (@"SAVE SUCCESS");
+//                                                dispatch_async(dispatch_get_main_queue(), ^{
+//                                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+//                                                });
+//                                            }];
+//                NSLog (@"SUCCESS");
+//                break;
+//            }
+//            default: {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+//                });
+//                NSLog (@"FAIL");
+//            }
+//        };
+//    }]; 
+//
+//}
 
 @end

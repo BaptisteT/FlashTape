@@ -40,7 +40,7 @@
     CMTime time = [asset duration];
     time.value = 0;
     CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
-    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef scale:4.0 orientation:UIImageOrientationUp];
     CGImageRelease(imageRef);  // CGImageRef won't be released by ARC
     return thumbnail;
 }

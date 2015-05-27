@@ -18,6 +18,7 @@
 @synthesize videoData;
 @synthesize localUrl;
 @synthesize isDownloading;
+@synthesize thumbmail;
 
 // Variable saved on parse
 @dynamic videoFile;

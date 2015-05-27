@@ -199,4 +199,21 @@
     [VideoPost saveAllInBackground:videoPosts];
 }
 
++ (void)deletePost:(VideoPost *)post
+           success:(void(^)())successBlock
+           failure:(void(^)(NSError *error))failureBlock
+{
+    [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            if (successBlock) {
+                successBlock();
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+
 @end

@@ -8,10 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol FriendTVCDelegate;
+
 @interface FriendTableViewCell : UITableViewCell
+
+@property (weak, nonatomic) id<FriendTVCDelegate> delegate;
 
 - (void)initWithName:(NSString *)name
                score:(NSString *)score
-       hasSeenVideos:(BOOL)hasSeenVideos;
+       hasSeenVideos:(BOOL)hasSeenVideos
+       isCurrentUser:(BOOL)isCurrentUser;
+
+@end
+
+@protocol FriendTVCDelegate
+
+- (void)expandCurrentUserStoryButtonClicked;
+- (void)saveCurrentUserStoryButtonClicked;
 
 @end

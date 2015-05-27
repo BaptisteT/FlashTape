@@ -6,14 +6,16 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
 #import <MessageUI/MessageUI.h>
 #import <UIKit/UIKit.h>
 
-@class User;
+#import "FriendTableViewCell.h"
+#import "VideoTableViewCell.h"
+
+@class VideoPost;
 @protocol FriendsVCProtocol;
 
-@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, FBSDKAppInviteDialogDelegate, MFMessageComposeViewControllerDelegate>
+@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
 @property (weak, nonatomic) NSDictionary *contactDictionnary;
@@ -25,5 +27,6 @@
 
 - (void)hideUIElementOnCamera:(BOOL)flag;
 - (void)playOneFriendVideos:(NSArray *)videos;
+- (void)removeVideoFromVideosArray:(VideoPost *)video;
 
 @end

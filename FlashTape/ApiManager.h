@@ -38,4 +38,8 @@
 
 + (void)updateVideoPosts:(NSArray *)videoPosts;
 
++ (void)deletePost:(VideoPost *)post
+           success:(void(^)())successBlock
+           failure:(void(^)(NSError *error))failureBlock;
+
 @end
