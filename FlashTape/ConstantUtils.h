@@ -16,7 +16,6 @@
 // System
 static NSString * const kFlashTapeAppStoreLink = @"https://itunes.apple.com/us/app/id997449435";
 static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
-static NSString * const kFlashTapeAppLinkUrl = @"https://www.mydomain.com/myapplink"; // todo BT
 
 // Parse
 static NSString * const kParsePostName = @"Posts";

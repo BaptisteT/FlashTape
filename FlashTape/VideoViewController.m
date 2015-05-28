@@ -88,9 +88,10 @@
 @end
 
 @implementation VideoViewController {
-    NSInteger _videoIndex;
     BOOL _isExporting;
     BOOL _longPressRunning;
+    BOOL _recordingRunning;
+    BOOL _cancelRecording;
 }
 
 // --------------------------------------------
@@ -100,11 +101,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _videoIndex = 0;
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
+    // Logic
     _isExporting = NO;
     _longPressRunning = NO;
+    _recordingRunning = NO;
+    _cancelRecording = NO;
     self.isSendingCount = 0;
     
     // HUD
@@ -352,11 +355,9 @@
 // --------------------------------------------
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
 {
-    static BOOL isExporting;
     if (gesture.state == UIGestureRecognizerStateBegan) {
         _longPressRunning = YES;
-        isExporting = _isExporting;
-        if (!isExporting) {
+        if (!_isExporting) {
             [self startRecording];
         }
         [self.captionTextView resignFirstResponder];
@@ -370,25 +371,8 @@
         }
     } else {
         _longPressRunning = NO;
-        if ([self isPreviewMode]) {
-            // cancel or send, & stop
-            if (!CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView])) {
-                if (self.postToSend) {
-                    [self sendVideoPost:self.postToSend];
-                }
-            } else {
-                if (_isExporting) {
-                    // todo bt boolean not to send
-                    // avoid bug iphone 4
-                }
-            }
-            self.postToSend = nil;
-        } else if (!isExporting) {
-            [self stopRecordingAndExecuteSuccess:^(VideoPost * post) {
-                [self sendVideoPost:post];
-                _isExporting = NO;
-            }];
-        }
+        _cancelRecording = [self isPreviewMode] && CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
+        [self terminateSessionAndExport];
         [self setCameraMode];
     }
 }
@@ -415,7 +399,8 @@
     if (self.failedVideoPostArray.count > 0) {
         [self sendFailedVideo];
     } else {
-        [self createCompositionAndPlayVideos:[self unseenVideosArray]];
+        NSArray *unseenArray = [self unseenVideosArray];
+        [self createCompositionAndPlayVideos:unseenArray.count > 0 ? unseenArray : self.videoPostArray];
         [TrackingUtils trackReplayButtonClicked];
     }
 }
@@ -530,34 +515,77 @@
     [ApiManager updateVideoPosts:self.videoPostArray];
 }
 
+
 // --------------------------------------------
 #pragma mark - Recording
 // --------------------------------------------
+
 - (void)startRecording {
+    _recordingRunning = YES;
     [self.recorder.session removeAllSegments];
     [self setRecordingMode];
-    
-    // Begin appending video/audio buffers to the session
     [self.recorder record];
 }
 
-- (void)stopRecordingAndExecuteSuccess:(void(^)(VideoPost *))successBlock {
-    if (_isExporting)
+- (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
+    [self terminateSessionAndExport];
+}
+
+- (void)playPreviewWithAsset:(AVAsset *)asset {
+    [self.previewView.player setItemByAsset:asset];
+    [self setPreviewMode];
+    [self.previewView.player play];
+}
+
+
+- (void)terminateSessionAndExport
+{
+    // Logic to avoid double case
+    if (_isExporting) {
         return;
+    } else if (!_recordingRunning){
+        if (!_longPressRunning && self.postToSend && !_cancelRecording) {
+            [self sendVideoPost:self.postToSend];
+            self.postToSend = nil;
+        } else {
+            return;
+        }
+    }
     _isExporting = YES;
-    [self.recorder pause:^{
-        [self exportAndSaveSession:self.recorder.session
-                           success:successBlock];
+    _recordingRunning = NO;
+    
+    // Pause and export
+    [self endRecordingMode];
+    [self.recorder pause: ^{
+        // Preview UI
+        if (_longPressRunning) {
+            [self playPreviewWithAsset:self.recorder.session.assetRepresentingSegments];
+        }
+
+        [self exportRecordingAndExecuteSuccess:^(VideoPost *post) {
+            _isExporting = NO;
+            if (_longPressRunning) {
+                self.postToSend = post;
+            } else if (!_cancelRecording) {
+               [self sendVideoPost:post];
+            }
+        } failure:^{
+            _isExporting = NO;
+            [self setCameraMode];
+        }];
     }];
 }
 
-- (void)exportAndSaveSession:(SCRecordSession *)recordSession
-                     success:(void(^)(VideoPost *))successBlock
+// Export
+- (void)exportRecordingAndExecuteSuccess:(void(^)(VideoPost *))successBlock
+                                 failure:(void(^)())failureBlock
 {
+    SCRecordSession *recordSession = self.recorder.session;
     if (CMTimeGetSeconds(recordSession.segmentsDuration) < kRecordMinDuration) {
         if (CMTimeGetSeconds(recordSession.segmentsDuration) != 0) // to avoid pb segment not ready
             [self displayTopMessage:NSLocalizedString(@"video_too_short", nil)];
-        _isExporting = NO;
+        if (failureBlock)
+            failureBlock();
         NSLog(@"too short");
     } else {
         AVAsset *asset = recordSession.assetRepresentingSegments;
@@ -567,18 +595,17 @@
         exporter.outputURL = recordSession.outputUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
         exporter.shouldOptimizeForNetworkUse = YES;
-        
         exporter.videoComposition = [self addCaptionToVideo:asset];
 
         // Export
         [exporter exportAsynchronouslyWithCompletionHandler: ^{
             if (exporter.error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
-                if (successBlock) {
+                if (successBlock)
                     successBlock(post);
-                }
             } else {
-                _isExporting = NO;
+                if (failureBlock)
+                    failureBlock();
                 NSLog(@"Export failed: %@", exporter.error);
             }
         }];
@@ -633,32 +660,6 @@
     });
 }
 
-// --------------------------------------------
-#pragma mark - SCRecorderDelegate
-// --------------------------------------------
-
-- (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
-    if (_isExporting) {
-        return;
-    }
-    [self stopRecordingAndExecuteSuccess:^(VideoPost *post) {
-        _isExporting = NO;
-        if (!_longPressRunning) { // to handle the case of simultaneity
-            [self sendVideoPost:post];
-            [self setCameraMode];
-        } else {
-            // Save post to be sent after long press
-            self.postToSend = post;
-        }
-    }];
-    [self.previewView.player setItemByAsset:recordSession.assetRepresentingSegments];
-    [self playPreview];
-}
-
-- (void)playPreview {
-    [self.previewView.player play];
-    [self setPreviewMode];
-}
 
 // ------------------------------
 #pragma mark Message
@@ -708,7 +709,13 @@
 - (BOOL)isRecordingMode {
     return self.recorder.isRecording;
 }
-
+    
+- (void)endRecordingMode {
+    self.recordingProgressContainer.hidden = YES;
+    [self.recordingProgressBar.layer removeAllAnimations];
+    self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
+}
+    
 - (void)setPlayingMode:(BOOL)flag
 {
     self.friendVideoView.hidden = !flag;
@@ -728,7 +735,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self setPlayingMode:NO];
         [self endPreviewMode];
-        self.recordingProgressContainer.hidden = YES;
+        [self endRecordingMode];
         [self hideUIElementOnCamera:NO];
         [self setReplayButtonUI];
     });
@@ -745,7 +752,6 @@
     
     // Start UI + progress bar anim
     self.recordingProgressContainer.hidden = NO;
-    [self.recordingProgressBar.layer removeAllAnimations];
     self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
     [UIView animateWithDuration:kRecordSessionMaxDuration
                           delay:0
@@ -789,7 +795,6 @@
         NSInteger unseenCount = unseenVideos.count;
         NSString *buttonTitle;
         if (unseenCount == 0) {
-            _videoIndex = 0;
             self.replayButton.backgroundColor = [ColorUtils black];
             buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
