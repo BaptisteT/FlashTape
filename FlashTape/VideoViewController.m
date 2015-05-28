@@ -326,7 +326,6 @@
 #pragma mark - Feed
 // --------------------------------------------
 - (void)retrieveVideo {
-    // Get video
     [ApiManager getVideoFromContacts:self.friends
                              success:^(NSArray *posts) {
                                  [self setVideoArray:posts];
@@ -336,6 +335,16 @@
 - (void)setVideoArray:(NSArray *)videoPostArray {
     self.videoPostArray = [NSMutableArray arrayWithArray:videoPostArray];
     [self setReplayButtonUI];
+}
+
+- (NSMutableArray *)unseenVideosArray {
+    NSMutableArray *array = [NSMutableArray new];
+    for (VideoPost *video in self.videoPostArray) {
+        if (!video.viewerIdsArray || [video.viewerIdsArray indexOfObject:[User currentUser].objectId] == NSNotFound) {
+            [array addObject:video];
+        }
+    }
+    return array;
 }
 
 // --------------------------------------------
@@ -406,7 +415,7 @@
     if (self.failedVideoPostArray.count > 0) {
         [self sendFailedVideo];
     } else {
-        [self createCompositionAndPlayVideos:[self.videoPostArray subarrayWithRange:NSMakeRange(_videoIndex, self.videoPostArray.count - _videoIndex)]];
+        [self createCompositionAndPlayVideos:[self unseenVideosArray]];
         [TrackingUtils trackReplayButtonClicked];
     }
 }
@@ -486,10 +495,7 @@
             
             // Update viewer ids and last video seen date
             VideoPost *videoSeen = (VideoPost *)videoArray[ii];
-            [GeneralUtils saveLastVideoSeenDate:videoSeen.createdAt];
-            if (videoSeen.user != [User currentUser]) {
-                [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
-            }
+            [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
             
             // update metadata & last seen date
             if (ii < self.videoPlayingObservedTimesArray.count - 1 && videoArray.count > ii + 1) {
@@ -506,23 +512,6 @@
     [self setPlayingMetaDataForVideoPost:videoArray[0]];
     [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
     [self animatePlayingProgressBar:CMTimeGetSeconds(composition.duration)];
-}
-
-
-// and then we implement the observation callback
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    AVPlayer *player = (AVPlayer *)object;
-    if(object==self.previewView.player) {
-        if(player.status==AVPlayerStatusFailed) {
-            NSLog(@"player status failure");
-        } else if(player.status==AVPlayerStatusReadyToPlay) {
-            NSLog(@"ready to play");
-            [self playPreview];
-            [self.previewView.player removeObserver:self forKeyPath:@"status"];
-        } else if(player.status==AVPlayerStatusUnknown) {
-            NSLog(@"player status unknown");
-        }
-    }
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
@@ -663,11 +652,7 @@
         }
     }];
     [self.previewView.player setItemByAsset:recordSession.assetRepresentingSegments];
-    if (self.previewView.player.status == AVPlayerStatusReadyToPlay) {
-        [self playPreview];
-    } else {
-        [self.previewView.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
-    }
+    [self playPreview];
 }
 
 - (void)playPreview {
@@ -793,33 +778,23 @@
     if (self.failedVideoPostArray.count > 0) {
         // failed video state
         self.replayButton.backgroundColor = [ColorUtils transparentRed];
-        NSString *title = self.failedVideoPostArray.count > 1 ? [NSString stringWithFormat:NSLocalizedString(@"videos_sending_failed", nil),self.failedVideoPostArray.count] : NSLocalizedString(@"video_sending_failed", nil);
+        NSString *title = self.failedVideoPostArray.count > 1 ? [NSString stringWithFormat: NSLocalizedString(@"videos_sending_failed", nil), self.failedVideoPostArray.count] : NSLocalizedString(@"video_sending_failed", nil);
         [self.replayButton setTitle:title forState:UIControlStateNormal];
     } else if (self.videoPostArray.count == 0) {
         // No button state
         self.replayButton.hidden = YES;
-        return;
     } else {
         // Replay or new state
+        NSMutableArray *unseenVideos = [self unseenVideosArray];
+        NSInteger unseenCount = unseenVideos.count;
         NSString *buttonTitle;
-        NSDate *lastSeenDate = [GeneralUtils getLastVideoSeenDate];
-        int kkk = 0;
-        for (int i = (int)(self.videoPostArray.count - 1) ; i >= 0 ; i--) {
-            NSDate *videoDate = ((VideoPost *)(self.videoPostArray[i])).createdAt ? ((VideoPost *)(self.videoPostArray[i])).createdAt : [NSDate date];
-            if ([videoDate compare:lastSeenDate] == NSOrderedDescending) {
-                kkk ++;
-            } else {
-                break;
-            }
-        }
-        if (kkk == 0) {
+        if (unseenCount == 0) {
             _videoIndex = 0;
             self.replayButton.backgroundColor = [ColorUtils black];
             buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
-            _videoIndex = self.videoPostArray.count - kkk;
             self.replayButton.backgroundColor = [ColorUtils purple];
-            buttonTitle = [NSString stringWithFormat:@"%d %@",kkk,kkk < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+            buttonTitle = [NSString stringWithFormat:@"%lu %@",unseenCount,unseenCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
         self.replayButton.hidden = NO;
@@ -862,6 +837,8 @@
 - (void)removeVideoFromVideosArray:(VideoPost *)video {
     [self.videoPostArray removeObject:video];
 }
+
+
 // --------------------------------------------
 #pragma mark - Details
 // --------------------------------------------
@@ -1049,47 +1026,5 @@
     composition.animationTool = [AVVideoCompositionCoreAnimationTool
                                  videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
 }
-
-// --------------------------------------------
-#pragma mark - Saving / Sharing
-// --------------------------------------------
-//- (void)saveVideoToCameraRoll {
-//    //
-//    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
-//    
-//    // Recompute with all videos
-//    _videoIndex = 0;
-//    [self createCompositionFromVideoPosts];
-//
-//    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:self.friendVideoComposition presetName:AVAssetExportPresetHighestQuality];
-//    NSString *exportVideoPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/FinishedVideo.m4v"];
-//    NSURL *exportURL = [NSURL fileURLWithPath:exportVideoPath];
-//    [[NSFileManager defaultManager] removeItemAtPath:exportVideoPath error:nil];
-//    exportSession.outputURL = exportURL;
-//    exportSession.outputFileType = AVFileTypeMPEG4;
-//    [exportSession exportAsynchronouslyWithCompletionHandler:^{
-//        switch (exportSession.status) {
-//            case AVAssetExportSessionStatusCompleted: {
-//                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-//                [library writeVideoAtPathToSavedPhotosAlbum:exportURL
-//                                            completionBlock:^(NSURL *assetURL, NSError *error) {
-//                                                NSLog (@"SAVE SUCCESS");
-//                                                dispatch_async(dispatch_get_main_queue(), ^{
-//                                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-//                                                });
-//                                            }];
-//                NSLog (@"SUCCESS");
-//                break;
-//            }
-//            default: {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-//                });
-//                NSLog (@"FAIL");
-//            }
-//        };
-//    }]; 
-//
-//}
 
 @end

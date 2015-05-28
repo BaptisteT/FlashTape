@@ -11,10 +11,6 @@
 
 @interface GeneralUtils : NSObject
 
-+ (void)saveLastVideoSeenDate:(NSDate *)date;
-
-+ (NSDate *)getLastVideoSeenDate;
-
 + (UIImage *)generateThumbImage:(NSURL *)url;
 
 // Show an alert message

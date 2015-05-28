@@ -111,7 +111,7 @@
 // --------------------------------------------
 #pragma mark - Video
 // --------------------------------------------
-
+// Save
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock
@@ -163,6 +163,7 @@
     }];
 }
 
+// Get video
 + (void)getVideoFromContacts:(NSArray *)friends
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock
@@ -195,10 +196,12 @@
     }];
 }
 
+// Update post (get latest list of viewers)
 + (void)updateVideoPosts:(NSArray *)videoPosts {
     [VideoPost saveAllInBackground:videoPosts];
 }
 
+// Delete Post
 + (void)deletePost:(VideoPost *)post
            success:(void(^)())successBlock
            failure:(void(^)(NSError *error))failureBlock
