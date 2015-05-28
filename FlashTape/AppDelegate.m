@@ -16,6 +16,7 @@
 #import "ColorUtils.h"
 #import "DatastoreUtils.h"
 #import "GeneralUtils.h"
+#import "NotifUtils.h"
 #import "TrackingUtils.h"
 
 
@@ -45,6 +46,9 @@
     [DatastoreUtils deleteExpiredPosts];
     
     if ([User currentUser]) {
+        // Remote notif
+        [NotifUtils registerForRemoteNotif];
+        
         WelcomeViewController* welcomeViewController = (WelcomeViewController *)  self.window.rootViewController.childViewControllers[0];
         [welcomeViewController performSegueWithIdentifier:@"Video From Welcome" sender:nil];
     }
@@ -53,6 +57,28 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [TrackingUtils trackOpenApp];
+}
+
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // Store the deviceToken in the current installation and save it to Parse.
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    currentInstallation.channels = @[ @"global" ];
+    [currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    UIApplicationState state = [application applicationState];
+    // New video
+    if ([userInfo valueForKey:@"new_video"]) {
+        if (state == UIApplicationStateActive) {
+            // refresh feed
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"new_video_posted"
+                                                                object:nil
+                                                              userInfo:nil];
+        }
+    }
 }
 
 @end
