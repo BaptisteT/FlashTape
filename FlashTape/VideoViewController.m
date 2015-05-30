@@ -40,7 +40,8 @@
 @property (strong, nonatomic) NSArray *friends;
 
 // Playing
-@property (strong, nonatomic) NSMutableArray *videoPostArray;
+@property (strong, nonatomic) NSMutableArray *allVideosArray;
+@property (strong, nonatomic) NSArray *videosToPlayArray;
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *friendVideoView;
 @property (strong, nonatomic) NSMutableArray *videoPlayingObservedTimesArray;
 @property (strong, nonatomic) NSMutableArray *compositionTimerObserverArray;
@@ -146,8 +147,6 @@
     _recorder.delegate = self;
     _recorder.autoSetVideoOrientation = YES;
     _recorder.device = [GeneralUtils getLastVideoSelfieModePref] ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
-    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
-    _recorder.audioConfiguration.preset = SCPresetMediumQuality;
      _recorder.autoSetVideoOrientation = NO;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
@@ -226,7 +225,7 @@
     self.previewView.hidden = YES;
     
     // Get local videos
-    self.videoPostArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:nil]];
+    self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:nil]];
     self.failedVideoPostArray = [NSMutableArray new];
     
     // Retrieve friends from local datastore
@@ -246,10 +245,11 @@
                 [contactArray addObject:[User currentUser].username];
                 [ApiManager getListOfFriends:contactArray
                                      success:^(NSArray *friends) {
-                                         if (friends.count != self.friends.count) {
+                                         NSInteger previousCount = self.friends.count;
+                                         self.friends = friends;
+                                         if (friends.count != previousCount) {
                                              [self retrieveVideo];
                                          }
-                                         self.friends = friends;
                                      } failure:nil];
                 [AddressbookUtils saveContactDictionnary:self.contactDictionnary];
             }
@@ -340,13 +340,13 @@
 }
 
 - (void)setVideoArray:(NSArray *)videoPostArray {
-    self.videoPostArray = [NSMutableArray arrayWithArray:videoPostArray];
+    self.allVideosArray = [NSMutableArray arrayWithArray:videoPostArray];
     [self setReplayButtonUI];
 }
 
 - (NSMutableArray *)unseenVideosArray {
     NSMutableArray *array = [NSMutableArray new];
-    for (VideoPost *video in self.videoPostArray) {
+    for (VideoPost *video in self.allVideosArray) {
         if (!video.viewerIdsArray || [video.viewerIdsArray indexOfObject:[User currentUser].objectId] == NSNotFound) {
             [array addObject:video];
         }
@@ -360,8 +360,8 @@
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        _longPressRunning = YES;
         if (!_isExporting) {
+            _longPressRunning = YES;
             [self startRecording];
         }
         [self.captionTextView resignFirstResponder];
@@ -404,7 +404,8 @@
         [self sendFailedVideo];
     } else {
         NSArray *unseenArray = [self unseenVideosArray];
-        [self createCompositionAndPlayVideos:unseenArray.count > 0 ? unseenArray : self.videoPostArray];
+        self.videosToPlayArray = unseenArray.count > 0 ? unseenArray : self.allVideosArray;
+        [self createCompositionAndPlayVideos];
         [TrackingUtils trackReplayButtonClicked];
     }
 }
@@ -432,12 +433,19 @@
         return;
     }
     CMTime observedTime;
+    int ii = 0;
     for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
         if (observedValue == self.videoPlayingObservedTimesArray.lastObject) {
+            VideoPost *videoSeen = (VideoPost *)self.videosToPlayArray.lastObject;
+            [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
             [self returnToCameraMode];
         } else {
             [observedValue getValue:&observedTime];
             if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
+                
+                VideoPost *videoSeen = (VideoPost *)self.videosToPlayArray[ii];
+                [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
+                
                 [self.friendVideoView.player seekToTime:observedTime];
                 CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
                 CGFloat currentTime = CMTimeGetSeconds(observedTime);
@@ -447,13 +455,15 @@
                 return;
             }
         }
+        ii++;
     }
 }
 
 // --------------------------------------------
 #pragma mark - Playing
 // --------------------------------------------
-- (void)createCompositionAndPlayVideos:(NSArray *)videoArray {
+- (void)createCompositionAndPlayVideos {
+    NSArray *videoArray = self.videosToPlayArray;
     AVMutableComposition *composition = [AVMutableComposition new];
     self.videoPlayingObservedTimesArray = [VideoUtils fillComposition:composition withVideoPosts:videoArray];
     
@@ -516,7 +526,7 @@
 
 - (void)returnToCameraMode {
     [self setCameraMode];
-    [ApiManager updateVideoPosts:self.videoPostArray];
+    [ApiManager updateVideoPosts:self.allVideosArray];
 }
 
 
@@ -551,9 +561,8 @@
         if (!_longPressRunning && self.postToSend && !_cancelRecording) {
             [self sendVideoPost:self.postToSend];
             self.postToSend = nil;
-        } else {
-            return;
         }
+        return;
     }
     _isExporting = YES;
     _recordingRunning = NO;
@@ -626,7 +635,7 @@
     [ApiManager saveVideoPost:post
             andExecuteSuccess:^() {
                 self.isSendingCount --;
-                [self.videoPostArray addObject:post];
+                [self.allVideosArray addObject:post];
                 [TrackingUtils trackVideoSent];
                 if (![self isPlayingMode])
                     [self setReplayButtonUI];
@@ -790,7 +799,8 @@
         self.replayButton.backgroundColor = [ColorUtils transparentRed];
         NSString *title = self.failedVideoPostArray.count > 1 ? [NSString stringWithFormat: NSLocalizedString(@"videos_sending_failed", nil), self.failedVideoPostArray.count] : NSLocalizedString(@"video_sending_failed", nil);
         [self.replayButton setTitle:title forState:UIControlStateNormal];
-    } else if (self.videoPostArray.count == 0) {
+        self.replayButton.hidden = NO;
+    } else if (self.allVideosArray.count == 0) {
         // No button state
         self.replayButton.hidden = YES;
     } else {
@@ -840,11 +850,12 @@
 }
 
 - (void)playOneFriendVideos:(NSArray *)videoArray {
-    [self createCompositionAndPlayVideos:videoArray];
+    self.videosToPlayArray = videoArray;
+    [self createCompositionAndPlayVideos];
 }
 
 - (void)removeVideoFromVideosArray:(VideoPost *)video {
-    [self.videoPostArray removeObject:video];
+    [self.allVideosArray removeObject:video];
 }
 
 

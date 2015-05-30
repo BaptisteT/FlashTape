@@ -91,6 +91,7 @@
     [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            NSLog(@"Successfully retrieved %lu friends.", (unsigned long)objects.count);
             [PFObject unpinAllObjectsInBackgroundWithName:kParseFriendName block:^void(BOOL success, NSError *error) {
                 // Cache the new results.
                 [PFObject pinAllInBackground:objects withName:kParseFriendName];
