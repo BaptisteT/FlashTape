@@ -384,7 +384,8 @@
 - (void)handleLongPressGestureOnMetaDataView:(UILongPressGestureRecognizer *)gesture {
     float widthRatio = (float)[gesture locationInView:self.metadataView].x / self.metadataView.frame.size.width;
     [self.playingProgressView.layer removeAllAnimations];
-    [self.friendVideoView.player seekToTime:CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoView.player.itemDuration) * widthRatio, self.friendVideoView.player.itemDuration.timescale)];
+    CMTime time = CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoView.player.itemDuration) * widthRatio, self.friendVideoView.player.itemDuration.timescale);
+    [self.friendVideoView.player seekToTime:time];
     [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [self showMetaData:NO];
@@ -393,6 +394,15 @@
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
 
     } else {
+        // Set metadata
+        CMTime observedTime;
+        for (NSValue *observedValue in [self.videoPlayingObservedTimesArray reverseObjectEnumerator]) {
+            [observedValue getValue:&observedTime];
+            if (CMTIME_COMPARE_INLINE(time, >, observedTime)) {
+                [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[[self.videoPlayingObservedTimesArray indexOfObject:observedValue]]];
+                break;
+            }
+        }
         [self.friendVideoView.player play];
         [self.whiteNoisePlayer play];
         [self animatePlayingProgressBar:CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration) * (1 - widthRatio)];
@@ -436,15 +446,12 @@
     int ii = 0;
     for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
         if (observedValue == self.videoPlayingObservedTimesArray.lastObject) {
-            VideoPost *videoSeen = (VideoPost *)self.videosToPlayArray.lastObject;
-            [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
             [self returnToCameraMode];
         } else {
             [observedValue getValue:&observedTime];
             if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
-                
-                VideoPost *videoSeen = (VideoPost *)self.videosToPlayArray[ii];
-                [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
+                // Set metadata
+                [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[ii]];
                 
                 [self.friendVideoView.player seekToTime:observedTime];
                 CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
@@ -488,16 +495,8 @@
     self.compositionTimerObserverArray = [NSMutableArray new];
     for (int ii = 0; ii < self.videoPlayingObservedTimesArray.count; ii++) {
         [self.compositionTimerObserverArray addObject:[self.friendVideoView.player addBoundaryTimeObserverForTimes:[NSArray arrayWithObject:self.videoPlayingObservedTimesArray[ii]] queue:dispatch_get_main_queue() usingBlock:^{
-            [TrackingUtils trackVideoSeen];
-
-            if (ii >= videoArray.count) return;
-            
-            // Update viewer ids and last video seen date
-            VideoPost *videoSeen = (VideoPost *)videoArray[ii];
-            [videoSeen addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
-            
-            // update metadata & last seen date
-            if (ii < self.videoPlayingObservedTimesArray.count - 1 && videoArray.count > ii + 1) {
+            // update metadata
+            if (ii < self.videoPlayingObservedTimesArray.count - 1 && ii < videoArray.count - 1) {
                 [self setPlayingMetaDataForVideoPost:videoArray[ii + 1]];
             } else {
                 [self returnToCameraMode];
@@ -514,9 +513,17 @@
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
-    [self showMetaData:YES];
     self.nameLabel.text = self.contactDictionnary[post.user.username];
     self.timeLabel.text = [post.createdAt timeAgoSinceNow];
+    
+    // Show metadata
+    [self showMetaData:YES];
+    
+    // Update viewer ids
+    [post addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
+    
+    // Track
+    [TrackingUtils trackVideoSeen];
 }
 
 - (void)showMetaData:(BOOL)flag {
@@ -924,7 +931,7 @@
     self.captionTextView.transform = CGAffineTransformIdentity;
     CGFloat width = self.view.frame.size.width;
     CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(width, 1000)];
-    self.captionTextView.frame = CGRectMake(self.view.frame.size.width/2 - size.width/2, keyboardRect.origin.y - size.height, size.width, size.height);
+    self.captionTextView.frame = CGRectMake(0, keyboardRect.origin.y - size.height, width, size.height);
 }
 
 // Caption transformed UI

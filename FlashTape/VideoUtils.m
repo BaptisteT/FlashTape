@@ -51,7 +51,7 @@
 }
 
 + (CMTime)getCompositionEndCMTime:(AVComposition *)composition {
-    return CMTimeMakeWithSeconds(CMTimeGetSeconds(composition.duration),composition.duration.timescale);
+    return CMTimeMakeWithSeconds(CMTimeGetSeconds(composition.duration) -0.01,composition.duration.timescale);
 }
 
 + (void)saveVideoCompositionToCameraRoll:(AVComposition *)composition

@@ -99,11 +99,30 @@
             if (successBlock) {
                 successBlock(objects);
             }
+            [ApiManager fillFollowersTableWithFollowingUsers:objects];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             if (failureBlock)
                 failureBlock(error);
+        }
+    }];
+}
+
+// Fill followers table
++ (void)fillFollowersTableWithFollowingUsers:(NSArray *)objects {
+    NSMutableArray *followingArray = [NSMutableArray new];
+    for (User *friend in objects) {
+        if (![friend.objectId isEqualToString:[PFUser currentUser].objectId]) {
+            PFObject *follow = [PFObject objectWithClassName:@"Follow"];
+            [follow setObject:[PFUser currentUser]  forKey:@"from"];
+            [follow setObject:friend forKey:@"to"];
+            [followingArray addObject:follow];
+        }
+    }
+    [PFObject saveAllInBackground:followingArray block:^(BOOL succeeded, NSError *error) {
+        if (!succeeded) {
+//            NSLog(@"Error: %@ %@", error, [error userInfo]);
         }
     }];
 }
