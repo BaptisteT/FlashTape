@@ -57,8 +57,12 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [TrackingUtils trackOpenApp];
+    [self _cleanBadge];
 }
 
+- (void)applicationWillResignActive:(UIApplication *)application {
+    [self _cleanBadge];
+}
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // Store the deviceToken in the current installation and save it to Parse.
@@ -71,13 +75,21 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     UIApplicationState state = [application applicationState];
     // New video
-    if ([userInfo valueForKey:@"new_video"]) {
+    if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_video"]) {
         if (state == UIApplicationStateActive) {
             // refresh feed
             [[NSNotificationCenter defaultCenter] postNotificationName:@"new_video_posted"
                                                                 object:nil
                                                               userInfo:nil];
         }
+    }
+}
+
+- (void)_cleanBadge {
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
     }
 }
 

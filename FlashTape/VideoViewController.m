@@ -533,7 +533,7 @@
 
 - (void)returnToCameraMode {
     [self setCameraMode];
-    [ApiManager updateVideoPosts:self.allVideosArray];
+    [ApiManager updateVideoPosts:self.videosToPlayArray];
 }
 
 
@@ -643,6 +643,9 @@
             andExecuteSuccess:^() {
                 self.isSendingCount --;
                 [self.allVideosArray addObject:post];
+                [self.allVideosArray sortUsingComparator:^NSComparisonResult(VideoPost *obj1, VideoPost *obj2) {
+                    return [obj1.recordedAt compare:obj2.recordedAt];
+                }];
                 [TrackingUtils trackVideoSent];
                 if (![self isPlayingMode])
                     [self setReplayButtonUI];

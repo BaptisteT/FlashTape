@@ -24,6 +24,7 @@
 @dynamic videoFile;
 @dynamic user;
 @dynamic viewerIdsArray;
+@dynamic recordedAt;
 
 + (void)load {
     [self registerSubclass];
@@ -39,6 +40,7 @@
     VideoPost *post = [VideoPost object];
     post.localUrl = url;
     post.user = [User currentUser];
+    post.recordedAt = [NSDate date];
     return post;
 }
 

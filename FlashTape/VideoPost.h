@@ -15,6 +15,7 @@
 @property (retain) User *user;
 @property (retain) PFFile *videoFile;
 @property (retain) NSArray *viewerIdsArray;
+@property (retain) NSDate *recordedAt;
 
 @property (retain) NSURL *localUrl;
 @property (retain) NSData *videoData; // use for failure (url is reused for other videos..)

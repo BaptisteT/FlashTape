@@ -191,7 +191,7 @@
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
     [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
     [query whereKey:@"user" containedIn:friends];
-    [query orderByAscending:@"createdAt"];
+    [query orderByAscending:@"recordedAt"];
     [query includeKey:@"user"];
     [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
