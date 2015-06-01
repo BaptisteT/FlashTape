@@ -38,3 +38,6 @@ static const float kTopMessageViewHeight = 20;
 static const float kTopMessageLabelHeight = 20;
 static const float kTopMessageAnimDuration = 0.5;
 static const float kTopMessageAnimDelay = 1.5;
+
+// Messaging
+static const float kMaxMessageLength = 100;

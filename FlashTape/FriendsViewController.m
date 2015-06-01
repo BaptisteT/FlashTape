@@ -8,6 +8,7 @@
 //
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
+#import "Message.h"
 #import "User.h"
 #import "VideoPost.h"
 
@@ -18,6 +19,7 @@
 #import "ColorUtils.h"
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
+#import "KeyboardUtils.h"
 #import "MBProgressHUD.h"
 #import "TrackingUtils.h"
 #import "VideoUtils.h"
@@ -30,6 +32,13 @@
 @property (strong, nonatomic) NSMutableArray *currentUserPosts;
 @property (weak, nonatomic) VideoPost *postToDelete;
 @property (weak, nonatomic) VideoPost *postToDetail;
+
+// Message
+@property (weak, nonatomic) IBOutlet UIView *messageContainerView;
+@property (weak, nonatomic) IBOutlet UITextView *messageTextView;
+@property (weak, nonatomic) IBOutlet UIButton *sendButton;
+@property (weak, nonatomic) User *messageReceiver;
+
 
 @end
 
@@ -61,15 +70,37 @@
         [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
     }
 
+    // Text View
+    self.messageTextView.delegate = self;
+    
     // Labels
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
+    [self.sendButton setTitle:NSLocalizedString(@"send_button", nil) forState:UIControlStateNormal];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(dismissFriendsController)
                                                  name: UIApplicationDidEnterBackgroundNotification
                                                object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 }
+
+// To avoid layout bug
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.messageContainerView.translatesAutoresizingMaskIntoConstraints = YES;
+}
+
+// --------------------------------------------
+#pragma mark - Actions
+// --------------------------------------------
 
 - (void)dismissFriendsController {
     [self.delegate hideUIElementOnCamera:NO];
@@ -78,6 +109,22 @@
 
 - (IBAction)closeButtonClicked:(id)sender {
     [self dismissFriendsController];
+}
+
+// Send message
+- (IBAction)sendMessageButtonClicked:(id)sender {
+    if (self.messageTextView.text.length == 0) {
+        return;
+    }
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    Message *message = [Message createMessageWithContent:self.messageTextView.text receiver:self.messageReceiver];
+    [ApiManager sendMessage:message
+                    success:^{
+                        // todo BT
+                    } failure:^(NSError *error) {
+                        // todo BT handle error
+                    }];
 }
 
 // --------------------------------------------
@@ -109,6 +156,7 @@
              hasSeenVideos:hasSeenVideo
              isCurrentUser:([User currentUser] == friend)];
         cell.delegate = self;
+        cell.accessoryType = ([User currentUser] == friend && !_expandMyStory) ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
         return cell;
     } else {
         VideoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoCell"];
@@ -127,11 +175,10 @@
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
-//        }
     }
 }
 
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
         [cell setSeparatorInset:UIEdgeInsetsZero];
@@ -151,20 +198,26 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        self.view.userInteractionEnabled = NO;
-        NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.section]];
-        if (!videos || videos.count == 0) {
-            [tableView deselectRowAtIndexPath:indexPath animated:YES];
-            self.view.userInteractionEnabled = YES;
-        } else {
-            [self dismissFriendsController];
-            [self.delegate playOneFriendVideos:videos];
-        }
+    if ([self.messageTextView isFirstResponder]) {
+        // If opened, we close keyboard
+        [self.messageTextView resignFirstResponder];
     } else {
-        VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
-        self.postToDetail = (post == self.postToDetail) ? nil : post;
-        [self reloadCurrentUserSection];
+        if (indexPath.row == 0) {
+            // Current user : show / hide story
+            if (indexPath.section == 0) {
+                _expandMyStory = !_expandMyStory;
+                [self reloadCurrentUserSection];
+            } else {
+                // todo BT
+                // prepare message / or read
+                self.messageReceiver = (User *)self.friends[indexPath.section];
+                [self.messageTextView becomeFirstResponder];
+            }
+        } else {
+            VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
+            self.postToDetail = (post == self.postToDetail) ? nil : post;
+            [self reloadCurrentUserSection];
+        }
     }
 }
 
@@ -199,47 +252,9 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-
-// --------------------------------------------
-#pragma mark - Details
-// --------------------------------------------
-
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
-// --------------------------------------------
-#pragma mark - Background Color Cycle
-// --------------------------------------------
-- (void) doBackgroundColorAnimation {
-    static NSInteger i = 0;
-    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
-                       [ColorUtils purple],
-                       [ColorUtils blue],
-                       [ColorUtils green],
-                       [ColorUtils orange], nil];
-    if(i >= [colors count]) {
-        i = 0;
-    }
-    
-    [UIView animateWithDuration:1.5f animations:^{
-        self.colorView.backgroundColor = [colors objectAtIndex:i];
-        [self.inviteButton setTitleColor:[colors objectAtIndex:i] forState:UIControlStateNormal];
-    } completion:^(BOOL finished) {
-        ++i;
-        [self doBackgroundColorAnimation];
-    }];
-    
-}
-
 // --------------------------------------------
 #pragma mark - Friend TVC Delegate
 // --------------------------------------------
-- (void)expandCurrentUserStoryButtonClicked {
-    _expandMyStory = !_expandMyStory;
-    [self reloadCurrentUserSection];
-}
-
 - (void)saveCurrentUserStoryButtonClicked {
     AVMutableComposition *compo = [AVMutableComposition new];
     [VideoUtils fillComposition:compo withVideoPosts:self.currentUserPosts];
@@ -250,6 +265,17 @@
         [GeneralUtils showAlertMessage:NSLocalizedString(@"save_story_error_message", nil) withTitle:NSLocalizedString(@"save_story_error_title", nil)];
     }];
 }
+
+// See my story
+//        self.view.userInteractionEnabled = NO;
+//        NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.section]];
+//        if (!videos || videos.count == 0) {
+//            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//            self.view.userInteractionEnabled = YES;
+//        } else {
+//            [self dismissFriendsController];
+//            [self.delegate playOneFriendVideos:videos];
+//        }
 
 // --------------------------------------------
 #pragma mark - Video TVC Delegate
@@ -283,5 +309,80 @@
                            }];
         }
     }
+}
+
+// ----------------------------------------------------------
+#pragma mark TextView delegate
+// ----------------------------------------------------------
+// Can not jump first line
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]) {
+        return NO;
+    }
+    if ([textView.text stringByReplacingCharactersInRange:range withString:text].length > kMaxMessageLength) {
+        return NO;
+    }
+    return YES;
+}
+
+// Modify size of text view and container dynamically
+- (void)textViewDidChange:(UITextView *)textView
+{
+    // Change color of post button
+    [self setPostButtonTitleColor];
+}
+
+
+// --------------------------------------------
+#pragma mark - UI
+// --------------------------------------------
+// Set post button title (white if any text, pink otherwise)
+- (void)setPostButtonTitleColor {
+    UIColor *postButtonColor;
+    if ([self.messageTextView.text isEqualToString:@""]) {
+        postButtonColor = [UIColor lightGrayColor];
+    } else {
+        postButtonColor = [UIColor blackColor];
+    }
+    [self.sendButton setTitleColor:postButtonColor forState:UIControlStateNormal];
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
+// Background Color Cycle
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f animations:^{
+        self.colorView.backgroundColor = [colors objectAtIndex:i];
+        [self.inviteButton setTitleColor:[colors objectAtIndex:i] forState:UIControlStateNormal];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
+    
+}
+
+// ----------------------------------------------------------
+#pragma mark Keyboard
+// ----------------------------------------------------------
+// Move up create comment view on keyboard will show
+- (void)keyboardWillShow:(NSNotification *)notification {
+    [KeyboardUtils pushUpTopView:self.messageContainerView whenKeyboardWillShowNotification:notification];
+}
+
+// Move down create comment view on keyboard will hide
+- (void)keyboardWillHide:(NSNotification *)notification {
+    [KeyboardUtils pushDownTopView:self.messageContainerView whenKeyboardWillhideNotification:notification];
 }
 @end

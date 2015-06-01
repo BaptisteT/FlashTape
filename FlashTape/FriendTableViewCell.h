@@ -23,7 +23,6 @@
 
 @protocol FriendTVCDelegate
 
-- (void)expandCurrentUserStoryButtonClicked;
 - (void)saveCurrentUserStoryButtonClicked;
 
 @end

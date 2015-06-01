@@ -11,6 +11,7 @@
 
 @class VideoPost;
 @class User;
+@class Message;
 
 @interface ApiManager : NSObject
 
@@ -41,5 +42,9 @@
 + (void)deletePost:(VideoPost *)post
            success:(void(^)())successBlock
            failure:(void(^)(NSError *error))failureBlock;
+
++ (void)sendMessage:(Message *)message
+            success:(void(^)())successBlock
+            failure:(void(^)(NSError *error))failureBlock;
 
 @end

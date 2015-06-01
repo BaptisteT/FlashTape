@@ -110,6 +110,8 @@
 		3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5281B15D93700E66537 /* VideoUtils.m */; };
 		3CAC4D021B146F8B0064FA76 /* NotifUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D011B146F8B0064FA76 /* NotifUtils.m */; };
 		3CAC4D051B14D92E0064FA76 /* DatastoreUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D041B14D92E0064FA76 /* DatastoreUtils.m */; };
+		3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0F81B1CA00000E923D2 /* Message.m */; };
+		3CD6D0FC1B1CA91F00E923D2 /* KeyboardUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
 		A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4A087EF1B0E4F5700292202 /* Images.xcassets */; };
 		A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */; };
@@ -293,6 +295,10 @@
 		3CAC4D011B146F8B0064FA76 /* NotifUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifUtils.m; sourceTree = "<group>"; };
 		3CAC4D031B14D92E0064FA76 /* DatastoreUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatastoreUtils.h; sourceTree = "<group>"; };
 		3CAC4D041B14D92E0064FA76 /* DatastoreUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatastoreUtils.m; sourceTree = "<group>"; };
+		3CD6D0F71B1CA00000E923D2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		3CD6D0F81B1CA00000E923D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardUtils.h; sourceTree = "<group>"; };
+		3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardUtils.m; sourceTree = "<group>"; };
 		A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		A4A087EF1B0E4F5700292202 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-55Rg.ttf"; sourceTree = "<group>"; };
@@ -521,6 +527,8 @@
 				3C5F98021AEBBC560098F70F /* VideoPost.m */,
 				3C2C4A061AFA2A1600E0E4BF /* User.h */,
 				3C2C4A071AFA2A1600E0E4BF /* User.m */,
+				3CD6D0F71B1CA00000E923D2 /* Message.h */,
+				3CD6D0F81B1CA00000E923D2 /* Message.m */,
 				3CAC4D031B14D92E0064FA76 /* DatastoreUtils.h */,
 				3CAC4D041B14D92E0064FA76 /* DatastoreUtils.m */,
 			);
@@ -544,6 +552,8 @@
 				3CAC4D011B146F8B0064FA76 /* NotifUtils.m */,
 				3C7BF5271B15D93700E66537 /* VideoUtils.h */,
 				3C7BF5281B15D93700E66537 /* VideoUtils.m */,
+				3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */,
+				3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -801,6 +811,7 @@
 				3C2C4A751AFE231F00E0E4BF /* NSDate+DateTools.m in Sources */,
 				3C2C4A1D1AFA637200E0E4BF /* RequestPhoneViewController.m in Sources */,
 				3C081CF91B1B54C70036D6B2 /* SCRecorder.m in Sources */,
+				3CD6D0FC1B1CA91F00E923D2 /* KeyboardUtils.m in Sources */,
 				3C2C4A431AFB5A3B00E0E4BF /* NBPhoneNumberDesc.m in Sources */,
 				3C081CEE1B1B54C70036D6B2 /* SCAssetExportSession.m in Sources */,
 				3C5F98031AEBBC560098F70F /* VideoPost.m in Sources */,
@@ -819,6 +830,7 @@
 				3C081CFA1B1B54C70036D6B2 /* SCRecorderFocusTargetView.m in Sources */,
 				3C2C4A3E1AFB5A3B00E0E4BF /* NBAsYouTypeFormatter.m in Sources */,
 				3C2C4A451AFB5A3B00E0E4BF /* NSArray+NBAdditions.m in Sources */,
+				3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */,
 				3C081CED1B1B54C70036D6B2 /* CIImageRendererUtils.m in Sources */,
 				3C081CF11B1B54C70036D6B2 /* SCContext.m in Sources */,
 				3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */,

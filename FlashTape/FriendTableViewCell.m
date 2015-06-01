@@ -16,7 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *seenImageView;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
-@property (weak, nonatomic) IBOutlet UIButton *expandButton;
 
 @end
 
@@ -35,11 +34,8 @@
     
     self.saveButton.enabled = YES;
     self.saveButton.hidden = !isCurrentUser;
-    self.expandButton.hidden = !isCurrentUser;
 }
-- (IBAction)expandButtonClicked:(id)sender {
-    [self.delegate expandCurrentUserStoryButtonClicked];
-}
+
 - (IBAction)saveButtonClicked:(id)sender {
     self.saveButton.enabled = NO;
     [self.delegate saveCurrentUserStoryButtonClicked];

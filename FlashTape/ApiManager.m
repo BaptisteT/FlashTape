@@ -11,6 +11,7 @@
 
 #import "ApiManager.h"
 #import "User.h"
+#import "Message.h"
 #import "VideoPost.h"
 
 #import "ConstantUtils.h"
@@ -241,5 +242,31 @@
         }
     }];
 }
+
+// --------------------------------------------
+#pragma mark - Message
+// --------------------------------------------
+
+// Send
++ (void)sendMessage:(Message *)message
+            success:(void(^)())successBlock
+            failure:(void(^)(NSError *error))failureBlock
+{
+    [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            if (successBlock) {
+                successBlock();
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+
+// Retrieve
+
+// Mark as read
 
 @end

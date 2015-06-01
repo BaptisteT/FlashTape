@@ -60,4 +60,7 @@
 "current_user_TVC_name" = "me";
 "story_views_label" = "%lu 👀";
 
+// Message
+"send_button" = "Send";
+
 
