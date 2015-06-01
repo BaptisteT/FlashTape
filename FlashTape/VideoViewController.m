@@ -37,7 +37,7 @@
 // Contacts
 @property (nonatomic) ABAddressBookRef addressBook;
 @property (strong, nonatomic) NSDictionary *contactDictionnary;
-@property (strong, nonatomic) NSArray *friends;
+@property (strong, nonatomic) NSMutableArray *friends;
 
 // Playing
 @property (strong, nonatomic) NSMutableArray *allVideosArray;
@@ -172,15 +172,13 @@
     self.filter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
     [self.filter setParameterValue:@64 forKey:@"inputCubeDimension"];
     [self.filter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
-    if (![GeneralUtils isiPhone4]) {
+//    if (![GeneralUtils isiPhone4]) {
         self.recorder.videoConfiguration.filter = self.filter;
-    }
+//    }
     
     // Video player
     self.friendVideoView.player.loopEnabled = NO;
     self.friendVideoView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-//    self.previewView.SCImageViewEnabled = YES;
-//    self.previewView.SCImageView.filter = self.filter;
     
     // Video tap gesture
     self.videoTapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnVideo)];
@@ -227,8 +225,6 @@
     self.previewView.player.loopEnabled = YES;
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     self.previewView.hidden = YES;
-//    self.previewView.SCImageViewEnabled = YES;
-//    self.previewView.SCImageView.filter = self.filter;
     
     // Get local videos
     self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:nil]];
@@ -237,8 +233,7 @@
     // Retrieve friends from local datastore
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
     [DatastoreUtils getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
-        self.friends = friends;
-        [self retrieveVideo];
+        [self setFriendsArray:friends];
     } failure:nil];
     
     // Start with camera
@@ -252,11 +247,7 @@
                 self.contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
                 [ApiManager getListOfFriends:self.contactDictionnary
                                      success:^(NSArray *friends) {
-                                         NSInteger previousCount = self.friends.count;
-                                         self.friends = friends;
-                                         if (friends.count != previousCount) {
-                                             [self retrieveVideo];
-                                         }
+                                         [self setFriendsArray:friends];
                                      } failure:nil];
                 [AddressbookUtils saveContactDictionnary:self.contactDictionnary];
             }
@@ -332,32 +323,6 @@
     }
 }
 
-
-// --------------------------------------------
-#pragma mark - Feed
-// --------------------------------------------
-- (void)retrieveVideo {
-    [ApiManager getVideoFromContacts:self.friends
-                             success:^(NSArray *posts) {
-                                 [self setVideoArray:posts];
-                             } failure:nil];
-}
-
-- (void)setVideoArray:(NSArray *)videoPostArray {
-    self.allVideosArray = [NSMutableArray arrayWithArray:videoPostArray];
-    [self setReplayButtonUI];
-}
-
-- (NSMutableArray *)unseenVideosArray {
-    NSMutableArray *array = [NSMutableArray new];
-    for (VideoPost *video in self.allVideosArray) {
-        if (!video.viewerIdsArray || [video.viewerIdsArray indexOfObject:[User currentUser].objectId] == NSNotFound) {
-            [array addObject:video];
-        }
-    }
-    return array;
-}
-
 // --------------------------------------------
 #pragma mark - Actions
 // --------------------------------------------
@@ -396,7 +361,7 @@
         [self.friendVideoView.player pause];
         [self.whiteNoisePlayer pause];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
-
+        
     } else {
         // Set metadata
         CMTime observedTime;
@@ -467,6 +432,48 @@
             }
         }
         ii++;
+    }
+}
+
+
+// --------------------------------------------
+#pragma mark - Feed
+// --------------------------------------------
+- (void)retrieveVideo {
+    [ApiManager getVideoFromContacts:self.friends
+                             success:^(NSArray *posts) {
+                                 [self setVideoArray:posts];
+                             } failure:nil];
+}
+
+- (void)setVideoArray:(NSArray *)videoPostArray {
+    self.allVideosArray = [NSMutableArray arrayWithArray:videoPostArray];
+    [self setReplayButtonUI];
+}
+
+- (NSMutableArray *)unseenVideosArray {
+    NSMutableArray *array = [NSMutableArray new];
+    for (VideoPost *video in self.allVideosArray) {
+        if (!video.viewerIdsArray || [video.viewerIdsArray indexOfObject:[User currentUser].objectId] == NSNotFound) {
+            [array addObject:video];
+        }
+    }
+    return array;
+}
+
+// --------------------------------------------
+#pragma mark - Friends
+// --------------------------------------------
+- (void)setFriendsArray:(NSArray *)friends {
+    NSUInteger previousCount = _friends ? _friends.count : 0;
+    _friends = [NSMutableArray arrayWithArray:friends];
+    if ([_friends indexOfObject:[User currentUser]] != NSNotFound) {
+        [_friends removeObjectAtIndex:[_friends indexOfObject:[User currentUser]]];
+    }
+    [_friends insertObject:[User currentUser] atIndex:0];
+    
+    if (previousCount != friends.count) {
+        [self retrieveVideo];
     }
 }
 
@@ -613,15 +620,15 @@
         NSLog(@"too short");
     } else {
         AVAsset *asset = recordSession.assetRepresentingSegments;
-        AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:asset
-                                                                          presetName:AVAssetExportPresetMediumQuality];
-        [GeneralUtils removeFile:recordSession.outputUrl];
-        exporter.outputURL = recordSession.outputUrl;
+        SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];
+        exporter.outputUrl = recordSession.outputUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
-        exporter.shouldOptimizeForNetworkUse = YES;
-        exporter.videoComposition = [self addCaptionToVideo:asset];
+        exporter.videoConfiguration.preset = SCPresetMediumQuality;
+        exporter.audioConfiguration.preset = SCPresetMediumQuality;
+        AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+        exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
+        exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
 
-        // Export
         [exporter exportAsynchronouslyWithCompletionHandler: ^{
             if (exporter.error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
@@ -753,7 +760,6 @@
         [self.playingProgressView.layer removeAllAnimations];
         [self.whiteNoisePlayer pause];
         [self.friendVideoView.player pause];
-        [self.friendVideoView.player seekToTime:kCMTimeZero];
     }
 }
 
@@ -956,66 +962,6 @@
     }
 }
 
-//
-- (AVMutableVideoComposition *)addCaptionToVideo:(AVAsset *)asset {
-    AVMutableVideoCompositionInstruction *mainInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-    mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
-    AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    AVMutableVideoCompositionLayerInstruction *videolayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoAssetTrack];
-    
-    UIImageOrientation videoAssetOrientation_  = UIImageOrientationUp;
-    BOOL isVideoAssetPortrait_  = NO;
-    CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
-    if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
-        videoAssetOrientation_ = UIImageOrientationRight;
-        isVideoAssetPortrait_ = YES;
-    }
-    if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
-        videoAssetOrientation_ =  UIImageOrientationLeft;
-        isVideoAssetPortrait_ = YES;
-    }
-    if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0) {
-        videoAssetOrientation_ =  UIImageOrientationUp;
-    }
-    if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0) {
-        videoAssetOrientation_ = UIImageOrientationDown;
-    }
-    
-    // todo bt mirror front video
-//    BOOL isFront = self.recorder.device == AVCaptureDevicePositionFront;
-//    if (isFront) {
-//        CGAffineTransform t = CGAffineTransformMakeScale(-1.0f, 1.0f);
-//        t = CGAffineTransformTranslate(t, -videoAssetTrack.naturalSize.width, 0);
-//        t = CGAffineTransformRotate(t, (DEGREES_TO_RADIANS(90.0)));
-//        t = CGAffineTransformTranslate(t, 0.0f, -videoAssetTrack.naturalSize.width);
-//        [videolayerInstruction setTransform:t atTime:kCMTimeZero];
-//    }
-    //
-    
-    mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
-    AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
-    CGSize naturalSize;
-    if(isVideoAssetPortrait_){
-        naturalSize = CGSizeMake(videoAssetTrack.naturalSize.height, videoAssetTrack.naturalSize.width);
-    } else {
-        naturalSize = videoAssetTrack.naturalSize;
-    }
-    float renderWidth, renderHeight;
-    renderWidth = naturalSize.width;
-    renderHeight = naturalSize.height;
-    mainCompositionInst.renderSize = CGSizeMake(renderWidth, renderHeight);
-    
-    [videolayerInstruction setTransform:videoAssetTrack.preferredTransform atTime:kCMTimeZero];
-    [videolayerInstruction setOpacity:0.0 atTime:asset.duration];
-    mainInstruction.layerInstructions = [NSArray arrayWithObjects:videolayerInstruction,nil];
-    mainCompositionInst.renderSize = naturalSize;
-    mainCompositionInst.instructions = [NSArray arrayWithObject:mainInstruction];
-    mainCompositionInst.frameDuration = CMTimeMake(1, 30);
-    
-    [self applyVideoEffectsToComposition:mainCompositionInst size:naturalSize];
-    return mainCompositionInst;
-}
-
 // Screenschot caption
 - (UIImage *)getImageFromCaption
 {
@@ -1037,28 +983,5 @@
     return img;
 }
 
-// Add caption image to video composition
-- (void)applyVideoEffectsToComposition:(AVMutableVideoComposition *)composition size:(CGSize)size
-{
-    // 1 - set up the overlay
-    CALayer *overlayLayer = [CALayer layer];
-    UIImage *overlayImage =[self getImageFromCaption];
-    
-    [overlayLayer setContents:(id)[overlayImage CGImage]];
-    overlayLayer.frame = CGRectMake(0, 0, size.width, size.height);
-    [overlayLayer setMasksToBounds:YES];
-    
-    // 2 - set up the parent layer
-    CALayer *parentLayer = [CALayer layer];
-    CALayer *videoLayer = [CALayer layer];
-    parentLayer.frame = CGRectMake(0, 0, size.width, size.height);
-    videoLayer.frame = CGRectMake(0, 0, size.width, size.height);
-    [parentLayer addSublayer:videoLayer];
-    [parentLayer addSublayer:overlayLayer];
-    
-    // 3 - apply magic
-    composition.animationTool = [AVVideoCompositionCoreAnimationTool
-                                 videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
-}
 
 @end

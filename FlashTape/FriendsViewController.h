@@ -15,7 +15,7 @@
 @class VideoPost;
 @protocol FriendsVCProtocol;
 
-@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate>
+@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
 @property (weak, nonatomic) NSDictionary *contactDictionnary;

@@ -27,8 +27,9 @@
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UIButton *inviteButton;
-
 @property (strong, nonatomic) NSMutableArray *currentUserPosts;
+@property (weak, nonatomic) VideoPost *postToDelete;
+@property (weak, nonatomic) VideoPost *postToDetail;
 
 @end
 
@@ -112,9 +113,21 @@
     } else {
         VideoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VideoCell"];
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
-        [cell initWithPost:post];
+        BOOL showViewers = NO;
+        NSMutableArray *names = [NSMutableArray new];
+        NSArray *viewIdsArray = [post viewerIdsArrayWithoutPoster];
+        if (post == self.postToDetail) {
+            showViewers = YES;
+            for (User *friend in self.friends) {
+                if ([viewIdsArray indexOfObject:friend.objectId] != NSNotFound) {
+                    [names addObject:self.contactDictionnary[friend.username]];
+                }
+            }
+        }
+        [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
+//        }
     }
 }
 
@@ -132,7 +145,8 @@
     if (indexPath.row == 0) {
         return 80;
     } else {
-        return 44;
+        VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
+        return (post == self.postToDetail) ? 44 + [post viewerIdsArrayWithoutPoster].count * 20 : 44;
     }
 }
 
@@ -147,6 +161,10 @@
             [self dismissFriendsController];
             [self.delegate playOneFriendVideos:videos];
         }
+    } else {
+        VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
+        self.postToDetail = (post == self.postToDetail) ? nil : post;
+        [self reloadCurrentUserSection];
     }
 }
 
@@ -236,18 +254,34 @@
 // --------------------------------------------
 #pragma mark - Video TVC Delegate
 // --------------------------------------------
-- (void)deletePost:(VideoPost *)post {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [ApiManager deletePost:post
-                   success:^{
-                       [self.currentUserPosts removeObject:post];
-                       [self.delegate removeVideoFromVideosArray:post];
-                       [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                       [self reloadCurrentUserSection];
-                   } failure:^(NSError *error) {
-                       [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                       [GeneralUtils showAlertMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
-                   }];
+- (void)deleteButtonClicked:(VideoPost *)post {
+    self.postToDelete = post;
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"delete_flash_confirm_title", nil)
+                               message:NSLocalizedString(@"delete_flash_confirm_message", nil)
+                               delegate:self
+                      cancelButtonTitle:NSLocalizedString(@"cancel_button_title", nil)
+                      otherButtonTitles:NSLocalizedString(@"delete_flash_ok_button", nil), nil] show];
 }
 
+// --------------------------------------------
+#pragma mark - UIAlertView Delegate
+// --------------------------------------------
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"delete_flash_ok_button", nil)]) {
+        if (self.postToDelete) {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [ApiManager deletePost:self.postToDelete
+                           success:^{
+                               [self.currentUserPosts removeObject:self.postToDelete];
+                               [self.delegate removeVideoFromVideosArray:self.postToDelete];
+                               [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                               self.postToDelete = nil;
+                               [self reloadCurrentUserSection];
+                           } failure:^(NSError *error) {
+                               [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                               [GeneralUtils showAlertMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
+                           }];
+        }
+    }
+}
 @end

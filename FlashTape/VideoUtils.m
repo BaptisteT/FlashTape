@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "SCAssetExportSession.h"
+
 #import "ConstantUtils.h"
 #import "VideoUtils.h"
 #import "VideoPost.h"
@@ -36,7 +38,7 @@
              toComposition:(AVMutableComposition *)composition {
     if (videoUrl) {
         AVURLAsset* sourceAsset = [AVURLAsset assetWithURL:videoUrl];
-        CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(CMTimeGetSeconds(sourceAsset.duration) - kVideoEndCutDuration, sourceAsset.duration.timescale));
+        CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(CMTimeGetSeconds(sourceAsset.duration) - kVideoEndCutDuration, 600));
         NSError *editError;
         [composition insertTimeRange:assetTimeRange
                              ofAsset:sourceAsset
@@ -58,36 +60,54 @@
                                  success:(void(^)())successBlock
                                  failure:(void(^)())failureBlock
 {
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetHighestQuality];
+    SCAssetExportSession *exportSession = [[SCAssetExportSession alloc] initWithAsset:composition];
+    exportSession.videoConfiguration.preset = SCPresetHighestQuality;
+    exportSession.audioConfiguration.preset = SCPresetHighestQuality;
+    exportSession.videoConfiguration.maxFrameRate = 35;
     NSString *exportVideoPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/FinishedVideo.m4v"];
     NSURL *exportURL = [NSURL fileURLWithPath:exportVideoPath];
     [[NSFileManager defaultManager] removeItemAtPath:exportVideoPath error:nil];
-    exportSession.outputURL = exportURL;
+    exportSession.outputUrl = exportURL;
     exportSession.outputFileType = AVFileTypeMPEG4;
+    
+    // Adding our "Flash" watermark
+    UILabel *label = [UILabel new];
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont boldSystemFontOfSize:40];
+    label.text = @"FlashTape";
+    [label sizeToFit];
+    
+    UIGraphicsBeginImageContext(label.frame.size);
+    
+    [label.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    exportSession.videoConfiguration.watermarkImage = image;
+    exportSession.videoConfiguration.watermarkFrame = CGRectMake(10, 10, label.frame.size.width, label.frame.size.height);
+    exportSession.videoConfiguration.watermarkAnchorLocation = SCWatermarkAnchorLocationBottomRight;
+
     [exportSession exportAsynchronouslyWithCompletionHandler:^{
-        switch (exportSession.status) {
-            case AVAssetExportSessionStatusCompleted: {
-                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                [library writeVideoAtPathToSavedPhotosAlbum:exportURL
-                                            completionBlock:^(NSURL *assetURL, NSError *error) {
-                                                if (error == nil) {
-                                                    if (successBlock) {
-                                                        successBlock();
-                                                    }
-                                                } else {
-                                                    if (failureBlock) {
-                                                        failureBlock();
-                                                    }
+        if (exportSession.error) {
+            if (failureBlock) {
+                failureBlock();
+            }
+        } else {
+            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+            [library writeVideoAtPathToSavedPhotosAlbum:exportURL
+                                        completionBlock:^(NSURL *assetURL, NSError *error) {
+                                            if (error == nil) {
+                                                if (successBlock) {
+                                                    successBlock();
                                                 }
-                                            }];
-                NSLog (@"SUCCESS");
-                break;
-            }
-            default: {
-                if (failureBlock) {
-                    failureBlock();
-                }
-            }
+                                            } else {
+                                                if (failureBlock) {
+                                                    failureBlock();
+                                                }
+                                            }
+                                        }];
         };
     }];
 }

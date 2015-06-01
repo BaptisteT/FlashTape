@@ -14,12 +14,12 @@
 @interface VideoTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) id<VideoTVCDelegate> delegate;
-- (void)initWithPost:(VideoPost *)post;
+- (void)initWithPost:(VideoPost *)post detailedState:(BOOL)detailedState viewerNames:(NSArray *)names;
 
 @end
 
 @protocol VideoTVCDelegate
 
-- (void)deletePost:(VideoPost *)post;
+- (void)deleteButtonClicked:(VideoPost *)post;
 
 @end

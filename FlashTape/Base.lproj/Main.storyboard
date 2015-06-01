@@ -787,31 +787,69 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K6O-uu-sHK">
-                                                    <rect key="frame" x="549" y="6" width="43" height="30"/>
-                                                    <state key="normal" title="delete">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K6O-uu-sHK">
+                                                    <rect key="frame" x="548" y="0.0" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="2CP-L0-37S"/>
+                                                        <constraint firstAttribute="width" constant="44" id="CgK-Ke-cgJ"/>
+                                                    </constraints>
+                                                    <inset key="contentEdgeInsets" minX="15" minY="15" maxX="15" maxY="15"/>
+                                                    <state key="normal" image="delete_button">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="deletButtonClicked:" destination="ZIp-cc-i6H" eventType="touchUpInside" id="z64-nk-mLO"/>
                                                     </connections>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="x 👀" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IFr-6O-BoM">
+                                                    <rect key="frame" x="552" y="11" width="36" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="IFr-6O-BoM" firstAttribute="centerY" secondItem="lmI-ga-N82" secondAttribute="centerY" id="0iu-Vj-geA"/>
+                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="IFr-6O-BoM" secondAttribute="trailing" id="2Qy-Ah-Jck"/>
+                                                <constraint firstItem="K6O-uu-sHK" firstAttribute="leading" secondItem="IFr-6O-BoM" secondAttribute="trailing" constant="30" id="3jO-vr-XfK"/>
+                                                <constraint firstItem="lmI-ga-N82" firstAttribute="centerY" secondItem="K6O-uu-sHK" secondAttribute="centerY" constant="-0.5" id="Gbl-Du-pGZ"/>
+                                                <constraint firstItem="K6O-uu-sHK" firstAttribute="centerX" secondItem="IFr-6O-BoM" secondAttribute="centerX" priority="750" id="HuL-8e-9f2"/>
                                                 <constraint firstItem="K6O-uu-sHK" firstAttribute="trailing" secondItem="8FS-Qg-JZE" secondAttribute="trailingMargin" id="JiW-XM-VPr"/>
                                                 <constraint firstItem="NNL-iu-UQy" firstAttribute="leading" secondItem="lmI-ga-N82" secondAttribute="trailing" constant="10" id="Lkg-Y0-KyS"/>
+                                                <constraint firstItem="lmI-ga-N82" firstAttribute="centerY" secondItem="NNL-iu-UQy" secondAttribute="centerY" id="VNt-od-L8T"/>
+                                                <constraint firstItem="lmI-ga-N82" firstAttribute="centerY" secondItem="NNL-iu-UQy" secondAttribute="centerY" id="mVR-Pi-4oL"/>
+                                                <constraint firstAttribute="centerY" secondItem="IFr-6O-BoM" secondAttribute="centerY" id="q41-FR-7bB"/>
+                                                <constraint firstItem="lmI-ga-N82" firstAttribute="top" secondItem="8FS-Qg-JZE" secondAttribute="top" constant="4" id="qN8-O9-VQz"/>
                                                 <constraint firstItem="lmI-ga-N82" firstAttribute="leading" secondItem="8FS-Qg-JZE" secondAttribute="leading" constant="20" id="rhV-9Y-H9C"/>
                                                 <constraint firstAttribute="centerY" secondItem="K6O-uu-sHK" secondAttribute="centerY" id="tt8-49-Lb2"/>
                                                 <constraint firstAttribute="centerY" secondItem="NNL-iu-UQy" secondAttribute="centerY" id="xDI-lB-OVc"/>
                                                 <constraint firstAttribute="centerY" secondItem="lmI-ga-N82" secondAttribute="centerY" id="ytC-Wo-sbk"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="ytC-Wo-sbk"/>
+                                                    <exclude reference="xDI-lB-OVc"/>
+                                                    <exclude reference="3jO-vr-XfK"/>
+                                                    <exclude reference="tt8-49-Lb2"/>
+                                                    <exclude reference="q41-FR-7bB"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="deleteButton" destination="K6O-uu-sHK" id="oBt-jx-ppP"/>
                                             <outlet property="timeLabel" destination="NNL-iu-UQy" id="As8-N2-5Jv"/>
                                             <outlet property="videoThumbmail" destination="lmI-ga-N82" id="vWj-eR-O8c"/>
+                                            <outlet property="viewsLabel" destination="IFr-6O-BoM" id="82M-4x-bAi"/>
                                         </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ViewerCell" rowHeight="20" id="jrl-AW-08I">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jrl-AW-08I" id="qSE-3c-pEe">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -1065,6 +1103,7 @@
         <image name="back_button-1" width="32" height="32"/>
         <image name="camera_flip_button" width="32" height="32"/>
         <image name="caption_button" width="32" height="32"/>
+        <image name="delete_button" width="50" height="50"/>
         <image name="friends_button" width="32" height="32"/>
         <image name="seen_image" width="30" height="30"/>
         <image name="separator-black" width="1" height="1"/>

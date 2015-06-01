@@ -31,4 +31,6 @@
 
 - (NSURL *)videoLocalURL;
 
+- (NSMutableArray *)viewerIdsArrayWithoutPoster;
+
 @end

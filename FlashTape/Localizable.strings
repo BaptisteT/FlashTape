@@ -6,16 +6,17 @@
   Copyright (c) 2015 Mindie. All rights reserved.
 */
 
+// General
+"cancel_button_title" = "Cancel";
+
 // Welcome
 "login_button" = "Let's flash!";
-
 
 // Phone
 "phone_number_error_message" = "Invalid phone number.";
 "number_text_field_placeholder" = "Phone Number";
 "disclaimer_phone_number" = "Please pick your contry code and enter your phone number.";
 "disclaimer_verification_code" = "We sent you a verication code. Please enter it below.";
-
 
 // Code
 "confirmation_code_error_message" = "We failed to send your confirmation code, the provided phone number might be invalid.";
@@ -30,7 +31,6 @@
 // Record
 "hold_ro_record_label" = "Hold to record";
 "replay_label" = "Replay";
-//"replay_label" = "Replay (%lu videos)";
 "downloading_label" = "Downloading";
 "new_videos_label" = "new flashes";
 "new_video_label" = "new flash";
@@ -50,7 +50,14 @@
 "sharing_wording" = "Join me on Flash and watch my life second by second: %@";
 
 // My story
+"delete_flash_confirm_title" = "Delete this Flash ?";
+"delete_flash_confirm_message" = "";
+"delete_flash_ok_button" = "Delete";
 "delete_flash_error_title" = "";
 "delete_flash_error_message" = "Sorry, we could not delete your flash";
 "save_story_error_title" = "";
 "save_story_error_message" = "Sorry, we could not save your flashes";
+"current_user_TVC_name" = "me";
+"story_views_label" = "%lu 👀";
+
+

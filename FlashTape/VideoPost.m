@@ -92,6 +92,12 @@
     }
 }
 
-
+- (NSMutableArray *)viewerIdsArrayWithoutPoster {
+    NSMutableArray *viewerIdsArrayWithoutPoster = [NSMutableArray arrayWithArray:self.viewerIdsArray];
+    if ([viewerIdsArrayWithoutPoster indexOfObject:self.user.objectId] != NSNotFound) {
+        [viewerIdsArrayWithoutPoster removeObjectAtIndex:[viewerIdsArrayWithoutPoster indexOfObject:self.user.objectId]];
+    }
+    return viewerIdsArrayWithoutPoster;
+}
 
 @end

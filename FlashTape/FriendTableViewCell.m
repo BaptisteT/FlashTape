@@ -5,8 +5,6 @@
 //  Created by Baptiste Truchot on 5/26/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
-#import "User.h"
-
 #import "FriendTableViewCell.h"
 
 // Degrees to radians
@@ -29,11 +27,13 @@
                score:(NSString *)score
        hasSeenVideos:(BOOL)hasSeenVideos
        isCurrentUser:(BOOL)isCurrentUser {
-    self.nameLabel.text = name;
+    
+    self.nameLabel.text = isCurrentUser ? NSLocalizedString(@"current_user_TVC_name", nil) : name;
     self.scoreLabel.text = score;
     self.seenImageView.hidden = !hasSeenVideos || isCurrentUser;
     self.backgroundColor = [UIColor clearColor];
     
+    self.saveButton.enabled = YES;
     self.saveButton.hidden = !isCurrentUser;
     self.expandButton.hidden = !isCurrentUser;
 }
