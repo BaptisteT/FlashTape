@@ -63,6 +63,7 @@
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *recordTutoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *cameraSwitchButton;
 @property (weak, nonatomic) IBOutlet UIButton *friendListButton;
+@property (strong, nonatomic) SCFilter *filter;
 
 // Caption
 @property (weak, nonatomic) IBOutlet UIButton *captionButton;
@@ -143,25 +144,18 @@
     
     // Create the recorder
     self.recorder = [SCRecorder recorder];
-    _recorder.captureSessionPreset = [SCRecorderTools bestCaptureSessionPresetCompatibleWithAllDevices];
     _recorder.delegate = self;
-    _recorder.autoSetVideoOrientation = YES;
     _recorder.device = [GeneralUtils getLastVideoSelfieModePref] ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
      _recorder.autoSetVideoOrientation = NO;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeMPEG4;
     _recorder.session = session;
-
-    // Filter
-//    if (![GeneralUtils isiPhone4]) {
-        SCFilter *testFilter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
-        [testFilter setParameterValue:@64 forKey:@"inputCubeDimension"];
-        [testFilter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
-        self.recorder.videoConfiguration.filter = testFilter;
-//    } else {
-//        self.recorder.videoConfiguration.filter = nil;
-//    }
+    
+    // Preset
+    _recorder.captureSessionPreset = [SCRecorderTools bestCaptureSessionPresetCompatibleWithAllDevices];
+    _recorder.audioConfiguration.preset = SCPresetLowQuality;
+    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
     
     // Start running the flow of buffers
     if (![self.recorder startRunning]) {
@@ -174,9 +168,19 @@
     [self.recordingProgressContainer addSubview:self.recordingProgressBar];
     self.recordingProgressContainer.hidden = YES;
     
+    // Filter
+    self.filter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
+    [self.filter setParameterValue:@64 forKey:@"inputCubeDimension"];
+    [self.filter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
+    if (![GeneralUtils isiPhone4]) {
+        self.recorder.videoConfiguration.filter = self.filter;
+    }
+    
     // Video player
     self.friendVideoView.player.loopEnabled = NO;
     self.friendVideoView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+//    self.previewView.SCImageViewEnabled = YES;
+//    self.previewView.SCImageView.filter = self.filter;
     
     // Video tap gesture
     self.videoTapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnVideo)];
@@ -223,6 +227,8 @@
     self.previewView.player.loopEnabled = YES;
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     self.previewView.hidden = YES;
+//    self.previewView.SCImageViewEnabled = YES;
+//    self.previewView.SCImageView.filter = self.filter;
     
     // Get local videos
     self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:nil]];
@@ -235,15 +241,16 @@
         [self retrieveVideo];
     } failure:nil];
     
+    // Start with camera
+    [self setCameraMode];
+    
     // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
             if (granted) {
                 self.contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-                NSMutableArray *contactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
-                [contactArray addObject:[User currentUser].username];
-                [ApiManager getListOfFriends:contactArray
+                [ApiManager getListOfFriends:self.contactDictionnary
                                      success:^(NSArray *friends) {
                                          NSInteger previousCount = self.friends.count;
                                          self.friends = friends;
@@ -281,9 +288,6 @@
                                              selector:@selector(retrieveVideo)
                                                  name:@"new_video_posted"
                                                object:nil];
-    
-    // Start with camera
-    [self setCameraMode];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -823,7 +827,7 @@
             buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
             self.replayButton.backgroundColor = [ColorUtils purple];
-            buttonTitle = [NSString stringWithFormat:@"%lu %@",unseenCount,unseenCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+            buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)unseenCount,unseenCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
         self.replayButton.hidden = NO;

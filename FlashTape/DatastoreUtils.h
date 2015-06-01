@@ -18,4 +18,6 @@
 
 + (void)deleteExpiredPosts;
 
++ (void)deleteLocalPostsNotInRemotePosts:(NSArray *)remotelyRetrievedPosts;
+
 @end

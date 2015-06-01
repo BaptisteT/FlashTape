@@ -9,6 +9,7 @@
 #import "SCImageView.h"
 #import "CIImageRendererUtils.h"
 #import "SCSampleBufferHolder.h"
+#import "SCContext.h"
 
 @interface SCImageView() {
     CIContext *_CIContext;
@@ -40,17 +41,23 @@
 }
 
 - (void)commonInit {
-    EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    
-    NSDictionary *options = @{ kCIContextWorkingColorSpace : [NSNull null] };
-    _CIContext = [CIContext contextWithEAGLContext:context options:options];
-    
-    self.context = context;
+    self.preferredCIImageTransform = CGAffineTransformIdentity;
     
     _sampleBufferHolder = [SCSampleBufferHolder new];
 }
 
+- (void)_loadContext {
+    if (_CIContext == nil) {
+        SCContext *context = [SCContext context];
+        _CIContext = context.CIContext;
+        self.context = context.EAGLContext;
+    }
+}
+
 - (void)drawRect:(CGRect)rect {
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
     CIImage *newImage = [CIImageRendererUtils generateImageFromSampleBufferHolder:_sampleBufferHolder];
     
     if (newImage != nil) {
@@ -59,11 +66,14 @@
     
     CIImage *image = _CIImage;
     if (image != nil) {
-        CGRect extent = [image extent];
+        image = [image imageByApplyingTransform:self.preferredCIImageTransform];
         
         if (_filter != nil) {
-            image = [_filter imageByProcessingImage:image];
+            image = [_filter imageByProcessingImage:image atTime:_CIImageTime];
         }
+        
+        CGRect extent = [image extent];
+        
         CGRect outputRect = [CIImageRendererUtils processRect:rect withImageSize:extent.size contentScale:self.contentScaleFactor contentMode:self.contentMode];
         
         [_CIContext drawImage:image inRect:outputRect fromRect:extent];
@@ -72,6 +82,7 @@
 
 - (void)setImageBySampleBuffer:(CMSampleBufferRef)sampleBuffer {
     _sampleBufferHolder.sampleBuffer = sampleBuffer;
+    
     [self setNeedsDisplay];
 }
 
@@ -82,6 +93,10 @@
 - (void)setCIImage:(CIImage *)CIImage {
     _CIImage = CIImage;
     
+    if (CIImage != nil) {
+        [self _loadContext];
+    }
+    
     [self setNeedsDisplay];
 }
 
@@ -89,10 +104,6 @@
     _filter = filter;
     
     [self setNeedsDisplay];
-}
-
-- (void)setPreferredCIImageTransform:(CGAffineTransform)preferredCIImageTransform {
-    self.transform = preferredCIImageTransform;
 }
 
 @end

@@ -53,9 +53,13 @@
     self.friendsTableView.dataSource = self;
     self.friendsTableView.delegate = self;
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.friendsTableView.separatorInset = UIEdgeInsetsZero;
-    self.friendsTableView.layoutMargins = UIEdgeInsetsZero;
-    
+    if ([self.friendsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.friendsTableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([self.friendsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+
     // Labels
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);

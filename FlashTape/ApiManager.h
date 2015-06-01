@@ -24,7 +24,7 @@
           success:(void(^)())successBlock
           failure:(void(^)())failureBlock;
 
-+ (void)getListOfFriends:(NSArray *)contactsPhoneNumbers
++ (void)getListOfFriends:(NSDictionary *)contactsDictionnary
                  success:(void(^)(NSArray *friends))successBlock
                  failure:(void(^)(NSError *error))failureBlock;
 

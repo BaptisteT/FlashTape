@@ -16,13 +16,13 @@
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 + (void)overrideCategoryMixWithOthers {
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    NSError *setCategoryError = nil;
-    if (![session setCategory:session.category
-                  withOptions:AVAudioSessionCategoryOptionMixWithOthers
-                        error:&setCategoryError]) {
-        NSLog(@"%@",setCategoryError);
-    }
+	
+    UInt32 doSetProperty = 1;
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    AudioSessionSetProperty (kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(doSetProperty), &doSetProperty);
+#pragma clang diagnostic pop
 }
 #endif
 

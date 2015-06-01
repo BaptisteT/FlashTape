@@ -33,16 +33,26 @@
 @property (strong, nonatomic) CIImage *CIImage;
 
 /**
+ The timestamp of the CIImage
+ */
+@property (assign, nonatomic) CFTimeInterval CIImageTime;
+
+/**
  The currently selected filter group.
  This changes when scrolling in the underlying UIScrollView.
  This value is Key-Value observable.
  */
-@property (readonly, nonatomic) SCFilter *selectedFilter;
+@property (strong, nonatomic) SCFilter *selectedFilter;
 
 /**
  The preferred transform for rendering the CIImage
  */
 @property (assign, nonatomic) CGAffineTransform preferredCIImageTransform;
+
+/**
+ A filter that is applied before applying the selected filter
+ */
+@property (strong, nonatomic) SCFilter *preprocessingFilter;
 
 /**
  Generates an UIImage from the currently displayed CIImage. The current selected

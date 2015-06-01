@@ -67,6 +67,10 @@
 
 - (void)updateScrollViewContentSize {
     _selectFilterScrollView.contentSize = CGSizeMake(self.filters.count * self.frame.size.width * 2, self.frame.size.height);
+    
+    if (self.selectedFilter != nil) {
+        [self scrollToFilter:self.selectedFilter animated:NO];
+    }
 }
 
 static CGRect CGRectTranslate(CGRect rect, CGFloat width, CGFloat maxWidth) {
@@ -75,7 +79,18 @@ static CGRect CGRectTranslate(CGRect rect, CGFloat width, CGFloat maxWidth) {
     return rect;
 }
 
-- (void)updateCurrentSelected {
+- (void)scrollToFilter:(SCFilter *)filter animated:(BOOL)animated {
+    NSInteger index = [self.filters indexOfObject:filter];
+    if (index >= 0) {
+        CGPoint contentOffset = CGPointMake(_selectFilterScrollView.frame.size.width * index, 0);
+        [_selectFilterScrollView setContentOffset:contentOffset animated:animated];
+        [self updateCurrentSelected:NO];
+    } else {
+        [NSException raise:@"InvalidFilterException" format:@"This filter is not present in the filters array"];
+    }
+}
+
+- (void)updateCurrentSelected:(BOOL)shouldNotify {
     NSUInteger filterGroupsCount = self.filters.count;
     NSInteger selectedIndex = (NSInteger)((_selectFilterScrollView.contentOffset.x + _selectFilterScrollView.frame.size.width / 2) / _selectFilterScrollView.frame.size.width) % filterGroupsCount;
     SCFilter *newFilterGroup = nil;
@@ -86,19 +101,29 @@ static CGRect CGRectTranslate(CGRect rect, CGFloat width, CGFloat maxWidth) {
         NSLog(@"Invalid contentOffset of scrollView in SCFilterSwitcherView (%f/%f with %d)", _selectFilterScrollView.contentOffset.x, _selectFilterScrollView.contentOffset.y, (int)self.filters.count);
     }
     
-    [self setSelectedFilter:newFilterGroup];
+    if (self.selectedFilter != newFilterGroup) {
+        [self setSelectedFilter:newFilterGroup];
+        
+        if (shouldNotify) {
+            id<SCSwipeableFilterViewDelegate> del = self.delegate;
+            
+            if ([del respondsToSelector:@selector(swipeableFilterView:didScrollToFilter:)]) {
+                [del swipeableFilterView:self didScrollToFilter:newFilterGroup];
+            }
+        }
+    }
 }
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
-    [self updateCurrentSelected];
+    [self updateCurrentSelected:YES];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    [self updateCurrentSelected];
+    [self updateCurrentSelected:YES];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self updateCurrentSelected];
+    [self updateCurrentSelected:YES];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -135,6 +160,7 @@ static CGRect CGRectTranslate(CGRect rect, CGFloat width, CGFloat maxWidth) {
     
     CGFloat xOutputRect = rect.size.width * -remainingRatio;
     CGFloat xImage = extent.size.width * -remainingRatio;
+    CFTimeInterval imageTime = self.CIImageTime;
     
     while (index <= upIndex) {
         NSInteger currentIndex = index % filterGroups.count;
@@ -142,7 +168,7 @@ static CGRect CGRectTranslate(CGRect rect, CGFloat width, CGFloat maxWidth) {
         CIImage *imageToUse = image;
         
         if ([obj isKindOfClass:[SCFilter class]]) {
-            imageToUse = [((SCFilter *)obj) imageByProcessingImage:imageToUse];
+            imageToUse = [((SCFilter *)obj) imageByProcessingImage:imageToUse atTime:imageTime];
         }
         
         CGRect outputRect = CGRectTranslate(rect, xOutputRect, rect.size.width);

@@ -50,6 +50,40 @@
     return results;
 }
 
++ (void)deleteLocalPostsNotInRemotePosts:(NSArray *)remotelyRetrievedPosts
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [DatastoreUtils getVideoInLocalDatastoreButNotInServerAndExecute:^(NSArray *posts) {
+        NSError *error;
+        for (VideoPost *post in posts) {
+            if ([remotelyRetrievedPosts indexOfObject:post] == NSNotFound) {
+                // Delete object
+                if (![fileManager fileExistsAtPath:[post videoLocalURL].path]) {
+                    [post unpinInBackgroundWithName:kParsePostName];
+                } else if (![fileManager removeItemAtURL:[post videoLocalURL] error:&error]) {
+                    NSLog(@"Error deleting: %@",error);
+                } else {
+                    [post unpinInBackgroundWithName:kParsePostName];
+                }
+            }
+        }
+    }];
+}
+
++ (void)getVideoInLocalDatastoreButNotInServerAndExecute:(void(^)(NSArray *posts))block
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    [query fromLocalDatastore];
+    [query setLimit:1000];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error == nil) {
+            block(objects);
+        } else {
+            NSLog(@"Local Datastore Expired Video Error: %@ %@", error, [error userInfo]);
+        }
+    }];
+}
+
 + (void)getExpiredVideoFromLocalDataStoreAndExecute:(void(^)(NSArray *posts))block
 {
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];

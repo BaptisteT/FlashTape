@@ -12,17 +12,18 @@
 
 #pragma mark - Private definition
 
-NSString *SCRecordSessionSegmentFilenamesKey = @"RecordSegmentFilenames";
-NSString *SCRecordSessionSegmentFilenameKey = @"Filename";
-NSString *SCRecordSessionSegmentInfoKey = @"Info";
+NSString * const SCRecordSessionSegmentFilenamesKey = @"RecordSegmentFilenames";
+NSString * const SCRecordSessionSegmentFilenameKey = @"Filename";
+NSString * const SCRecordSessionSegmentInfoKey = @"Info";
 
-NSString *SCRecordSessionDurationKey = @"Duration";
-NSString *SCRecordSessionIdentifierKey = @"Identifier";
-NSString *SCRecordSessionDateKey = @"Date";
-NSString *SCRecordSessionDirectoryKey = @"Directory";
+NSString * const SCRecordSessionDurationKey = @"Duration";
+NSString * const SCRecordSessionIdentifierKey = @"Identifier";
+NSString * const SCRecordSessionDateKey = @"Date";
+NSString * const SCRecordSessionDirectoryKey = @"Directory";
 
-NSString *SCRecordSessionTemporaryDirectory = @"TemporaryDirectory";
-NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
+NSString * const SCRecordSessionTemporaryDirectory = @"TemporaryDirectory";
+NSString * const SCRecordSessionCacheDirectory = @"CacheDirectory";
+NSString * const SCRecordSessionDocumentDirectory = @"DocumentDirectory";
 
 @implementation SCRecordSession
 
@@ -32,7 +33,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
     if (self) {
         NSString *directory = dictionaryRepresentation[SCRecordSessionDirectoryKey];
         if (directory != nil) {
-            _recordSegmentsDirectory = directory;
+            _segmentsDirectory = directory;
         }
         
         NSArray *recordSegments = [dictionaryRepresentation objectForKey:SCRecordSessionSegmentFilenamesKey];
@@ -49,7 +50,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
                 filename = (NSString *)recordSegment;
             }
             
-            NSURL *url = [SCRecordSession segmentURLForFilename:filename andDirectory:_recordSegmentsDirectory];
+            NSURL *url = [SCRecordSession segmentURLForFilename:filename andDirectory:_segmentsDirectory];
             
             if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
                 [_segments addObject:[SCRecordSessionSegment segmentWithURL:url info:info]];
@@ -101,9 +102,9 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
         _currentSegmentDuration = kCMTimeZero;
         _segmentsDuration = kCMTimeZero;
         _date = [NSDate date];
-        _recordSegmentsDirectory = SCRecordSessionTemporaryDirectory;
+        _segmentsDirectory = SCRecordSessionTemporaryDirectory;
         _identifier = [NSString stringWithFormat:@"%ld", (long)[_date timeIntervalSince1970]];
-        _audioQueue = dispatch_queue_create("me.truchot.SCRecorder.Audio", nil);
+        _audioQueue = dispatch_queue_create("me.corsin.SCRecorder.Audio", nil);
     }
     
     return self;
@@ -116,6 +117,9 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
         directoryUrl = [NSURL fileURLWithPath:NSTemporaryDirectory()];
     } else if ([SCRecordSessionCacheDirectory isEqualToString:directory]) {
         NSArray *myPathList = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        directoryUrl = [NSURL fileURLWithPath:myPathList.firstObject];
+    } else if ([SCRecordSessionDocumentDirectory isEqualToString:directory]) {
+        NSArray *myPathList = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         directoryUrl = [NSURL fileURLWithPath:myPathList.firstObject];
     } else {
         directoryUrl = [NSURL fileURLWithPath:directory];
@@ -138,6 +142,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
 
 - (void)dispatchSyncOnSessionQueue:(void(^)())block {
     SCRecorder *recorder = self.recorder;
+    
     if (recorder == nil || [SCRecorder isSessionQueue]) {
         block();
     } else {
@@ -261,7 +266,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
 
     if (extension != nil) {
         NSString *filename = [NSString stringWithFormat:@"%@SCVideo.%d.%@", _identifier, _currentSegmentCount, extension];
-        NSURL *file = [SCRecordSession segmentURLForFilename:filename andDirectory:self.recordSegmentsDirectory];
+        NSURL *file = [SCRecordSession segmentURLForFilename:filename andDirectory:self.segmentsDirectory];
         
         [self removeFile:file];
         
@@ -567,7 +572,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
         }
         
         NSString *filename = [NSString stringWithFormat:@"%@SCVideo-Merged.%@", _identifier, fileExtension];
-        NSURL *outputUrl = [SCRecordSession segmentURLForFilename:filename andDirectory:_recordSegmentsDirectory];
+        NSURL *outputUrl = [SCRecordSession segmentURLForFilename:filename andDirectory:_segmentsDirectory];
         [self removeFile:outputUrl];
 
         if (_segments.count == 0) {
@@ -761,7 +766,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
         AVMutableCompositionTrack *videoTrack = nil;
         
         int currentSegment = 0;
-        CMTime currentTime = kCMTimeZero;
+        CMTime currentTime = composition.duration;
         for (SCRecordSessionSegment *recordSegment in _segments) {
             AVAsset *asset = recordSegment.asset;
             
@@ -773,8 +778,14 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
             CMTime videoTime = currentTime;
             for (AVAssetTrack *videoAssetTrack in videoAssetTracks) {
                 if (videoTrack == nil) {
-                    videoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
-                    videoTrack.preferredTransform = videoAssetTrack.preferredTransform;
+                    NSArray *videoTracks = [composition tracksWithMediaType:AVMediaTypeVideo];
+                    
+                    if (videoTracks.count > 0) {
+                        videoTrack = [videoTracks firstObject];
+                    } else {
+                        videoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+                        videoTrack.preferredTransform = videoAssetTrack.preferredTransform;
+                    }
                 }
                 
                 videoTime = [self _appendTrack:videoAssetTrack toCompositionTrack:videoTrack atTime:videoTime withBounds:maxBounds];
@@ -784,7 +795,13 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
             CMTime audioTime = currentTime;
             for (AVAssetTrack *audioAssetTrack in audioAssetTracks) {
                 if (audioTrack == nil) {
-                    audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+                    NSArray *audioTracks = [composition tracksWithMediaType:AVMediaTypeAudio];
+                    
+                    if (audioTracks.count > 0) {
+                        audioTrack = [audioTracks firstObject];
+                    } else {
+                        audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+                    }
                 }
                 
                 audioTime = [self _appendTrack:audioAssetTrack toCompositionTrack:audioTrack atTime:audioTime withBounds:maxBounds];
@@ -867,7 +884,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
              SCRecordSessionDurationKey : [NSNumber numberWithDouble:CMTimeGetSeconds(_segmentsDuration)],
              SCRecordSessionIdentifierKey : _identifier,
              SCRecordSessionDateKey : _date,             
-             SCRecordSessionDirectoryKey : _recordSegmentsDirectory
+             SCRecordSessionDirectoryKey : _segmentsDirectory
              };
 }
 
@@ -885,7 +902,27 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
     
     NSString *filename = [NSString stringWithFormat:@"%@SCVideo-Merged.%@", _identifier, fileExtension];
     
-    return [SCRecordSession segmentURLForFilename:filename andDirectory:_recordSegmentsDirectory];
+    return [SCRecordSession segmentURLForFilename:filename andDirectory:_segmentsDirectory];
+}
+
+- (void)setSegmentsDirectory:(NSString *)segmentsDirectory {
+    _segmentsDirectory = [segmentsDirectory copy];
+    
+    [self dispatchSyncOnSessionQueue:^{
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        for (SCRecordSessionSegment *recordSegment in self.segments) {
+            NSURL *newUrl = [SCRecordSession segmentURLForFilename:recordSegment.url.lastPathComponent andDirectory:_segmentsDirectory];
+            
+            if (![newUrl isEqual:recordSegment.url]) {
+                NSError *error = nil;
+                if ([fileManager moveItemAtURL:recordSegment.url toURL:newUrl error:&error]) {
+                    recordSegment.url = newUrl;
+                } else {
+                    NSLog(@"Unable to change segmentsDirectory for segment %@: %@", recordSegment.url, error.localizedDescription);
+                }
+            }
+        }
+    }];
 }
 
 - (BOOL)isUsingMovieFileOutput {

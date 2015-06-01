@@ -14,6 +14,7 @@
 #import "VideoPost.h"
 
 #import "ConstantUtils.h"
+#import "DatastoreUtils.h"
 
 @implementation ApiManager
 
@@ -82,10 +83,12 @@
     }];
 }
 
-+ (void)getListOfFriends:(NSArray *)contactsPhoneNumbers
++ (void)getListOfFriends:(NSDictionary *)contactsDictionnary
                  success:(void(^)(NSArray *friends))successBlock
                  failure:(void(^)(NSError *error))failureBlock
 {
+    NSMutableArray *contactsPhoneNumbers = [NSMutableArray arrayWithArray:[contactsDictionnary allKeys]];
+    [contactsPhoneNumbers addObject:[User currentUser].username];
     PFQuery *query = [User query];
     [query whereKey:@"username" containedIn:contactsPhoneNumbers];
     [query orderByDescending:@"score"];
@@ -99,7 +102,7 @@
             if (successBlock) {
                 successBlock(objects);
             }
-            [ApiManager fillFollowersTableWithFollowingUsers:objects];
+            [ApiManager fillFollowersTableWithUsers:objects contactsDictionnary:contactsDictionnary];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -110,21 +113,18 @@
 }
 
 // Fill followers table
-+ (void)fillFollowersTableWithFollowingUsers:(NSArray *)objects {
++ (void)fillFollowersTableWithUsers:(NSArray *)objects contactsDictionnary:(NSDictionary *)contactsDictionnary {
     NSMutableArray *followingArray = [NSMutableArray new];
     for (User *friend in objects) {
         if (![friend.objectId isEqualToString:[PFUser currentUser].objectId]) {
             PFObject *follow = [PFObject objectWithClassName:@"Follow"];
             [follow setObject:[PFUser currentUser]  forKey:@"from"];
             [follow setObject:friend forKey:@"to"];
+            [follow setObject:contactsDictionnary[friend.username] forKey:@"to_name"];
             [followingArray addObject:follow];
         }
     }
-    [PFObject saveAllInBackground:followingArray block:^(BOOL succeeded, NSError *error) {
-        if (!succeeded) {
-//            NSLog(@"Error: %@ %@", error, [error userInfo]);
-        }
-    }];
+    [PFObject saveAllInBackground:followingArray];
 }
 
 
@@ -207,6 +207,9 @@
                 successBlock(objects);
             }
             NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
+            
+            // Clean local datastore
+            [DatastoreUtils deleteLocalPostsNotInRemotePosts:objects];
         } else {
             // Log details of the failure
             NSLog(@"Get Video Error: %@ %@", error, [error userInfo]);
