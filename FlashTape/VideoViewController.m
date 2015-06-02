@@ -36,7 +36,6 @@
 
 // Contacts
 @property (nonatomic) ABAddressBookRef addressBook;
-@property (strong, nonatomic) NSDictionary *contactDictionnary;
 @property (strong, nonatomic) NSMutableArray *friends;
 
 // Playing
@@ -235,7 +234,6 @@
     self.failedVideoPostArray = [NSMutableArray new];
     
     // Retrieve friends from local datastore
-    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
     [DatastoreUtils getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
         [self setFriendsArray:friends];
     } failure:nil];
@@ -248,12 +246,11 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
             if (granted) {
-                self.contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-                [ApiManager getListOfFriends:self.contactDictionnary
+                NSDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                [ApiManager getListOfFriends:contactDictionnary
                                      success:^(NSArray *friends) {
                                          [self setFriendsArray:friends];
                                      } failure:nil];
-                [AddressbookUtils saveContactDictionnary:self.contactDictionnary];
             }
         });
     });
@@ -321,7 +318,6 @@
         [self hideUIElementOnCamera:YES];
         ((FriendsViewController *) [segue destinationViewController]).delegate = self;
         ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
-        ((FriendsViewController *) [segue destinationViewController]).contactDictionnary = self.contactDictionnary;
     }
 }
 
@@ -533,7 +529,7 @@
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
-    self.nameLabel.text = self.contactDictionnary[post.user.username];
+    self.nameLabel.text = post.user.flashUsername;
     self.timeLabel.text = [post.createdAt timeAgoSinceNow];
     
     // Show metadata

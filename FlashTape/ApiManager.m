@@ -103,7 +103,7 @@
             if (successBlock) {
                 successBlock(objects);
             }
-            [ApiManager fillFollowersTableWithUsers:objects contactsDictionnary:contactsDictionnary];
+            [ApiManager fillFollowersTableWithUsers:objects];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -114,14 +114,13 @@
 }
 
 // Fill followers table
-+ (void)fillFollowersTableWithUsers:(NSArray *)objects contactsDictionnary:(NSDictionary *)contactsDictionnary {
++ (void)fillFollowersTableWithUsers:(NSArray *)objects {
     NSMutableArray *followingArray = [NSMutableArray new];
     for (User *friend in objects) {
         if (![friend.objectId isEqualToString:[PFUser currentUser].objectId]) {
             PFObject *follow = [PFObject objectWithClassName:@"Follow"];
             [follow setObject:[PFUser currentUser]  forKey:@"from"];
             [follow setObject:friend forKey:@"to"];
-            [follow setObject:contactsDictionnary[friend.username] forKey:@"to_name"];
             [followingArray addObject:follow];
         }
     }

@@ -165,7 +165,7 @@
         NSInteger messageCount = self.messagesDictionnary[friend.objectId] ? ((NSArray *)self.messagesDictionnary[friend.objectId]).count : 0;
         
         // Create cell
-        [cell initWithName:self.contactDictionnary[friend.username]
+        [cell initWithName:friend.flashUsername
                      score:[NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)]
              hasSeenVideos:hasSeenVideo
              isCurrentUser:[self isCurrentUserUserCell:indexPath]
@@ -182,7 +182,7 @@
             showViewers = YES;
             for (User *friend in self.friends) {
                 if ([viewIdsArray indexOfObject:friend.objectId] != NSNotFound) {
-                    [names addObject:self.contactDictionnary[friend.username]];
+                    [names addObject:friend.flashUsername];
                 }
             }
         }
