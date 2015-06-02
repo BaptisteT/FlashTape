@@ -6,8 +6,9 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import "ApiManager.h"
-#import "UICustomLineLabel.h"
+#import "User.h"
 
+#import "UICustomLineLabel.h"
 #import "CodeConfirmationViewController.h"
 #import "GeneralUtils.h"
 #import "MBProgressHUD.h"
@@ -16,8 +17,7 @@
 
 @interface CodeConfirmationViewController ()
 
-@property (weak, nonatomic) IBOutlet UITextField *codeTextField;
-@property (strong, nonatomic) IBOutlet UITextView *disclaimerTextView;
+@property (strong, nonatomic) IBOutlet UILabel *disclaimerLabel;
 @property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UITextField *codeTextField1;
 @property (strong, nonatomic) IBOutlet UITextField *codeTextField2;
@@ -49,13 +49,12 @@
     self.codeTextField3.delegate = self;
     self.codeTextField4.delegate = self;
     [[UITextField appearance] setTintColor:[UIColor whiteColor]];
-
     
     //Label
     self.titleLabel.lineType = LineTypeDown;
     self.titleLabel.lineHeight = 4.0f;
-    self.disclaimerTextView.text = NSLocalizedString(@"disclaimer_verification_code", nil);
-    
+    self.disclaimerLabel.numberOfLines = 0;
+    self.disclaimerLabel.text = NSLocalizedString(@"disclaimer_verification_code", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -89,7 +88,12 @@
                       success:^{
                           [NotifUtils registerForRemoteNotif];
                           [MBProgressHUD hideHUDForView:self.view animated:YES];
-                          [self performSegueWithIdentifier:@"Video From Code" sender:nil];
+                          User *currentUser = [User currentUser];
+                          if (currentUser.flashUsername && currentUser.flashUsername.length > 0) {
+                              [self performSegueWithIdentifier:@"Videos From Code" sender:nil];
+                          } else {
+                              [self performSegueWithIdentifier:@"Username From Code" sender:nil];
+                          }
                       } failure:^{
                           [MBProgressHUD hideHUDForView:self.view animated:YES];
                           [GeneralUtils showAlertMessage:NSLocalizedString(@"authentification_error_message", nil) withTitle:NSLocalizedString(@"authentification_error_title", nil)];
@@ -102,13 +106,6 @@
 // --------------------------------------------
 #pragma mark - Textfield Delegate
 // --------------------------------------------
-//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-//{
-//    textField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
-//    [self setNextButtonColor];
-//    return NO;
-//}
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
     NSString *finalString = [textField.text stringByReplacingCharactersInRange:range withString:string];
@@ -133,7 +130,7 @@
 // --------------------------------------------
 #pragma mark - Background Color Cycle
 // --------------------------------------------
-- (void) doBackgroundColorAnimation {
+- (void)doBackgroundColorAnimation {
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                        [ColorUtils purple],
@@ -144,13 +141,15 @@
         i = 0;
     }
     
-    [UIView animateWithDuration:1.5f animations:^{
+    [UIView animateWithDuration:1.5f
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
         self.colorView1.backgroundColor = [colors objectAtIndex:i];
         self.colorView2.backgroundColor = [colors objectAtIndex:i];
         self.colorView3.backgroundColor = [colors objectAtIndex:i];
         self.colorView4.backgroundColor = [colors objectAtIndex:i];
     } completion:^(BOOL finished) {
-        self.code = [NSString stringWithFormat:@"%@%@%@%@",self.codeTextField1.text, self.codeTextField2.text, self.codeTextField3.text, self.codeTextField4.text];
         ++i;
         [self doBackgroundColorAnimation];
     }];

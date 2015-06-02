@@ -30,6 +30,7 @@
 		3C081D011B1B54C70036D6B2 /* SCVideoConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C081CE81B1B54C70036D6B2 /* SCVideoConfiguration.m */; };
 		3C081D021B1B54C70036D6B2 /* SCVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C081CEA1B1B54C70036D6B2 /* SCVideoPlayerView.m */; };
 		3C081D031B1B54C70036D6B2 /* SCWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C081CEC1B1B54C70036D6B2 /* SCWeakSelectorTarget.m */; };
+		3C0AC1791B1E0FE80056C59C /* UsernameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0AC1781B1E0FE80056C59C /* UsernameViewController.m */; };
 		3C1ECE4C1B0BD4D7004F7F02 /* CaptionTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */; };
 		3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A071AFA2A1600E0E4BF /* User.m */; };
 		3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */; };
@@ -173,6 +174,8 @@
 		3C081CEA1B1B54C70036D6B2 /* SCVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCVideoPlayerView.m; sourceTree = "<group>"; };
 		3C081CEB1B1B54C70036D6B2 /* SCWeakSelectorTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCWeakSelectorTarget.h; sourceTree = "<group>"; };
 		3C081CEC1B1B54C70036D6B2 /* SCWeakSelectorTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCWeakSelectorTarget.m; sourceTree = "<group>"; };
+		3C0AC1771B1E0FE80056C59C /* UsernameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsernameViewController.h; sourceTree = "<group>"; };
+		3C0AC1781B1E0FE80056C59C /* UsernameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsernameViewController.m; sourceTree = "<group>"; };
 		3C1ECE4A1B0BD4D7004F7F02 /* CaptionTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptionTextView.h; sourceTree = "<group>"; };
 		3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptionTextView.m; sourceTree = "<group>"; };
 		3C2C4A061AFA2A1600E0E4BF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -513,6 +516,8 @@
 				3C2C4A4B1AFB5E1800E0E4BF /* CountryCodeTableViewController.m */,
 				3C2C4A1F1AFB564D00E0E4BF /* CodeConfirmationViewController.h */,
 				3C2C4A201AFB564D00E0E4BF /* CodeConfirmationViewController.m */,
+				3C0AC1771B1E0FE80056C59C /* UsernameViewController.h */,
+				3C0AC1781B1E0FE80056C59C /* UsernameViewController.m */,
 				3C5F97FD1AEBB4620098F70F /* VideoViewController.h */,
 				3C5F97FE1AEBB4620098F70F /* VideoViewController.m */,
 				3C2C4A801B036F7500E0E4BF /* FriendsViewController.h */,
@@ -853,6 +858,7 @@
 				3C2C4A211AFB564D00E0E4BF /* CodeConfirmationViewController.m in Sources */,
 				3C2C4A4C1AFB5E1800E0E4BF /* CountryCodeTableViewController.m in Sources */,
 				3C081CF61B1B54C70036D6B2 /* SCMediaTypeConfiguration.m in Sources */,
+				3C0AC1791B1E0FE80056C59C /* UsernameViewController.m in Sources */,
 				3C5F98111AEC1CFF0098F70F /* ConstantUtils.m in Sources */,
 				3C081CF81B1B54C70036D6B2 /* SCPlayer.m in Sources */,
 				3C2C4A2B1AFB592C00E0E4BF /* RMPhoneFormat.m in Sources */,
@@ -963,8 +969,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Baptiste Truchot (642N2WBU3A)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -983,8 +989,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Baptiste Truchot (642N2WBU3A)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

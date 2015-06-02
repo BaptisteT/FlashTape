@@ -35,13 +35,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *countryNameButton;
 @property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
-@property (strong, nonatomic) IBOutlet UITextView *disclaimerTextView;
+@property (strong, nonatomic) IBOutlet UILabel *disclaimerLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *separatorImage;
-@property (strong, nonatomic) IBOutlet UIButton *doneI4Button;
 
 @end
 
-@implementation RequestPhoneViewController
+@implementation RequestPhoneViewController {
+    BOOL _hasTranslatedView;
+}
 
 // --------------------------------------------
 #pragma mark - Life Cycle
@@ -52,6 +53,7 @@
     
     self.decimalPhoneNumber = @"";
     [self setInitialCountryInfo];
+    _hasTranslatedView = NO;
     
     //ColorView
     [self doBackgroundColorAnimation];
@@ -59,11 +61,11 @@
     //Label
     self.titleLabel.lineType = LineTypeDown;
     self.titleLabel.lineHeight = 4.0f;
-    self.disclaimerTextView.text = NSLocalizedString(@"disclaimer_phone_number", nil);
+    self.disclaimerLabel.numberOfLines = 0;
+    self.disclaimerLabel.text = NSLocalizedString(@"disclaimer_phone_number", nil);
     
     // Button
     self.validationButton.hidden = YES;
-    self.doneI4Button.hidden = YES;
     
     // Textfield
     self.numberTextField.placeholder = NSLocalizedString(@"number_text_field_placeholder", nil);
@@ -79,20 +81,29 @@
     [[UITextField appearance] setTintColor:[UIColor whiteColor]];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    if ([[UIScreen mainScreen] bounds].size.height == 480 && !_hasTranslatedView)
+    {
+        _hasTranslatedView = YES;
+        self.titleLabel.translatesAutoresizingMaskIntoConstraints = YES;
+        self.countryNameButton.translatesAutoresizingMaskIntoConstraints = YES;
+        self.colorView.translatesAutoresizingMaskIntoConstraints = YES;
+        self.separatorImage.hidden = YES;
+        self.disclaimerLabel.hidden = YES;
+        CGRect colorFrame = self.colorView.frame;
+        colorFrame.origin.y -= 100;
+        self.colorView.frame = colorFrame;
+        CGRect countryFrame = self.countryNameButton.frame;
+        countryFrame.origin.y -= 70;
+        self.countryNameButton.frame = countryFrame;
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self.numberTextField becomeFirstResponder];
-    
-    if ([[UIScreen mainScreen] bounds].size.height == 480)
-    {
-        self.separatorImage.hidden = YES;
-        self.titleLabel.hidden = YES;
-        self.doneI4Button.hidden = NO;
-        CGRect frame = self.view.frame;
-        frame.origin.y -= 120;
-        self.view.frame = frame;
-    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -246,7 +257,7 @@
 // --------------------------------------------
 #pragma mark - Background Color Cycle
 // --------------------------------------------
-- (void) doBackgroundColorAnimation {
+- (void)doBackgroundColorAnimation {
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                        [ColorUtils purple],
@@ -257,7 +268,10 @@
         i = 0;
     }
     
-    [UIView animateWithDuration:1.5f animations:^{
+    [UIView animateWithDuration:1.5f
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                    animations:^{
         self.colorView.backgroundColor = [colors objectAtIndex:i];
     } completion:^(BOOL finished) {
         ++i;

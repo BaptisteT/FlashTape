@@ -24,6 +24,12 @@
 "invalid_code_error_message" = "Invalid code, please try again.";
 "sms_instruction_label" = "We have sent you an SMS";
 
+// username
+"username_title" = "Username";
+"username_explanation" = "Please, enter your username below.";
+"save_username_error_title" = "Sorry, we could not save your username";
+"save_username_error_message" = "Please, try again.";
+
 // Auth
 "authentification_error_title" = "Authentification error";
 "authentification_error_message" = "Please, sign in again";

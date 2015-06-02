@@ -128,6 +128,24 @@
     [PFObject saveAllInBackground:followingArray];
 }
 
++ (void)saveUsername:(NSString *)username
+             success:(void(^)())successBlock
+             failure:(void(^)(NSError *error))failureBlock
+{
+    User *user = [User currentUser];
+    user.flashUsername = username;
+    [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            if (successBlock) {
+                successBlock();
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
 
 // --------------------------------------------
 #pragma mark - Video

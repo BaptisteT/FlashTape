@@ -12,6 +12,7 @@
 @interface User : PFUser <PFSubclassing>
 
 @property (nonatomic) NSInteger score;
+@property (retain) NSString *flashUsername;
 
 + (User *)createUserWithNumber:(NSString *)phoneNumber;
 
