@@ -96,9 +96,9 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSLog(@"Successfully retrieved %lu friends.", (unsigned long)objects.count);
-            [PFObject unpinAllObjectsInBackgroundWithName:kParseFriendName block:^void(BOOL success, NSError *error) {
+            [User unpinAllObjectsInBackgroundWithName:kParseFriendsName block:^void(BOOL success, NSError *error) {
                 // Cache the new results.
-                [PFObject pinAllInBackground:objects withName:kParseFriendName];
+                [User pinAllInBackground:objects withName:kParseFriendsName];
             }];
             if (successBlock) {
                 successBlock(objects);
@@ -163,7 +163,7 @@
                     [post.user saveInBackground];
                     
                     // Pin
-                    [post pinInBackgroundWithName:kParsePostName];
+                    [post pinInBackgroundWithName:kParsePostsName];
                     
                     // Success block
                     if (successBlock)
@@ -201,7 +201,7 @@
             [VideoPost downloadVideoFromPosts:objects];
             
             // Cache the new results.
-            [VideoPost pinAllInBackground:objects withName:kParsePostName];
+            [VideoPost pinAllInBackground:objects withName:kParsePostsName];
             
             // Return
             if (successBlock) {
@@ -265,8 +265,56 @@
     }];
 }
 
-// Retrieve
+// Retrieve unread messages
++ (void)retrieveUnreadMessagesAndExecuteSuccess:(void(^)(NSArray *messagesArray))successBlock
+                                        failure:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
+    [query whereKey:@"receiver" equalTo:[User currentUser]];
+    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:false]];
+    [query orderByAscending:@"createdAt"];
+    [query includeKey:@"sender"];
+    [query setLimit:1000];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            // Pin
+            [Message unpinAllObjectsInBackgroundWithName:kParseMessagesName block:^void(BOOL success, NSError *error) {
+                // Cache the new results.
+                [Message pinAllInBackground:objects withName:kParseMessagesName];
+            }];
+
+            if (successBlock) {
+                successBlock(objects);
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
 
 // Mark as read
++ (void)markMessageAsRead:(Message *)message
+                  success:(void(^)())successBlock
+                  failure:(void(^)(NSError *error))failureBlock
+{
+    message.read = [NSNumber numberWithBool:YES];
+    // Unpin
+    [message unpinInBackgroundWithName:kParseMessagesName];
+    // Save as read on parse
+    [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            if (successBlock) {
+                successBlock();
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+
 
 @end

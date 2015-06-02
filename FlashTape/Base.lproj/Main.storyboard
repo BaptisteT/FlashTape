@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -42,6 +43,10 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
+        </mutableArray>
+        <mutableArray key="NHaasGroteskDSPro-75Bd.ttf">
+            <string>NHaasGroteskDSPro-75Bd</string>
+            <string>NHaasGroteskDSPro-75Bd</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -389,6 +394,15 @@
                                             <action selector="friendsButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="yhW-fZ-7jj"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDy-d9-iWW">
+                                        <rect key="frame" x="40" y="10" width="15" height="15"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="ZDy-d9-iWW" secondAttribute="height" multiplier="1:1" id="jWp-H5-zas"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-75Bd" family="Neue Haas Grotesk Display Pro" pointSize="12"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jbZ-6p-eMN" userLabel="SwitchCameraButton">
                                         <rect key="frame" x="550" y="10" width="40" height="40"/>
                                         <constraints>
@@ -472,8 +486,10 @@
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="YI8-op-pzm"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="a3J-Ht-ZTL"/>
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="cAH-hE-KeG"/>
+                                    <constraint firstItem="ZDy-d9-iWW" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="fxy-5M-acD"/>
                                     <constraint firstAttribute="centerY" secondItem="ZrJ-X2-Mtw" secondAttribute="centerY" id="qil-IO-mQz"/>
                                     <constraint firstAttribute="bottom" secondItem="ePW-Ve-NCZ" secondAttribute="bottom" constant="5" id="uIs-um-DSv"/>
+                                    <constraint firstItem="ZDy-d9-iWW" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="40" id="upS-ss-bQZ"/>
                                     <constraint firstAttribute="trailing" secondItem="jbZ-6p-eMN" secondAttribute="trailing" constant="10" id="wWN-I1-NG8"/>
                                     <constraint firstAttribute="bottom" secondItem="ZCy-IZ-pCQ" secondAttribute="bottom" id="whw-31-fB7"/>
                                     <constraint firstItem="AUk-ak-rpt" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="xO5-6u-nbR"/>
@@ -662,6 +678,7 @@
                         <outlet property="replayButton" destination="hOb-67-bYR" id="436-1J-73J"/>
                         <outlet property="sendingLoaderView" destination="ePW-Ve-NCZ" id="ynm-iY-Mx6"/>
                         <outlet property="timeLabel" destination="gMp-L0-adU" id="M2N-71-MnR"/>
+                        <outlet property="unreadMessagesCountLabel" destination="ZDy-d9-iWW" id="b3u-G5-Yoa"/>
                         <segue destination="gUo-G0-jbW" kind="presentation" identifier="Friends From Video" modalPresentationStyle="overCurrentContext" animates="NO" id="0bv-ip-Mhx"/>
                     </connections>
                 </viewController>
@@ -724,14 +741,25 @@
                                                         <action selector="saveButtonClicked:" destination="Y8i-4U-BMg" eventType="touchUpInside" id="aoB-q4-YjX"/>
                                                     </connections>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ipD-oW-FC9">
+                                                    <rect key="frame" x="519" y="30" width="21" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="ipD-oW-FC9" secondAttribute="height" multiplier="1:1" id="4R4-S8-bGu"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-75Bd" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="y1L-4Y-drw" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="HUd-DI-Feb"/>
                                                 <constraint firstAttribute="centerY" secondItem="DQR-Th-awv" secondAttribute="centerY" constant="-0.5" id="Yxn-wK-6Tx"/>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="aO8-i6-tv2"/>
+                                                <constraint firstItem="ipD-oW-FC9" firstAttribute="centerY" secondItem="DQR-Th-awv" secondAttribute="centerY" id="df3-Gj-qVv"/>
                                                 <constraint firstItem="DQR-Th-awv" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" constant="27" id="eLb-dx-hH8"/>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="top" secondItem="y1L-4Y-drw" secondAttribute="bottom" constant="4" id="guN-Vi-lv6"/>
                                                 <constraint firstAttribute="centerY" secondItem="y1L-4Y-drw" secondAttribute="centerY" constant="6.5" id="gvx-nV-xYA"/>
+                                                <constraint firstItem="DQR-Th-awv" firstAttribute="leading" secondItem="ipD-oW-FC9" secondAttribute="trailing" constant="20" id="hzt-oZ-Axo"/>
                                                 <constraint firstAttribute="centerY" secondItem="XLB-UB-kNZ" secondAttribute="centerY" constant="-15" id="k5b-a2-1eV"/>
                                                 <constraint firstAttribute="trailing" secondItem="DQR-Th-awv" secondAttribute="trailing" constant="20" id="r8g-35-Trr"/>
                                                 <constraint firstAttribute="centerY" secondItem="CZK-D3-zfC" secondAttribute="centerY" constant="-0.5" id="yLP-hv-AuJ"/>
@@ -745,6 +773,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
+                                            <outlet property="messageCountLabel" destination="ipD-oW-FC9" id="Rea-dM-Np2"/>
                                             <outlet property="nameLabel" destination="y1L-4Y-drw" id="xrF-rr-81H"/>
                                             <outlet property="saveButton" destination="CZK-D3-zfC" id="ARm-oF-k6L"/>
                                             <outlet property="scoreLabel" destination="XLB-UB-kNZ" id="MwL-xE-gef"/>
@@ -825,6 +854,22 @@
                                             <outlet property="videoThumbmail" destination="lmI-ga-N82" id="vWj-eR-O8c"/>
                                             <outlet property="viewsLabel" destination="IFr-6O-BoM" id="82M-4x-bAi"/>
                                         </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageReceivedCell" textLabel="PHK-01-1dj" style="IBUITableViewCellStyleDefault" id="MJh-xF-noy">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MJh-xF-noy" id="3wQ-X5-RIL">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PHK-01-1dj">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>

@@ -16,6 +16,9 @@
 // Show an alert message
 + (void)showAlertMessage:(NSString *)text withTitle:(NSString *)title;
 
+// Show message on top of view
++ (void)displayTopMessage:(NSString *)message onView:(UIView *)superView;
+
 + (void)removeFile:(NSURL *)fileURL;
 
 + (BOOL)isiPhone4;

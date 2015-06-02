@@ -47,4 +47,11 @@
             success:(void(^)())successBlock
             failure:(void(^)(NSError *error))failureBlock;
 
++ (void)retrieveUnreadMessagesAndExecuteSuccess:(void(^)(NSArray *messagesArray))successBlock
+                                        failure:(void(^)(NSError *error))failureBlock;
+
++ (void)markMessageAsRead:(Message *)message
+                  success:(void(^)())successBlock
+                  failure:(void(^)(NSError *error))failureBlock;
+
 @end

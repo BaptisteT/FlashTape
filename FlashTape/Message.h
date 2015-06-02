@@ -15,7 +15,7 @@
 @property (retain) User *sender;
 @property (retain) User *receiver;
 @property (retain) NSString *messageContent;
-@property (nonatomic) BOOL read;
+@property (retain) NSNumber *read;
 
 + (Message *)createMessageWithContent:(NSString *)messageContent
                              receiver:(User *)receiver;

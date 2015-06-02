@@ -20,4 +20,6 @@
 
 + (void)deleteLocalPostsNotInRemotePosts:(NSArray *)remotelyRetrievedPosts;
 
++ (NSArray *)getUnreadMessagesLocally;
+
 @end

@@ -18,8 +18,9 @@ static NSString * const kFlashTapeAppStoreLink = @"https://itunes.apple.com/us/a
 static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 
 // Parse
-static NSString * const kParsePostName = @"Posts";
-static NSString * const kParseFriendName = @"Friends";
+static NSString * const kParsePostsName = @"Posts";
+static NSString * const kParseFriendsName = @"Friends";
+static NSString * const kParseMessagesName = @"Messages";
 
 // Feed
 static const NSInteger kFeedHistoryInHours = 24;

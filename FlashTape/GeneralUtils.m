@@ -55,6 +55,37 @@
                       otherButtonTitles:nil] show];
 }
 
+// Show message on top of view
++ (void)displayTopMessage:(NSString *)message onView:(UIView *)superView
+{
+    UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(0, - kTopMessageViewHeight, superView.frame.size.width, kTopMessageViewHeight)];
+    messageView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.8];
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, messageView.frame.size.height - kTopMessageLabelHeight, messageView.frame.size.width - 20 - 5, kTopMessageLabelHeight)];
+    messageLabel.textAlignment = NSTextAlignmentCenter;
+    messageLabel.text = message;
+    messageLabel.font = [UIFont systemFontOfSize:14];
+    messageLabel.textColor = [UIColor whiteColor];
+    [messageView addSubview:messageLabel];
+    [superView addSubview:messageView];
+    [UIView animateWithDuration:kTopMessageAnimDuration
+                     animations:^(){
+                         messageView.frame = CGRectMake(0, 0, messageView.frame.size.width, kTopMessageViewHeight);
+                     } completion:^(BOOL completed) {
+                         if (completed) {
+                             [UIView animateWithDuration:kTopMessageAnimDuration
+                                                   delay:kTopMessageAnimDelay
+                                                 options:UIViewAnimationOptionCurveLinear
+                                              animations:^(){
+                                                  messageView.frame = CGRectMake(0, - kTopMessageViewHeight, messageView.frame.size.width, kTopMessageViewHeight);
+                                              } completion:^(BOOL completed) {
+                                                  [messageView removeFromSuperview];
+                                              }];
+                         } else {
+                             [messageView removeFromSuperview];
+                         }
+                     }];
+}
+
 + (void)deleteStoredData
 {
     NSString *tmpDirectory = NSTemporaryDirectory();

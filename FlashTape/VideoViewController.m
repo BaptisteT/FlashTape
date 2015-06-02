@@ -86,6 +86,8 @@
 @property (weak, nonatomic) IBOutlet UIView *sendingLoaderView;
 @property (strong, nonatomic) MBProgressHUD* sendingHud;
 
+// Messages
+@property (weak, nonatomic) IBOutlet UILabel *unreadMessagesCountLabel;
 
 @end
 
@@ -111,6 +113,7 @@
     _recordingRunning = NO;
     _cancelRecording = NO;
     self.isSendingCount = 0;
+    self.unreadMessagesCountLabel.hidden = YES;
     
     // HUD
     self.sendingHud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
@@ -279,6 +282,10 @@
                                              selector:@selector(retrieveVideo)
                                                  name:@"new_video_posted"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(retrieveUnreadMessages)
+                                                 name:@"new_message"
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -304,6 +311,7 @@
 
 - (void)willBecomeActiveCallback {
     [self retrieveVideo];
+    [self retrieveUnreadMessages];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -614,7 +622,7 @@
     SCRecordSession *recordSession = self.recorder.session;
     if (CMTimeGetSeconds(recordSession.segmentsDuration) < kRecordMinDuration) {
         if (CMTimeGetSeconds(recordSession.segmentsDuration) != 0) // to avoid pb segment not ready
-            [self displayTopMessage:NSLocalizedString(@"video_too_short", nil)];
+            [GeneralUtils displayTopMessage:NSLocalizedString(@"video_too_short", nil) onView:self.view];
         if (failureBlock)
             failureBlock();
         NSLog(@"too short");
@@ -698,34 +706,23 @@
 // ------------------------------
 #pragma mark Message
 // ------------------------------
-- (void)displayTopMessage:(NSString *)message
-{
-    UIView *messageView = [[UIView alloc] initWithFrame:CGRectMake(0, - kTopMessageViewHeight, self.view.frame.size.width, kTopMessageViewHeight)];
-    messageView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.8];
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, messageView.frame.size.height - kTopMessageLabelHeight, messageView.frame.size.width - 20 - 5, kTopMessageLabelHeight)];
-    messageLabel.textAlignment = NSTextAlignmentCenter;
-    messageLabel.text = message;
-    messageLabel.font = [UIFont systemFontOfSize:14];
-    messageLabel.textColor = [UIColor whiteColor];
-    [messageView addSubview:messageLabel];
-    [self.view addSubview:messageView];
-    [UIView animateWithDuration:kTopMessageAnimDuration
-                     animations:^(){
-                         messageView.frame = CGRectMake(0, 0, messageView.frame.size.width, kTopMessageViewHeight);
-                     } completion:^(BOOL completed) {
-                         if (completed) {
-                             [UIView animateWithDuration:kTopMessageAnimDuration
-                                                   delay:kTopMessageAnimDelay
-                                                 options:UIViewAnimationOptionCurveLinear
-                                              animations:^(){
-                                                  messageView.frame = CGRectMake(0, - kTopMessageViewHeight, messageView.frame.size.width, kTopMessageViewHeight);
-                                              } completion:^(BOOL completed) {
-                                                  [messageView removeFromSuperview];
-                                              }];
-                         } else {
-                             [messageView removeFromSuperview];
-                         }
-                     }];
+- (void)retrieveUnreadMessages {
+    [ApiManager retrieveUnreadMessagesAndExecuteSuccess:^(NSArray *messagesArray) {
+        [self setMessagesLabel:messagesArray.count];
+    } failure:nil];
+}
+
+- (void)setMessagesLabel:(NSInteger)count {
+    if (count != 0) {
+        self.unreadMessagesCountLabel.hidden = NO;
+        self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)count];
+        self.unreadMessagesCountLabel.layer.cornerRadius = self.unreadMessagesCountLabel.frame.size.height / 2;
+        self.unreadMessagesCountLabel.layer.borderWidth = 1;
+        self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils orange].CGColor;
+        self.unreadMessagesCountLabel.textColor = [ColorUtils orange];
+    } else {
+        self.unreadMessagesCountLabel.hidden = YES;
+    }
 }
 
 // --------------------------------------------

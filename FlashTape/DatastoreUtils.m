@@ -59,11 +59,11 @@
             if ([remotelyRetrievedPosts indexOfObject:post] == NSNotFound) {
                 // Delete object
                 if (![fileManager fileExistsAtPath:[post videoLocalURL].path]) {
-                    [post unpinInBackgroundWithName:kParsePostName];
+                    [post unpinInBackgroundWithName:kParsePostsName];
                 } else if (![fileManager removeItemAtURL:[post videoLocalURL] error:&error]) {
                     NSLog(@"Error deleting: %@",error);
                 } else {
-                    [post unpinInBackgroundWithName:kParsePostName];
+                    [post unpinInBackgroundWithName:kParsePostsName];
                 }
             }
         }
@@ -106,14 +106,27 @@
         NSError *error;
         for (VideoPost *post in posts) {
             if (![fileManager fileExistsAtPath:[post videoLocalURL].path]) {
-                 [post unpinInBackgroundWithName:kParsePostName];
+                 [post unpinInBackgroundWithName:kParsePostsName];
             } else if (![fileManager removeItemAtURL:[post videoLocalURL] error:&error]) {
                  NSLog(@"Error deleting: %@",error);
             } else {
-                [post unpinInBackgroundWithName:kParsePostName];
+                [post unpinInBackgroundWithName:kParsePostsName];
             }
         }
     }];
+}
+
+
++ (NSArray *)getUnreadMessagesLocally
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
+    [query fromLocalDatastore];
+    [query orderByAscending:@"createdAt"];
+    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:false]];
+    [query includeKey:@"user"];
+    [query setLimit:1000];
+    NSArray *results = [query findObjects];
+    return results;
 }
 
 @end

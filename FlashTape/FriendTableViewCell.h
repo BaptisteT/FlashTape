@@ -17,7 +17,8 @@
 - (void)initWithName:(NSString *)name
                score:(NSString *)score
        hasSeenVideos:(BOOL)hasSeenVideos
-       isCurrentUser:(BOOL)isCurrentUser;
+       isCurrentUser:(BOOL)isCurrentUser
+    newMessagesCount:(NSInteger)count;
 
 @end
 

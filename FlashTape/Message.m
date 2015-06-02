@@ -31,6 +31,7 @@
     message.sender = [User currentUser];
     message.receiver = receiver;
     message.messageContent = messageContent;
+    message.read = [NSNumber numberWithBool:false];
     return message;
 }
 
