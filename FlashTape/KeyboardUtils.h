@@ -11,6 +11,9 @@
 
 @interface KeyboardUtils : NSObject
 
+// Animation to change the view frame as keyboard moves
++ (void)changeFrameOfView:(UIView *)topView whenKeyboardMoveNotification:(NSNotification *)notification;
+
 // Animation to move up the view as the keyboard shows
 + (void)pushUpTopView:(UIView *)topView whenKeyboardWillShowNotification:(NSNotification *)notification;
 

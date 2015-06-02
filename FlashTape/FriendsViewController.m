@@ -12,6 +12,7 @@
 #import "User.h"
 #import "VideoPost.h"
 
+#import "CreateMessageTableViewCell.h"
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
 #import "VideoTableViewCell.h"
@@ -35,9 +36,6 @@
 
 // Message
 @property (strong, nonatomic) User *friendToDetail;
-@property (weak, nonatomic) IBOutlet UIView *messageContainerView;
-@property (weak, nonatomic) IBOutlet UITextView *messageTextView;
-@property (weak, nonatomic) IBOutlet UIButton *sendButton;
 @property (strong, nonatomic) NSDictionary *messagesDictionnary;
 
 @end
@@ -74,14 +72,10 @@
     if ([self.friendsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
         [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
     }
-
-    // Text View
-    self.messageTextView.delegate = self;
     
     // Labels
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
-    [self.sendButton setTitle:NSLocalizedString(@"send_button", nil) forState:UIControlStateNormal];
     
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(dismissFriendsController)
@@ -101,11 +95,11 @@
                                                object:nil];
 }
 
-// To avoid layout bug
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.messageContainerView.translatesAutoresizingMaskIntoConstraints = YES;
+    self.friendsTableView.translatesAutoresizingMaskIntoConstraints = YES;
 }
+
 
 // --------------------------------------------
 #pragma mark - Actions
@@ -127,18 +121,12 @@
 }
 
 // Send message
-- (IBAction)sendMessageButtonClicked:(id)sender {
-    if (self.messageTextView.text.length == 0) {
-        return;
-    }
-    
+- (void)sendMessage:(NSString *)text {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    Message *message = [Message createMessageWithContent:self.messageTextView.text receiver:self.friendToDetail];
+    Message *message = [Message createMessageWithContent:text receiver:self.friendToDetail];
     [ApiManager sendMessage:message
                     success:^{
                         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        self.messageTextView.text = @"";
-                        [self setPostButtonTitleColor];
                         // todo BT
                     } failure:^(NSError *error) {
                         // todo BT handle error
@@ -158,10 +146,11 @@
     } else {
         NSArray *messages;
         User *friend = (User *)self.friends[section];
-        if (self.friendToDetail && self.friendToDetail == friend) {
+        BOOL isSelected = self.friendToDetail && self.friendToDetail == friend;
+        if (isSelected) {
             messages = self.messagesDictionnary[friend.objectId];
         }
-        return 1 + (messages ? messages.count : 0);
+        return 1 + (messages ? messages.count : 0) + (isSelected ? 1 : 0);
     }
 }
 
@@ -201,11 +190,11 @@
         cell.delegate = self;
         return cell;
     } else if ([self isFriendMessageCell:indexPath]) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageReceivedCell"];
         User *friend = (User *)self.friends[indexPath.section];
         NSMutableArray *messages = self.messagesDictionnary[friend.objectId];
         Message *message = (messages && messages.count > 0) ? (Message *)messages[0] : nil;
         if (message) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageReceivedCell"];
             cell.textLabel.text = message.messageContent;
 
             // unpin / delete / unread
@@ -213,8 +202,12 @@
                                   success:nil
                                   failure:nil];
             [messages removeObject:message];
+            return cell;
+        } else { // todo BT make robust
+            CreateMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CreateMessageCell"];
+            [cell initWithDelegate:self];
+            return cell;
         }
-        return cell;
     } else {
         return [UITableViewCell new];
     }
@@ -228,8 +221,7 @@
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         return (post == self.postToDetail) ? 44 + [post viewerIdsArrayWithoutPoster].count * 20 : 44;
     } else if ([self isFriendMessageCell:indexPath]) {
-        // todo BT
-        return 44;
+        return 40;
     } else {
         // should not happen
         return 44;
@@ -240,7 +232,6 @@
     if ([self isCurrentUserUserCell:indexPath]) {
         _expandMyStory = !_expandMyStory;
         self.postToDetail = nil;
-        [self.messageTextView resignFirstResponder];
         self.friendToDetail = nil;
         [self.friendsTableView reloadData];
     } else if ([self isCurrentUserPostCell:indexPath]) {
@@ -253,10 +244,8 @@
         User *friend = (User *)self.friends[indexPath.section];
         if (self.friendToDetail && self.friendToDetail == friend) {
             self.friendToDetail = nil;
-            [self.messageTextView resignFirstResponder];
         } else {
             self.friendToDetail = friend;
-            [self.messageTextView becomeFirstResponder];
         }
         [self.friendsTableView reloadData];
     }
@@ -398,42 +387,10 @@
     }
 }
 
-// ----------------------------------------------------------
-#pragma mark TextView delegate
-// ----------------------------------------------------------
-// Can not jump first line
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if ([text isEqualToString:@"\n"]) {
-        return NO;
-    }
-    if ([textView.text stringByReplacingCharactersInRange:range withString:text].length > kMaxMessageLength) {
-        return NO;
-    }
-    return YES;
-}
-
-// Modify size of text view and container dynamically
-- (void)textViewDidChange:(UITextView *)textView
-{
-    // Change color of post button
-    [self setPostButtonTitleColor];
-}
-
 
 // --------------------------------------------
 #pragma mark - UI
 // --------------------------------------------
-// Set post button title (white if any text, pink otherwise)
-- (void)setPostButtonTitleColor {
-    UIColor *postButtonColor;
-    if ([self.messageTextView.text isEqualToString:@""]) {
-        postButtonColor = [UIColor lightGrayColor];
-    } else {
-        postButtonColor = [UIColor blackColor];
-    }
-    [self.sendButton setTitleColor:postButtonColor forState:UIControlStateNormal];
-}
-
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }
@@ -474,11 +431,13 @@
 // ----------------------------------------------------------
 // Move up create comment view on keyboard will show
 - (void)keyboardWillShow:(NSNotification *)notification {
-    [KeyboardUtils pushUpTopView:self.messageContainerView whenKeyboardWillShowNotification:notification];
+    // todo BT
+    // ensure create message cell is visible
+    [KeyboardUtils changeFrameOfView:self.friendsTableView whenKeyboardMoveNotification:notification];
 }
 
 // Move down create comment view on keyboard will hide
 - (void)keyboardWillHide:(NSNotification *)notification {
-    [KeyboardUtils pushDownTopView:self.messageContainerView whenKeyboardWillhideNotification:notification];
+    [KeyboardUtils changeFrameOfView:self.friendsTableView whenKeyboardMoveNotification:notification];
 }
 @end

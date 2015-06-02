@@ -112,6 +112,7 @@
 		3CAC4D051B14D92E0064FA76 /* DatastoreUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D041B14D92E0064FA76 /* DatastoreUtils.m */; };
 		3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0F81B1CA00000E923D2 /* Message.m */; };
 		3CD6D0FC1B1CA91F00E923D2 /* KeyboardUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */; };
+		3CEF7FA01B1DCD0000401455 /* CreateMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEF7F9F1B1DCD0000401455 /* CreateMessageTableViewCell.m */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
 		A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4A087EF1B0E4F5700292202 /* Images.xcassets */; };
 		A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */; };
@@ -299,6 +300,8 @@
 		3CD6D0F81B1CA00000E923D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardUtils.h; sourceTree = "<group>"; };
 		3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardUtils.m; sourceTree = "<group>"; };
+		3CEF7F9E1B1DCD0000401455 /* CreateMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateMessageTableViewCell.h; sourceTree = "<group>"; };
+		3CEF7F9F1B1DCD0000401455 /* CreateMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateMessageTableViewCell.m; sourceTree = "<group>"; };
 		A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		A4A087EF1B0E4F5700292202 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-55Rg.ttf"; sourceTree = "<group>"; };
@@ -567,6 +570,8 @@
 				3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */,
 				3C7BF5241B15B84700E66537 /* VideoTableViewCell.h */,
 				3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */,
+				3CEF7F9E1B1DCD0000401455 /* CreateMessageTableViewCell.h */,
+				3CEF7F9F1B1DCD0000401455 /* CreateMessageTableViewCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -821,6 +826,7 @@
 				3C081D011B1B54C70036D6B2 /* SCVideoConfiguration.m in Sources */,
 				3C1ECE4C1B0BD4D7004F7F02 /* CaptionTextView.m in Sources */,
 				3C2C4A3F1AFB5A3B00E0E4BF /* NBNumberFormat.m in Sources */,
+				3CEF7FA01B1DCD0000401455 /* CreateMessageTableViewCell.m in Sources */,
 				3C081CF01B1B54C70036D6B2 /* SCAudioTools.m in Sources */,
 				3C081CF21B1B54C70036D6B2 /* SCFilter.m in Sources */,
 				A4CE87671B0920A900DC20DC /* UICustomLineLabel.m in Sources */,

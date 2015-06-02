@@ -62,5 +62,6 @@
 
 // Message
 "send_button" = "Send";
+"create_message_placeholder" = "Send a message";
 
 

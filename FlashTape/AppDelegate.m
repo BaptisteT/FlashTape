@@ -87,7 +87,7 @@
         if (state == UIApplicationStateActive) {
             // todo BT
             // sound + vibration
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
             
             // load new messages
             [[NSNotificationCenter defaultCenter] postNotificationName:@"new_message"
