@@ -46,6 +46,7 @@
 @property (strong, nonatomic) NSMutableArray *videoPlayingObservedTimesArray;
 @property (strong, nonatomic) NSMutableArray *compositionTimerObserverArray;
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
+@property (strong, nonatomic) NSTimer *downloadingStateTimer;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIView *metadataView;
@@ -496,8 +497,8 @@
     // Case where video not yet downloaded
     if (videoArray.count == 0 || !composition) return;
     if (composition.duration.value <= 0) {
-        [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)videoArray[0]).downloadProgress] forState:UIControlStateNormal];
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(setReplayButtonUI) userInfo:nil repeats:NO];
+        [self setReplayButtonDownloadingState];
+        self.downloadingStateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(setReplayButtonDownloadingState) userInfo:nil repeats:YES];
         return;
     }
     
@@ -811,6 +812,7 @@
 }
 
 - (void)setReplayButtonUI {
+    [self.downloadingStateTimer invalidate];
     if (self.failedVideoPostArray.count > 0) {
         // failed video state
         self.replayButton.backgroundColor = [ColorUtils transparentRed];
@@ -834,6 +836,17 @@
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
         self.replayButton.hidden = NO;
+    }
+}
+
+- (void)setReplayButtonDownloadingState {
+    if (self.videosToPlayArray && self.videosToPlayArray.count > 0) {
+        NSInteger progress = ((VideoPost *)self.videosToPlayArray[0]).downloadProgress;
+        if (progress == 100) {
+            [self setReplayButtonUI];
+        } else {
+            [self.replayButton setTitle:[NSString stringWithFormat:@"%@ (%lu%%)",NSLocalizedString(@"downloading_label", nil),(long)((VideoPost *)self.videosToPlayArray[0]).downloadProgress] forState:UIControlStateNormal];
+        }
     }
 }
 

@@ -12,6 +12,7 @@
 #import "GeneralUtils.h"
 #import "MBProgressHUD.h"
 #import "ColorUtils.h"
+#import "NotifUtils.h"
 
 @interface CodeConfirmationViewController ()
 
@@ -86,6 +87,7 @@
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ApiManager logInUser:self.phoneNumber
                       success:^{
+                          [NotifUtils registerForRemoteNotif];
                           [MBProgressHUD hideHUDForView:self.view animated:YES];
                           [self performSegueWithIdentifier:@"Video From Code" sender:nil];
                       } failure:^{
