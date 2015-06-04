@@ -182,7 +182,7 @@
             showViewers = YES;
             for (User *friend in self.friends) {
                 if ([viewIdsArray indexOfObject:friend.objectId] != NSNotFound) {
-                    [names addObject:friend.flashUsername];
+                    [names addObject:friend.flashUsername ? friend.flashUsername : @"?"];
                 }
             }
         }

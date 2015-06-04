@@ -53,6 +53,7 @@
 @property (strong, nonatomic) UILongPressGestureRecognizer *playingProgressViewLongPressGesture;
 @property (strong, nonatomic) AVAudioPlayer *whiteNoisePlayer;
 @property (strong, nonatomic) UITapGestureRecognizer *videoTapGestureRecogniser;
+@property (strong, nonatomic) NSArray *metadataColorArray;
 
 // Recording
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
@@ -96,6 +97,7 @@
     BOOL _longPressRunning;
     BOOL _recordingRunning;
     BOOL _cancelRecording;
+    int _metadataColorIndex;
 }
 
 // --------------------------------------------
@@ -112,8 +114,11 @@
     _longPressRunning = NO;
     _recordingRunning = NO;
     _cancelRecording = NO;
+    _metadataColorIndex = 0;
     self.isSendingCount = 0;
     self.unreadMessagesCountLabel.hidden = YES;
+    
+    self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
     // HUD
     self.sendingHud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
@@ -494,6 +499,9 @@
     if (videoArray.count == 0 || !composition) return;
     if (composition.duration.value <= 0) {
         [self setReplayButtonDownloadingState];
+        if (self.downloadingStateTimer) {
+            [self.downloadingStateTimer invalidate];
+        }
         self.downloadingStateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(setReplayButtonDownloadingState) userInfo:nil repeats:YES];
         return;
     }
@@ -529,8 +537,19 @@
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
+    if (![self.nameLabel.text isEqualToString:post.user.flashUsername]) {
+        _metadataColorIndex ++;
+        if (_metadataColorIndex >= self.metadataColorArray.count) {
+            _metadataColorIndex = 0;
+        }
+    }
+    
     self.nameLabel.text = post.user.flashUsername;
     self.timeLabel.text = [post.createdAt timeAgoSinceNow];
+    
+    // Color
+    self.nameLabel.textColor = self.metadataColorArray[_metadataColorIndex];
+    self.timeLabel.textColor = self.metadataColorArray[_metadataColorIndex];
     
     // Show metadata
     [self showMetaData:YES];
