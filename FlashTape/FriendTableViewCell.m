@@ -16,7 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *seenImageView;
+@property (weak, nonatomic) IBOutlet UILabel *seemView;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UILabel *messageCountLabel;
 
@@ -33,7 +33,7 @@
 {
     self.nameLabel.text = isCurrentUser ? NSLocalizedString(@"current_user_TVC_name", nil) : name;
     self.scoreLabel.text = score;
-    self.seenImageView.hidden = !hasSeenVideos || isCurrentUser;
+    self.seemView.hidden = !hasSeenVideos || isCurrentUser;
     self.backgroundColor = [UIColor clearColor];
     self.accessoryType = isCurrentUser ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
     

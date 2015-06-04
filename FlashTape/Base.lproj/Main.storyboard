@@ -821,13 +821,6 @@
                                                     <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="seen_image" translatesAutoresizingMaskIntoConstraints="NO" id="DQR-Th-awv">
-                                                    <rect key="frame" x="560" y="30" width="20" height="20"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="20" id="2G9-B9-B8p"/>
-                                                        <constraint firstAttribute="width" constant="20" id="PhC-Q2-6Yo"/>
-                                                    </constraints>
-                                                </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZK-D3-zfC">
                                                     <rect key="frame" x="501" y="25" width="32" height="30"/>
                                                     <state key="normal" title="save">
@@ -846,18 +839,24 @@
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="👀" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9jK-Tx-agv">
+                                                    <rect key="frame" x="573" y="29" width="22" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="9jK-Tx-agv" firstAttribute="trailing" secondItem="bDY-Zb-eof" secondAttribute="trailingMargin" constant="3" id="5fB-kF-OqI"/>
+                                                <constraint firstAttribute="centerY" secondItem="9jK-Tx-agv" secondAttribute="centerY" id="7u6-jB-H59"/>
                                                 <constraint firstItem="y1L-4Y-drw" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="HUd-DI-Feb"/>
-                                                <constraint firstAttribute="centerY" secondItem="DQR-Th-awv" secondAttribute="centerY" constant="-0.5" id="Yxn-wK-6Tx"/>
+                                                <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="ipD-oW-FC9" secondAttribute="trailing" constant="33" id="Pq8-aE-sxc"/>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="aO8-i6-tv2"/>
-                                                <constraint firstItem="ipD-oW-FC9" firstAttribute="centerY" secondItem="DQR-Th-awv" secondAttribute="centerY" id="df3-Gj-qVv"/>
-                                                <constraint firstItem="DQR-Th-awv" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" constant="27" id="eLb-dx-hH8"/>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="top" secondItem="y1L-4Y-drw" secondAttribute="bottom" constant="4" id="guN-Vi-lv6"/>
                                                 <constraint firstAttribute="centerY" secondItem="y1L-4Y-drw" secondAttribute="centerY" constant="6.5" id="gvx-nV-xYA"/>
-                                                <constraint firstItem="DQR-Th-awv" firstAttribute="leading" secondItem="ipD-oW-FC9" secondAttribute="trailing" constant="20" id="hzt-oZ-Axo"/>
                                                 <constraint firstAttribute="centerY" secondItem="XLB-UB-kNZ" secondAttribute="centerY" constant="-15" id="k5b-a2-1eV"/>
-                                                <constraint firstAttribute="trailing" secondItem="DQR-Th-awv" secondAttribute="trailing" constant="20" id="r8g-35-Trr"/>
+                                                <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" constant="40" id="oW8-Dv-l1T"/>
+                                                <constraint firstAttribute="centerY" secondItem="ipD-oW-FC9" secondAttribute="centerY" constant="-1" id="xIm-dP-e5n"/>
                                                 <constraint firstAttribute="centerY" secondItem="CZK-D3-zfC" secondAttribute="centerY" constant="-0.5" id="yLP-hv-AuJ"/>
                                             </constraints>
                                             <variation key="default">
@@ -873,7 +872,7 @@
                                             <outlet property="nameLabel" destination="y1L-4Y-drw" id="xrF-rr-81H"/>
                                             <outlet property="saveButton" destination="CZK-D3-zfC" id="ARm-oF-k6L"/>
                                             <outlet property="scoreLabel" destination="XLB-UB-kNZ" id="MwL-xE-gef"/>
-                                            <outlet property="seenImageView" destination="DQR-Th-awv" id="3El-QI-459"/>
+                                            <outlet property="seemView" destination="9jK-Tx-agv" id="fZW-FG-joI"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VideoCell" id="ZIp-cc-i6H" customClass="VideoTableViewCell">
@@ -1256,7 +1255,6 @@
         <image name="caption_button" width="32" height="32"/>
         <image name="delete_button" width="50" height="50"/>
         <image name="friends_button" width="32" height="32"/>
-        <image name="seen_image" width="30" height="30"/>
         <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>

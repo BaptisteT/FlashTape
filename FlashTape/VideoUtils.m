@@ -61,7 +61,8 @@
         AVMutableVideoCompositionLayerInstruction *firstVideoLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoCompositionTrack];
         
         if (!CGSizeEqualToSize(assetTrack.naturalSize,size)) {
-            CGAffineTransform transform = CGAffineTransformMakeScale(size.width / assetTrack.naturalSize.width, size.height / assetTrack.naturalSize.height);;
+            CGFloat scaleFactor = MAX(size.width / assetTrack.naturalSize.width, size.height / assetTrack.naturalSize.height);
+            CGAffineTransform transform = CGAffineTransformMakeScale(scaleFactor,scaleFactor);
             [firstVideoLayerInstruction setTransform:transform atTime:kCMTimeZero];
             videoCompositionInstruction.layerInstructions = @[firstVideoLayerInstruction];
         }
@@ -77,7 +78,7 @@
     mutableVideoComposition.instructions = instructions;
     
     // Set the frame duration to an appropriate value (i.e. 30 frames per second for video).
-    mutableVideoComposition.frameDuration = CMTimeMake(1, 29);
+    mutableVideoComposition.frameDuration = CMTimeMake(1, 30);
     mutableVideoComposition.renderSize = size;
     
     AVPlayerItem *pi = [AVPlayerItem playerItemWithAsset:composition];
