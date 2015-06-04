@@ -332,9 +332,9 @@
 #pragma mark - Friend TVC Delegate
 // --------------------------------------------
 - (void)saveCurrentUserStoryButtonClicked {
-    AVMutableComposition *compo = [AVMutableComposition new];
-    [VideoUtils fillComposition:compo withVideoPosts:self.currentUserPosts];
-    [VideoUtils saveVideoCompositionToCameraRoll:compo success:^{
+    AVPlayerItem *pi = [VideoUtils createAVPlayerItemWithVideoPosts:self.currentUserPosts
+                                          andFillObservedTimesArray:nil];
+    [VideoUtils saveVideoCompositionToCameraRoll:pi.asset success:^{
         [self.friendsTableView reloadData];
     } failure:^{
         [self.friendsTableView reloadData];

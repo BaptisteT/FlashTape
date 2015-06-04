@@ -180,9 +180,9 @@
     self.filter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
     [self.filter setParameterValue:@64 forKey:@"inputCubeDimension"];
     [self.filter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
-//    if (![GeneralUtils isiPhone4]) {
+    if (![GeneralUtils isiPhone4]) {
         self.recorder.videoConfiguration.filter = self.filter;
-//    }
+    }
     
     // Video player
     self.friendVideoView.player.loopEnabled = NO;
@@ -364,14 +364,14 @@
     float widthRatio = (float)[gesture locationInView:self.metadataView].x / self.metadataView.frame.size.width;
     [self.playingProgressView.layer removeAllAnimations];
     CMTime time = CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoView.player.itemDuration) * widthRatio, self.friendVideoView.player.itemDuration.timescale);
-    [self.friendVideoView.player seekToTime:time];
     [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [self showMetaData:NO];
         [self.friendVideoView.player pause];
         [self.whiteNoisePlayer pause];
+        [self.friendVideoView.player seekToTime:time];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
-        
+        [self.friendVideoView.player seekToTime:time];
     } else {
         // Set metadata
         CMTime observedTime;
@@ -382,7 +382,9 @@
                 break;
             }
         }
-        [self.friendVideoView.player play];
+        [self.friendVideoView.player seekToTime:time completionHandler:^(BOOL finished) {
+            [self.friendVideoView.player play];
+        }];
         [self.whiteNoisePlayer play];
         [self animatePlayingProgressBar:CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration) * (1 - widthRatio)];
     }
@@ -423,6 +425,7 @@
     }
     CMTime observedTime;
     int ii = 0;
+    [self.friendVideoView.player pause];
     for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
         if (observedValue == self.videoPlayingObservedTimesArray.lastObject) {
             [self returnToCameraMode];
@@ -432,12 +435,14 @@
                 // Set metadata
                 [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[ii]];
                 
-                [self.friendVideoView.player seekToTime:observedTime];
-                CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
-                CGFloat currentTime = CMTimeGetSeconds(observedTime);
-                [self.playingProgressView.layer removeAllAnimations];
-                [self.playingProgressView setFrame:CGRectMake(0, 0, currentTime / videoDuration * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
-                [self animatePlayingProgressBar:videoDuration - currentTime];
+                [self.friendVideoView.player seekToTime:observedTime completionHandler:^(BOOL finished) {
+                    [self.friendVideoView.player play];
+                    CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
+                    CGFloat currentTime = CMTimeGetSeconds(observedTime);
+                    [self.playingProgressView.layer removeAllAnimations];
+                    [self.playingProgressView setFrame:CGRectMake(0, 0, currentTime / videoDuration * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
+                    [self animatePlayingProgressBar:videoDuration - currentTime];
+                }];
                 return;
             }
         }
@@ -492,12 +497,13 @@
 // --------------------------------------------
 - (void)createCompositionAndPlayVideos {
     NSArray *videoArray = self.videosToPlayArray;
-    AVMutableComposition *composition = [AVMutableComposition new];
-    self.videoPlayingObservedTimesArray = [VideoUtils fillComposition:composition withVideoPosts:videoArray];
+    self.videoPlayingObservedTimesArray = [NSMutableArray new];
+    AVPlayerItem *pi = [VideoUtils createAVPlayerItemWithVideoPosts:videoArray
+                       andFillObservedTimesArray:self.videoPlayingObservedTimesArray];
     
     // Case where video not yet downloaded
-    if (videoArray.count == 0 || !composition) return;
-    if (composition.duration.value <= 0) {
+    if (!pi) return;
+    if (pi.duration.value <= 0) {
         [self setReplayButtonDownloadingState];
         if (self.downloadingStateTimer) {
             [self.downloadingStateTimer invalidate];
@@ -505,9 +511,9 @@
         self.downloadingStateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(setReplayButtonDownloadingState) userInfo:nil repeats:YES];
         return;
     }
-    
+
     // Set item
-    [self.friendVideoView.player setItemByAsset:composition];
+    [self.friendVideoView.player setItem:pi];
     [self.friendVideoView.player seekToTime:kCMTimeZero];
     
     // Time observer
@@ -533,7 +539,7 @@
     [self setPlayingMode:YES];
     [self setPlayingMetaDataForVideoPost:videoArray[0]];
     [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
-    [self animatePlayingProgressBar:CMTimeGetSeconds(composition.duration)];
+    [self animatePlayingProgressBar:CMTimeGetSeconds(pi.duration)];
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {

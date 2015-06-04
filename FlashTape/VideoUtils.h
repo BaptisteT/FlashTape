@@ -10,10 +10,10 @@
 
 @interface VideoUtils : NSObject
 
-+ (NSMutableArray *)fillComposition:(AVMutableComposition *)composition
-                     withVideoPosts:(NSArray *)posts;
++ (AVPlayerItem *)createAVPlayerItemWithVideoPosts:(NSArray *)posts
+                         andFillObservedTimesArray:(NSMutableArray *)observedTimesArray;
 
-+ (void)saveVideoCompositionToCameraRoll:(AVComposition *)composition
++ (void)saveVideoCompositionToCameraRoll:(AVAsset *)composition
                                  success:(void(^)())successBlock
                                  failure:(void(^)())failureBlock;
 

@@ -14,49 +14,80 @@
 
 @implementation VideoUtils
 
-+ (NSMutableArray *)fillComposition:(AVMutableComposition *)composition
-                     withVideoPosts:(NSArray *)posts
++ (AVPlayerItem *)createAVPlayerItemWithVideoPosts:(NSArray *)posts
+                         andFillObservedTimesArray:(NSMutableArray *)observedTimesArray
 {
-    NSMutableArray *observedTimesArray = [NSMutableArray new];
-    if (!composition)
-        return observedTimesArray;
-    for (NSInteger kk = 0; kk < posts.count; kk++) {
-        VideoPost *post = posts[kk];
-        if (post.localUrl) {
-            NSValue *observedTime = [VideoUtils addVideoAtURL:post.localUrl toComposition:composition];
-            if (observedTime) {
-                [observedTimesArray addObject:observedTime];
-            }
-        } else {
-            return observedTimesArray;
+    if (!posts || posts.count == 0)
+        return nil;
+    if (observedTimesArray)
+        [observedTimesArray removeAllObjects];
+    
+    AVMutableComposition *composition = [AVMutableComposition composition];
+    AVMutableCompositionTrack *videoCompositionTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo
+                                                                                preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *audioCompositionTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio
+                                                                                preferredTrackID:kCMPersistentTrackID_Invalid];
+    NSMutableArray *instructions = [NSMutableArray new];
+    CGSize size = CGSizeMake(720, 1280);
+    CMTime time = kCMTimeZero;
+    for (VideoPost *post in posts) {
+        AVAsset *asset = [AVAsset assetWithURL:post.videoLocalURL];
+        AVAssetTrack *assetTrack = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+        AVAssetTrack *audioAssetTrack = [asset tracksWithMediaType:AVMediaTypeAudio].firstObject;
+        
+        NSError *error;
+        CMTime cutDuration = CMTimeMakeWithSeconds(CMTimeGetSeconds(assetTrack.timeRange.duration) - kVideoEndCutDuration, 600);
+        CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, cutDuration);
+        [videoCompositionTrack insertTimeRange:assetTimeRange
+                                       ofTrack:assetTrack
+                                        atTime:time
+                                         error:&error];
+        if (error) {
+            NSLog(@"Error - %@", error.debugDescription);
         }
-    }
-    return observedTimesArray;
-}
-
-+ (NSValue *)addVideoAtURL:(NSURL *)videoUrl
-             toComposition:(AVMutableComposition *)composition {
-    if (videoUrl) {
-        AVURLAsset* sourceAsset = [AVURLAsset assetWithURL:videoUrl];
-        CMTimeRange assetTimeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(CMTimeGetSeconds(sourceAsset.duration) - kVideoEndCutDuration, 600));
-        NSError *editError;
-        [composition insertTimeRange:assetTimeRange
-                             ofAsset:sourceAsset
-                              atTime:[VideoUtils getCompositionEndCMTime:composition]
-                               error:&editError];
-        if (editError) {
-            NSLog(@"%@",editError.description);
+        
+        [audioCompositionTrack insertTimeRange:assetTimeRange
+                                       ofTrack:audioAssetTrack
+                                        atTime:time
+                                         error:&error];
+        if (error) {
+            NSLog(@"Error - %@", error.debugDescription);
         }
-        return [NSValue valueWithCMTime:[VideoUtils getCompositionEndCMTime:composition]];
+        
+        AVMutableVideoCompositionInstruction *videoCompositionInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+        videoCompositionInstruction.timeRange = CMTimeRangeMake(time, cutDuration);
+        videoCompositionInstruction.layerInstructions = @[[AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoCompositionTrack]];
+        
+        AVMutableVideoCompositionLayerInstruction *firstVideoLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoCompositionTrack];
+        
+        if (!CGSizeEqualToSize(assetTrack.naturalSize,size)) {
+            CGAffineTransform transform = CGAffineTransformMakeScale(size.width / assetTrack.naturalSize.width, size.height / assetTrack.naturalSize.height);;
+            [firstVideoLayerInstruction setTransform:transform atTime:kCMTimeZero];
+            videoCompositionInstruction.layerInstructions = @[firstVideoLayerInstruction];
+        }
+        
+        [instructions addObject:videoCompositionInstruction];
+        
+        time = CMTimeAdd(time, cutDuration);
+        if (observedTimesArray)
+            [observedTimesArray addObject:[NSValue valueWithCMTime:time]];
     }
-    return nil;
+    
+    AVMutableVideoComposition *mutableVideoComposition = [AVMutableVideoComposition videoComposition];
+    mutableVideoComposition.instructions = instructions;
+    
+    // Set the frame duration to an appropriate value (i.e. 30 frames per second for video).
+    mutableVideoComposition.frameDuration = CMTimeMake(1, 29);
+    mutableVideoComposition.renderSize = size;
+    
+    AVPlayerItem *pi = [AVPlayerItem playerItemWithAsset:composition];
+    pi.videoComposition = mutableVideoComposition;
+
+    return pi;
 }
 
-+ (CMTime)getCompositionEndCMTime:(AVComposition *)composition {
-    return CMTimeMakeWithSeconds(CMTimeGetSeconds(composition.duration) -0.01,composition.duration.timescale);
-}
 
-+ (void)saveVideoCompositionToCameraRoll:(AVComposition *)composition
++ (void)saveVideoCompositionToCameraRoll:(AVAsset *)composition
                                  success:(void(^)())successBlock
                                  failure:(void(^)())failureBlock
 {
@@ -91,6 +122,7 @@
 
     [exportSession exportAsynchronouslyWithCompletionHandler:^{
         if (exportSession.error) {
+            NSLog(@"%@",exportSession.error.description);
             if (failureBlock) {
                 failureBlock();
             }
@@ -103,6 +135,7 @@
                                                     successBlock();
                                                 }
                                             } else {
+                                                NSLog(@"%@",error.description);
                                                 if (failureBlock) {
                                                     failureBlock();
                                                 }
