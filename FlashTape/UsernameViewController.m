@@ -50,8 +50,6 @@
 // ----------------------------------------------------------
 - (IBAction)doneButtonClicked:(id)sender {
     if (self.usernameTextfield.text.length == 0) {
-        // todo BT
-        // error message
         return;
     }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -61,7 +59,11 @@
                          [self performSegueWithIdentifier:@"Videos From Username" sender:nil];
                      } failure:^(NSError *error) {
                          [MBProgressHUD hideHUDForView:self.view animated:YES];
-                         [GeneralUtils showAlertMessage:NSLocalizedString(@"save_username_error_message", nil) withTitle:NSLocalizedString(@"save_username_error_title", nil)];
+                         if (error) {
+                             [GeneralUtils showAlertMessage:NSLocalizedString(@"save_username_error_message", nil) withTitle:NSLocalizedString(@"save_username_error_title", nil)];
+                         } else {
+                             [GeneralUtils showAlertMessage:NSLocalizedString(@"already_taken_username_error_message", nil) withTitle:NSLocalizedString(@"already_taken_username_error_title", nil)];
+                         }
                      }];
 }
 

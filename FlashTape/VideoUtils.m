@@ -74,7 +74,7 @@
         
         time = CMTimeAdd(time, cutDuration);
         if (observedTimesArray)
-            [observedTimesArray addObject:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(CMTimeGetSeconds(time)-0.01,time.timescale)]];
+            [observedTimesArray addObject:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(CMTimeGetSeconds(time)- 0.01,time.timescale)]];
     }
     
     AVMutableVideoComposition *mutableVideoComposition = [AVMutableVideoComposition videoComposition];

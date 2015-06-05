@@ -29,6 +29,8 @@
 "username_explanation" = "Please, enter your username below.";
 "save_username_error_title" = "Sorry, we could not save your username";
 "save_username_error_message" = "Please, try again.";
+"already_taken_username_error_message" = "Please, pick another one";
+"already_taken_username_error_title" = "Sorry, this username is already taken";
 
 // Auth
 "authentification_error_title" = "Authentification error";

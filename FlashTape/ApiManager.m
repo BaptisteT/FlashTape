@@ -129,7 +129,8 @@
                                         // Get user from follow
                                         for(PFObject *follow in followings) {
                                             User *otherUser = [follow objectForKey:@"to"];
-                                            [friendArray addObject:otherUser];
+                                            if (otherUser)
+                                                [friendArray addObject:otherUser];
                                         }
                                         // Sort by score
                                         [friendArray sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
@@ -157,12 +158,29 @@
              failure:(void(^)(NSError *error))failureBlock
 {
     // todo BT uniqueness
-    User *user = [User currentUser];
-    user.flashUsername = username;
-    [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            if (successBlock) {
-                successBlock();
+    PFQuery *query = [User query];
+    [query whereKey:@"flashUsername" equalTo:username];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (objects.count == 0) {
+                User *user = [User currentUser];
+                user.flashUsername = username;
+                [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        if (successBlock) {
+                            successBlock();
+                        }
+                    } else {
+                        if (failureBlock) {
+                            failureBlock(error);
+                        }
+                    }
+                }];
+            } else {
+                // username already taken
+                if (failureBlock) {
+                    failureBlock(nil);
+                }
             }
         } else {
             if (failureBlock) {

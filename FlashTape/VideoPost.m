@@ -76,7 +76,7 @@ static int downloadingCount = 0;
                     self.downloadProgress = percentDone;
                 }];
             } else {
-                [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(downloadVideoFile) userInfo:nil repeats:NO];
+                [NSTimer scheduledTimerWithTimeInterval:kDelayBeforeRetryDownload target:self selector:@selector(downloadVideoFile) userInfo:nil repeats:NO];
                 NSLog(@"blocked");
             }
         }

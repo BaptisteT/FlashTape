@@ -19,6 +19,7 @@ static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 
 // Parse
 static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;
+static NSInteger const kDelayBeforeRetryDownload = 3;
 static NSString * const kParsePostsName = @"Posts";
 static NSString * const kParseFriendsName = @"Friends";
 static NSString * const kParseMessagesName = @"Messages";

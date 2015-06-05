@@ -418,16 +418,19 @@
     CMTime observedTime;
     int ii = 0;
     [self.friendVideoView.player pause];
+    CMTime playerTime = self.friendVideoView.player.currentTime;
+    CMTime gapPlayerTime = CMTimeAdd(playerTime, CMTimeMakeWithSeconds(0.02, 600));
     for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
         if (observedValue == self.videoPlayingObservedTimesArray.lastObject) {
             [self returnToCameraMode];
         } else {
             [observedValue getValue:&observedTime];
-            if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, <, observedTime)) {
+            if (CMTIME_COMPARE_INLINE(gapPlayerTime, <, observedTime)) {
+                NSLog(@"%f %f %f",CMTimeGetSeconds(playerTime),CMTimeGetSeconds(gapPlayerTime),CMTimeGetSeconds(observedTime));
                 // Set metadata
                 [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[ii]];
                 
-                [self.friendVideoView.player seekToTime:observedTime completionHandler:^(BOOL finished) {
+                [self.friendVideoView.player seekToTime:observedTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
                     [self.friendVideoView.player play];
                     CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
                     CGFloat currentTime = CMTimeGetSeconds(observedTime);
