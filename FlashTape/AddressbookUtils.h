@@ -14,7 +14,7 @@
 
 + (NSMutableDictionary *)getCountriesAndCallingCodesForLetterCodes;
 
-+ (NSMutableDictionary *)getFormattedPhoneNumbersFromAddressBook:(ABAddressBookRef)addressBook;
++ (NSMutableSet *)getFormattedPhoneNumbersFromAddressBook:(ABAddressBookRef)addressBook;
 
 + (void)saveContactDictionnary:(NSDictionary *)contactDictionnary;
 

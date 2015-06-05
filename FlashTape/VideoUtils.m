@@ -31,6 +31,9 @@
     CGSize size = CGSizeMake(720, 1280);
     CMTime time = kCMTimeZero;
     for (VideoPost *post in posts) {
+        if (!post.videoLocalURL) {
+            break;
+        }
         AVAsset *asset = [AVAsset assetWithURL:post.videoLocalURL];
         AVAssetTrack *assetTrack = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
         AVAssetTrack *audioAssetTrack = [asset tracksWithMediaType:AVMediaTypeAudio].firstObject;

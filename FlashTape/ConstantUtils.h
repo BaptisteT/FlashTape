@@ -29,7 +29,7 @@ static const NSInteger kFeedHistoryInHours = 24;
 static const float kRecordSessionMaxDuration = 2.0;
 static const float kRecordMinDuration = 0.25;
 static const float kVideoEndCutDuration = 0.1;
-static const NSInteger kMaxScoreBeforeHidingTuto = 3;
+static const NSInteger kMaxScoreBeforeHidingTuto = 20;
 
 // Playing
 static const NSInteger kPlayerQueueLength = 3;

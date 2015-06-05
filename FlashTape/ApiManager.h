@@ -25,9 +25,12 @@
           success:(void(^)())successBlock
           failure:(void(^)())failureBlock;
 
-+ (void)getListOfFriends:(NSDictionary *)contactsDictionnary
-                 success:(void(^)(NSArray *friends))successBlock
-                 failure:(void(^)(NSError *error))failureBlock;
++ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+                              failure:(void(^)(NSError *error))failureBlock;
+
++ (void)fillFollowersTableWithUsers:(NSMutableSet *)contacts
+                            success:(void(^)(NSArray *friends))successBlock
+                            failure:(void(^)(NSError *error))failureBlock;
 
 + (void)saveUsername:(NSString *)username
              success:(void(^)())successBlock
@@ -37,7 +40,7 @@
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error))failureBlock;
 
-+ (void)getVideoFromContacts:(NSArray *)friends
++ (void)getVideoFromFriends:(NSArray *)friends
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock;
 

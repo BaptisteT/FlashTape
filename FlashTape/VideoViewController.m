@@ -240,7 +240,7 @@
     
     // Retrieve friends from local datastore
     [DatastoreUtils getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
-        [self setFriendsArray:friends];
+        [self setFriendsArray:friends]; // retrieve video in different number of friends
     } failure:nil];
     
     // Start with camera
@@ -248,17 +248,7 @@
     
     // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                NSDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-                [ApiManager getListOfFriends:contactDictionnary
-                                     success:^(NSArray *friends) {
-                                         [self setFriendsArray:friends];
-                                     } failure:nil];
-            }
-        });
-    });
+    [self parseContactsAndFindFriends];
     
     // Callback
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -315,6 +305,7 @@
 - (void)willBecomeActiveCallback {
     [self retrieveVideo];
     [self retrieveUnreadMessages];
+    [self parseContactsAndFindFriends];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -394,6 +385,7 @@
     if (self.failedVideoPostArray.count > 0) {
         [self sendFailedVideo];
     } else {
+        self.replayButton.enabled = NO;
         NSArray *unseenArray = [self unseenVideosArray];
         self.videosToPlayArray = unseenArray.count > 0 ? unseenArray : self.allVideosArray;
         [self createCompositionAndPlayVideos];
@@ -455,7 +447,7 @@
 #pragma mark - Feed
 // --------------------------------------------
 - (void)retrieveVideo {
-    [ApiManager getVideoFromContacts:self.friends
+    [ApiManager getVideoFromFriends:self.friends
                              success:^(NSArray *posts) {
                                  [self setVideoArray:posts];
                              } failure:nil];
@@ -492,6 +484,22 @@
     }
 }
 
+- (void)parseContactsAndFindFriends {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                NSMutableSet *contactSet = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                [contactSet addObject:[User currentUser].username];
+                // fill following table
+                [ApiManager fillFollowersTableWithUsers:contactSet
+                                                success:^(NSArray *friends) {
+                                                    [self setFriendsArray:friends];
+                                                } failure:nil];
+            }
+        });
+    });
+}
+
 // --------------------------------------------
 #pragma mark - Playing
 // --------------------------------------------
@@ -514,7 +522,6 @@
 
     // Set item
     [self.friendVideoView.player setItem:pi];
-    [self.friendVideoView.player seekToTime:kCMTimeZero];
     
     // Time observer
     if (self.compositionTimerObserverArray) {
@@ -535,11 +542,13 @@
     }
     
     // Play
-    [self.friendVideoView.player play];
-    [self setPlayingMode:YES];
-    [self setPlayingMetaDataForVideoPost:videoArray[0]];
-    [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
-    [self animatePlayingProgressBar:CMTimeGetSeconds(pi.duration)];
+    [self.friendVideoView.player seekToTime:kCMTimeZero completionHandler:^(BOOL finished) {
+        [self.friendVideoView.player play];
+        [self setPlayingMode:YES];
+        [self setPlayingMetaDataForVideoPost:videoArray[0]];
+        [self.playingProgressView setFrame:CGRectMake(0, 0, 0, self.metadataView.frame.size.height)];
+        [self animatePlayingProgressBar:CMTimeGetSeconds(pi.duration)];
+    }];
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
@@ -834,6 +843,7 @@
 
 - (void)setReplayButtonUI {
     [self.downloadingStateTimer invalidate];
+    self.replayButton.enabled = YES;
     if (self.failedVideoPostArray.count > 0) {
         // failed video state
         self.replayButton.backgroundColor = [ColorUtils transparentRed];

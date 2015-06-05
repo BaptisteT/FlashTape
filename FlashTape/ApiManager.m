@@ -84,26 +84,28 @@
     }];
 }
 
-+ (void)getListOfFriends:(NSDictionary *)contactsDictionnary
-                 success:(void(^)(NSArray *friends))successBlock
-                 failure:(void(^)(NSError *error))failureBlock
++ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+                              failure:(void(^)(NSError *error))failureBlock
 {
-    NSMutableArray *contactsPhoneNumbers = [NSMutableArray arrayWithArray:[contactsDictionnary allKeys]];
-    [contactsPhoneNumbers addObject:[User currentUser].username];
-    PFQuery *query = [User query];
-    [query whereKey:@"username" containedIn:contactsPhoneNumbers];
-    [query orderByDescending:@"score"];
+    // set up the query on the Follow table
+    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
+    [query whereKey:@"from" equalTo:[PFUser currentUser]];
+    [query includeKey:@"to"];
+    // execute the query
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSLog(@"Successfully retrieved %lu friends.", (unsigned long)objects.count);
+            NSMutableArray *friends = [NSMutableArray new];
+            for(PFObject *object in objects) {
+                [friends addObject:[object objectForKey:@"to"]];
+            }
             [User unpinAllObjectsInBackgroundWithName:kParseFriendsName block:^void(BOOL success, NSError *error) {
                 // Cache the new results.
-                [User pinAllInBackground:objects withName:kParseFriendsName];
+                [User pinAllInBackground:friends withName:kParseFriendsName];
             }];
             if (successBlock) {
-                successBlock(objects);
+                successBlock(friends);
             }
-            [ApiManager fillFollowersTableWithUsers:objects];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -113,24 +115,48 @@
     }];
 }
 
+
 // Fill followers table
-+ (void)fillFollowersTableWithUsers:(NSArray *)objects {
-    NSMutableArray *followingArray = [NSMutableArray new];
-    for (User *friend in objects) {
-        if (![friend.objectId isEqualToString:[PFUser currentUser].objectId]) {
-            PFObject *follow = [PFObject objectWithClassName:@"Follow"];
-            [follow setObject:[PFUser currentUser]  forKey:@"from"];
-            [follow setObject:friend forKey:@"to"];
-            [followingArray addObject:follow];
-        }
-    }
-    [PFObject saveAllInBackground:followingArray];
++ (void)fillFollowersTableWithUsers:(NSMutableSet *)contacts
+                            success:(void(^)(NSArray *friends))successBlock
+                            failure:(void(^)(NSError *error))failureBlock
+{
+    [PFCloud callFunctionInBackground:@"fillFollowTable"
+                       withParameters:@{@"contacts": [contacts allObjects]}
+                                block:^(NSArray *followings, NSError *error) {
+                                    if (!error) {
+                                        NSMutableArray *friendArray = [NSMutableArray new];
+                                        // Get user from follow
+                                        for(PFObject *follow in followings) {
+                                            User *otherUser = [follow objectForKey:@"to"];
+                                            [friendArray addObject:otherUser];
+                                        }
+                                        // Sort by score
+                                        [friendArray sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
+                                            return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
+                                        }];
+                                        
+                                        // Pin
+                                        [User unpinAllObjectsInBackgroundWithName:kParseFriendsName block:^void(BOOL success, NSError *error) {
+                                            // Cache the new results.
+                                            [User pinAllInBackground:friendArray withName:kParseFriendsName];
+                                        }];
+                                        if (successBlock) {
+                                            successBlock(friendArray);
+                                        }
+                                    } else {
+                                        if (failureBlock) {
+                                            failureBlock(error);
+                                        }
+                                    }
+                                }];
 }
 
 + (void)saveUsername:(NSString *)username
              success:(void(^)())successBlock
              failure:(void(^)(NSError *error))failureBlock
 {
+    // todo BT uniqueness
     User *user = [User currentUser];
     user.flashUsername = username;
     [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -202,7 +228,7 @@
 }
 
 // Get video
-+ (void)getVideoFromContacts:(NSArray *)friends
++ (void)getVideoFromFriends:(NSArray *)friends
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock
 {

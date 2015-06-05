@@ -64,9 +64,9 @@
     return letterCodeToCountryAndCallingCode;
 }
 
-+ (NSMutableDictionary *)getFormattedPhoneNumbersFromAddressBook:(ABAddressBookRef)addressBook
++ (NSMutableSet *)getFormattedPhoneNumbersFromAddressBook:(ABAddressBookRef)addressBook
 {
-    NSMutableDictionary *addressBookFormattedContacts = [[NSMutableDictionary alloc] init];
+    NSMutableSet *addressBookFormattedContacts = [[NSMutableSet alloc] init];
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     
     CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
@@ -91,7 +91,7 @@
                 }
                 // Stock potential contact
                 NSString *phoneNumber = [NSString stringWithFormat:@"+%u%llu", (unsigned int)nbPhoneNumber.countryCode, nbPhoneNumber.nationalNumber];
-                [addressBookFormattedContacts setObject:name forKey:phoneNumber];
+                [addressBookFormattedContacts addObject:phoneNumber];
             }
         }
     }
@@ -100,14 +100,14 @@
     return addressBookFormattedContacts;
 }
 
-+ (void)saveContactDictionnary:(NSDictionary *)contactDictionnary
++ (void)saveContactDictionnary:(NSArray *)contactArray
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:contactDictionnary forKey:CONTACT_DICTIONNARY_PREF];
+    [prefs setObject:contactArray forKey:CONTACT_DICTIONNARY_PREF];
     [prefs synchronize];
 }
 
-+ (NSDictionary *)getContactDictionnary
++ (NSArray *)getContactDictionnary
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     return [prefs objectForKey:CONTACT_DICTIONNARY_PREF];
