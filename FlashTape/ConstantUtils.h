@@ -18,6 +18,7 @@ static NSString * const kFlashTapeAppStoreLink = @"https://itunes.apple.com/us/a
 static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 
 // Parse
+static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;
 static NSString * const kParsePostsName = @"Posts";
 static NSString * const kParseFriendsName = @"Friends";
 static NSString * const kParseMessagesName = @"Messages";

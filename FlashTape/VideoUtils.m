@@ -31,10 +31,10 @@
     CGSize size = CGSizeMake(720, 1280);
     CMTime time = kCMTimeZero;
     for (VideoPost *post in posts) {
-        if (!post.videoLocalURL) {
+        if (!post.localUrl) {
             break;
         }
-        AVAsset *asset = [AVAsset assetWithURL:post.videoLocalURL];
+        AVAsset *asset = [AVAsset assetWithURL:post.localUrl];
         AVAssetTrack *assetTrack = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
         AVAssetTrack *audioAssetTrack = [asset tracksWithMediaType:AVMediaTypeAudio].firstObject;
         
@@ -74,7 +74,7 @@
         
         time = CMTimeAdd(time, cutDuration);
         if (observedTimesArray)
-            [observedTimesArray addObject:[NSValue valueWithCMTime:time]];
+            [observedTimesArray addObject:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(CMTimeGetSeconds(time)-0.01,time.timescale)]];
     }
     
     AVMutableVideoComposition *mutableVideoComposition = [AVMutableVideoComposition videoComposition];

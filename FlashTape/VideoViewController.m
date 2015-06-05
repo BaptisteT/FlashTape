@@ -871,6 +871,7 @@
 }
 
 - (void)setReplayButtonDownloadingState {
+    self.replayButton.enabled = YES;
     if (self.videosToPlayArray && self.videosToPlayArray.count > 0) {
         NSInteger progress = ((VideoPost *)self.videosToPlayArray[0]).downloadProgress;
         if (progress == 100) {

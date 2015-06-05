@@ -9,6 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+#import "ConstantUtils.h"
 #import "GeneralUtils.h"
 
 @implementation VideoPost
@@ -25,6 +26,8 @@
 @dynamic user;
 @dynamic viewerIdsArray;
 @dynamic recordedAt;
+
+static int downloadingCount = 0;
 
 + (void)load {
     [self registerSubclass];
@@ -53,21 +56,29 @@
         self.localUrl = [self videoLocalURL];
     } else {
         if (!self.isDownloading) {
-            self.isDownloading = YES;
-            [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                self.isDownloading = NO;
-                if (data) {
-                    [self saveDataToLocalURL:data];
-                } else {
-                    if ([self.videoFile isDataAvailable]) {
-                        [self saveDataToLocalURL:[self.videoFile getData]];
+            if (downloadingCount < kMaxConcurrentVideoDownloadingCount) {
+                downloadingCount ++;
+                NSLog(@"%d",downloadingCount);
+                self.isDownloading = YES;
+                [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                    self.isDownloading = NO;
+                    downloadingCount --;
+                    if (data) {
+                        [self saveDataToLocalURL:data];
                     } else {
-                        NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                        if ([self.videoFile isDataAvailable]) {
+                            [self saveDataToLocalURL:[self.videoFile getData]];
+                        } else {
+                            NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                        }
                     }
-                }
-            } progressBlock:^(int percentDone) {
-                self.downloadProgress = percentDone;
-            }];
+                } progressBlock:^(int percentDone) {
+                    self.downloadProgress = percentDone;
+                }];
+            } else {
+                [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(downloadVideoFile) userInfo:nil repeats:NO];
+                NSLog(@"blocked");
+            }
         }
     }
 }
