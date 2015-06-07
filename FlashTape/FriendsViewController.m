@@ -12,7 +12,6 @@
 #import "User.h"
 #import "VideoPost.h"
 
-#import "CreateMessageTableViewCell.h"
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
 #import "VideoTableViewCell.h"
@@ -35,7 +34,6 @@
 @property (weak, nonatomic) VideoPost *postToDetail;
 
 // Message
-@property (strong, nonatomic) User *friendToDetail;
 @property (strong, nonatomic) NSDictionary *messagesDictionnary;
 
 @end
@@ -82,14 +80,6 @@
                                                  name: UIApplicationDidEnterBackgroundNotification
                                                object: nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(retrieveUnreadMessages)
                                                  name:@"new_message"
                                                object:nil];
@@ -104,6 +94,9 @@
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"Find By Username From Friends"]) {
         ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
+    } else if ([segueName isEqualToString: @"Create Message From Friends"]) {
+        ((SendMessageViewController *) [segue destinationViewController]).delegate = self;
+        ((SendMessageViewController *) [segue destinationViewController]).messageRecipient = (User *)sender;
     }
 }
 
@@ -127,16 +120,17 @@
 }
 
 // Send message
+// todo BT new UI
 - (void)sendMessage:(NSString *)text {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    Message *message = [Message createMessageWithContent:text receiver:self.friendToDetail];
-    [ApiManager sendMessage:message
-                    success:^{
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        // todo BT
-                    } failure:^(NSError *error) {
-                        // todo BT handle error
-                    }];
+//    Message *message = [Message createMessageWithContent:text receiver:self.friendToDetail];
+//    [ApiManager sendMessage:message
+//                    success:^{
+//                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//                        // todo BT
+//                    } failure:^(NSError *error) {
+//                        // todo BT handle error
+//                    }];
 }
 
 // --------------------------------------------
@@ -150,13 +144,7 @@
     if ([self isCurrentUserSection:section]) {
         return 1 + (_expandMyStory ? self.currentUserPosts.count : 0);
     } else {
-        NSArray *messages;
-        User *friend = (User *)self.friends[section];
-        BOOL isSelected = self.friendToDetail && self.friendToDetail == friend;
-        if (isSelected) {
-            messages = self.messagesDictionnary[friend.objectId];
-        }
-        return 1 + (messages ? messages.count : 0) + (isSelected ? 1 : 0);
+        return 1;
     }
 }
 
@@ -195,26 +183,27 @@
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
-    } else if ([self isFriendMessageCell:indexPath]) {
-        User *friend = (User *)self.friends[indexPath.section];
-        NSMutableArray *messages = self.messagesDictionnary[friend.objectId];
-        Message *message = (messages && messages.count > 0) ? (Message *)messages[0] : nil;
-        if (message) {
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageReceivedCell"];
-            cell.textLabel.text = message.messageContent;
-
-            // unpin / delete / unread
-            [ApiManager markMessageAsRead:message
-                                  success:nil
-                                  failure:nil];
-            [messages removeObject:message];
-            return cell;
-        } else { // todo BT make robust
-            CreateMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CreateMessageCell"];
-            [cell initWithDelegate:self];
-            return cell;
-        }
-    } else {
+    }
+//    else if ([self isFriendMessageCell:indexPath]) {
+//        User *friend = (User *)self.friends[indexPath.section];
+//        NSMutableArray *messages = self.messagesDictionnary[friend.objectId];
+//        Message *message = (messages && messages.count > 0) ? (Message *)messages[0] : nil;
+//        if (message) {
+//            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageReceivedCell"];
+//            cell.textLabel.text = message.messageContent;
+//
+//            // unpin / delete / unread
+//            [ApiManager markMessageAsRead:message
+//                                  success:nil
+//                                  failure:nil];
+//            [messages removeObject:message];
+//            return cell;
+//        } else { // todo BT make robust
+//            CreateMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CreateMessageCell"];
+//            [cell initWithDelegate:self];
+//            return cell;
+//        }
+    else {
         return [UITableViewCell new];
     }
 }
@@ -226,9 +215,8 @@
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         return (post == self.postToDetail) ? 44 + [post viewerIdsArrayWithoutPoster].count * 20 : 44;
-    } else if ([self isFriendMessageCell:indexPath]) {
-        return 40;
-    } else {
+    }
+    else {
         // should not happen
         return 44;
     }
@@ -238,7 +226,6 @@
     if ([self isCurrentUserUserCell:indexPath]) {
         _expandMyStory = !_expandMyStory;
         self.postToDetail = nil;
-        self.friendToDetail = nil;
         [self.friendsTableView reloadData];
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
@@ -248,12 +235,10 @@
         _expandMyStory = NO;
         self.postToDetail = nil;
         User *friend = (User *)self.friends[indexPath.section];
-        if (self.friendToDetail && self.friendToDetail == friend) {
-            self.friendToDetail = nil;
-        } else {
-            self.friendToDetail = friend;
-        }
-        [self.friendsTableView reloadData];
+        
+        // todo BT
+        // depend on message or not
+        [self performSegueWithIdentifier:@"Create Message From Friends" sender:friend];
     }
 }
 
@@ -308,9 +293,6 @@
     return indexPath.row != 0 && [self isCurrentUserSection:indexPath.section];
 }
 
-- (BOOL)isFriendMessageCell:(NSIndexPath *)indexPath {
-    return indexPath.row != 0 && ![self isCurrentUserSection:indexPath.section];
-}
 
 // ----------------------------------------------------------
 #pragma mark SMS controller
@@ -432,18 +414,5 @@
     }
 }
 
-// ----------------------------------------------------------
-#pragma mark Keyboard
-// ----------------------------------------------------------
-// Move up create comment view on keyboard will show
-- (void)keyboardWillShow:(NSNotification *)notification {
-    // todo BT
-    // ensure create message cell is visible
-    [KeyboardUtils changeFrameOfView:self.friendsTableView whenKeyboardMoveNotification:notification];
-}
 
-// Move down create comment view on keyboard will hide
-- (void)keyboardWillHide:(NSNotification *)notification {
-    [KeyboardUtils changeFrameOfView:self.friendsTableView whenKeyboardMoveNotification:notification];
-}
 @end

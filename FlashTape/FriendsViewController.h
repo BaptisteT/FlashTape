@@ -9,14 +9,14 @@
 #import <MessageUI/MessageUI.h>
 #import <UIKit/UIKit.h>
 
-#import "CreateMessageTableViewCell.h"
 #import "FriendTableViewCell.h"
 #import "VideoTableViewCell.h"
+#import "SendMessageViewController.h"
 
 @class VideoPost;
 @protocol FriendsVCProtocol;
 
-@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, CreateMessageTVCDelegate >
+@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
 @property (strong, nonatomic) NSMutableArray *friends;

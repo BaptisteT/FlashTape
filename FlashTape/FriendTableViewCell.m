@@ -45,10 +45,6 @@
     if (count != 0) {
         self.messageCountLabel.hidden = NO;
         self.messageCountLabel.text = [NSString stringWithFormat:@"%lu",(long)count];
-        self.messageCountLabel.layer.cornerRadius = self.messageCountLabel.frame.size.height / 2;
-        self.messageCountLabel.layer.borderWidth = 1;
-        self.messageCountLabel.layer.borderColor = [ColorUtils orange].CGColor;
-        self.messageCountLabel.textColor = [ColorUtils orange];
     } else {
         self.messageCountLabel.hidden = YES;
     }

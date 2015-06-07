@@ -71,12 +71,16 @@
 "story_views_label" = "%lu 👀";
 
 // Message
-"send_button" = "Send";
-"create_message_placeholder" = "Send a message";
+"send_title" = "Send to %@";
+"message_receive_title" = "From %@";
+"create_message_placeholder" = "Type here";
+"back_button" = "Back";
 
 // Find by username
 "find_by_username_controller_title" = "Add a new username";
 "find_by_username_textfield_placeholder" = "Search";
 "username_section_title" = "USERNAME";
+
+
 
 
