@@ -131,4 +131,11 @@
     return [prefs objectForKey:LAST_VIDEO_SELFIE_MODE] ? [[prefs objectForKey:LAST_VIDEO_SELFIE_MODE ] boolValue] : YES;
 }
 
+
++ (NSString *)transformedUsernameFromOriginal:(NSString *)original {
+    NSMutableString *transformedUsername = [original mutableCopy];
+    CFStringTransform((__bridge CFMutableStringRef)transformedUsername, NULL, kCFStringTransformStripCombiningMarks, NO);
+    return [transformedUsername lowercaseString];
+}
+
 @end

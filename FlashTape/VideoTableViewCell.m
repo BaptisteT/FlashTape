@@ -42,7 +42,10 @@
         self.videoThumbmail.layer.cornerRadius = self.videoThumbmail.frame.size.height / 2;
         self.videoThumbmail.clipsToBounds = YES;
     }
-    self.timeLabel.text = [post.createdAt shortTimeAgoSinceNow];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm"];
+    NSString *stringDate = [dateFormatter stringFromDate:post.recordedAt];
+    self.timeLabel.text = stringDate;
     self.viewsLabel.hidden = detailedState;
     self.deleteButton.hidden = !detailedState;
     if (!detailedState) {

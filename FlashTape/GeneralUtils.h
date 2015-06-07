@@ -27,4 +27,6 @@
 
 + (BOOL)getLastVideoSelfieModePref;
 
++ (NSString *)transformedUsernameFromOriginal:(NSString *)original;
+
 @end

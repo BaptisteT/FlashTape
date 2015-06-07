@@ -13,6 +13,7 @@
 
 @property (nonatomic) NSInteger score;
 @property (retain) NSString *flashUsername;
+@property (retain) NSString *transformedUsername;
 
 + (User *)createUserWithNumber:(NSString *)phoneNumber;
 

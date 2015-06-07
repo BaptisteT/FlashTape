@@ -34,16 +34,13 @@
     }];
 }
 
-+ (NSArray *)getVideoLocallyFromUser:(User *)user
++ (NSArray *)getVideoLocallyFromUsers:(NSArray *)users
 {
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
     [query fromLocalDatastore];
     [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
-    if (user) {
-        [query whereKey:@"user"  equalTo:user];
-    }
-    [query orderByAscending:@"createdAt"];
-    [query includeKey:@"user"];
+    [query whereKey:@"user" containedIn:users];
+    [query orderByAscending:@"recordedAt"];
     [query setLimit:1000];
     NSArray *results = [query findObjects];
     [VideoPost downloadVideoFromPosts:results];
@@ -53,7 +50,7 @@
 + (void)deleteLocalPostsNotInRemotePosts:(NSArray *)remotelyRetrievedPosts
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    [DatastoreUtils getVideoInLocalDatastoreButNotInServerAndExecute:^(NSArray *posts) {
+    [DatastoreUtils getVideoInLocalDatastoreAndExecute:^(NSArray *posts) {
         NSError *error;
         for (VideoPost *post in posts) {
             if ([remotelyRetrievedPosts indexOfObject:post] == NSNotFound) {
@@ -70,7 +67,7 @@
     }];
 }
 
-+ (void)getVideoInLocalDatastoreButNotInServerAndExecute:(void(^)(NSArray *posts))block
++ (void)getVideoInLocalDatastoreAndExecute:(void(^)(NSArray *posts))block
 {
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
     [query fromLocalDatastore];

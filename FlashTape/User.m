@@ -14,6 +14,7 @@
 
 @dynamic score;
 @dynamic flashUsername;
+@dynamic transformedUsername;
 
 + (void)load {
     [self registerSubclass];
@@ -24,6 +25,7 @@
     User *user = (User *)[PFUser user];
     user.username = phoneNumber;
     user.flashUsername = @"";
+    user.transformedUsername = @"";
     user.password = @"";
     user.score = 0;
     return user;

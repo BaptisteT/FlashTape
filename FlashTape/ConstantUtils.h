@@ -18,13 +18,13 @@ static NSString * const kFlashTapeAppStoreLink = @"https://itunes.apple.com/us/a
 static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 
 // Parse
-static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;
-static NSInteger const kDelayBeforeRetryDownload = 3;
 static NSString * const kParsePostsName = @"Posts";
 static NSString * const kParseFriendsName = @"Friends";
 static NSString * const kParseMessagesName = @"Messages";
 
-// Feed
+// Download / feed
+static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;
+static NSInteger const kDelayBeforeRetryDownload = 3;
 static const NSInteger kFeedHistoryInHours = 24;
 
 // Recording
@@ -44,3 +44,6 @@ static const float kTopMessageAnimDelay = 1.5;
 
 // Messaging
 static const float kMaxMessageLength = 100;
+
+// User
+static const NSInteger kUsernameMinLength = 3;

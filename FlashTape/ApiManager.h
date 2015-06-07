@@ -15,6 +15,10 @@
 
 @interface ApiManager : NSObject
 
+// --------------------------------------------
+#pragma mark - User
+// --------------------------------------------
+
 + (void)requestSmsCode:(NSString *)phoneNumber
                  retry:(BOOL)retry
                success:(void(^)(NSInteger code))successBlock
@@ -25,16 +29,36 @@
           success:(void(^)())successBlock
           failure:(void(^)())failureBlock;
 
-+ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
-                              failure:(void(^)(NSError *error))failureBlock;
-
-+ (void)fillFollowersTableWithUsers:(NSMutableSet *)contacts
-                            success:(void(^)(NSArray *friends))successBlock
-                            failure:(void(^)(NSError *error))failureBlock;
-
 + (void)saveUsername:(NSString *)username
              success:(void(^)())successBlock
              failure:(void(^)(NSError *error))failureBlock;
+
+// --------------------------------------------
+#pragma mark - Follow
+// --------------------------------------------
+
++ (void)findUserByUsername:(NSString *)flashUserName
+                   success:(void(^)(User *user))successBlock
+                   failure:(void(^)(NSError *error))failureBlock;
+
+//+ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+//                              failure:(void(^)(NSError *error))failureBlock;
+
++ (void)fillFollowersTableWithUsers:(NSArray *)contacts
+                            success:(void(^)(NSArray *friends))successBlock
+                            failure:(void(^)(NSError *error))failureBlock;
+
++ (void)createRelationWithFollowing:(User *)followedUser
+                            success:(void(^)())successBlock
+                            failure:(void(^)(NSError *error))failureBlock;
+
++ (void)deleteRelationWithFollowing:(User *)followedUser
+                            success:(void(^)())successBlock
+                            failure:(void(^)(NSError *error))failureBlock;
+
+// --------------------------------------------
+#pragma mark - Video
+// --------------------------------------------
 
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
@@ -53,6 +77,11 @@
 + (void)sendMessage:(Message *)message
             success:(void(^)())successBlock
             failure:(void(^)(NSError *error))failureBlock;
+
+
+// --------------------------------------------
+#pragma mark - Message
+// --------------------------------------------
 
 + (void)retrieveUnreadMessagesAndExecuteSuccess:(void(^)(NSArray *messagesArray))successBlock
                                         failure:(void(^)(NSError *error))failureBlock;

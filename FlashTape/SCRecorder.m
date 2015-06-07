@@ -175,7 +175,9 @@
     NSError *newError = nil;
     
     AVCaptureSession *session = _captureSession;
-    
+    // BT
+    _captureSession.automaticallyConfiguresApplicationAudioSession = NO;
+    //
     if (session != nil) {
         [self beginConfiguration];
         
@@ -289,6 +291,9 @@
     }
     
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
+    // BT
+    _captureSession.automaticallyConfiguresApplicationAudioSession = NO;
+    //
     _beginSessionConfigurationCount = 0;
     _captureSession = session;
     

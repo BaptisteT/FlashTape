@@ -9,6 +9,7 @@
 
 #import "UsernameViewController.h"
 
+#import "ConstantUtils.h"
 #import "GeneralUtils.h"
 #import "UICustomLineLabel.h"
 #import "MBProgressHUD.h"
@@ -49,7 +50,8 @@
 #pragma mark Actions
 // ----------------------------------------------------------
 - (IBAction)doneButtonClicked:(id)sender {
-    if (self.usernameTextfield.text.length == 0) {
+    if (self.usernameTextfield.text.length < kUsernameMinLength) {
+        [GeneralUtils showAlertMessage:NSLocalizedString(@"short_username_error_message", nil) withTitle:NSLocalizedString(@"short_username_error_message", nil)];
         return;
     }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];

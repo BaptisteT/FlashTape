@@ -36,6 +36,7 @@
 
 // Contacts
 @property (nonatomic) ABAddressBookRef addressBook;
+@property (nonatomic) NSDictionary *contactDictionnary;
 @property (strong, nonatomic) NSMutableArray *friends;
 
 // Playing
@@ -120,6 +121,16 @@
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
+    // Audio session
+    AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+    BOOL success; NSError* error;
+    success = [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
+                            withOptions:AVAudioSessionCategoryOptionMixWithOthers | AVAudioSessionCategoryOptionDefaultToSpeaker
+                                  error:&error];
+    if (!success)
+        NSLog(@"AVAudioSession error setting category:%@",error);
+    [audioSession setActive:YES error:nil];
+    
     // HUD
     self.sendingHud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
     self.sendingHud.color = [UIColor clearColor];
@@ -140,15 +151,6 @@
     self.captionTextView.delegate = self;
     self.captionTextView.captionDelegate = self;
     self.captionTransform = CGAffineTransformIdentity;
-    
-    // Audio session
-    AVAudioSession* audioSession = [AVAudioSession sharedInstance];
-    BOOL success; NSError* error;
-    success = [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
-                             error:&error];
-    if (!success)
-        NSLog(@"AVAudioSession error setting category:%@",error);
-    [audioSession setActive:YES error:nil];
     
     // Create the recorder
     self.recorder = [SCRecorder recorder];
@@ -234,19 +236,22 @@
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     self.previewView.hidden = YES;
     
-    // Get local videos
-    self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:nil]];
-    self.failedVideoPostArray = [NSMutableArray new];
-    
     // Retrieve friends from local datastore
     [DatastoreUtils getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
         [self setFriendsArray:friends]; // retrieve video in different number of friends
+        
+        // Get local videos
+        self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:self.friends]];
     } failure:nil];
+    
+    // Friend array
+    self.failedVideoPostArray = [NSMutableArray new];
     
     // Start with camera
     [self setCameraMode];
     
     // Load address book, friends & video (if the result is different from cashing)
+    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     [self parseContactsAndFindFriends];
     
@@ -273,11 +278,11 @@
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(retrieveVideo)
-                                                 name:@"new_video_posted"
+                                                 name:@"retrieve_video"
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(retrieveUnreadMessages)
-                                                 name:@"new_message"
+                                                 name:@"retrieve_message"
                                                object:nil];
 }
 
@@ -314,6 +319,7 @@
         [self hideUIElementOnCamera:YES];
         ((FriendsViewController *) [segue destinationViewController]).delegate = self;
         ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
+        ((FriendsViewController *) [segue destinationViewController]).contactDictionnary = self.contactDictionnary;
     }
 }
 
@@ -426,7 +432,6 @@
         } else {
             [observedValue getValue:&observedTime];
             if (CMTIME_COMPARE_INLINE(gapPlayerTime, <, observedTime)) {
-                NSLog(@"%f %f %f",CMTimeGetSeconds(playerTime),CMTimeGetSeconds(gapPlayerTime),CMTimeGetSeconds(observedTime));
                 // Set metadata
                 [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[ii]];
                 
@@ -491,13 +496,17 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
             if (granted) {
-                NSMutableSet *contactSet = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-                [contactSet addObject:[User currentUser].username];
+                NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                [contactDictionnary setObject:[User currentUser].flashUsername forKey:[User currentUser].username];
+                
                 // fill following table
-                [ApiManager fillFollowersTableWithUsers:contactSet
+                [ApiManager fillFollowersTableWithUsers:[contactDictionnary allKeys]
                                                 success:^(NSArray *friends) {
                                                     [self setFriendsArray:friends];
                                                 } failure:nil];
+                
+                [contactDictionnary removeObjectForKey:[User currentUser].username];
+                [AddressbookUtils saveContactDictionnary:contactDictionnary];
             }
         });
     });
@@ -563,7 +572,10 @@
     }
     
     self.nameLabel.text = post.user.flashUsername;
-    self.timeLabel.text = [post.createdAt timeAgoSinceNow];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm"];
+    NSString *stringDate = [dateFormatter stringFromDate:post.recordedAt];
+    self.timeLabel.text = stringDate;
     
     // Color
     self.nameLabel.textColor = self.metadataColorArray[_metadataColorIndex];

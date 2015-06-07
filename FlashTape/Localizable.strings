@@ -31,6 +31,8 @@
 "save_username_error_message" = "Please, try again.";
 "already_taken_username_error_message" = "Please, pick another one";
 "already_taken_username_error_title" = "Sorry, this username is already taken";
+"short_username_error_message" = " minimum length is 3 characters";
+"short_username_error_title" = "Oops that username is too short";
 
 // Auth
 "authentification_error_title" = "Authentification error";
@@ -71,5 +73,10 @@
 // Message
 "send_button" = "Send";
 "create_message_placeholder" = "Send a message";
+
+// Find by username
+"find_by_username_controller_title" = "Add a new username";
+"find_by_username_textfield_placeholder" = "Search";
+"username_section_title" = "USERNAME";
 
 

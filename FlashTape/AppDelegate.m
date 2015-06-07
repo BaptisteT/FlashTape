@@ -8,6 +8,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import "User.h"
 
@@ -30,6 +31,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //Stop app pausing other sound.
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord
+                                     withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionDefaultToSpeaker
+                                           error:nil];
     // Enable Parse Crash Reporting
     [ParseCrashReporting enable];
     
@@ -79,7 +84,7 @@
     if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_video"]) {
         if (state == UIApplicationStateActive) {
             // refresh feed
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"new_video_posted"
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_video"
                                                                 object:nil
                                                               userInfo:nil];
         }
@@ -90,7 +95,7 @@
             AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
             
             // load new messages
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"new_message"
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_message"
                                                                 object:nil
                                                               userInfo:nil];
         }

@@ -57,7 +57,7 @@
     [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
     
     // Refresh current User posts
-    self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUser:[User currentUser]]];
+    self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]]];
     [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
         [self.friendsTableView reloadData];
     }];
@@ -95,11 +95,17 @@
                                                object:nil];
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    self.friendsTableView.translatesAutoresizingMaskIntoConstraints = YES;
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.friendsTableView reloadData];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSString * segueName = segue.identifier;
+    if ([segueName isEqualToString: @"Find By Username From Friends"]) {
+        ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
+    }
+}
 
 // --------------------------------------------
 #pragma mark - Actions

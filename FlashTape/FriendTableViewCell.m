@@ -31,7 +31,7 @@
        isCurrentUser:(BOOL)isCurrentUser
     newMessagesCount:(NSInteger)count
 {
-    self.nameLabel.text = isCurrentUser ? NSLocalizedString(@"current_user_TVC_name", nil) : name;
+    self.nameLabel.text = name;
     self.scoreLabel.text = score;
     self.seemView.hidden = !hasSeenVideos || isCurrentUser;
     self.backgroundColor = [UIColor clearColor];

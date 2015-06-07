@@ -12,7 +12,7 @@
 + (void)getFriendsFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
                                               failure:(void(^)(NSError *error))failureBlock;
 
-+ (NSArray *)getVideoLocallyFromUser:(User *)user;
++ (NSArray *)getVideoLocallyFromUsers:(NSArray *)users;
 
 + (void)getExpiredVideoFromLocalDataStoreAndExecute:(void(^)(NSArray *posts))block;
 

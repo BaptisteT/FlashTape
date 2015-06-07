@@ -19,7 +19,8 @@
 @interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, CreateMessageTVCDelegate >
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
-@property (strong, nonatomic) NSArray *friends;
+@property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSDictionary *contactDictionnary;
 
 @end
 
