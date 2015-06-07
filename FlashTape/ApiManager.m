@@ -151,6 +151,7 @@
 //    // set up the query on the Follow table
 //    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
 //    [query whereKey:@"from" equalTo:[PFUser currentUser]];
+//    [query whereKey:@"removed" equalTo:[PFUser currentUser]];
 //    [query includeKey:@"to"];
 //    // execute the query
 //    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -218,15 +219,32 @@
                             success:(void(^)())successBlock
                             failure:(void(^)(NSError *error))failureBlock
 {
-    PFObject *follow = [PFObject objectWithClassName:@"Follow"];
-    follow[@"to"] = followedUser;
-    follow[@"from"] = [User currentUser];
-    [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            [followedUser pinInBackgroundWithName:kParseFriendsName];
-            if (successBlock) {
-                successBlock();
+    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
+    [query whereKey:@"from" equalTo:[User currentUser]];
+    [query whereKey:@"to" equalTo:followedUser];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *follows, NSError *error) {
+        if (!error) {
+            PFObject * follow;
+            if (follows.count > 0) {
+                follow = follows.firstObject;
+            } else {
+                follow = [PFObject objectWithClassName:@"Follow"];
+                follow[@"to"] = followedUser;
+                follow[@"from"] = [User currentUser];
             }
+            follow[@"removed"] = [NSNumber numberWithBool:NO];
+            [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [followedUser pinInBackgroundWithName:kParseFriendsName];
+                    if (successBlock) {
+                        successBlock();
+                    }
+                } else {
+                    if (failureBlock) {
+                        failureBlock(error);
+                    }
+                }
+            }];
         } else {
             if (failureBlock) {
                 failureBlock(error);
@@ -243,10 +261,12 @@
     [query whereKey:@"from" equalTo:[User currentUser]];
     [query whereKey:@"to" equalTo:followedUser];
     [query findObjectsInBackgroundWithBlock:^(NSArray *follows, NSError *error) {
-        if (!error) {
-            [PFObject deleteAllInBackground:follows block:^(BOOL succeeded, NSError *error) {
+        if (!error && follows.count > 0) {
+            PFObject *follow = follows.firstObject;
+            follow[@"removed"] = [NSNumber numberWithBool:YES];
+            [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [followedUser unpinInBackgroundWithName:kParseFriendsName];
+                    [followedUser pinInBackgroundWithName:kParseFriendsName];
                     if (successBlock) {
                         successBlock();
                     }

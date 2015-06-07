@@ -50,9 +50,7 @@ static int downloadingCount = 0;
 - (void)downloadVideoFile
 {
     NSError *err;
-    if (self.localUrl) {
-        return;
-    } else if ([[self videoLocalURL] checkResourceIsReachableAndReturnError:&err]) {
+    if ([[self videoLocalURL] checkResourceIsReachableAndReturnError:&err]) {
         self.localUrl = [self videoLocalURL];
     } else {
         if (!self.isDownloading) {

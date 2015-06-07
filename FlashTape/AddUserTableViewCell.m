@@ -57,7 +57,7 @@
 }
 
 - (IBAction)addOrDeleteButtonClicked:(id)sender {
-    if (!self.user) {
+    if (!self.user || self.user == [User currentUser]) {
         return;
     }
     [self setAddOrDeleteButtonState:0];

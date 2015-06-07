@@ -105,7 +105,7 @@
 #pragma mark - Add user Cell Delegate
 // --------------------------------------------
 - (void)addFriendAndReloadVideo:(User *)user {
-    [self.friends addObject:user];
+    [self.friends insertObject:user atIndex:1]; // todo BT sort
     [self reloadFeedVideo];
 }
 
