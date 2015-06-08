@@ -8,6 +8,8 @@
 
 // General
 "cancel_button_title" = "Cancel";
+"unexpected_error" = "Unexpected error";
+"please_try_again" = "Please, try again";
 
 // Welcome
 "login_button" = "Let's flash!";
@@ -58,6 +60,10 @@
 "friend_controller_title" = "Invite your friends";
 "friend_score_label" = "Increase your score for more fun";
 "sharing_wording" = "Join me on Flash and watch my life second by second: %@";
+"follow_or_block_alert_title" = "%@ does not belong to your friends";
+"follow_or_block_alert_message" = "You need to add him to read his message.";
+"follow_button" = "Add friend";
+"block_button" = "Block";
 
 // My story
 "delete_flash_confirm_title" = "Delete this Flash ?";
@@ -72,9 +78,12 @@
 
 // Message
 "send_title" = "Send to %@";
+"read_title" = "From %@";
+"read_subtitle" = "Tap to see the next message";
 "message_receive_title" = "From %@";
 "create_message_placeholder" = "Type here";
 "back_button" = "Back";
+"reply_button" = "Reply";
 
 // Find by username
 "find_by_username_controller_title" = "Add a new username";

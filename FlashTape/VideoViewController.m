@@ -155,7 +155,7 @@
     // Create the recorder
     self.recorder = [SCRecorder recorder];
     _recorder.delegate = self;
-    _recorder.device = [GeneralUtils getLastVideoSelfieModePref] ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    _recorder.device = AVCaptureDevicePositionBack;
      _recorder.autoSetVideoOrientation = NO;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
@@ -223,6 +223,10 @@
         self.recordTutoLabel.lineHeight = 4.0f;
     }
     self.replayButton.hidden = YES;
+    self.unreadMessagesCountLabel.layer.cornerRadius = self.unreadMessagesCountLabel.frame.size.height / 2;
+    self.unreadMessagesCountLabel.layer.borderWidth = 1;
+    self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils purple].CGColor;
+    self.unreadMessagesCountLabel.textColor = [ColorUtils purple];
     
     // Preview
     self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
@@ -254,6 +258,9 @@
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     [self parseContactsAndFindFriends];
+    
+    // Retrieve unread messages
+    [self retrieveUnreadMessages];
     
     // Callback
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -319,7 +326,6 @@
         [self hideUIElementOnCamera:YES];
         ((FriendsViewController *) [segue destinationViewController]).delegate = self;
         ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
-        ((FriendsViewController *) [segue destinationViewController]).contactDictionnary = self.contactDictionnary;
     }
 }
 
@@ -759,16 +765,8 @@
 }
 
 - (void)setMessagesLabel:(NSInteger)count {
-    if (count != 0) {
-        self.unreadMessagesCountLabel.hidden = NO;
-        self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)count];
-        self.unreadMessagesCountLabel.layer.cornerRadius = self.unreadMessagesCountLabel.frame.size.height / 2;
-        self.unreadMessagesCountLabel.layer.borderWidth = 1;
-        self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils orange].CGColor;
-        self.unreadMessagesCountLabel.textColor = [ColorUtils orange];
-    } else {
-        self.unreadMessagesCountLabel.hidden = YES;
-    }
+    self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)count];
+    self.unreadMessagesCountLabel.hidden = count == 0;
 }
 
 // --------------------------------------------
@@ -913,10 +911,12 @@
 
 - (void)hideUIElementOnCamera:(BOOL)flag {
     if (flag) {
+        self.unreadMessagesCountLabel.hidden = YES;
         self.replayButton.hidden = YES;
         self.recordTutoLabel.hidden = YES;
         self.captionTextView.hidden = YES;
     } else {
+        self.unreadMessagesCountLabel.hidden = [self.unreadMessagesCountLabel.text isEqualToString:@"0"];
         [self setReplayButtonUI];
         self.captionTextView.hidden = (self.captionTextView.text.length == 0);
         self.recordTutoLabel.hidden = !(self.captionTextView.text.length == 0);

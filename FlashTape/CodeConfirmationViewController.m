@@ -31,7 +31,9 @@
 
 @end
 
-@implementation CodeConfirmationViewController
+@implementation CodeConfirmationViewController {
+    BOOL _stopAnimation;
+}
 
 
 // --------------------------------------------
@@ -39,10 +41,7 @@
 // --------------------------------------------
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //Color View
-    [self doBackgroundColorAnimation];
-    
+
     //TextField
     self.codeTextField1.delegate = self;
     self.codeTextField2.delegate = self;
@@ -59,6 +58,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [self.codeTextField1 becomeFirstResponder];
+    //Color View
+    _stopAnimation = NO;
+    [self doBackgroundColorAnimation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -67,6 +69,7 @@
     [self.codeTextField2 resignFirstResponder];
     [self.codeTextField3 resignFirstResponder];
     [self.codeTextField4 resignFirstResponder];
+    _stopAnimation = YES;
 }
 
 // --------------------------------------------
@@ -131,6 +134,8 @@
 #pragma mark - Background Color Cycle
 // --------------------------------------------
 - (void)doBackgroundColorAnimation {
+    if (_stopAnimation)
+        return;
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                        [ColorUtils purple],

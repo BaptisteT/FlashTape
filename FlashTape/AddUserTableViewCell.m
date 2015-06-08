@@ -61,24 +61,20 @@
         return;
     }
     [self setAddOrDeleteButtonState:0];
-    BOOL isFriend = [[self.delegate friends] containsObject:self.user];
-    if (!isFriend) {
-        [ApiManager createRelationWithFollowing:self.user
-                                        success:^{
+    BOOL block = ![[self.delegate friends] containsObject:self.user];
+    
+    [ApiManager updateRelationWithFollowing:self.user
+                                      block:block
+                                    success:^{
+                                        if (block) {
                                             [self.delegate addFriendAndReloadVideo:self.user];
-                                            [self setAddOrDeleteButtonState:2];
-                                        } failure:^(NSError *error) {
-                                            [self setAddOrDeleteButtonState:1];
-                                        }];
-    } else {
-        [ApiManager deleteRelationWithFollowing:self.user
-                                        success:^{
+                                        } else {
                                             [self.delegate removeFriendAndReloadVideo:self.user];
-                                            [self setAddOrDeleteButtonState:1];
-                                        } failure:^(NSError *error) {
-                                            [self setAddOrDeleteButtonState:2];
-                                        }];
-    }
+                                        }
+                                        [self setAddOrDeleteButtonState:block ? 2 : 1];
+                                    } failure:^(NSError *error) {
+                                        [self setAddOrDeleteButtonState:block ? 1 : 2];
+                                    }];
 }
 
 - (void)setAddOrDeleteButtonState:(NSInteger)state

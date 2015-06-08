@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import <Foundation/Foundation.h>
+@class User;
 
 @interface DatastoreUtils : NSObject
 
@@ -21,5 +22,7 @@
 + (void)deleteLocalPostsNotInRemotePosts:(NSArray *)remotelyRetrievedPosts;
 
 + (NSArray *)getUnreadMessagesLocally;
+
++ (NSArray *)getMessagesLocallyFromUser:(User *)user;
 
 @end

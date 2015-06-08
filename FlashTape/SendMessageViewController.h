@@ -21,4 +21,7 @@
 
 @protocol SendMessageVCDelegate
 
+- (void)sendMessage:(NSString *)text toUser:(User *)user;
+- (void)closeReadAndMessageViews;
+
 @end

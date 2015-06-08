@@ -41,18 +41,12 @@
                    success:(void(^)(User *user))successBlock
                    failure:(void(^)(NSError *error))failureBlock;
 
-//+ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
-//                              failure:(void(^)(NSError *error))failureBlock;
-
 + (void)fillFollowersTableWithUsers:(NSArray *)contacts
                             success:(void(^)(NSArray *friends))successBlock
                             failure:(void(^)(NSError *error))failureBlock;
 
-+ (void)createRelationWithFollowing:(User *)followedUser
-                            success:(void(^)())successBlock
-                            failure:(void(^)(NSError *error))failureBlock;
-
-+ (void)deleteRelationWithFollowing:(User *)followedUser
++ (void)updateRelationWithFollowing:(User *)followedUser
+                              block:(BOOL)block
                             success:(void(^)())successBlock
                             failure:(void(^)(NSError *error))failureBlock;
 

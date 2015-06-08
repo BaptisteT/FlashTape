@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import <AudioToolbox/AudioToolbox.h>
+
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import <AVFoundation/AVFoundation.h>
@@ -90,9 +91,8 @@
         }
     } else if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_message"]) {
         if (state == UIApplicationStateActive) {
-            // todo BT
-            // sound + vibration
-            AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+            // sound
+            AudioServicesPlaySystemSound(1114);
             
             // load new messages
             [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_message"

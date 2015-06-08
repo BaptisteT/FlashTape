@@ -42,6 +42,7 @@
 
 @implementation RequestPhoneViewController {
     BOOL _hasTranslatedView;
+    BOOL _stopAnimation;
 }
 
 // --------------------------------------------
@@ -54,9 +55,6 @@
     self.decimalPhoneNumber = @"";
     [self setInitialCountryInfo];
     _hasTranslatedView = NO;
-    
-    //ColorView
-    [self doBackgroundColorAnimation];
 
     //Label
     self.titleLabel.lineType = LineTypeDown;
@@ -104,6 +102,9 @@
 {
     [super viewDidAppear:animated];
     [self.numberTextField becomeFirstResponder];
+    //ColorView
+    _stopAnimation = NO;
+    [self doBackgroundColorAnimation];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -120,6 +121,9 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    _stopAnimation = YES;
+}
 
 // --------------------------------------------
 #pragma mark - Action
@@ -258,6 +262,9 @@
 #pragma mark - Background Color Cycle
 // --------------------------------------------
 - (void)doBackgroundColorAnimation {
+    if (_stopAnimation) {
+        return;
+    }
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                        [ColorUtils purple],

@@ -12,15 +12,15 @@
 #import "FriendTableViewCell.h"
 #import "VideoTableViewCell.h"
 #import "SendMessageViewController.h"
+#import "ReadMessageViewController.h"
 
 @class VideoPost;
 @protocol FriendsVCProtocol;
 
-@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate>
+@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate, ReadMessageVCDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
 @property (strong, nonatomic) NSMutableArray *friends;
-@property (strong, nonatomic) NSDictionary *contactDictionnary;
 
 @end
 
@@ -30,5 +30,6 @@
 //- (void)playOneFriendVideos:(NSArray *)videos;
 - (void)removeVideoFromVideosArray:(VideoPost *)video;
 - (void)setMessagesLabel:(NSInteger)count;
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion;
 
 @end

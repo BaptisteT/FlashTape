@@ -29,9 +29,10 @@
     [super viewDidLoad];
     
     self.titleLabel.text = NSLocalizedString(@"find_by_username_controller_title", nil);
+    [self.backButton setTitle:NSLocalizedString(@"back_button", nil) forState:UIControlStateNormal];
     
     self.usernameTextField.delegate = self;
-    self.usernameTextField.tintColor = [UIColor blueColor];
+    self.usernameTextField.tintColor = [UIColor blackColor];
     self.usernameTextField.placeholder = NSLocalizedString(@"find_by_username_textfield_placeholder", nil);
     [self.usernameTextField becomeFirstResponder];
     

@@ -128,7 +128,7 @@
 + (BOOL)getLastVideoSelfieModePref
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    return [prefs objectForKey:LAST_VIDEO_SELFIE_MODE] ? [[prefs objectForKey:LAST_VIDEO_SELFIE_MODE ] boolValue] : YES;
+    return [prefs objectForKey:LAST_VIDEO_SELFIE_MODE] ? [[prefs objectForKey:LAST_VIDEO_SELFIE_MODE ] boolValue] : NO;
 }
 
 

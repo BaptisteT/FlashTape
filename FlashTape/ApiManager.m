@@ -215,7 +215,8 @@
                                 }];
 }
 
-+ (void)createRelationWithFollowing:(User *)followedUser
++ (void)updateRelationWithFollowing:(User *)followedUser
+                              block:(BOOL)block
                             success:(void(^)())successBlock
                             failure:(void(^)(NSError *error))failureBlock
 {
@@ -232,41 +233,15 @@
                 follow[@"to"] = followedUser;
                 follow[@"from"] = [User currentUser];
             }
-            follow[@"removed"] = [NSNumber numberWithBool:NO];
+            follow[@"removed"] = [NSNumber numberWithBool:block];
             [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [followedUser pinInBackgroundWithName:kParseFriendsName];
-                    if (successBlock) {
-                        successBlock();
+                    if (block) {
+                        [followedUser unpinInBackgroundWithName:kParseFriendsName];
+                        [PFObject unpinAllInBackground:[DatastoreUtils getMessagesLocallyFromUser:followedUser] withName:kParseMessagesName];
+                    } else {
+                        [followedUser pinInBackgroundWithName:kParseFriendsName];
                     }
-                } else {
-                    if (failureBlock) {
-                        failureBlock(error);
-                    }
-                }
-            }];
-        } else {
-            if (failureBlock) {
-                failureBlock(error);
-            }
-        }
-    }];
-}
-
-+ (void)deleteRelationWithFollowing:(User *)followedUser
-                            success:(void(^)())successBlock
-                            failure:(void(^)(NSError *error))failureBlock
-{
-    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
-    [query whereKey:@"from" equalTo:[User currentUser]];
-    [query whereKey:@"to" equalTo:followedUser];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *follows, NSError *error) {
-        if (!error && follows.count > 0) {
-            PFObject *follow = follows.firstObject;
-            follow[@"removed"] = [NSNumber numberWithBool:YES];
-            [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    [followedUser pinInBackgroundWithName:kParseFriendsName];
                     if (successBlock) {
                         successBlock();
                     }
@@ -424,9 +399,14 @@
 + (void)retrieveUnreadMessagesAndExecuteSuccess:(void(^)(NSArray *messagesArray))successBlock
                                         failure:(void(^)(NSError *error))failureBlock
 {
+    PFQuery *innerQuery = [PFQuery queryWithClassName:@"Follow"];
+    [innerQuery whereKey:@"from" equalTo:[PFUser currentUser]];
+    [innerQuery whereKey:@"removed" equalTo:[NSNumber numberWithBool:YES]];
+    
     PFQuery *query = [PFQuery queryWithClassName:@"Message"];
     [query whereKey:@"receiver" equalTo:[User currentUser]];
     [query whereKey:@"read" equalTo:[NSNumber numberWithBool:false]];
+    [query whereKey:@"sender" doesNotMatchKey:@"to" inQuery:innerQuery];
     [query orderByAscending:@"createdAt"];
     [query includeKey:@"sender"];
     [query setLimit:1000];

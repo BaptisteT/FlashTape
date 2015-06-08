@@ -16,7 +16,9 @@
 
 @end
 
-@implementation WelcomeViewController
+@implementation WelcomeViewController {
+    BOOL _stopAnimation;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -27,16 +29,27 @@
     
     //Login Button
     [self.loginButton setTitle:NSLocalizedString(@"login_button", nil) forState:UIControlStateNormal];
+}
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     //ColorView
+    _stopAnimation = NO;
     [self doBackgroundColorAnimation];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    _stopAnimation = YES;
+}
 
 // --------------------------------------------
 #pragma mark - Background Color Cycle
 // --------------------------------------------
 - (void) doBackgroundColorAnimation {
+    if (_stopAnimation) {
+        return;
+    }
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                                                 [ColorUtils purple],

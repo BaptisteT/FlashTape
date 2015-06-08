@@ -14,6 +14,7 @@
 
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
+#import "ReadMessageViewController.h"
 #import "VideoTableViewCell.h"
 
 #import "ColorUtils.h"
@@ -32,14 +33,16 @@
 @property (strong, nonatomic) NSMutableArray *currentUserPosts;
 @property (weak, nonatomic) VideoPost *postToDelete;
 @property (weak, nonatomic) VideoPost *postToDetail;
-
-// Message
-@property (strong, nonatomic) NSDictionary *messagesDictionnary;
+@property (strong, nonatomic) SendMessageViewController *sendMessageController;
+@property (strong, nonatomic) NSMutableDictionary *messagesDictionnary;
+@property (strong, nonatomic) NSMutableArray *followerArray;
+@property (strong, nonatomic) User *userToFollowOrBlock;
 
 @end
 
 @implementation FriendsViewController {
     BOOL _expandMyStory;
+    BOOL _stopAnimation;
 }
 
 - (void)viewDidLoad {
@@ -47,9 +50,9 @@
     
     // Some init
     _expandMyStory = NO;
-    [self doBackgroundColorAnimation];
     self.colorView.alpha = 0.5;
-    self.messagesDictionnary = [NSDictionary new];
+    self.messagesDictionnary = [NSMutableDictionary new];
+    self.followerArray = [NSMutableArray new];
     
     // Retrieve Messages Locally
     [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
@@ -71,33 +74,46 @@
         [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
     }
     
+    // Instantiate send message controller
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+    self.sendMessageController = [storyboard instantiateViewControllerWithIdentifier:@"SendMessageController"];
+    self.sendMessageController.delegate = self;
+    
     // Labels
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
     
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(dismissFriendsController)
-                                                 name: UIApplicationDidEnterBackgroundNotification
+                                                 name: UIApplicationWillResignActiveNotification
                                                object: nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(retrieveUnreadMessages)
-                                                 name:@"new_message"
+                                                 name:@"retrieve_message"
                                                object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.friendsTableView reloadData];
+    _stopAnimation = NO;
+    [self doBackgroundColorAnimation];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"Find By Username From Friends"]) {
         ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
-    } else if ([segueName isEqualToString: @"Create Message From Friends"]) {
-        ((SendMessageViewController *) [segue destinationViewController]).delegate = self;
-        ((SendMessageViewController *) [segue destinationViewController]).messageRecipient = (User *)sender;
+    } else if ([segueName isEqualToString: @"Read Message From Friends"]) {
+        User *friend = (User *)sender;
+        ((ReadMessageViewController *) [segue destinationViewController]).messageSender = friend;
+        ((ReadMessageViewController *) [segue destinationViewController]).messagesArray = self.messagesDictionnary[friend.objectId];
+        ((ReadMessageViewController *) [segue destinationViewController]).delegate = self;
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    _stopAnimation = YES;
 }
 
 // --------------------------------------------
@@ -112,7 +128,7 @@
         count += ((NSMutableArray *)self.messagesDictionnary[key]).count;
     }
     [self.delegate setMessagesLabel:count];
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.delegate dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)closeButtonClicked:(id)sender {
@@ -120,24 +136,29 @@
 }
 
 // Send message
-// todo BT new UI
-- (void)sendMessage:(NSString *)text {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    Message *message = [Message createMessageWithContent:text receiver:self.friendToDetail];
-//    [ApiManager sendMessage:message
-//                    success:^{
-//                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//                        // todo BT
-//                    } failure:^(NSError *error) {
-//                        // todo BT handle error
-//                    }];
+- (void)sendMessage:(NSString *)text toUser:(User *)user {
+    // todo BT send animation
+    // failure handling ?
+    Message *message = [Message createMessageWithContent:text receiver:user];
+    [ApiManager sendMessage:message
+                    success:^{
+                        // todo BT
+                    } failure:^(NSError *error) {
+                        // todo BT handle error
+                    }];
+}
+
+- (void)closeReadAndMessageViews {
+    if (self.presentedViewController != self) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
 }
 
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.friends.count;
+    return self.friends.count + self.followerArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -153,7 +174,14 @@
     if ([self isCurrentUserUserCell:indexPath] || [self isFriendUserCell:indexPath]) {
         // Data
         FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-        User *friend = (User *)self.friends[indexPath.section];
+        
+        User *friend;
+        if (indexPath.section < self.friends.count) {
+            friend = (User *)self.friends[indexPath.section];
+        } else {
+            friend = (User *)self.followerArray[indexPath.section - self.friends.count];
+        }
+        
         NSArray *viewerIdsArray = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray : nil;
         BOOL hasSeenVideo = (viewerIdsArray) ? ([viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : NO;
         NSInteger messageCount = self.messagesDictionnary[friend.objectId] ? ((NSArray *)self.messagesDictionnary[friend.objectId]).count : 0;
@@ -183,27 +211,7 @@
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
-    }
-//    else if ([self isFriendMessageCell:indexPath]) {
-//        User *friend = (User *)self.friends[indexPath.section];
-//        NSMutableArray *messages = self.messagesDictionnary[friend.objectId];
-//        Message *message = (messages && messages.count > 0) ? (Message *)messages[0] : nil;
-//        if (message) {
-//            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MessageReceivedCell"];
-//            cell.textLabel.text = message.messageContent;
-//
-//            // unpin / delete / unread
-//            [ApiManager markMessageAsRead:message
-//                                  success:nil
-//                                  failure:nil];
-//            [messages removeObject:message];
-//            return cell;
-//        } else { // todo BT make robust
-//            CreateMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CreateMessageCell"];
-//            [cell initWithDelegate:self];
-//            return cell;
-//        }
-    else {
+    } else { // should not happen
         return [UITableViewCell new];
     }
 }
@@ -215,8 +223,7 @@
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         return (post == self.postToDetail) ? 44 + [post viewerIdsArrayWithoutPoster].count * 20 : 44;
-    }
-    else {
+    } else {
         // should not happen
         return 44;
     }
@@ -234,12 +241,29 @@
     } else if ([self isFriendUserCell:indexPath]) {
         _expandMyStory = NO;
         self.postToDetail = nil;
-        User *friend = (User *)self.friends[indexPath.section];
         
-        // todo BT
-        // depend on message or not
-        [self performSegueWithIdentifier:@"Create Message From Friends" sender:friend];
+        if (indexPath.section < self.friends.count) {
+            User *friend = (User *)self.friends[indexPath.section];
+            if (self.messagesDictionnary[friend.objectId] && ((NSArray *)self.messagesDictionnary[friend.objectId]).count > 0) {
+                [self performSegueWithIdentifier:@"Read Message From Friends" sender:friend];
+            } else {
+                [self presentSendViewController:friend];
+            }
+        } else {
+            self.userToFollowOrBlock = (User *)self.followerArray[indexPath.section - self.friends.count];
+            // Present alert view
+            [[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"follow_or_block_alert_title", nil), self.userToFollowOrBlock.flashUsername]
+                                        message:NSLocalizedString(@"follow_or_block_alert_message", nil)
+                                       delegate:self
+                              cancelButtonTitle:NSLocalizedString(@"block_button", nil)
+                              otherButtonTitles:NSLocalizedString(@"follow_button", nil), nil] show];
+        }
     }
+}
+
+- (void)presentSendViewController:(User *)friend {
+    self.sendMessageController.messageRecipient = friend;
+    [self presentViewController:self.sendMessageController animated:YES completion:nil];
 }
 
 - (void)reloadCurrentUserSection {
@@ -257,11 +281,16 @@
 - (void)createMessagesDictionnaryAndReload:(NSArray *)unreadMessages {
     NSMutableDictionary *messagesDictionary = [NSMutableDictionary new];
     for (Message *message in unreadMessages) {
+        // Add message to dictionnary
         NSMutableArray *messageArray = [messagesDictionary objectForKey:message.sender.objectId];
         if (messageArray) {
             [messageArray addObject:message];
         } else {
             [messagesDictionary setObject:[NSMutableArray arrayWithObject:message] forKey:message.sender.objectId];
+        }
+        // Add user to follower if not a friend
+        if (![self.friends containsObject:message.sender]) {
+            [self.followerArray addObject:message.sender];
         }
     }
     self.messagesDictionnary = messagesDictionary;
@@ -278,7 +307,7 @@
 #pragma mark - Cell Type
 // --------------------------------------------
 - (BOOL)isCurrentUserSection:(NSInteger)section {
-    return (User *)self.friends[section] == [User currentUser];
+    return section < self.friends.count && (User *)self.friends[section] == [User currentUser];
 }
 
 - (BOOL)isCurrentUserUserCell:(NSIndexPath *)indexPath {
@@ -330,17 +359,6 @@
     }];
 }
 
-// See my story
-//        self.view.userInteractionEnabled = NO;
-//        NSArray *videos = [DatastoreUtils getVideoLocallyFromUser:(User *)self.friends[indexPath.section]];
-//        if (!videos || videos.count == 0) {
-//            [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//            self.view.userInteractionEnabled = YES;
-//        } else {
-//            [self dismissFriendsController];
-//            [self.delegate playOneFriendVideos:videos];
-//        }
-
 // --------------------------------------------
 #pragma mark - Video TVC Delegate
 // --------------------------------------------
@@ -357,21 +375,46 @@
 #pragma mark - UIAlertView Delegate
 // --------------------------------------------
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"delete_flash_ok_button", nil)]) {
-        if (self.postToDelete) {
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            [ApiManager deletePost:self.postToDelete
-                           success:^{
-                               [self.currentUserPosts removeObject:self.postToDelete];
-                               [self.delegate removeVideoFromVideosArray:self.postToDelete];
-                               [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                               self.postToDelete = nil;
-                               [self reloadCurrentUserSection];
-                           } failure:^(NSError *error) {
-                               [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                               [GeneralUtils showAlertMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
-                           }];
+    if ([alertView.title isEqualToString:NSLocalizedString(@"delete_flash_confirm_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"delete_flash_ok_button", nil)]) {
+            if (self.postToDelete) {
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                [ApiManager deletePost:self.postToDelete
+                               success:^{
+                                   [self.currentUserPosts removeObject:self.postToDelete];
+                                   [self.delegate removeVideoFromVideosArray:self.postToDelete];
+                                   [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                                   self.postToDelete = nil;
+                                   [self reloadCurrentUserSection];
+                               } failure:^(NSError *error) {
+                                   [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+                                   [GeneralUtils showAlertMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
+                               }];
+            }
         }
+    } else if([alertView.message isEqualToString:NSLocalizedString(@"follow_or_block_alert_message", nil)]) {
+        BOOL block = [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"block_button", nil)];
+        
+        // Follow or block user
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [ApiManager updateRelationWithFollowing:self.userToFollowOrBlock
+                                          block:block
+                                        success:^{
+                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                            [self.followerArray removeObject:self.userToFollowOrBlock];
+                                            if (block) {
+                                                // remove & unpin messages
+                                                [self.messagesDictionnary removeObjectForKey:self.userToFollowOrBlock.objectId];
+                                            } else {
+                                                // add to friends
+                                                [self.friends addObject:self.userToFollowOrBlock];
+                                            }
+                                            self.userToFollowOrBlock = nil;
+                                            [self.friendsTableView reloadData];
+                                        } failure:^(NSError *error) {
+                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                            [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
+                                        }];
     }
 }
 
@@ -379,12 +422,11 @@
 // --------------------------------------------
 #pragma mark - UI
 // --------------------------------------------
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
 // Background Color Cycle
 - (void) doBackgroundColorAnimation {
+    if (_stopAnimation) {
+        return;
+    }
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                        [ColorUtils purple],

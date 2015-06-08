@@ -25,7 +25,9 @@
 
 @end
 
-@implementation UsernameViewController
+@implementation UsernameViewController {
+    BOOL _stopAnimation;
+}
 
 // ----------------------------------------------------------
 #pragma mark Life cycle
@@ -37,14 +39,18 @@
     self.viewTitleLabel.text = NSLocalizedString(@"username_title", nil);
     self.viewExplanationLabel.text = NSLocalizedString(@"username_explanation", nil);
     self.usernameTextfield.delegate = self;
-    [self doBackgroundColorAnimation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
     [self.usernameTextfield becomeFirstResponder];
+    _stopAnimation = NO;
+    [self doBackgroundColorAnimation];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    _stopAnimation = YES;
+}
 
 // ----------------------------------------------------------
 #pragma mark Actions
@@ -84,6 +90,9 @@
 #pragma mark - Background Color Cycle
 // --------------------------------------------
 - (void)doBackgroundColorAnimation {
+    if (_stopAnimation) {
+        return;
+    }
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                        [ColorUtils purple],

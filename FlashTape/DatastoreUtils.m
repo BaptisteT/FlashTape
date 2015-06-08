@@ -120,7 +120,17 @@
     [query fromLocalDatastore];
     [query orderByAscending:@"createdAt"];
     [query whereKey:@"read" equalTo:[NSNumber numberWithBool:false]];
-    [query includeKey:@"user"];
+    [query includeKey:@"sender"];
+    [query setLimit:1000];
+    NSArray *results = [query findObjects];
+    return results;
+}
+
++ (NSArray *)getMessagesLocallyFromUser:(User *)user
+{
+    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
+    [query fromLocalDatastore];
+    [query whereKey:@"sender" equalTo:user];
     [query setLimit:1000];
     NSArray *results = [query findObjects];
     return results;
