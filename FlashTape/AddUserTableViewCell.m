@@ -61,19 +61,19 @@
         return;
     }
     [self setAddOrDeleteButtonState:0];
-    BOOL block = ![[self.delegate friends] containsObject:self.user];
+    BOOL block = [[self.delegate friends] containsObject:self.user];
     
     [ApiManager updateRelationWithFollowing:self.user
                                       block:block
                                     success:^{
-                                        if (block) {
+                                        if (!block) {
                                             [self.delegate addFriendAndReloadVideo:self.user];
                                         } else {
                                             [self.delegate removeFriendAndReloadVideo:self.user];
                                         }
-                                        [self setAddOrDeleteButtonState:block ? 2 : 1];
-                                    } failure:^(NSError *error) {
                                         [self setAddOrDeleteButtonState:block ? 1 : 2];
+                                    } failure:^(NSError *error) {
+                                        [self setAddOrDeleteButtonState:block ? 2 : 1];
                                     }];
 }
 

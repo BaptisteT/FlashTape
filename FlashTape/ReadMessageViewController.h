@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class SendMessageViewController;
 @class User;
 
 @protocol ReadMessageVCDelegate;
@@ -21,6 +22,6 @@
 
 @protocol ReadMessageVCDelegate
 
-- (void)presentSendViewController:(User *)friend;
+- (SendMessageViewController *)sendMessageController;
 
 @end

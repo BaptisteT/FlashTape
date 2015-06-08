@@ -227,6 +227,7 @@
     self.unreadMessagesCountLabel.layer.borderWidth = 1;
     self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils purple].CGColor;
     self.unreadMessagesCountLabel.textColor = [ColorUtils purple];
+    self.unreadMessagesCountLabel.hidden = YES;
     
     // Preview
     self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);

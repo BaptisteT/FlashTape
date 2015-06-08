@@ -41,6 +41,9 @@
     self.textView.delegate = self;
     [self.backButton setTitle:NSLocalizedString(@"back_button", nil) forState:UIControlStateNormal];
     
+    // State
+    [self setEmojiState:YES];
+    
     // Observer
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
@@ -54,9 +57,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // State
-    [self setEmojiState:YES];
     
     // Label
     NSString *title = [NSString stringWithFormat:NSLocalizedString(@"send_title", nil),self.messageRecipient.flashUsername];
@@ -103,11 +103,13 @@
 #pragma mark Textview delegate
 // ----------------------------------------------------------
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSString *newString = [textView.text stringByReplacingCharactersInRange:range withString:text];
     if ([text isEqualToString:@"\n"]) {
-        [self sendMessage:textView.text];
+        if (newString.length > 0) {
+            [self sendMessage:textView.text];
+        }
         return NO;
     } else  {
-        NSString *newString = [textView.text stringByReplacingCharactersInRange:range withString:text];
         if (newString.length > kMaxMessageLength) {
             return NO;
         }

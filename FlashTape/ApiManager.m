@@ -376,7 +376,6 @@
 // --------------------------------------------
 #pragma mark - Message
 // --------------------------------------------
-
 // Send
 + (void)sendMessage:(Message *)message
             success:(void(^)())successBlock
