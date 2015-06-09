@@ -15,4 +15,6 @@
 
 @interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol, UITextViewDelegate, CaptionTextViewProtocol>
 
+@property (nonatomic) BOOL navigateDirectlyToFriends;
+
 @end

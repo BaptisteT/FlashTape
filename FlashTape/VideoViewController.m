@@ -245,8 +245,9 @@
     self.previewView.hidden = YES;
     
     // Retrieve friends from local datastore
+    _friends = [NSMutableArray new];
     [DatastoreUtils getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
-        [self setFriendsArray:friends]; // retrieve video in different number of friends
+        [self setObjectsFromFriendsArray:friends]; // retrieve video in different number of friends
         
         // Get local videos
         self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:self.friends]];
@@ -295,6 +296,10 @@
                                              selector:@selector(retrieveUnreadMessages)
                                                  name:@"retrieve_message"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(navigateToFriends)
+                                                 name:@"new_message_clicked"
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -305,6 +310,11 @@
     [self.navigationController.navigationBar setHidden:YES];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    
+    if (self.navigateDirectlyToFriends) {
+        self.navigateDirectlyToFriends = NO;
+        [self performSelector:@selector(navigateToFriends) withObject:nil afterDelay:0.1];
+    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -338,6 +348,11 @@
         // To avoid pause when plug / unplug headset
         [self.friendVideoView.player play];
     }
+}
+
+- (void)navigateToFriends {
+    [self.captionTextView resignFirstResponder];
+    [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
 }
 
 // --------------------------------------------
@@ -420,8 +435,7 @@
 }
 
 - (IBAction)friendsButtonClicked:(id)sender {
-    [self.captionTextView resignFirstResponder];
-    [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
+    [self navigateToFriends];
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
@@ -493,9 +507,10 @@
 // --------------------------------------------
 #pragma mark - Friends
 // --------------------------------------------
-- (void)setFriendsArray:(NSArray *)friends {
+- (void)setObjectsFromFriendsArray:(NSArray *)friends {
     NSUInteger previousCount = _friends ? _friends.count : 0;
-    _friends = [NSMutableArray arrayWithArray:friends];
+    [_friends removeAllObjects];
+    [_friends addObjectsFromArray:friends];
     if ([_friends indexOfObject:[User currentUser]] != NSNotFound) {
         [_friends removeObjectAtIndex:[_friends indexOfObject:[User currentUser]]];
     }
@@ -516,7 +531,7 @@
                 // fill following table
                 [ApiManager fillFollowersTableWithUsers:[contactDictionnary allKeys]
                                                 success:^(NSArray *friends) {
-                                                    [self setFriendsArray:friends];
+                                                    [self setObjectsFromFriendsArray:friends];
                                                 } failure:nil];
                 
                 [contactDictionnary removeObjectForKey:[User currentUser].username];

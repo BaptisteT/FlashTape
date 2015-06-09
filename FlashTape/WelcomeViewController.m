@@ -7,6 +7,8 @@
 //
 
 #import "WelcomeViewController.h"
+#import "VideoViewController.h"
+
 #import "ColorUtils.h"
 
 @interface WelcomeViewController ()
@@ -42,6 +44,16 @@
     [super viewWillDisappear:animated];
     _stopAnimation = YES;
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSString * segueName = segue.identifier;
+    if ([segueName isEqualToString: @"Video From Welcome"]) {
+        if ([sender boolValue]) {
+            ((VideoViewController *) [segue destinationViewController]).navigateDirectlyToFriends = YES;
+        }
+    }
+}
+
 
 // --------------------------------------------
 #pragma mark - Background Color Cycle

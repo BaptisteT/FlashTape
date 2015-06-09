@@ -58,6 +58,9 @@
     // Retrieve Messages Locally
     [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
     
+    // Retrieve messages from server
+    [self retrieveUnreadMessages];
+    
     // Refresh current User posts
     self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]]];
     [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
@@ -309,8 +312,11 @@
 
 - (void)retrieveUnreadMessages {
     [ApiManager retrieveUnreadMessagesAndExecuteSuccess:^(NSArray *messages) {
+        [self.refreshControl endRefreshing];
         [self createMessagesDictionnaryAndReload:messages];
-    } failure:nil];
+    } failure:^(NSError *error) {
+        [self.refreshControl endRefreshing];
+    }];
 }
 
 // --------------------------------------------

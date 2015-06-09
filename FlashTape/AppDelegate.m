@@ -53,11 +53,21 @@
     [DatastoreUtils deleteExpiredPosts];
     
     if ([User currentUser]) {
-        // Remote notif
+        // Register for notif
         [NotifUtils registerForRemoteNotif];
         
+        // Check if we come from a new message notif
+        NSNumber *notifOpening = [NSNumber numberWithBool:NO];
+        NSDictionary *remoteNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (remoteNotif) {
+            if ([[remoteNotif valueForKey:@"notif_type"] isEqualToString:@"new_message"]) {
+                notifOpening = [NSNumber numberWithBool:YES];
+            }
+        }
+        
+        // Navigate
         WelcomeViewController* welcomeViewController = (WelcomeViewController *)  self.window.rootViewController.childViewControllers[0];
-        [welcomeViewController performSegueWithIdentifier:@"Video From Welcome" sender:nil];
+        [welcomeViewController performSegueWithIdentifier:@"Video From Welcome" sender:notifOpening];
     }
     return YES;
 }
@@ -96,6 +106,11 @@
             
             // load new messages
             [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_message"
+                                                                object:nil
+                                                              userInfo:nil];
+        } else {
+            // navigate to chat
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"new_message_clicked"
                                                                 object:nil
                                                               userInfo:nil];
         }
