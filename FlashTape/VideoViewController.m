@@ -907,7 +907,18 @@
             buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
             self.replayButton.backgroundColor = [ColorUtils purple];
-            buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)unseenCount,unseenCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+            BOOL videoFromCurrentUserOnly = YES;
+            for (VideoPost *post in unseenVideos) {
+                if (post.user != [User currentUser]) {
+                    videoFromCurrentUserOnly = NO;
+                    break;
+                }
+            }
+            if (videoFromCurrentUserOnly) {
+                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)unseenCount,unseenCount < 2 ? NSLocalizedString(@"video_sent_label", nil) : NSLocalizedString(@"videos_sent_label", nil)];
+            } else {
+                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)unseenCount,unseenCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+            }
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
         self.replayButton.hidden = NO;
