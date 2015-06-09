@@ -37,6 +37,7 @@
 @property (strong, nonatomic) NSMutableDictionary *messagesDictionnary;
 @property (strong, nonatomic) NSMutableArray *followerArray;
 @property (strong, nonatomic) User *userToFollowOrBlock;
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 @end
 
@@ -73,6 +74,15 @@
     if ([self.friendsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
         [self.friendsTableView setLayoutMargins:UIEdgeInsetsZero];
     }
+    
+    // Refresh control
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor clearColor];
+    self.refreshControl.tintColor = [ColorUtils purple];
+    [self.refreshControl addTarget:self
+                            action:@selector(retrieveUnreadMessages)
+                  forControlEvents:UIControlEventValueChanged];
+    [self.friendsTableView addSubview:self.refreshControl];
     
     // Instantiate send message controller
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];

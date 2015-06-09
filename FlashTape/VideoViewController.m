@@ -346,6 +346,9 @@
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
+        if ([gesture locationInView:self.cameraView].y < 60) {
+            return; // don't start if we press above
+        }
         if (!_isExporting) {
             _longPressRunning = YES;
             [self startRecording];
@@ -360,10 +363,12 @@
             self.cancelConfirmView.hidden = !cancelMode;
         }
     } else {
-        _longPressRunning = NO;
-        _cancelRecording = [self isPreviewMode] && CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
-        [self terminateSessionAndExport];
-        [self setCameraMode];
+        if (_longPressRunning) {
+            _longPressRunning = NO;
+            _cancelRecording = [self isPreviewMode] && CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
+            [self terminateSessionAndExport];
+            [self setCameraMode];
+        }
     }
 }
 
@@ -434,7 +439,6 @@
     }
     CMTime observedTime;
     int ii = 0;
-    [self.friendVideoView.player pause];
     CMTime playerTime = self.friendVideoView.player.currentTime;
     CMTime gapPlayerTime = CMTimeAdd(playerTime, CMTimeMakeWithSeconds(0.02, 600));
     for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
@@ -446,8 +450,7 @@
                 // Set metadata
                 [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[ii]];
                 
-                [self.friendVideoView.player seekToTime:observedTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-                    [self.friendVideoView.player play];
+                [self.friendVideoView.player seekToTime:observedTime toleranceBefore:CMTimeMake(100, 600) toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
                     CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
                     CGFloat currentTime = CMTimeGetSeconds(observedTime);
                     [self.playingProgressView.layer removeAllAnimations];
