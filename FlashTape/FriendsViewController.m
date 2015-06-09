@@ -263,7 +263,7 @@
 
 - (void)presentSendViewController:(User *)friend {
     self.sendMessageController.messageRecipient = friend;
-    [self presentViewController:self.sendMessageController animated:YES completion:nil];
+    [self presentViewController:self.sendMessageController animated:NO completion:nil];
 }
 
 - (void)reloadCurrentUserSection {

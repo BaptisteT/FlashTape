@@ -68,6 +68,14 @@
     [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0,usernameRange.location)];
     self.titleLabel.attributedText = attributedText;
     self.textView.text = @"";
+    self.textViewPlaceholder.hidden = self.textView.hidden;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (!self.textView.hidden && ![self.textView isFirstResponder]) {
+        [self.textView becomeFirstResponder];
+    }
 }
 
 - (void)viewDidLayoutSubviews {

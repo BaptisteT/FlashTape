@@ -72,6 +72,7 @@
 @property (strong, nonatomic) CaptionTextView *captionTextView;
 @property (nonatomic) CGAffineTransform captionTransform;
 @property (nonatomic) CGPoint captionCenter;
+@property (strong, nonatomic) UITapGestureRecognizer *closeCaptionTapGestureRecogniser;
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
@@ -151,6 +152,8 @@
     self.captionTextView.delegate = self;
     self.captionTextView.captionDelegate = self;
     self.captionTransform = CGAffineTransformIdentity;
+    self.closeCaptionTapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapToCloseCaption)];
+    [self.cameraView addGestureRecognizer:self.closeCaptionTapGestureRecogniser];
     
     // Create the recorder
     self.recorder = [SCRecorder recorder];
@@ -417,6 +420,7 @@
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
+    self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     [self.captionTextView becomeFirstResponder];
 }
 
@@ -955,8 +959,13 @@
 }
 
 // --------------------------------------------
-#pragma mark - Caption TextView delegate
+#pragma mark - Caption
 // --------------------------------------------
+- (void)handleTapToCloseCaption {
+    [self.captionTextView resignFirstResponder];
+    self.longPressGestureRecogniser.minimumPressDuration = 0;
+}
+
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
     self.recordTutoLabel.hidden = YES;

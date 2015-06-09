@@ -78,7 +78,7 @@
 - (IBAction)replyButtonClicked:(id)sender {
     SendMessageViewController *controller = [self.delegate sendMessageController];
     controller.messageRecipient = self.messageSender;
-    [self presentViewController:controller animated:YES completion:nil];
+    [self presentViewController:controller animated:NO completion:nil];
 }
 
 // --------------------------------------------

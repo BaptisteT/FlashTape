@@ -807,7 +807,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="FriendCell" rowHeight="80" id="Y8i-4U-BMg" customClass="FriendTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FriendCell" rowHeight="80" id="Y8i-4U-BMg" customClass="FriendTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Y8i-4U-BMg" id="bDY-Zb-eof">
@@ -999,7 +999,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="s5X-7E-zXT" kind="presentation" identifier="Find By Username From Friends" id="cqG-DB-8d4"/>
+                                    <segue destination="s5X-7E-zXT" kind="presentation" identifier="Find By Username From Friends" animates="NO" id="cqG-DB-8d4"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1051,7 +1051,7 @@
                         <outlet property="friendsTableView" destination="LqB-To-ITe" id="5Y1-lY-uQr"/>
                         <outlet property="inviteButton" destination="bO2-dF-h7J" id="KZm-EF-ZrD"/>
                         <outlet property="scoreLabel" destination="WUl-fI-ihe" id="r0a-eX-m9N"/>
-                        <segue destination="IGD-Zc-Fg7" kind="presentation" identifier="Read Message From Friends" id="vuw-LO-0He"/>
+                        <segue destination="IGD-Zc-Fg7" kind="presentation" identifier="Read Message From Friends" animates="NO" id="vuw-LO-0He"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LZr-cM-H0D" userLabel="First Responder" sceneMemberID="firstResponder"/>
