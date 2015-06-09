@@ -44,6 +44,9 @@
     // State
     [self setEmojiState:YES];
     
+    [self.textView addObserver:self forKeyPath:@"contentSize" options:(NSKeyValueObservingOptionNew) context:NULL];
+
+    
     // Observer
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
@@ -82,6 +85,13 @@
     [super viewDidLayoutSubviews];
     [self initEmojiView];
     self.messageTypeContainerView.translatesAutoresizingMaskIntoConstraints = YES;
+    [self adjustTextViewOffset];
+}
+
+- (void)adjustTextViewOffset {
+    CGFloat topoffset = ([self.textView bounds].size.height - [self.textView contentSize].height * [self.textView zoomScale])/2.0;
+    topoffset = ( topoffset < 0.0 ? 0.0 : topoffset );
+    self.textView.contentOffset = (CGPoint){.x = 0, .y = -topoffset};
 }
 
 // ----------------------------------------------------------
@@ -123,6 +133,12 @@
         }
         self.textViewPlaceholder.hidden = newString.length > 0;
         return YES;
+    }
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == self.textView) {
+        [self adjustTextViewOffset];
     }
 }
 
