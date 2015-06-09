@@ -145,41 +145,73 @@
     }];
 }
 
-//+ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
-//                              failure:(void(^)(NSError *error))failureBlock
-//{
-//    // set up the query on the Follow table
-//    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
-//    [query whereKey:@"from" equalTo:[PFUser currentUser]];
-//    [query whereKey:@"removed" equalTo:[PFUser currentUser]];
-//    [query includeKey:@"to"];
-//    // execute the query
-//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            NSLog(@"Successfully retrieved %lu friends.", (unsigned long)objects.count);
-//            NSMutableArray *friends = [NSMutableArray new];
-//            for(PFObject *object in objects) {
-//                [friends addObject:[object objectForKey:@"to"]];
-//            }
-//            [User unpinAllObjectsInBackgroundWithName:kParseFriendsName block:^void(BOOL success, NSError *error) {
-//                // Cache the new results.
-//                [User pinAllInBackground:friends withName:kParseFriendsName];
-//            }];
-//            if (successBlock) {
-//                successBlock(friends);
-//            }
-//        } else {
-//            // Log details of the failure
-//            NSLog(@"Error: %@ %@", error, [error userInfo]);
-//            if (failureBlock)
-//                failureBlock(error);
-//        }
-//    }];
-//}
++ (void)getFollowersAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+                              failure:(void(^)(NSError *error))failureBlock
+{
+    // set up the query on the Follow table
+    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
+    [query whereKey:@"to" equalTo:[PFUser currentUser]];
+    [query whereKey:@"removed" notEqualTo:[NSNumber numberWithBool:YES]];
+    [query includeKey:@"from"];
+    // execute the query
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableArray *friends = [NSMutableArray new];
+            for(PFObject *object in objects) {
+                if ([object objectForKey:@"from"])
+                    [friends addObject:[object objectForKey:@"from"]];
+            }
+            [User unpinAllObjectsInBackgroundWithName:kParseFollowersName block:^void(BOOL success, NSError *error) {
+                // Cache the new results.
+                [User pinAllInBackground:friends withName:kParseFollowersName];
+            }];
+            if (successBlock) {
+                successBlock(friends);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
+}
+
++ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+                              failure:(void(^)(NSError *error))failureBlock
+{
+    // set up the query on the Follow table
+    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
+    [query whereKey:@"from" equalTo:[PFUser currentUser]];
+    [query whereKey:@"removed" equalTo:[NSNumber numberWithBool:NO]];
+    [query includeKey:@"to"];
+    // execute the query
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSLog(@"Successfully retrieved %lu following.", (unsigned long)objects.count);
+            NSMutableArray *friends = [NSMutableArray new];
+            for(PFObject *object in objects) {
+                [friends addObject:[object objectForKey:@"to"]];
+            }
+            [User unpinAllObjectsInBackgroundWithName:kParseFollowingName block:^void(BOOL success, NSError *error) {
+                // Cache the new results.
+                [User pinAllInBackground:friends withName:kParseFollowingName];
+            }];
+            if (successBlock) {
+                successBlock(friends);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
+}
 
 
 // Fill followers table
-+ (void)fillFollowersTableWithUsers:(NSArray *)contacts
++ (void)fillFollowTableWithContacts:(NSArray *)contacts
                             success:(void(^)(NSArray *friends))successBlock
                             failure:(void(^)(NSError *error))failureBlock
 {
@@ -200,9 +232,9 @@
                                         }];
                                         
                                         // Pin
-                                        [User unpinAllObjectsInBackgroundWithName:kParseFriendsName block:^void(BOOL success, NSError *error) {
+                                        [User unpinAllObjectsInBackgroundWithName:kParseFollowingName block:^void(BOOL success, NSError *error) {
                                             // Cache the new results.
-                                            [User pinAllInBackground:friendArray withName:kParseFriendsName];
+                                            [User pinAllInBackground:friendArray withName:kParseFollowingName];
                                         }];
                                         if (successBlock) {
                                             successBlock(friendArray);
@@ -237,10 +269,10 @@
             [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
                     if (block) {
-                        [followedUser unpinInBackgroundWithName:kParseFriendsName];
+                        [followedUser unpinInBackgroundWithName:kParseFollowingName];
                         [PFObject unpinAllInBackground:[DatastoreUtils getMessagesLocallyFromUser:followedUser] withName:kParseMessagesName];
                     } else {
-                        [followedUser pinInBackgroundWithName:kParseFriendsName];
+                        [followedUser pinInBackgroundWithName:kParseFollowingName];
                     }
                     if (successBlock) {
                         successBlock();

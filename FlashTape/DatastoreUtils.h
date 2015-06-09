@@ -10,8 +10,10 @@
 
 @interface DatastoreUtils : NSObject
 
-+ (void)getFriendsFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
++ (void)getFollowingFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
                                               failure:(void(^)(NSError *error))failureBlock;
+
++ (NSArray *)getNamesOfUsersWithId:(NSArray *)idsArray;
 
 + (NSArray *)getVideoLocallyFromUsers:(NSArray *)users;
 

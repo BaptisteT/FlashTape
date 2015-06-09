@@ -41,7 +41,10 @@
                    success:(void(^)(User *user))successBlock
                    failure:(void(^)(NSError *error))failureBlock;
 
-+ (void)fillFollowersTableWithUsers:(NSArray *)contacts
++ (void)getFollowersAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+                              failure:(void(^)(NSError *error))failureBlock;
+
++ (void)fillFollowTableWithContacts:(NSArray *)contacts
                             success:(void(^)(NSArray *friends))successBlock
                             failure:(void(^)(NSError *error))failureBlock;
 

@@ -14,11 +14,17 @@
 
 @implementation DatastoreUtils
 
-+ (void)getFriendsFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+
+// --------------------------------------------
+#pragma mark - Users
+// --------------------------------------------
+
++ (void)getFollowingFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *following))successBlock
                                               failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [User query];
     [query fromLocalDatastore];
+    [query fromPinWithName:kParseFollowingName];
     [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -27,12 +33,51 @@
             }
         } else {
             // Log details of the failure
-            NSLog(@"Error in friends from local datastore: %@ %@", error, [error userInfo]);
+            NSLog(@"Error in following from local datastore: %@ %@", error, [error userInfo]);
             if (failureBlock)
                 failureBlock(error);
         }
     }];
 }
+
++ (void)getFollowersFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *followers))successBlock
+                                                failure:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *query = [User query];
+    [query fromLocalDatastore];
+    [query fromPinWithName:kParseFollowersName];
+    [query orderByDescending:@"score"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (successBlock) {
+                successBlock(objects);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error in folloers from local datastore: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
+}
+
++ (NSArray *)getNamesOfUsersWithId:(NSArray *)idsArray
+{
+    PFQuery *query = [User query];
+    [query fromLocalDatastore];
+    [query whereKey:@"objectId" containedIn:idsArray];
+    NSArray *users = [query findObjects];
+    NSMutableArray *names = [NSMutableArray new];
+    for (User *user in users) {
+        [names addObject:user.flashUsername];
+    }
+    return names;
+}
+
+
+// --------------------------------------------
+#pragma mark - Videos
+// --------------------------------------------
 
 + (NSArray *)getVideoLocallyFromUsers:(NSArray *)users
 {
@@ -114,6 +159,10 @@
 }
 
 
+// --------------------------------------------
+#pragma mark - Messages
+// --------------------------------------------
+
 + (NSArray *)getUnreadMessagesLocally
 {
     PFQuery *query = [PFQuery queryWithClassName:@"Message"];
@@ -135,5 +184,7 @@
     NSArray *results = [query findObjects];
     return results;
 }
+
+
 
 @end

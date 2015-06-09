@@ -5,6 +5,7 @@
 //  Created by Baptiste Truchot on 5/27/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "DatastoreUtils.h"
 #import "VideoPost.h"
 
 #import "VideoTableViewCell.h"
@@ -56,7 +57,7 @@
         }
         self.viewerNamesLabel = nil;
     } else {
-        if (!names) return;
+        NSArray *names = [DatastoreUtils getNamesOfUsersWithId:[post viewerIdsArrayWithoutPoster]];
         int ii = 0;
         for (NSString *name in names) {
             [self addLabelWithName:name yPosition:44+20*ii];

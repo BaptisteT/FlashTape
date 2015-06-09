@@ -65,14 +65,14 @@
 // --------------------------------------------
 - (void)handleTap {
     if (self.messagesArray.count == 0) {
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:NO completion:nil];
     } else {
         [self setFirstMessage];
     }
 }
 
 - (IBAction)backButtonClicked:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)replyButtonClicked:(id)sender {
@@ -97,7 +97,7 @@
                               failure:nil];
         [self.messagesArray removeObject:message];
     } else {
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:NO completion:nil];
     }
 }
 

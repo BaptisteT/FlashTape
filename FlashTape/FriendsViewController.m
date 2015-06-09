@@ -209,14 +209,14 @@
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         BOOL showViewers = NO;
         NSMutableArray *names = [NSMutableArray new];
-        NSArray *viewIdsArray = [post viewerIdsArrayWithoutPoster];
+//        NSArray *viewIdsArray = [post viewerIdsArrayWithoutPoster];
         if (post == self.postToDetail) {
             showViewers = YES;
-            for (User *friend in self.friends) {
-                if ([viewIdsArray indexOfObject:friend.objectId] != NSNotFound) {
-                    [names addObject:friend.flashUsername ? friend.flashUsername : @"?"];
-                }
-            }
+//            for (User *friend in self.friends) {
+//                if ([viewIdsArray indexOfObject:friend.objectId] != NSNotFound) {
+//                    [names addObject:friend.flashUsername ? friend.flashUsername : @"?"];
+//                }
+//            }
         }
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;

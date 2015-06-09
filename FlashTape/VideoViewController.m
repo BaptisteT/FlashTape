@@ -246,7 +246,7 @@
     
     // Retrieve friends from local datastore
     _friends = [NSMutableArray new];
-    [DatastoreUtils getFriendsFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
+    [DatastoreUtils getFollowingFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
         [self setObjectsFromFriendsArray:friends]; // retrieve video in different number of friends
         
         // Get local videos
@@ -300,6 +300,11 @@
                                              selector:@selector(navigateToFriends)
                                                  name:@"new_message_clicked"
                                                object:nil];
+    
+    
+    // todo BT
+    // put somewhere else
+    [ApiManager getFollowersAndExecuteSuccess:nil failure:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -529,7 +534,7 @@
                 [contactDictionnary setObject:[User currentUser].flashUsername forKey:[User currentUser].username];
                 
                 // fill following table
-                [ApiManager fillFollowersTableWithUsers:[contactDictionnary allKeys]
+                [ApiManager fillFollowTableWithContacts:[contactDictionnary allKeys]
                                                 success:^(NSArray *friends) {
                                                     [self setObjectsFromFriendsArray:friends];
                                                 } failure:nil];
