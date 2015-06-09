@@ -412,10 +412,8 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // Pin
-            [Message unpinAllObjectsInBackgroundWithName:kParseMessagesName block:^void(BOOL success, NSError *error) {
-                // Cache the new results.
-                [Message pinAllInBackground:objects withName:kParseMessagesName];
-            }];
+            [Message unpinAllObjectsWithName:kParseMessagesName];
+            [Message pinAll:objects withName:kParseMessagesName];
 
             if (successBlock) {
                 successBlock(objects);

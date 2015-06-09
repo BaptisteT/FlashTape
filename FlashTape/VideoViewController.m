@@ -783,6 +783,9 @@
 // ------------------------------
 - (void)retrieveUnreadMessages {
     [ApiManager retrieveUnreadMessagesAndExecuteSuccess:^(NSArray *messagesArray) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_message_locally"
+                                                            object:nil
+                                                          userInfo:nil];
         [self setMessagesLabel:messagesArray.count];
     } failure:nil];
 }

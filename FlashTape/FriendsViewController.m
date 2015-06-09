@@ -58,9 +58,6 @@
     // Retrieve Messages Locally
     [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
     
-    // Retrieve messages from server
-    [self retrieveUnreadMessages];
-    
     // Refresh current User posts
     self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]]];
     [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
@@ -101,8 +98,8 @@
                                                  name: UIApplicationWillResignActiveNotification
                                                object: nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(retrieveUnreadMessages)
-                                                 name:@"retrieve_message"
+                                             selector:@selector(retrieveUnreadMessagesLocally)
+                                                 name:@"retrieve_message_locally"
                                                object:nil];
 }
 
@@ -317,6 +314,10 @@
     } failure:^(NSError *error) {
         [self.refreshControl endRefreshing];
     }];
+}
+
+- (void)retrieveUnreadMessagesLocally {
+    [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
 }
 
 // --------------------------------------------
