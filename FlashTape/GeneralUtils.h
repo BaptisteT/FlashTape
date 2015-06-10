@@ -29,4 +29,6 @@
 
 + (NSString *)transformedUsernameFromOriginal:(NSString *)original;
 
++ (void)openSettings;
+
 @end

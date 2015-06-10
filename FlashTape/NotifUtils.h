@@ -16,5 +16,6 @@
 // Get token without asking notif permissions --> for silent notif (ios8 + only)
 + (void)registerForSilentRemoteNotif;
 
++ (BOOL)isRegisteredForRemoteNotification;
 
 @end

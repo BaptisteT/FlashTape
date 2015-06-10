@@ -96,6 +96,18 @@
 "find_by_username_textfield_placeholder" = "Search";
 "username_section_title" = "USERNAME";
 
+// Authorisation
+"micro_access_error_title" = "No micro access.";
+"micro_access_error_message" = "Please allow micro access in settings.";
+"camera_access_error_title" = "No camera access.";
+"camera_access_error_message" = "Please allow camera access in settings.";
+"notification_error_title" = "Notification";
+"notification_error_message" = "To be alerted when a friend sends you a message, please allow notifications in your settings.";
+"contact_access_error_title" = "FlashTape can't access your address book.";
+"contact_access_error_message" = "Please allow contact access in your settings to find more friends.";
+"ok_button" = "Allow";
+"later_button" = "Later";
+
 
 
 

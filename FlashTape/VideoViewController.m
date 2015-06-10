@@ -36,7 +36,6 @@
 
 // Contacts
 @property (nonatomic) ABAddressBookRef addressBook;
-@property (nonatomic) NSDictionary *contactDictionnary;
 @property (strong, nonatomic) NSMutableArray *friends;
 
 // Playing
@@ -261,9 +260,8 @@
     [self setCameraMode];
     
     // Load address book, friends & video (if the result is different from cashing)
-    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    [self parseContactsAndFindFriends];
+    [self parseContactsAndFindFriendsIfAlreadyAuthorized];
     
     // Retrieve unread messages
     [self retrieveUnreadMessages];
@@ -302,7 +300,6 @@
                                                  name:@"new_message_clicked"
                                                object:nil];
     
-    
     // todo BT
     // put somewhere else
     [ApiManager getFollowersAndExecuteSuccess:nil failure:nil];
@@ -337,7 +334,7 @@
 - (void)willBecomeActiveCallback {
     [self retrieveVideo];
     [self retrieveUnreadMessages];
-    [self parseContactsAndFindFriends];
+    [self parseContactsAndFindFriendsIfAlreadyAuthorized];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -367,7 +364,7 @@
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        if ([gesture locationInView:self.cameraView].y < 60) {
+        if ([gesture locationInView:self.cameraView].y < 60 || [self cameraOrMicroAccessDenied]) {
             return; // don't start if we press above
         }
         if (!_isExporting) {
@@ -523,27 +520,42 @@
     [_friends insertObject:[User currentUser] atIndex:0];
     
     if (previousCount != friends.count) {
+        // Retrieve video
         [self retrieveVideo];
+        
+        // If friend controller, reload tableview
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"reload_friend_tableview"
+                                                            object:nil
+                                                          userInfo:nil];
     }
 }
 
+- (void)parseContactsAndFindFriendsIfAuthNotDetermined {
+    if(ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        [self parseContactsAndFindFriends];
+    }
+}
+
+- (void)parseContactsAndFindFriendsIfAlreadyAuthorized {
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        [self parseContactsAndFindFriends];
+    }
+}
 - (void)parseContactsAndFindFriends {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-                [contactDictionnary setObject:[User currentUser].flashUsername forKey:[User currentUser].username];
-                
-                // fill following table
-                [ApiManager fillFollowTableWithContacts:[contactDictionnary allKeys]
-                                                success:^(NSArray *friends) {
-                                                    [self setObjectsFromFriendsArray:friends];
-                                                } failure:nil];
-                
-                [contactDictionnary removeObjectForKey:[User currentUser].username];
-                [AddressbookUtils saveContactDictionnary:contactDictionnary];
-            }
-        });
+    ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
+        if (granted) {
+            NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+            [contactDictionnary setObject:[User currentUser].flashUsername forKey:[User currentUser].username];
+            
+            // fill following table
+            [ApiManager fillFollowTableWithContacts:[contactDictionnary allKeys]
+                                            success:^(NSArray *friends) {
+                                                [self setObjectsFromFriendsArray:friends];
+                                            } failure:nil];
+            
+            [contactDictionnary removeObjectForKey:[User currentUser].username];
+            [AddressbookUtils saveContactDictionnary:contactDictionnary];
+        }
     });
 }
 
@@ -634,6 +646,8 @@
 - (void)returnToCameraMode {
     [self setCameraMode];
     [ApiManager updateVideoPosts:self.videosToPlayArray];
+    // First time, ask contact access
+    [self parseContactsAndFindFriendsIfAuthNotDetermined];
 }
 
 
@@ -730,6 +744,19 @@
             }
         }];
     }
+}
+
+- (BOOL)cameraOrMicroAccessDenied {
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if(authStatus == AVAuthorizationStatusDenied) {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"camera_access_error_title", nil)
+                                    message:NSLocalizedString(@"camera_access_error_message", nil)
+                                   delegate:self
+                          cancelButtonTitle:NSLocalizedString(@"OK", nil)
+                          otherButtonTitles:nil] show];
+        return YES;
+    }
+    return NO;
 }
 
 
@@ -1088,5 +1115,14 @@
     return img;
 }
 
+
+// ----------------------------------------------------------
+#pragma mark AlertView
+// ----------------------------------------------------------
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ([alertView.message isEqualToString:NSLocalizedString(@"camera_access_error_message", nil)]) {
+        [GeneralUtils openSettings];
+    }
+}
 
 @end

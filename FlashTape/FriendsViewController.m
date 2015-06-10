@@ -6,6 +6,8 @@
 //  Created by Baptiste Truchot on 5/13/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import <AddressBook/AddressBook.h>
+
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
 #import "Message.h"
@@ -22,6 +24,7 @@
 #import "GeneralUtils.h"
 #import "KeyboardUtils.h"
 #import "MBProgressHUD.h"
+#import "NotifUtils.h"
 #import "TrackingUtils.h"
 #import "VideoUtils.h"
 
@@ -99,6 +102,27 @@
                                              selector:@selector(retrieveUnreadMessagesLocally)
                                                  name:@"retrieve_message_locally"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reload)
+                                                 name:@"reload_friend_tableview"
+                                               object:nil];
+    
+    // If first time, ask access to contact
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        [self.delegate parseContactsAndFindFriendsIfAuthNotDetermined];
+    }
+    // If contact access denied, propose to redirect to settings
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
+                                    message:NSLocalizedString(@"contact_access_error_message",nil)
+                                   delegate:self
+                          cancelButtonTitle:NSLocalizedString(@"later_button",nil)
+                          otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
+    }
+    // Notif
+    else if (![NotifUtils isRegisteredForRemoteNotification]) {
+        [NotifUtils registerForRemoteNotif];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -122,6 +146,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     _stopAnimation = YES;
+}
+
+- (void)reload {
+    [self.friendsTableView reloadData];
 }
 
 // --------------------------------------------
@@ -465,6 +493,10 @@
                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
                                             [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
                                         }];
+    } else if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
+            [GeneralUtils openSettings];
+        }
     }
 }
 
