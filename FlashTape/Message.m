@@ -15,6 +15,8 @@
 @dynamic messageContent;
 @dynamic read;
 
+@synthesize status;
+
 + (void)load {
     [self registerSubclass];
 }

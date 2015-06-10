@@ -48,9 +48,7 @@
                                        }
                                    }
                                }
-                               failure:^(NSError *error) {
-                                   // todo BT
-                               }];
+                               failure:nil];
     } else {
         self.addOrDeleteFriendButton.hidden = YES;
     }

@@ -86,6 +86,10 @@
 "create_message_placeholder" = "Type here";
 "back_button" = "Back";
 "reply_button" = "Reply";
+"messages_failed" = "%lu messages failed";
+"message_failed" = "%lu message failed";
+"messages_sending" = "sending (%lu)";
+"messages_sent" = "sent!";
 
 // Find by username
 "find_by_username_controller_title" = "Add a new username";

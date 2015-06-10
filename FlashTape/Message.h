@@ -10,12 +10,21 @@
 
 #import "User.h"
 
+typedef NS_ENUM(NSInteger,MessageStatus) {
+    kMessageTypeNone = 0,
+    kMessageTypeSending = 1,
+    kMessageTypeFailed = 2,
+    kMessageTypeSent = 3,
+    kMessageTypeReceived = 4
+};
+
 @interface Message : PFObject<PFSubclassing>
 
 @property (retain) User *sender;
 @property (retain) User *receiver;
 @property (retain) NSString *messageContent;
 @property (retain) NSNumber *read;
+@property (nonatomic) MessageStatus status;
 
 + (Message *)createMessageWithContent:(NSString *)messageContent
                              receiver:(User *)receiver;

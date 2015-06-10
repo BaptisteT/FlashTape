@@ -34,7 +34,8 @@
 @property (weak, nonatomic) VideoPost *postToDelete;
 @property (weak, nonatomic) VideoPost *postToDetail;
 @property (strong, nonatomic) SendMessageViewController *sendMessageController;
-@property (strong, nonatomic) NSMutableDictionary *messagesDictionnary;
+@property (strong, nonatomic) NSMutableDictionary *messagesReceivedDictionnary;
+@property (strong, nonatomic) NSMutableDictionary *messagesSentDictionnary;
 @property (strong, nonatomic) NSMutableArray *followerArray;
 @property (strong, nonatomic) User *userToFollowOrBlock;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
@@ -52,7 +53,8 @@
     // Some init
     _expandMyStory = NO;
     self.colorView.alpha = 0.5;
-    self.messagesDictionnary = [NSMutableDictionary new];
+    self.messagesReceivedDictionnary = [NSMutableDictionary new];
+    self.messagesSentDictionnary = [NSMutableDictionary new];
     self.followerArray = [NSMutableArray new];
     
     // Retrieve Messages Locally
@@ -93,10 +95,6 @@
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
     
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(dismissFriendsController)
-                                                 name: UIApplicationWillResignActiveNotification
-                                               object: nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(retrieveUnreadMessagesLocally)
                                                  name:@"retrieve_message_locally"
@@ -117,7 +115,7 @@
     } else if ([segueName isEqualToString: @"Read Message From Friends"]) {
         User *friend = (User *)sender;
         ((ReadMessageViewController *) [segue destinationViewController]).messageSender = friend;
-        ((ReadMessageViewController *) [segue destinationViewController]).messagesArray = self.messagesDictionnary[friend.objectId];
+        ((ReadMessageViewController *) [segue destinationViewController]).messagesArray = self.messagesReceivedDictionnary[friend.objectId];
         ((ReadMessageViewController *) [segue destinationViewController]).delegate = self;
     }
 }
@@ -134,8 +132,8 @@
     [self.delegate hideUIElementOnCamera:NO];
     
     NSInteger count = 0;
-    for (NSString *key in self.messagesDictionnary) {
-        count += ((NSMutableArray *)self.messagesDictionnary[key]).count;
+    for (NSString *key in self.messagesReceivedDictionnary) {
+        count += ((NSMutableArray *)self.messagesReceivedDictionnary[key]).count;
     }
     [self.delegate setMessagesLabel:count];
     [self.delegate dismissViewControllerAnimated:NO completion:nil];
@@ -145,23 +143,46 @@
     [self dismissFriendsController];
 }
 
-// Send message
-- (void)sendMessage:(NSString *)text toUser:(User *)user {
-    // todo BT send animation
-    // failure handling ?
-    Message *message = [Message createMessageWithContent:text receiver:user];
-    [ApiManager sendMessage:message
-                    success:^{
-                        // todo BT
-                    } failure:^(NSError *error) {
-                        // todo BT handle error
-                    }];
-}
-
 - (void)closeReadAndMessageViews {
     if (self.presentedViewController != self) {
         [self dismissViewControllerAnimated:NO completion:nil];
     }
+}
+
+// --------------------------------------------
+#pragma mark - Actions
+// --------------------------------------------
+
+// Send message
+- (void)sendMessage:(Message *)message {
+    // reload this section
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.friends indexOfObject:message.receiver]];
+    [self.friendsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+    
+    [ApiManager sendMessage:message
+                    success:^{
+                        message.status = kMessageTypeSent;
+                        [self.friendsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                    } failure:^(NSError *error) {
+                        message.status = kMessageTypeFailed;
+                        [self.friendsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                    }];
+}
+// Send message
+- (void)sendMessage:(NSString *)text toUser:(User *)user {
+    // Create message
+    Message *message = [Message createMessageWithContent:text receiver:user];
+    message.status = kMessageTypeSending;
+    
+    // Add message to message sent dic
+    NSMutableArray *messageSentArray = [self.messagesSentDictionnary objectForKey:message.receiver.objectId];
+    if (messageSentArray) {
+        [messageSentArray addObject:message];
+    } else {
+        [self.messagesSentDictionnary setObject:[NSMutableArray arrayWithObject:message] forKey:message.receiver.objectId];
+    }
+    
+    [self sendMessage:message];
 }
 
 // --------------------------------------------
@@ -194,14 +215,13 @@
         
         NSArray *viewerIdsArray = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray : nil;
         BOOL hasSeenVideo = (viewerIdsArray) ? ([viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : NO;
-        NSInteger messageCount = self.messagesDictionnary[friend.objectId] ? ((NSArray *)self.messagesDictionnary[friend.objectId]).count : 0;
+        NSInteger messageCount = self.messagesReceivedDictionnary[friend.objectId] ? ((NSArray *)self.messagesReceivedDictionnary[friend.objectId]).count : 0;
         
         // Create cell
-        [cell initWithName:friend.flashUsername
-                     score:[NSString stringWithFormat:@"%lu",(long)(friend.score ? friend.score : 0)]
+        [cell initWithUser:friend
              hasSeenVideos:hasSeenVideo
-             isCurrentUser:[self isCurrentUserUserCell:indexPath]
-          newMessagesCount:messageCount];
+       unreadMessagesCount:messageCount
+         messagesSentArray:self.messagesSentDictionnary[friend.objectId]];
         cell.delegate = self;
         return cell;
     } else if ([self isCurrentUserPostCell:indexPath]) {
@@ -209,15 +229,7 @@
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         BOOL showViewers = NO;
         NSMutableArray *names = [NSMutableArray new];
-//        NSArray *viewIdsArray = [post viewerIdsArrayWithoutPoster];
-        if (post == self.postToDetail) {
-            showViewers = YES;
-//            for (User *friend in self.friends) {
-//                if ([viewIdsArray indexOfObject:friend.objectId] != NSNotFound) {
-//                    [names addObject:friend.flashUsername ? friend.flashUsername : @"?"];
-//                }
-//            }
-        }
+        showViewers = (post == self.postToDetail);
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
@@ -243,7 +255,7 @@
     if ([self isCurrentUserUserCell:indexPath]) {
         _expandMyStory = !_expandMyStory;
         self.postToDetail = nil;
-        [self.friendsTableView reloadData];
+        [self reloadCurrentUserSection];
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         self.postToDetail = (post == self.postToDetail) ? nil : post;
@@ -254,8 +266,27 @@
         
         if (indexPath.section < self.friends.count) {
             User *friend = (User *)self.friends[indexPath.section];
-            if (self.messagesDictionnary[friend.objectId] && ((NSArray *)self.messagesDictionnary[friend.objectId]).count > 0) {
+            
+            // Check if we have failure
+            NSMutableArray *failedMessageArray = [NSMutableArray new];
+            if (self.messagesSentDictionnary[friend.objectId]) {
+                for (Message *message in self.messagesSentDictionnary[friend.objectId]) {
+                    if (message.status == kMessageTypeFailed) {
+                        [failedMessageArray addObject:message];
+                    }
+                }
+            }
+            
+            // Resend
+            if (failedMessageArray.count > 0) {
+                for (Message *message in failedMessageArray) {
+                    [self sendMessage:message];
+                }
+            // read
+            } else if (self.messagesReceivedDictionnary[friend.objectId] && ((NSArray *)self.messagesReceivedDictionnary[friend.objectId]).count > 0) {
                 [self performSegueWithIdentifier:@"Read Message From Friends" sender:friend];
+                
+            // Send
             } else {
                 [self presentSendViewController:friend];
             }
@@ -303,7 +334,7 @@
             [self.followerArray addObject:message.sender];
         }
     }
-    self.messagesDictionnary = messagesDictionary;
+    self.messagesReceivedDictionnary = messagesDictionary;
     [self.friendsTableView reloadData];
 }
 
@@ -366,6 +397,8 @@
 #pragma mark - Friend TVC Delegate
 // --------------------------------------------
 - (void)saveCurrentUserStoryButtonClicked {
+    // todo BT
+    // anim
     AVPlayerItem *pi = [VideoUtils createAVPlayerItemWithVideoPosts:self.currentUserPosts
                                           andFillObservedTimesArray:nil];
     [VideoUtils saveVideoCompositionToCameraRoll:pi.asset success:^{
@@ -421,7 +454,7 @@
                                             [self.followerArray removeObject:self.userToFollowOrBlock];
                                             if (block) {
                                                 // remove & unpin messages
-                                                [self.messagesDictionnary removeObjectForKey:self.userToFollowOrBlock.objectId];
+                                                [self.messagesReceivedDictionnary removeObjectForKey:self.userToFollowOrBlock.objectId];
                                             } else {
                                                 // add to friends
                                                 [self.friends addObject:self.userToFollowOrBlock];

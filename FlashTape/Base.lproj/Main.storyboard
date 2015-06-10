@@ -849,9 +849,16 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-oE-oLH">
+                                                    <rect key="frame" x="279" y="29" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="9jK-Tx-agv" firstAttribute="trailing" secondItem="bDY-Zb-eof" secondAttribute="trailingMargin" constant="3" id="5fB-kF-OqI"/>
+                                                <constraint firstAttribute="centerY" secondItem="0KZ-oE-oLH" secondAttribute="centerY" id="7CO-uL-eLy"/>
                                                 <constraint firstAttribute="centerY" secondItem="9jK-Tx-agv" secondAttribute="centerY" id="7u6-jB-H59"/>
                                                 <constraint firstItem="y1L-4Y-drw" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="HUd-DI-Feb"/>
                                                 <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="ipD-oW-FC9" secondAttribute="trailing" constant="33" id="Pq8-aE-sxc"/>
@@ -860,6 +867,7 @@
                                                 <constraint firstAttribute="centerY" secondItem="y1L-4Y-drw" secondAttribute="centerY" constant="6.5" id="gvx-nV-xYA"/>
                                                 <constraint firstAttribute="centerY" secondItem="XLB-UB-kNZ" secondAttribute="centerY" constant="-15" id="k5b-a2-1eV"/>
                                                 <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" constant="40" id="oW8-Dv-l1T"/>
+                                                <constraint firstAttribute="centerX" secondItem="0KZ-oE-oLH" secondAttribute="centerX" id="plo-35-aJe"/>
                                                 <constraint firstAttribute="centerY" secondItem="ipD-oW-FC9" secondAttribute="centerY" id="xIm-dP-e5n"/>
                                                 <constraint firstAttribute="centerY" secondItem="CZK-D3-zfC" secondAttribute="centerY" constant="-0.5" id="yLP-hv-AuJ"/>
                                             </constraints>
@@ -873,6 +881,7 @@
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
                                             <outlet property="messageCountLabel" destination="ipD-oW-FC9" id="Rea-dM-Np2"/>
+                                            <outlet property="messageSentLabel" destination="0KZ-oE-oLH" id="jmd-aZ-eEH"/>
                                             <outlet property="nameLabel" destination="y1L-4Y-drw" id="xrF-rr-81H"/>
                                             <outlet property="saveButton" destination="CZK-D3-zfC" id="ARm-oF-k6L"/>
                                             <outlet property="scoreLabel" destination="XLB-UB-kNZ" id="MwL-xE-gef"/>

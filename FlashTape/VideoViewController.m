@@ -160,6 +160,7 @@
     _recorder.delegate = self;
     _recorder.device = AVCaptureDevicePositionBack;
      _recorder.autoSetVideoOrientation = NO;
+    _recorder.keepMirroringOnWrite = YES;
     _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeMPEG4;
@@ -167,8 +168,8 @@
     
     // Preset
     _recorder.captureSessionPreset = [SCRecorderTools bestCaptureSessionPresetCompatibleWithAllDevices];
-    _recorder.audioConfiguration.preset = SCPresetLowQuality;
-    _recorder.videoConfiguration.preset = SCPresetMediumQuality;
+    _recorder.audioConfiguration.preset = SCPresetMediumQuality;
+    _recorder.videoConfiguration.preset = SCPresetHighestQuality;
     
     // Start running the flow of buffers
     if (![self.recorder startRunning]) {
@@ -230,7 +231,7 @@
     self.unreadMessagesCountLabel.layer.borderWidth = 1;
     self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils purple].CGColor;
     self.unreadMessagesCountLabel.textColor = [ColorUtils purple];
-    self.unreadMessagesCountLabel.hidden = YES;
+    [self setMessagesLabel:0];
     
     // Preview
     self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
