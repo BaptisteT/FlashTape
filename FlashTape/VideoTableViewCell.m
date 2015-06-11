@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *viewsLabel;
 @property (strong, nonatomic) NSMutableArray *viewerNamesLabel;
+@property (strong, nonatomic) IBOutlet UIView *separatorView;
 
 @end
 
@@ -59,9 +60,15 @@
         if (!names) return;
         int ii = 0;
         for (NSString *name in names) {
-            [self addLabelWithName:name yPosition:44+20*ii];
+            [self addLabelWithName:name yPosition:70+20*ii];
             ii++;
         }
+        // @baptiste Hide separator quand la section est ouverte et ajouter un separator en bas pour fermer la section
+//        self.separatorView.hidden = detailedState;
+//        UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0,57 + 20*self.viewerNamesLabel.count, self.frame.size.width, 2)];
+//        separator.backgroundColor = [UIColor colorWithRed:255./255. green:255./255. blue:255./255. alpha:0.2];
+//        [self addSubview:separator];
+
     }
 }
 
@@ -70,7 +77,7 @@
     label.text = name;
     label.textColor = [UIColor whiteColor];
     label.minimumScaleFactor = 2;
-    label.font = [UIFont systemFontOfSize:10];
+    label.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:12];
     if (!self.viewerNamesLabel) {
         self.viewerNamesLabel = [NSMutableArray new];
     }

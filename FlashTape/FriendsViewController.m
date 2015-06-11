@@ -65,6 +65,8 @@
     }];
     
     // Tableview
+    [self.friendsTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self.friendsTableView.separatorInset = UIEdgeInsetsZero;
     self.friendsTableView.dataSource = self;
     self.friendsTableView.delegate = self;
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -78,7 +80,7 @@
     // Refresh control
     self.refreshControl = [[UIRefreshControl alloc] init];
     self.refreshControl.backgroundColor = [UIColor clearColor];
-    self.refreshControl.tintColor = [ColorUtils purple];
+    self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self
                             action:@selector(retrieveUnreadMessages)
                   forControlEvents:UIControlEventValueChanged];
@@ -232,10 +234,10 @@
         return 80;
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
-        return (post == self.postToDetail) ? 44 + [post viewerIdsArrayWithoutPoster].count * 20 : 44;
+        return (post == self.postToDetail) ? 70 + [post viewerIdsArrayWithoutPoster].count * 20 : 50;
     } else {
         // should not happen
-        return 44;
+        return 50;
     }
 }
 

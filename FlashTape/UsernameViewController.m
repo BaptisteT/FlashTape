@@ -39,6 +39,8 @@
     self.viewTitleLabel.text = NSLocalizedString(@"username_title", nil);
     self.viewExplanationLabel.text = NSLocalizedString(@"username_explanation", nil);
     self.usernameTextfield.delegate = self;
+    self.viewTitleLabel.lineType = LineTypeDown;
+    self.viewTitleLabel.lineHeight = 4.0f;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

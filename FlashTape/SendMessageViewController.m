@@ -39,7 +39,6 @@
     self.textView.tintColor = [UIColor blackColor];
     self.textViewPlaceholder.text = NSLocalizedString(@"create_message_placeholder", nil);
     self.textView.delegate = self;
-    [self.backButton setTitle:NSLocalizedString(@"back_button", nil) forState:UIControlStateNormal];
     
     // State
     [self setEmojiState:YES];
@@ -197,7 +196,7 @@
     } else {
         self.emojiButton.backgroundColor = [UIColor clearColor];
         self.textButton.backgroundColor = [UIColor whiteColor];
-        [self.textButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [self.textButton setTitleColor:[UIColor colorWithRed:204./255. green:204./255. blue:204./255. alpha:1] forState:UIControlStateNormal];
         self.emojiView.hidden = YES;
         self.textView.hidden = NO;
         if (self.textView.text.length == 0) {

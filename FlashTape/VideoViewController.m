@@ -593,22 +593,21 @@
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
-    if (![self.nameLabel.text isEqualToString:post.user.flashUsername]) {
+    if (![self.nameLabel.text isEqualToString:[NSString stringWithFormat:@" %@  ",post.user.flashUsername]]) {
         _metadataColorIndex ++;
         if (_metadataColorIndex >= self.metadataColorArray.count) {
             _metadataColorIndex = 0;
         }
     }
     
-    self.nameLabel.text = post.user.flashUsername;
+    self.nameLabel.text = [NSString stringWithFormat:@" %@  ",post.user.flashUsername];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm"];
     NSString *stringDate = [dateFormatter stringFromDate:post.recordedAt];
     self.timeLabel.text = stringDate;
     
     // Color
-    self.nameLabel.textColor = self.metadataColorArray[_metadataColorIndex];
-    self.timeLabel.textColor = self.metadataColorArray[_metadataColorIndex];
+    self.nameLabel.backgroundColor = self.metadataColorArray[_metadataColorIndex];
     
     // Show metadata
     [self showMetaData:YES];
@@ -791,8 +790,14 @@
 }
 
 - (void)setMessagesLabel:(NSInteger)count {
-    self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)count];
-    self.unreadMessagesCountLabel.hidden = count == 0;
+    if (count > 0) {
+        [self.friendListButton setTitle:[NSString stringWithFormat:@"%lu",(long)count] forState:UIControlStateNormal];
+        [self.friendListButton setBackgroundImage:nil forState:UIControlStateNormal];
+    } else {
+        [self.friendListButton setBackgroundImage:[UIImage imageNamed:@"friends_button"] forState:UIControlStateNormal];
+        [self.friendListButton setTitle:nil forState:UIControlStateNormal];
+
+    }
 }
 
 // --------------------------------------------

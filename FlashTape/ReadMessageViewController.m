@@ -7,10 +7,12 @@
 //
 #import "ApiManager.h"
 #import "Message.h"
-#import "User.h"    
+#import "User.h"
 
 #import "ReadMessageViewController.h"
 #import "SendMessageViewController.h"
+
+#define EMOJI_ARRAY @[@"❤️", @"😂", @"😔", @"😍", @"☺️", @"😎", @"😉", @"💋", @"😊", @"👍", @"😘", @"😡", @"😀", @"👌", @"😬", @"🙈", @"👅", @"🍻", @"😱", @"🙏", @"🐶", @"😜", @"💩", @"💪"]
 
 @interface ReadMessageViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *messageLabel;
@@ -41,19 +43,12 @@
     [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:usernameRange];
     [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0,usernameRange.location)];
     self.titleLabel.attributedText = attributedText;
-    [self.backButton setTitle:NSLocalizedString(@"back_button", nil) forState:UIControlStateNormal];
     self.titleSubLabel.text = NSLocalizedString(@"read_subtitle", nil);
     if (self.messagesArray.count < 2) {
         self.titleSubLabel.hidden = YES;
     }
-    NSMutableAttributedString* replyTitle = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"reply_button", nil)];
-    [replyTitle addAttribute:NSUnderlineStyleAttributeName
-                      value:@(NSUnderlineStyleSingle)
-                      range:NSMakeRange(0, replyTitle.length)];
-    [self.replyButton setAttributedTitle:replyTitle forState:UIControlStateNormal];
     [self.replyButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.messageLabel.numberOfLines = 0;
-    
     self.tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
     [self.view addGestureRecognizer:self.tapGestureRecogniser];
     
@@ -88,9 +83,30 @@
     if (self.messagesArray.count > 0) {
         Message *message = self.messagesArray.firstObject;
         self.messageLabel.text = message.messageContent;
-        self.messageLabel.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:150];
+        if([EMOJI_ARRAY containsObject:message.messageContent]) {
+            NSLog(@"Emoji message");
+            self.messageLabel.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:250];
+            self.messageLabel.textAlignment = NSTextAlignmentCenter;
+        } else {
+            NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString:message.messageContent];
+            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+            CGFloat minMaxLineHeight = (self.messageLabel.font.pointSize - self.messageLabel.font.ascender + self.messageLabel.font.capHeight);
+            NSNumber *offset = @(self.messageLabel.font.capHeight - self.messageLabel.font.ascender);
+            NSRange range = NSMakeRange(0, message.messageContent.length);
+            [style setMinimumLineHeight:minMaxLineHeight];
+            [style setMaximumLineHeight:minMaxLineHeight + 8.0f];
+            [attrString addAttribute:NSParagraphStyleAttributeName
+                               value:style
+                               range:range];
+            [attrString addAttribute:NSBaselineOffsetAttributeName
+                               value:offset
+                               range:range];
+            self.messageLabel.attributedText = attrString;
+            if (message.messageContent.length <= 10) {
+                self.messageLabel.textAlignment = NSTextAlignmentCenter;
+            }
+        }
         self.messageLabel.adjustsFontSizeToFitWidth = YES;
-        
         // unpin / delete / unread
         [ApiManager markMessageAsRead:message
                               success:nil
