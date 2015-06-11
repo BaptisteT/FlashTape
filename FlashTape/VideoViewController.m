@@ -89,7 +89,9 @@
 @property (strong, nonatomic) MBProgressHUD* sendingHud;
 
 // Messages
+@property (nonatomic) NSInteger messageCount;
 @property (weak, nonatomic) IBOutlet UILabel *unreadMessagesCountLabel;
+@property (nonatomic) NSInteger unreadVideoCount;
 
 @end
 
@@ -117,7 +119,7 @@
     _cancelRecording = NO;
     _metadataColorIndex = 0;
     self.isSendingCount = 0;
-    self.unreadMessagesCountLabel.hidden = YES;
+    self.unreadVideoCount = 0;
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
@@ -230,7 +232,7 @@
     self.unreadMessagesCountLabel.layer.borderWidth = 1;
     self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils purple].CGColor;
     self.unreadMessagesCountLabel.textColor = [ColorUtils purple];
-    [self setMessagesLabel:0];
+    self.messageCount = 0;
     
     // Preview
     self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
@@ -819,13 +821,17 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_message_locally"
                                                             object:nil
                                                           userInfo:nil];
-        [self setMessagesLabel:messagesArray.count];
+        [self setMessageCount:messagesArray.count];
     } failure:nil];
 }
 
-- (void)setMessagesLabel:(NSInteger)count {
-    self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)count];
-    self.unreadMessagesCountLabel.hidden = count == 0;
+- (void)setMessageCount:(NSInteger)messageCount {
+    _messageCount = messageCount;
+    self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)messageCount];
+    self.unreadMessagesCountLabel.hidden = (messageCount == 0);
+    
+    // Update Badge
+    [ApiManager updateBadge:messageCount + self.unreadVideoCount];
 }
 
 // --------------------------------------------
@@ -925,12 +931,13 @@
     } else if (self.allVideosArray.count == 0) {
         // No button state
         self.replayButton.hidden = YES;
+        self.unreadVideoCount = 0;
     } else {
         // Replay or new state
         NSMutableArray *unseenVideos = [self unseenVideosArray];
-        NSInteger unseenCount = unseenVideos.count;
+        self.unreadVideoCount = unseenVideos.count;
         NSString *buttonTitle;
-        if (unseenCount == 0) {
+        if (self.unreadVideoCount == 0) {
             self.replayButton.backgroundColor = [ColorUtils black];
             buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
         } else {
@@ -943,9 +950,9 @@
                 }
             }
             if (videoFromCurrentUserOnly) {
-                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)unseenCount,unseenCount < 2 ? NSLocalizedString(@"video_sent_label", nil) : NSLocalizedString(@"videos_sent_label", nil)];
+                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)self.unreadVideoCount,self.unreadVideoCount < 2 ? NSLocalizedString(@"video_sent_label", nil) : NSLocalizedString(@"videos_sent_label", nil)];
             } else {
-                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)unseenCount,unseenCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)self.unreadVideoCount,self.unreadVideoCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
             }
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
@@ -986,7 +993,7 @@
         self.recordTutoLabel.hidden = YES;
         self.captionTextView.hidden = YES;
     } else {
-        self.unreadMessagesCountLabel.hidden = [self.unreadMessagesCountLabel.text isEqualToString:@"0"];
+        self.unreadMessagesCountLabel.hidden = (self.messageCount == 0);
         [self setReplayButtonUI];
         self.captionTextView.hidden = (self.captionTextView.text.length == 0);
         self.recordTutoLabel.hidden = !(self.captionTextView.text.length == 0);

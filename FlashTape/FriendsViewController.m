@@ -129,10 +129,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Order friends by score
-    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
-        return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
-    }];
+    [self setVideoControllerMessageCount];
+    [self orderFriendsByScore];
     [self.friendsTableView reloadData];
     
     // background color animation
@@ -163,11 +161,7 @@
 - (void)dismissFriendsController {
     [self.delegate hideUIElementOnCamera:NO];
     
-    NSInteger count = 0;
-    for (NSString *key in self.messagesReceivedDictionnary) {
-        count += ((NSMutableArray *)self.messagesReceivedDictionnary[key]).count;
-    }
-    [self.delegate setMessagesLabel:count];
+    [self setVideoControllerMessageCount];
     [self.delegate dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -252,6 +246,14 @@
 
 - (void)retrieveUnreadMessagesLocally {
     [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
+}
+
+- (void)setVideoControllerMessageCount {
+    NSInteger count = 0;
+    for (NSString *key in self.messagesReceivedDictionnary) {
+        count += ((NSMutableArray *)self.messagesReceivedDictionnary[key]).count;
+    }
+    [self.delegate setMessageCount:count];
 }
 
 // --------------------------------------------
@@ -428,6 +430,18 @@
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                         [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
                                     }];
+}
+
+- (void)orderFriendsByScore {
+    // Order friends by score
+    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
+        if (obj1 == [PFUser currentUser]) {
+            return NSOrderedAscending;
+        } else if (obj2 == [PFUser currentUser]) {
+            return NSOrderedDescending;
+        } else
+            return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
+    }];
 }
 
 // --------------------------------------------

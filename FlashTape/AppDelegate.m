@@ -89,11 +89,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [TrackingUtils trackOpenApp];
-    [self _cleanBadge];
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-    [self _cleanBadge];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -132,10 +127,5 @@
     }
 }
 
-- (void)_cleanBadge {
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    currentInstallation.badge = 0;
-    [currentInstallation saveInBackground];
-}
 
 @end

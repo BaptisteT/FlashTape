@@ -226,10 +226,6 @@
                                             if (otherUser)
                                                 [friendArray addObject:otherUser];
                                         }
-                                        // Sort by score
-                                        [friendArray sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
-                                            return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
-                                        }];
                                         
                                         // Pin
                                         [User unpinAllObjectsInBackgroundWithName:kParseFollowingName block:^void(BOOL success, NSError *error) {
@@ -478,6 +474,16 @@
             }
         }
     }];
+}
+
+// --------------------------------------------
+#pragma mark - Installation
+// --------------------------------------------
+
++ (void)updateBadge:(NSInteger)count {
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    currentInstallation.badge = count;
+    [currentInstallation saveInBackground];
 }
 
 

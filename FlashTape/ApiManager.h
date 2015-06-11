@@ -87,4 +87,10 @@
                   success:(void(^)())successBlock
                   failure:(void(^)(NSError *error))failureBlock;
 
+// --------------------------------------------
+#pragma mark - Installation
+// --------------------------------------------
+
++ (void)updateBadge:(NSInteger)count;
+
 @end

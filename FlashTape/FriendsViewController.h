@@ -29,7 +29,7 @@
 - (void)hideUIElementOnCamera:(BOOL)flag;
 //- (void)playOneFriendVideos:(NSArray *)videos;
 - (void)removeVideoFromVideosArray:(VideoPost *)video;
-- (void)setMessagesLabel:(NSInteger)count;
+- (void)setMessageCount:(NSInteger)messageCount;
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion;
 - (void)parseContactsAndFindFriendsIfAuthNotDetermined;
 
