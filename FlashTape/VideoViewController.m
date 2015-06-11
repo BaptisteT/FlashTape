@@ -179,7 +179,7 @@
     
     // Recording progress bar
     self.recordingProgressBar = [[UIView alloc] init];
-    self.recordingProgressBar.backgroundColor = [UIColor whiteColor];
+    self.recordingProgressBar.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.1];
     [self.recordingProgressContainer addSubview:self.recordingProgressBar];
     self.recordingProgressContainer.hidden = YES;
     
@@ -746,11 +746,13 @@
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];
         exporter.outputUrl = recordSession.outputUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
-        exporter.videoConfiguration.preset = SCPresetMediumQuality;
-        exporter.audioConfiguration.preset = SCPresetMediumQuality;
-        AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-        exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
-        exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
+//        exporter.videoConfiguration.preset = SCPresetMediumQuality;
+//        exporter.audioConfiguration.preset = SCPresetMediumQuality;
+        if (self.captionTextView.text.length > 0) {
+            AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+            exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
+            exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
+        }
         
         NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
 

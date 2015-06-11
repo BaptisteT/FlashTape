@@ -561,11 +561,16 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZCy-IZ-pCQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
-                                        <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="2nB-Lz-VdK"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="2nB-Lz-VdK"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -587,6 +592,7 @@
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="a3J-Ht-ZTL"/>
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="cAH-hE-KeG"/>
                                     <constraint firstItem="ZDy-d9-iWW" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="fxy-5M-acD"/>
+                                    <constraint firstAttribute="bottom" secondItem="ZCy-IZ-pCQ" secondAttribute="bottom" id="kQv-wj-zB2"/>
                                     <constraint firstAttribute="centerY" secondItem="ZrJ-X2-Mtw" secondAttribute="centerY" id="qil-IO-mQz"/>
                                     <constraint firstAttribute="bottom" secondItem="ePW-Ve-NCZ" secondAttribute="bottom" constant="5" id="uIs-um-DSv"/>
                                     <constraint firstItem="ZDy-d9-iWW" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="40" id="upS-ss-bQZ"/>
