@@ -130,8 +130,6 @@
     [super viewWillAppear:animated];
     
     [self setVideoControllerMessageCount];
-    
-    [self orderFriendsByScore];
     [self.friendsTableView reloadData];
     
     // background color animation
@@ -433,18 +431,6 @@
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                         [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
                                     }];
-}
-
-- (void)orderFriendsByScore {
-    // Order friends by score
-    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
-        if (obj1 == [PFUser currentUser]) {
-            return NSOrderedAscending;
-        } else if (obj2 == [PFUser currentUser]) {
-            return NSOrderedDescending;
-        } else
-            return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
-    }];
 }
 
 // --------------------------------------------

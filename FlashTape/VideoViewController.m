@@ -522,10 +522,10 @@
     NSUInteger previousCount = _friends ? _friends.count : 0;
     [_friends removeAllObjects];
     [_friends addObjectsFromArray:friends];
-    if ([_friends indexOfObject:[User currentUser]] != NSNotFound) {
-        [_friends removeObjectAtIndex:[_friends indexOfObject:[User currentUser]]];
+    if (![_friends containsObject:[User currentUser]]) {
+        [_friends addObject:[User currentUser]];
     }
-    [_friends insertObject:[User currentUser] atIndex:0];
+    [self orderFriendsByScore];
     
     if (previousCount != friends.count) {
         // Retrieve video
@@ -536,6 +536,18 @@
                                                             object:nil
                                                           userInfo:nil];
     }
+}
+
+- (void)orderFriendsByScore {
+    // Order friends by score
+    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
+        if (obj1 == [PFUser currentUser]) {
+            return NSOrderedAscending;
+        } else if (obj2 == [PFUser currentUser]) {
+            return NSOrderedDescending;
+        } else
+            return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
+    }];
 }
 
 - (void)parseContactsAndFindFriendsIfAuthNotDetermined {
