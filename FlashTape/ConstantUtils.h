@@ -20,6 +20,9 @@ static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 //Flurry token
 static NSString * const kProdFlurryToken = @"5PFZ5RNNFKH6J6D6V4ZY";
 
+//Mixpanel token
+static NSString * const kMixpanelToken = @"51d7f02e924b3babe98ea09ca2dd423b";
+
 // Parse
 static NSString * const kParsePostsName = @"Posts";
 static NSString * const kParseFollowingName = @"Friends";

@@ -8,7 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "User.h"
+
 @interface TrackingUtils : NSObject
+
++ (void)identifyUser:(User *)user signup:(BOOL)flag;
 
 + (void)trackVideoSent;
 
@@ -16,10 +20,24 @@
 
 + (void)trackVideoSeen;
 
-+ (void)trackReplayButtonClicked;
++ (void)trackVideoDeleted;
 
-+ (void)trackOpenApp;
++ (void)trackReplayVideos;
+
++ (void)trackSession:(NSNumber *)length;
 
 + (void)trackInviteButtonClicked;
+
++ (void)trackInviteSent;
+
++ (void)trackMessageSent;
+
++ (void)trackMessageRead;
+
++ (void)trackMessageSendingFailed;
+
++ (void)trackAddFriend;
+
++ (void)trackBlockFriend;
 
 @end

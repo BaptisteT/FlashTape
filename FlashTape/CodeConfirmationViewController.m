@@ -13,6 +13,7 @@
 #import "GeneralUtils.h"
 #import "MBProgressHUD.h"
 #import "ColorUtils.h"
+#import "TrackingUtils.h"
 
 @interface CodeConfirmationViewController ()
 
@@ -88,9 +89,11 @@
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ApiManager logInUser:self.phoneNumber
                       success:^{
+                          // Ask username if not already
                           [MBProgressHUD hideHUDForView:self.view animated:YES];
                           User *currentUser = [User currentUser];
                           if (currentUser.flashUsername && currentUser.flashUsername.length > 0) {
+                              [TrackingUtils identifyUser:[User currentUser] signup:NO];
                               [self performSegueWithIdentifier:@"Videos From Code" sender:nil];
                           } else {
                               [self performSegueWithIdentifier:@"Username From Code" sender:nil];

@@ -14,6 +14,7 @@
 #import "UICustomLineLabel.h"
 #import "MBProgressHUD.h"
 #import "ColorUtils.h"
+#import "TrackingUtils.h"
 
 @interface UsernameViewController ()
 
@@ -65,6 +66,8 @@
                      success:^{
                          [MBProgressHUD hideHUDForView:self.view animated:YES];
                          [self performSegueWithIdentifier:@"Videos From Username" sender:nil];
+                         // Identify user
+                         [TrackingUtils identifyUser:[User currentUser] signup:YES];
                      } failure:^(NSError *error) {
                          [MBProgressHUD hideHUDForView:self.view animated:YES];
                          if (error) {

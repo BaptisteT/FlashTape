@@ -27,7 +27,7 @@
 @protocol FriendsVCProtocol
 
 - (void)hideUIElementOnCamera:(BOOL)flag;
-//- (void)playOneFriendVideos:(NSArray *)videos;
+- (void)playOneFriendVideos:(NSArray *)videos;
 - (void)removeVideoFromVideosArray:(VideoPost *)video;
 - (void)setMessageCount:(NSInteger)messageCount;
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion;

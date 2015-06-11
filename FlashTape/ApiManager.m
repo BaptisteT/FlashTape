@@ -17,6 +17,7 @@
 #import "ConstantUtils.h"
 #import "DatastoreUtils.h"
 #import "GeneralUtils.h"
+#import "TrackingUtils.h"
 
 @implementation ApiManager
 
@@ -267,8 +268,10 @@
                     if (block) {
                         [followedUser unpinInBackgroundWithName:kParseFollowingName];
                         [PFObject unpinAllInBackground:[DatastoreUtils getMessagesLocallyFromUser:followedUser] withName:kParseMessagesName];
+                        [TrackingUtils trackBlockFriend];
                     } else {
                         [followedUser pinInBackgroundWithName:kParseFollowingName];
+                        [TrackingUtils trackAddFriend];
                     }
                     if (successBlock) {
                         successBlock();
@@ -323,6 +326,9 @@
                     // Pin
                     [post pinInBackgroundWithName:kParsePostsName];
                     
+                    // Track
+                    [TrackingUtils trackVideoSent];
+                    
                     // Success block
                     if (successBlock)
                         successBlock();
@@ -331,9 +337,15 @@
                     NSLog(@"Error: %@ %@", error, [error userInfo]);
                     if (failureBlock)
                         failureBlock(error);
+                    
+                    // Track
+                    [TrackingUtils trackVideoSendingFailure];
                 }
             }];
         } else {
+            // Track
+            [TrackingUtils trackVideoSendingFailure];
+            
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             if (failureBlock)
@@ -390,6 +402,7 @@
 {
     [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
+            [TrackingUtils trackVideoDeleted];
             if (successBlock) {
                 successBlock();
             }
@@ -411,10 +424,12 @@
 {
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
+            [TrackingUtils trackMessageSent];
             if (successBlock) {
                 successBlock();
             }
         } else {
+            [TrackingUtils trackMessageSendingFailed];
             if (failureBlock) {
                 failureBlock(error);
             }
@@ -464,6 +479,7 @@
     [message unpinInBackgroundWithName:kParseMessagesName];
     // Save as read on parse
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [TrackingUtils trackMessageRead];
         if (succeeded) {
             if (successBlock) {
                 successBlock();

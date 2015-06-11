@@ -430,7 +430,9 @@
         NSArray *unseenArray = [self unseenVideosArray];
         self.videosToPlayArray = unseenArray.count > 0 ? unseenArray : self.allVideosArray;
         [self createCompositionAndPlayVideos];
-        [TrackingUtils trackReplayButtonClicked];
+        if (unseenArray.count == 0) {
+            [TrackingUtils trackReplayVideos];
+        }
     }
 }
 
@@ -775,14 +777,12 @@
                 [self.allVideosArray sortUsingComparator:^NSComparisonResult(VideoPost *obj1, VideoPost *obj2) {
                     return [obj1.recordedAt compare:obj2.recordedAt];
                 }];
-                [TrackingUtils trackVideoSent];
                 if (![self isPlayingMode])
                     [self setReplayButtonUI];
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];
                 [self setReplayButtonUI];
-                [TrackingUtils trackVideoSendingFailure];
             }];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.captionTextView.text = @"";

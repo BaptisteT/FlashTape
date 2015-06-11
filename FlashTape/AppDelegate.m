@@ -9,6 +9,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "Flurry.h"
+#import "Mixpanel.h"
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import <AVFoundation/AVFoundation.h>
@@ -27,6 +28,8 @@
 
 
 @interface AppDelegate ()
+
+@property (strong, nonatomic) NSDate *sessionStartDate;
 
 @end
 
@@ -50,24 +53,25 @@
     // Track statistics around application opens.
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-# ifdef DEBUG
-    BOOL debug = true;
-# else
-    BOOL debug = false;
-# endif
-    if (!debug) {
+    if (!DEBUG) {
         // Flurry
         [Flurry startSession:kProdFlurryToken];
         [Flurry setBackgroundSessionEnabled:NO];
         
         // Fabrick
         [Fabric with:@[CrashlyticsKit]];
+        
+        // Mixpanel
+        [Mixpanel sharedInstanceWithToken:kMixpanelToken launchOptions:launchOptions];
     }
     
     // Clean video data
     [DatastoreUtils deleteExpiredPosts];
     
     if ([User currentUser]) {
+        // Identify user
+        [TrackingUtils identifyUser:[User currentUser] signup:NO];
+        
         // Register for notif
         [NotifUtils registerForRemoteNotif];
         
@@ -88,7 +92,12 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [TrackingUtils trackOpenApp];
+    self.sessionStartDate = [NSDate date];
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+     NSNumber *seconds = @([[NSDate date] timeIntervalSinceDate:self.sessionStartDate]);
+    [TrackingUtils trackSession:seconds];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

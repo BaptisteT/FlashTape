@@ -481,8 +481,12 @@
     [self presentViewController:messageController animated:YES completion:nil];
 }
 // Dismiss message after finish
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
+    if (result == MessageComposeResultSent) {
+        [TrackingUtils trackInviteSent];
+    }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
