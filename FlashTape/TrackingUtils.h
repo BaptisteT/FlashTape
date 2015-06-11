@@ -40,4 +40,6 @@
 
 + (void)trackBlockFriend;
 
++ (void)trackSaveStory;
+
 @end

@@ -17,7 +17,7 @@
     if (DEBUG)return;
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel.people set:@{@"username": user.flashUsername, @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
+    [mixpanel.people set:@{@"name": user.flashUsername, @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
     [mixpanel identify:user.objectId];
     
     if (flag) {
@@ -167,6 +167,16 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"friend.block"];
     [mixpanel.people increment:@"friend.block" by:[NSNumber numberWithInt:1]];
+}
+
++ (void)trackSaveStory
+{
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"video.saved"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"video.saved"];
 }
 
 @end

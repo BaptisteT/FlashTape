@@ -11,6 +11,7 @@
 #import "ConstantUtils.h"
 #import "VideoUtils.h"
 #import "VideoPost.h"
+#import "TrackingUtils.h"
 
 @implementation VideoUtils
 
@@ -135,6 +136,7 @@
             [library writeVideoAtPathToSavedPhotosAlbum:exportURL
                                         completionBlock:^(NSURL *assetURL, NSError *error) {
                                             if (error == nil) {
+                                                [TrackingUtils trackSaveStory];
                                                 if (successBlock) {
                                                     successBlock();
                                                 }
