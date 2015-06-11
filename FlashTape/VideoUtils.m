@@ -128,6 +128,7 @@
     [exportSession exportAsynchronouslyWithCompletionHandler:^{
         if (exportSession.error) {
             NSLog(@"%@",exportSession.error.description);
+            [TrackingUtils trackSaveStoryFailed];
             if (failureBlock) {
                 failureBlock();
             }
@@ -142,6 +143,7 @@
                                                 }
                                             } else {
                                                 NSLog(@"%@",error.description);
+                                                [TrackingUtils trackSaveStoryFailed];
                                                 if (failureBlock) {
                                                     failureBlock();
                                                 }

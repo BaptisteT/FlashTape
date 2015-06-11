@@ -398,6 +398,7 @@
     CMTime time = CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoView.player.itemDuration) * widthRatio, self.friendVideoView.player.itemDuration.timescale);
     [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
     if (gesture.state == UIGestureRecognizerStateBegan) {
+        [TrackingUtils trackPlayingBarSlide];
         [self showMetaData:NO];
         [self.friendVideoView.player pause];
         [self.whiteNoisePlayer pause];
@@ -437,15 +438,18 @@
 }
 
 - (IBAction)flipCameraButtonClicked:(id)sender {
+    [TrackingUtils trackCameraFlipClicked];
     self.recorder.device = self.recorder.device == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
     [GeneralUtils saveLastVideoSelfieModePref:(self.recorder.device == AVCaptureDevicePositionFront)];
 }
 
 - (IBAction)friendsButtonClicked:(id)sender {
+    [TrackingUtils trackFriendButtonClicked];
     [self navigateToFriends];
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
+    [TrackingUtils trackCaptionClicked];
     self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     [self.captionTextView becomeFirstResponder];
 }
@@ -735,10 +739,13 @@
         AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
         exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
         exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
+        
+        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
 
         [exporter exportAsynchronouslyWithCompletionHandler: ^{
             if (exporter.error == nil) {
                 VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
+                post.videoProperties = properties;
                 if (successBlock)
                     successBlock(post);
             } else {
@@ -779,6 +786,8 @@
                 }];
                 if (![self isPlayingMode])
                     [self setReplayButtonUI];
+                // Track
+                [TrackingUtils trackVideoSentWithProperties:post.videoProperties];
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];

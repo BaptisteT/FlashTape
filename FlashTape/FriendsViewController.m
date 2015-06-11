@@ -130,6 +130,7 @@
     [super viewWillAppear:animated];
     
     [self setVideoControllerMessageCount];
+    
     [self orderFriendsByScore];
     [self.friendsTableView reloadData];
     
@@ -329,10 +330,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self isCurrentUserUserCell:indexPath]) {
+        [TrackingUtils trackMyStoryClicked];
         _expandMyStory = !_expandMyStory;
         self.postToDetail = nil;
         [self reloadCurrentUserSection];
     } else if ([self isCurrentUserPostCell:indexPath]) {
+        [TrackingUtils trackMyVideoClicked];
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         self.postToDetail = (post == self.postToDetail) ? nil : post;
         [self reloadCurrentUserSection];

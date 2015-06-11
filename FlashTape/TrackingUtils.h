@@ -14,7 +14,7 @@
 
 + (void)identifyUser:(User *)user signup:(BOOL)flag;
 
-+ (void)trackVideoSent;
++ (void)trackVideoSentWithProperties:(NSDictionary *)properties;
 
 + (void)trackVideoSendingFailure;
 
@@ -30,7 +30,7 @@
 
 + (void)trackInviteSent;
 
-+ (void)trackMessageSent;
++ (void)trackMessageSent:(NSString *)messageType;
 
 + (void)trackMessageRead;
 
@@ -41,5 +41,19 @@
 + (void)trackBlockFriend;
 
 + (void)trackSaveStory;
+
++ (void)trackSaveStoryFailed;
+
++ (void)trackCaptionClicked;
+
++ (void)trackCameraFlipClicked;
+
++ (void)trackFriendButtonClicked;
+
++ (void)trackMyStoryClicked;
+
++ (void)trackMyVideoClicked;
+
++ (void)trackPlayingBarSlide;
 
 @end

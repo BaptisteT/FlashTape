@@ -44,15 +44,14 @@
     [mixpanel.people increment:@"app.open" by:[NSNumber numberWithInt:1]];
 }
 
-+ (void)trackVideoSent
++ (void)trackVideoSentWithProperties:(NSDictionary *)properties
 {
     if (DEBUG)return;
     
     [PFAnalytics trackEvent:@"video.sent"];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"video.sent"];
-    [mixpanel.people increment:@"video.sent" by:[NSNumber numberWithInt:1]];
+    [mixpanel track:@"video.sent" properties:properties];
 }
 
 + (void)trackVideoSendingFailure
@@ -115,14 +114,14 @@
     [mixpanel track:@"invite.sent"];
 }
 
-+ (void)trackMessageSent
++ (void)trackMessageSent:(NSString *)messageType
 {
     if (DEBUG)return;
     
     [PFAnalytics trackEvent:@"message.sent"];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"message.sent"];
+    [mixpanel track:@"message.sent" properties:@{@"type": messageType}];
     [mixpanel.people increment:@"message.sent" by:[NSNumber numberWithInt:1]];
 }
 
@@ -178,5 +177,73 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.saved"];
 }
+
++ (void)trackSaveStoryFailed
+{
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"video.saving_failure"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"video.saving_failure"];
+}
+
+
++ (void)trackCaptionClicked {
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"caption.clicked"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"caption.clicked"];
+}
+
++ (void)trackCameraFlipClicked {
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"camera_flip.clicked"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"camera_flip.clicked"];
+}
+
++ (void)trackFriendButtonClicked {
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"friend_button.clicked"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"friend_button.clicked"];
+}
+
++ (void)trackMyStoryClicked {
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"me.story.clicked"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"me.story.clicked"];
+}
+
++ (void)trackMyVideoClicked {
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"me.video.clicked"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"me.video.clicked"];
+}
+
++ (void)trackPlayingBarSlide {
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"playing.slide"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"playing.slide"];
+}
+
+
+
 
 @end

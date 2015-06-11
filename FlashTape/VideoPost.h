@@ -22,6 +22,7 @@
 @property (nonatomic) NSInteger downloadProgress;
 @property (nonatomic) BOOL isDownloading;
 @property (retain) UIImage *thumbmail;
+@property (retain) NSDictionary *videoProperties;
 
 + (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
 

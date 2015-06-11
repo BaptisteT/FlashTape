@@ -326,9 +326,6 @@
                     // Pin
                     [post pinInBackgroundWithName:kParsePostsName];
                     
-                    // Track
-                    [TrackingUtils trackVideoSent];
-                    
                     // Success block
                     if (successBlock)
                         successBlock();
@@ -424,7 +421,6 @@
 {
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            [TrackingUtils trackMessageSent];
             if (successBlock) {
                 successBlock();
             }

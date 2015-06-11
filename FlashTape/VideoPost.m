@@ -26,6 +26,7 @@
 @dynamic user;
 @dynamic viewerIdsArray;
 @dynamic recordedAt;
+@dynamic videoProperties;
 
 static int downloadingCount = 0;
 

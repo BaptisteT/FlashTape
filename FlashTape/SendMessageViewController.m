@@ -11,6 +11,7 @@
 
 #import "ConstantUtils.h"
 #import "KeyboardUtils.h"
+#import "TrackingUtils.h"
 
 #define EMOJI_ARRAY @[@"❤️", @"😂", @"😔", @"😍", @"☺️", @"😎", @"😉", @"💋", @"😊", @"👍", @"😘", @"😡", @"😀", @"👌", @"😬", @"🙈", @"👅", @"🍻", @"😱", @"🙏", @"🐶", @"😜", @"💩", @"💪"]
 
@@ -109,6 +110,7 @@
 }
 
 - (void)emojiClicked:(UIButton *)sender {
+    [TrackingUtils trackMessageSent:@"emoji"];
     [self sendMessage:sender.titleLabel.text];
 }
 
@@ -124,6 +126,7 @@
     NSString *newString = [textView.text stringByReplacingCharactersInRange:range withString:text];
     if ([text isEqualToString:@"\n"]) {
         if (newString.length > 0) {
+            [TrackingUtils trackMessageSent:@"text"];
             [self sendMessage:textView.text];
         }
         return NO;
