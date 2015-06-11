@@ -70,6 +70,7 @@
     }];
     
     // Tableview
+    self.friendsTableView.allowsMultipleSelectionDuringEditing = NO;
     self.friendsTableView.dataSource = self;
     self.friendsTableView.delegate = self;
     self.friendsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -127,7 +128,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // Order friends by score
+    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
+        return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
+    }];
     [self.friendsTableView reloadData];
+    
+    // background color animation
     _stopAnimation = NO;
     [self doBackgroundColorAnimation];
 }
@@ -146,10 +154,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     _stopAnimation = YES;
-}
-
-- (void)reload {
-    [self.friendsTableView reloadData];
 }
 
 // --------------------------------------------
@@ -177,8 +181,13 @@
     }
 }
 
+- (void)presentSendViewController:(User *)friend {
+    self.sendMessageController.messageRecipient = friend;
+    [self presentViewController:self.sendMessageController animated:NO completion:nil];
+}
+
 // --------------------------------------------
-#pragma mark - Actions
+#pragma mark - Message
 // --------------------------------------------
 
 // Send message
@@ -213,9 +222,46 @@
     [self sendMessage:message];
 }
 
+- (void)createMessagesDictionnaryAndReload:(NSArray *)unreadMessages {
+    NSMutableDictionary *messagesDictionary = [NSMutableDictionary new];
+    for (Message *message in unreadMessages) {
+        // Add message to dictionnary
+        NSMutableArray *messageArray = [messagesDictionary objectForKey:message.sender.objectId];
+        if (messageArray) {
+            [messageArray addObject:message];
+        } else {
+            [messagesDictionary setObject:[NSMutableArray arrayWithObject:message] forKey:message.sender.objectId];
+        }
+        // Add user to follower if not a friend
+        if (![self.friends containsObject:message.sender]) {
+            [self.followerArray addObject:message.sender];
+        }
+    }
+    self.messagesReceivedDictionnary = messagesDictionary;
+    [self.friendsTableView reloadData];
+}
+
+- (void)retrieveUnreadMessages {
+    [ApiManager retrieveUnreadMessagesAndExecuteSuccess:^(NSArray *messages) {
+        [self.refreshControl endRefreshing];
+        [self createMessagesDictionnaryAndReload:messages];
+    } failure:^(NSError *error) {
+        [self.refreshControl endRefreshing];
+    }];
+}
+
+- (void)retrieveUnreadMessagesLocally {
+    [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
+}
+
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
+
+- (void)reload {
+    [self.friendsTableView reloadData];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.friends.count + self.followerArray.count;
 }
@@ -330,9 +376,21 @@
     }
 }
 
-- (void)presentSendViewController:(User *)friend {
-    self.sendMessageController.messageRecipient = friend;
-    [self presentViewController:self.sendMessageController animated:NO completion:nil];
+// Edit only friend cells
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [self isFriendUserCell:indexPath];
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete && [self isFriendUserCell:indexPath]) {
+        User *friend = (User *)self.friends[indexPath.section];
+        [self updateRelationshipWithUser:friend block:YES];
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NSLocalizedString(@"block_button", nil);
 }
 
 - (void)reloadCurrentUserSection {
@@ -345,38 +403,31 @@
 }
 
 // --------------------------------------------
-#pragma mark - Messages
+#pragma mark - Friends
 // --------------------------------------------
-- (void)createMessagesDictionnaryAndReload:(NSArray *)unreadMessages {
-    NSMutableDictionary *messagesDictionary = [NSMutableDictionary new];
-    for (Message *message in unreadMessages) {
-        // Add message to dictionnary
-        NSMutableArray *messageArray = [messagesDictionary objectForKey:message.sender.objectId];
-        if (messageArray) {
-            [messageArray addObject:message];
-        } else {
-            [messagesDictionary setObject:[NSMutableArray arrayWithObject:message] forKey:message.sender.objectId];
-        }
-        // Add user to follower if not a friend
-        if (![self.friends containsObject:message.sender]) {
-            [self.followerArray addObject:message.sender];
-        }
-    }
-    self.messagesReceivedDictionnary = messagesDictionary;
-    [self.friendsTableView reloadData];
-}
-
-- (void)retrieveUnreadMessages {
-    [ApiManager retrieveUnreadMessagesAndExecuteSuccess:^(NSArray *messages) {
-        [self.refreshControl endRefreshing];
-        [self createMessagesDictionnaryAndReload:messages];
-    } failure:^(NSError *error) {
-        [self.refreshControl endRefreshing];
-    }];
-}
-
-- (void)retrieveUnreadMessagesLocally {
-    [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
+// Follow or block user
+- (void)updateRelationshipWithUser:(User *)user
+                             block:(BOOL)block
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ApiManager updateRelationWithFollowing:user
+                                      block:block
+                                    success:^{
+                                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                        [self.followerArray removeObject:user];
+                                        if (block) {
+                                            [self.friends removeObject:user];
+                                            // remove messages
+                                            [self.messagesReceivedDictionnary removeObjectForKey:user.objectId];
+                                        } else {
+                                            // add to friends
+                                            [self.friends addObject:user];
+                                        }
+                                        [self.friendsTableView reloadData];
+                                    } failure:^(NSError *error) {
+                                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                        [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
+                                    }];
 }
 
 // --------------------------------------------
@@ -471,28 +522,11 @@
             }
         }
     } else if([alertView.message isEqualToString:NSLocalizedString(@"follow_or_block_alert_message", nil)]) {
-        BOOL block = [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"block_button", nil)];
-        
         // Follow or block user
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [ApiManager updateRelationWithFollowing:self.userToFollowOrBlock
-                                          block:block
-                                        success:^{
-                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                            [self.followerArray removeObject:self.userToFollowOrBlock];
-                                            if (block) {
-                                                // remove & unpin messages
-                                                [self.messagesReceivedDictionnary removeObjectForKey:self.userToFollowOrBlock.objectId];
-                                            } else {
-                                                // add to friends
-                                                [self.friends addObject:self.userToFollowOrBlock];
-                                            }
-                                            self.userToFollowOrBlock = nil;
-                                            [self.friendsTableView reloadData];
-                                        } failure:^(NSError *error) {
-                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                            [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
-                                        }];
+        BOOL block = [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"block_button", nil)];
+        [self updateRelationshipWithUser:self.userToFollowOrBlock block:block];
+        self.userToFollowOrBlock = nil;
+
     } else if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
             [GeneralUtils openSettings];

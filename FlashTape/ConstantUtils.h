@@ -17,6 +17,9 @@
 static NSString * const kFlashTapeAppStoreLink = @"https://itunes.apple.com/us/app/id997449435";
 static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 
+//Flurry token
+static NSString * const kProdFlurryToken = @"5PFZ5RNNFKH6J6D6V4ZY";
+
 // Parse
 static NSString * const kParsePostsName = @"Posts";
 static NSString * const kParseFollowingName = @"Friends";

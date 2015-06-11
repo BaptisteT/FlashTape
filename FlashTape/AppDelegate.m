@@ -6,7 +6,9 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import <AudioToolbox/AudioToolbox.h>
-
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import "Flurry.h"
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import <AVFoundation/AVFoundation.h>
@@ -17,6 +19,7 @@
 #import "WelcomeViewController.h"
 
 #import "ColorUtils.h"
+#import "ConstantUtils.h"
 #import "DatastoreUtils.h"
 #import "GeneralUtils.h"
 #import "NotifUtils.h"
@@ -36,20 +39,32 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord
                                      withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionDefaultToSpeaker
                                            error:nil];
-    // Enable Parse Crash Reporting
-    [ParseCrashReporting enable];
-    
+    // -------------------------------
+    // Parse
+    // -------------------------------
     // Enable Parse local datastore
     [Parse enableLocalDatastore];
-    
     // Initialize Parse.
     [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
                   clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
-
     // Track statistics around application opens.
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    // Clean data
+# ifdef DEBUG
+    BOOL debug = true;
+# else
+    BOOL debug = false;
+# endif
+    if (!debug) {
+        // Flurry
+        [Flurry startSession:kProdFlurryToken];
+        [Flurry setBackgroundSessionEnabled:NO];
+        
+        // Fabrick
+        [Fabric with:@[CrashlyticsKit]];
+    }
+    
+    // Clean video data
     [DatastoreUtils deleteExpiredPosts];
     
     if ([User currentUser]) {
