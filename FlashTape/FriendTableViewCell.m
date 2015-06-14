@@ -22,8 +22,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *seemView;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UILabel *messageCountLabel;
-@property (weak, nonatomic) IBOutlet UILabel *messageSentLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *messageSentLabel;
+@property (strong, nonatomic) IBOutlet UIImageView *accessoryImage;
 @end
 
 
@@ -36,10 +37,14 @@
 {
     self.nameLabel.text = user.flashUsername;
     self.scoreLabel.text = [NSString stringWithFormat:@"%lu",(long)(user.score ? user.score : 0)];
+    self.nameLabel.translatesAutoresizingMaskIntoConstraints = YES;
+    self.scoreLabel.translatesAutoresizingMaskIntoConstraints = YES;
+    
     BOOL isCurrentUser = [User currentUser] == user;
+    
     self.seemView.hidden = !hasSeenVideos || isCurrentUser;
     self.backgroundColor = [UIColor clearColor];
-    self.accessoryType = isCurrentUser ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+    self.accessoryImage.hidden = !isCurrentUser;
     
     // Save
     self.saveButton.enabled = YES;
@@ -49,7 +54,19 @@
     if (count != 0) {
         self.messageCountLabel.hidden = NO;
         self.messageCountLabel.text = [NSString stringWithFormat:@"%lu",(long)count];
+        CGRect frame = self.nameLabel.frame;
+        frame.origin.x = 60;
+        self.nameLabel.frame = frame;
+        frame = self.scoreLabel.frame;
+        frame.origin.x = 60;
+        self.scoreLabel.frame = frame;
     } else {
+        CGRect frame = self.nameLabel.frame;
+        frame.origin.x = 20;
+        self.nameLabel.frame = frame;
+        frame = self.scoreLabel.frame;
+        frame.origin.x = 20;
+        self.scoreLabel.frame = frame;
         self.messageCountLabel.hidden = YES;
     }
     

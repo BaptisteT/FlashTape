@@ -28,7 +28,7 @@
 
 // username
 "username_title" = "Username";
-"username_explanation" = "Please, enter your username below.";
+"username_explanation" = "Pick your unique username and have a lot of fun!";
 "save_username_error_title" = "Sorry, we could not save your username";
 "save_username_error_message" = "Please, try again.";
 "already_taken_username_error_message" = "Please, pick another one";
@@ -76,7 +76,7 @@
 "save_story_error_title" = "";
 "save_story_error_message" = "Sorry, we could not save your flashes";
 "current_user_TVC_name" = "me";
-"story_views_label" = "%lu 👀";
+"story_views_label" = "%lu";
 
 // Message
 "send_title" = "Send to %@";

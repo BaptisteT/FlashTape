@@ -17,7 +17,7 @@
     if (DEBUG)return;
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel.people set:@{@"name": user.flashUsername, @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
+    [mixpanel.people set:@{@"name": user.flashUsername ? user.flashUsername : @"", @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
     [mixpanel identify:user.objectId];
     
     if (flag) {

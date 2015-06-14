@@ -90,7 +90,7 @@
 
 // Messages
 @property (nonatomic) NSInteger messageCount;
-@property (weak, nonatomic) IBOutlet UILabel *unreadMessagesCountLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *unreadMessagesCountLabel;
 @property (nonatomic) NSInteger unreadVideoCount;
 
 @end
@@ -228,10 +228,10 @@
         self.recordTutoLabel.lineHeight = 4.0f;
     }
     self.replayButton.hidden = YES;
-    self.unreadMessagesCountLabel.layer.cornerRadius = self.unreadMessagesCountLabel.frame.size.height / 2;
-    self.unreadMessagesCountLabel.layer.borderWidth = 1;
-    self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils purple].CGColor;
-    self.unreadMessagesCountLabel.textColor = [ColorUtils purple];
+//    self.unreadMessagesCountLabel.layer.cornerRadius = self.unreadMessagesCountLabel.frame.size.height / 2;
+//    self.unreadMessagesCountLabel.layer.borderWidth = 1;
+//    self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils purple].CGColor;
+//    self.unreadMessagesCountLabel.textColor = [ColorUtils purple];
     self.messageCount = 0;
     
     // Preview
@@ -631,22 +631,21 @@
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
-    if (![self.nameLabel.text isEqualToString:post.user.flashUsername]) {
+    if (![self.nameLabel.text isEqualToString:[NSString stringWithFormat:@" %@  ",post.user.flashUsername]]) {
         _metadataColorIndex ++;
         if (_metadataColorIndex >= self.metadataColorArray.count) {
             _metadataColorIndex = 0;
         }
     }
     
-    self.nameLabel.text = post.user.flashUsername;
+    self.nameLabel.text = [NSString stringWithFormat:@" %@  ",post.user.flashUsername];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm"];
     NSString *stringDate = [dateFormatter stringFromDate:post.recordedAt];
     self.timeLabel.text = stringDate;
     
     // Color
-    self.nameLabel.textColor = self.metadataColorArray[_metadataColorIndex];
-    self.timeLabel.textColor = self.metadataColorArray[_metadataColorIndex];
+    self.nameLabel.backgroundColor = self.metadataColorArray[_metadataColorIndex];
     
     // Show metadata
     [self showMetaData:YES];
@@ -848,10 +847,21 @@
     } failure:nil];
 }
 
+
 - (void)setMessageCount:(NSInteger)messageCount {
     _messageCount = messageCount;
-    self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)messageCount];
-    self.unreadMessagesCountLabel.hidden = (messageCount == 0);
+    
+    if (messageCount > 0) {
+        [self.friendListButton setTitle:[NSString stringWithFormat:@"%lu",(long)messageCount] forState:UIControlStateNormal];
+        [self.friendListButton setBackgroundImage:nil forState:UIControlStateNormal];
+    } else {
+        [self.friendListButton setBackgroundImage:[UIImage imageNamed:@"friends_button"] forState:UIControlStateNormal];
+        [self.friendListButton setTitle:nil forState:UIControlStateNormal];
+        
+    }
+    
+//    self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)messageCount];
+//    self.unreadMessagesCountLabel.hidden = (messageCount == 0);
     
     // Update Badge
     [ApiManager updateBadge:messageCount + self.unreadVideoCount];
@@ -1011,12 +1021,12 @@
 
 - (void)hideUIElementOnCamera:(BOOL)flag {
     if (flag) {
-        self.unreadMessagesCountLabel.hidden = YES;
+//        self.unreadMessagesCountLabel.hidden = YES;
         self.replayButton.hidden = YES;
         self.recordTutoLabel.hidden = YES;
         self.captionTextView.hidden = YES;
     } else {
-        self.unreadMessagesCountLabel.hidden = (self.messageCount == 0);
+//        self.unreadMessagesCountLabel.hidden = (self.messageCount == 0);
         [self setReplayButtonUI];
         self.captionTextView.hidden = (self.captionTextView.text.length == 0);
         self.recordTutoLabel.hidden = !(self.captionTextView.text.length == 0);
