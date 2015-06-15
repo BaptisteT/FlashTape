@@ -199,7 +199,7 @@
 // Send message
 - (void)sendMessage:(Message *)message {
     // reload this section
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self.friends indexOfObject:message.receiver]];
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self sectionForFriend:message.receiver]];
     [self.friendsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
     
     [ApiManager sendMessage:message
@@ -407,7 +407,7 @@
 }
 
 - (void)reloadCurrentUserSection {
-    NSInteger section = [self.friends indexOfObject:[User currentUser]];
+    NSInteger section = [self sectionForFriend:[User currentUser]];
     if (section != NSNotFound) {
         NSRange range = NSMakeRange(section, 1);
         NSIndexSet *sectionToReload = [NSIndexSet indexSetWithIndexesInRange:range];
@@ -481,6 +481,10 @@
     } else {
         return nil;
     }
+}
+
+- (NSInteger)sectionForFriend:(User *)user {
+    return [self.friends indexOfObject:user] + 1;
 }
 
 // ----------------------------------------------------------

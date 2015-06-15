@@ -815,7 +815,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="increase_your_score_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WUl-fI-ihe">
-                                <rect key="frame" x="16" y="50" width="568" height="20"/>
+                                <rect key="frame" x="16" y="58" width="568" height="20"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -1119,8 +1119,9 @@
                             <constraint firstItem="WUl-fI-ihe" firstAttribute="trailing" secondItem="RIw-BT-qC9" secondAttribute="trailingMargin" id="cH8-Tf-5nd"/>
                             <constraint firstAttribute="centerX" secondItem="YBS-wd-gmG" secondAttribute="centerX" id="dUW-UF-IxE"/>
                             <constraint firstItem="LqB-To-ITe" firstAttribute="top" secondItem="bO2-dF-h7J" secondAttribute="bottom" id="dUc-D7-fpc"/>
+                            <constraint firstItem="ZSA-hz-LCJ" firstAttribute="top" secondItem="WUl-fI-ihe" secondAttribute="bottom" constant="10" id="eWi-Ez-ZfY"/>
                             <constraint firstAttribute="trailing" secondItem="bO2-dF-h7J" secondAttribute="trailing" id="itp-cz-ZTk"/>
-                            <constraint firstItem="WUl-fI-ihe" firstAttribute="top" secondItem="xSU-N2-FLc" secondAttribute="bottom" constant="30" id="jPX-3H-zp9"/>
+                            <constraint firstItem="WUl-fI-ihe" firstAttribute="top" secondItem="xSU-N2-FLc" secondAttribute="bottom" constant="40" id="jPX-3H-zp9"/>
                             <constraint firstItem="bO2-dF-h7J" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" id="jeV-bw-u7D"/>
                             <constraint firstAttribute="centerX" secondItem="5uH-OJ-Xuh" secondAttribute="centerX" id="lDa-KQ-reu"/>
                             <constraint firstItem="YBS-wd-gmG" firstAttribute="top" secondItem="RIw-BT-qC9" secondAttribute="top" id="mUF-kq-pTb"/>
@@ -1139,6 +1140,7 @@
                                 <exclude reference="ag5-ZY-X0B"/>
                                 <exclude reference="dUW-UF-IxE"/>
                                 <exclude reference="zLu-qX-YJj"/>
+                                <exclude reference="jPX-3H-zp9"/>
                                 <exclude reference="Am4-77-bjI"/>
                                 <exclude reference="aLa-p7-NS9"/>
                                 <exclude reference="b3E-yV-0HW"/>
