@@ -51,19 +51,27 @@
     self.timeLabel.text = stringDate;
     self.viewsLabel.hidden = detailedState;
     self.deleteButton.hidden = !detailedState;
+    
+    if (!self.viewerNamesLabel) {
+        self.viewerNamesLabel = [NSMutableArray new];
+    }
+    
+    // Clean previous names if any
+    for (UILabel *nameLabel in self.viewerNamesLabel) {
+        [nameLabel removeFromSuperview];
+    }
+    [self.viewerNamesLabel removeAllObjects];
+    
+    // detail UI
     if (!detailedState) {
         NSInteger viewsCount = [post viewerIdsArrayWithoutPoster].count;
         self.viewsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"story_views_label", nil),viewsCount];
-        for (UILabel *nameLabel in self.viewerNamesLabel) {
-            [nameLabel removeFromSuperview];
-        }
-        self.viewerNamesLabel = nil;
     } else {
         NSArray *names = [DatastoreUtils getNamesOfUsersWithId:[post viewerIdsArrayWithoutPoster]];
         int ii = 0;
         for (NSString *name in names) {
             [self addLabelWithName:name yPosition:kVideoCellHeight+kVideoCellViewerAdditionalHeight*ii];
-            ii++;
+            ii ++;
         }
     }
 }
@@ -74,9 +82,6 @@
     label.textColor = [UIColor whiteColor];
     label.minimumScaleFactor = 2;
     label.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:12];
-    if (!self.viewerNamesLabel) {
-        self.viewerNamesLabel = [NSMutableArray new];
-    }
     [self.viewerNamesLabel addObject:label];
     [self addSubview:label];
 }
