@@ -271,13 +271,12 @@
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
-
 - (void)reload {
     [self.friendsTableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.friends.count + self.followerArray.count;
+    return 1 + self.friends.count + self.followerArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -290,17 +289,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self isCurrentUserUserCell:indexPath] || [self isFriendUserCell:indexPath]) {
+    if ([self isAddFriendSection:indexPath.section]) {
+        return [tableView dequeueReusableCellWithIdentifier:@"AddFriendCell"];
+    } else if ([self isCurrentUserUserCell:indexPath] || [self isFriendUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
         // Data
         FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-        
-        User *friend;
-        if (indexPath.section < self.friends.count) {
-            friend = (User *)self.friends[indexPath.section];
-        } else {
-            friend = (User *)self.followerArray[indexPath.section - self.friends.count];
-        }
-        
+        User *friend = [self friendOrFollowerForSection:indexPath.section];
         NSArray *viewerIdsArray = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray : nil;
         BOOL hasSeenVideo = (viewerIdsArray) ? ([viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : NO;
         NSInteger messageCount = self.messagesReceivedDictionnary[friend.objectId] ? ((NSArray *)self.messagesReceivedDictionnary[friend.objectId]).count : 0;
@@ -321,14 +315,15 @@
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
-    } else { // should not happen
+    } else {
+        NSLog(@"should not happen");
         return [UITableViewCell new];
     }
 }
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self isCurrentUserUserCell:indexPath] || [self isFriendUserCell:indexPath]) {
+    if ([self isAddFriendSection:indexPath.section] || [self isCurrentUserUserCell:indexPath] || [self isFriendUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
         return 80;
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
@@ -350,57 +345,57 @@
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         self.postToDetail = (post == self.postToDetail) ? nil : post;
         [self reloadCurrentUserSection];
-    } else if ([self isFriendUserCell:indexPath]) {
+    } else if ([self isFriendUserSection:indexPath.section]) {
         _expandMyStory = NO;
         self.postToDetail = nil;
-        
-        if (indexPath.section < self.friends.count) {
-            User *friend = (User *)self.friends[indexPath.section];
-            
-            // Check if we have failure
-            NSMutableArray *failedMessageArray = [NSMutableArray new];
-            if (self.messagesSentDictionnary[friend.objectId]) {
-                for (Message *message in self.messagesSentDictionnary[friend.objectId]) {
-                    if (message.status == kMessageTypeFailed) {
-                        [failedMessageArray addObject:message];
-                    }
+        User *friend = [self friendOrFollowerForSection:indexPath.section];
+
+        // Check if we have failure
+        NSMutableArray *failedMessageArray = [NSMutableArray new];
+        if (self.messagesSentDictionnary[friend.objectId]) {
+            for (Message *message in self.messagesSentDictionnary[friend.objectId]) {
+                if (message.status == kMessageTypeFailed) {
+                    [failedMessageArray addObject:message];
                 }
             }
-            
-            // Resend
-            if (failedMessageArray.count > 0) {
-                for (Message *message in failedMessageArray) {
-                    [self sendMessage:message];
-                }
-            // read
-            } else if (self.messagesReceivedDictionnary[friend.objectId] && ((NSArray *)self.messagesReceivedDictionnary[friend.objectId]).count > 0) {
-                [self performSegueWithIdentifier:@"Read Message From Friends" sender:friend];
-                
-            // Send
-            } else {
-                [self presentSendViewController:friend];
-            }
-        } else {
-            self.userToFollowOrBlock = (User *)self.followerArray[indexPath.section - self.friends.count];
-            // Present alert view
-            [[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"follow_or_block_alert_title", nil), self.userToFollowOrBlock.flashUsername]
-                                        message:NSLocalizedString(@"follow_or_block_alert_message", nil)
-                                       delegate:self
-                              cancelButtonTitle:NSLocalizedString(@"block_button", nil)
-                              otherButtonTitles:NSLocalizedString(@"follow_button", nil), nil] show];
         }
+        
+        // Resend
+        if (failedMessageArray.count > 0) {
+            for (Message *message in failedMessageArray) {
+                [self sendMessage:message];
+            }
+        // read
+        } else if (self.messagesReceivedDictionnary[friend.objectId] && ((NSArray *)self.messagesReceivedDictionnary[friend.objectId]).count > 0) {
+            [self performSegueWithIdentifier:@"Read Message From Friends" sender:friend];
+            
+        // Send
+        } else {
+            [self presentSendViewController:friend];
+        }
+    }
+    else if ([self isFollowerUserSection:indexPath.section]) {
+        _expandMyStory = NO;
+        self.postToDetail = nil;
+        self.userToFollowOrBlock = [self friendOrFollowerForSection:indexPath.section];
+        // Present alert view
+        [[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"follow_or_block_alert_title", nil), self.userToFollowOrBlock.flashUsername]
+                                    message:NSLocalizedString(@"follow_or_block_alert_message", nil)
+                                   delegate:self
+                          cancelButtonTitle:NSLocalizedString(@"block_button", nil)
+                          otherButtonTitles:NSLocalizedString(@"follow_button", nil), nil] show];
     }
 }
 
 // Edit only friend cells
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self isFriendUserCell:indexPath];
+    return [self isFriendUserSection:indexPath.section];
 }
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete && [self isFriendUserCell:indexPath]) {
-        User *friend = (User *)self.friends[indexPath.section];
+    if (editingStyle == UITableViewCellEditingStyleDelete && [self isFriendUserSection:indexPath.section]) {
+        User *friend = [self friendOrFollowerForSection:indexPath.section];
         [self updateRelationshipWithUser:friend block:YES];
     }
 }
@@ -449,22 +444,42 @@
 // --------------------------------------------
 #pragma mark - Cell Type
 // --------------------------------------------
+- (BOOL)isAddFriendSection:(NSInteger)section {
+    return section == 0;
+}
+
 - (BOOL)isCurrentUserSection:(NSInteger)section {
-    return section < self.friends.count && (User *)self.friends[section] == [User currentUser];
+    return [self friendOrFollowerForSection:section] == [User currentUser];
 }
 
 - (BOOL)isCurrentUserUserCell:(NSIndexPath *)indexPath {
     return [self isCurrentUserSection:indexPath.section] && indexPath.row == 0;
 }
 
-- (BOOL)isFriendUserCell:(NSIndexPath *)indexPath {
-    return indexPath.row == 0 && ![self isCurrentUserSection:indexPath.section];
+- (BOOL)isFriendUserSection:(NSInteger)section {
+    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && (section < self.friends.count + 1);
+}
+
+- (BOOL)isFollowerUserSection:(NSInteger)section {
+    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && ![self isFriendUserSection:section] && section < self.followerArray.count + self.friends.count + 1;
 }
 
 - (BOOL)isCurrentUserPostCell:(NSIndexPath *)indexPath {
     return indexPath.row != 0 && [self isCurrentUserSection:indexPath.section];
 }
 
+- (User *)friendOrFollowerForSection:(NSInteger)section {
+    if (section == 0) {
+        return nil;
+    }
+    if (section < self.friends.count + 1) {
+        return (User *)self.friends[section - 1];
+    } else if (section < self.followerArray.count + self.friends.count + 1 ) {
+        return (User *)self.followerArray[section - self.friends.count - 1];
+    } else {
+        return nil;
+    }
+}
 
 // ----------------------------------------------------------
 #pragma mark SMS controller
