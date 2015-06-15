@@ -123,14 +123,14 @@
 #pragma mark Textview delegate
 // ----------------------------------------------------------
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    NSString *newString = [textView.text stringByReplacingCharactersInRange:range withString:text];
     if ([text isEqualToString:@"\n"]) {
-        if (newString.length > 0) {
+        if (textView.text.length > 0) {
             [TrackingUtils trackMessageSent:@"text"];
             [self sendMessage:textView.text];
         }
         return NO;
     } else  {
+        NSString *newString = [textView.text stringByReplacingCharactersInRange:range withString:text];
         if (newString.length > kMaxMessageLength) {
             return NO;
         }

@@ -20,7 +20,10 @@
 @interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate, ReadMessageVCDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
-@property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSMutableOrderedSet *friends;
+
+// On click on feed friend name
+@property (strong, nonatomic) NSString *friendUsername;
 
 @end
 

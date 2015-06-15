@@ -61,7 +61,7 @@
     self.followerArray = [NSMutableArray new];
     
     // Retrieve Messages Locally
-    [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
+    [self retrieveUnreadMessagesLocally];
     
     // Refresh current User posts
     self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]]];
@@ -130,6 +130,17 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // Open send message if coming from click on name label
+    if (self.friendUsername) {
+        for (User *friend in self.friends) {
+            if ([friend.flashUsername isEqualToString:self.friendUsername]) {
+                [self presentSendViewController:friend];
+                self.friendUsername = nil;
+                return;
+            }
+        }
+    }
     
     [self setVideoControllerMessageCount];
     [self.friendsTableView reloadData];

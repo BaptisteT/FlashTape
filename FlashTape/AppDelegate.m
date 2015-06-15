@@ -68,7 +68,8 @@
     // Clean video data
     [DatastoreUtils deleteExpiredPosts];
     
-    if ([User currentUser]) {
+    User *currentUser = [User currentUser];
+    if (currentUser && currentUser.flashUsername && currentUser.flashUsername.length > 0) {
         // Identify user
         [TrackingUtils identifyUser:[User currentUser] signup:NO];
         

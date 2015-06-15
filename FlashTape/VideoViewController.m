@@ -36,7 +36,7 @@
 
 // Contacts
 @property (nonatomic) ABAddressBookRef addressBook;
-@property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSMutableOrderedSet *friends;
 
 // Playing
 @property (strong, nonatomic) NSMutableArray *allVideosArray;
@@ -47,7 +47,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *replayButton;
 @property (strong, nonatomic) NSTimer *downloadingStateTimer;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UIButton *nameButton;
 @property (weak, nonatomic) IBOutlet UIView *metadataView;
 @property (strong, nonatomic) UIView *playingProgressView;
 @property (strong, nonatomic) UILongPressGestureRecognizer *playingProgressViewLongPressGesture;
@@ -90,7 +90,6 @@
 
 // Messages
 @property (nonatomic) NSInteger messageCount;
-//@property (weak, nonatomic) IBOutlet UILabel *unreadMessagesCountLabel;
 @property (nonatomic) NSInteger unreadVideoCount;
 
 @end
@@ -120,6 +119,7 @@
     _metadataColorIndex = 0;
     self.isSendingCount = 0;
     self.unreadVideoCount = 0;
+    self.friendVideoView.hidden = YES;
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
@@ -215,7 +215,7 @@
     self.playingProgressViewLongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGestureOnMetaDataView:)];
     self.playingProgressViewLongPressGesture.minimumPressDuration = 0;
     [self.metadataView addGestureRecognizer:self.playingProgressViewLongPressGesture];
-    self.nameLabel.text = @"";
+    [self.nameButton setTitle:@"" forState:UIControlStateNormal];
     self.timeLabel.text = @"";
     
      // Labels
@@ -228,10 +228,6 @@
         self.recordTutoLabel.lineHeight = 4.0f;
     }
     self.replayButton.hidden = YES;
-//    self.unreadMessagesCountLabel.layer.cornerRadius = self.unreadMessagesCountLabel.frame.size.height / 2;
-//    self.unreadMessagesCountLabel.layer.borderWidth = 1;
-//    self.unreadMessagesCountLabel.layer.borderColor = [ColorUtils purple].CGColor;
-//    self.unreadMessagesCountLabel.textColor = [ColorUtils purple];
     self.messageCount = 0;
     
     // Preview
@@ -247,12 +243,12 @@
     self.previewView.hidden = YES;
     
     // Retrieve friends from local datastore
-    _friends = [NSMutableArray new];
+    _friends = [NSMutableOrderedSet new];
     [DatastoreUtils getFollowingFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
         [self setObjectsFromFriendsArray:friends]; // retrieve video in different number of friends
         
         // Get local videos
-        self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:self.friends]];
+        self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:[self.friends array]]];
     } failure:nil];
     
     // Friend array
@@ -345,6 +341,9 @@
         [self hideUIElementOnCamera:YES];
         ((FriendsViewController *) [segue destinationViewController]).delegate = self;
         ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
+        if (sender && [sender isKindOfClass:[NSString class]]) {
+            ((FriendsViewController *) [segue destinationViewController]).friendUsername = sender;
+        }
     }
 }
 
@@ -494,7 +493,7 @@
 #pragma mark - Feed
 // --------------------------------------------
 - (void)retrieveVideo {
-    [ApiManager getVideoFromFriends:self.friends
+    [ApiManager getVideoFromFriends:[self.friends array]
                              success:^(NSArray *posts) {
                                  [self setVideoArray:posts];
                              } failure:nil];
@@ -631,21 +630,23 @@
 }
 
 - (void)setPlayingMetaDataForVideoPost:(VideoPost *)post {
-    if (![self.nameLabel.text isEqualToString:[NSString stringWithFormat:@" %@  ",post.user.flashUsername]]) {
+    NSString *newNameButtonTitle = [NSString stringWithFormat:@"%@",post.user.flashUsername];
+    
+    if (![self.nameButton.titleLabel.text isEqualToString:newNameButtonTitle]) {
         _metadataColorIndex ++;
         if (_metadataColorIndex >= self.metadataColorArray.count) {
             _metadataColorIndex = 0;
         }
     }
     
-    self.nameLabel.text = [NSString stringWithFormat:@" %@  ",post.user.flashUsername];
+    [self.nameButton setTitle:newNameButtonTitle forState:UIControlStateNormal];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm"];
     NSString *stringDate = [dateFormatter stringFromDate:post.recordedAt];
     self.timeLabel.text = stringDate;
     
     // Color
-    self.nameLabel.backgroundColor = self.metadataColorArray[_metadataColorIndex];
+    self.nameButton.backgroundColor = self.metadataColorArray[_metadataColorIndex];
     
     // Show metadata
     [self showMetaData:YES];
@@ -658,7 +659,7 @@
 }
 
 - (void)showMetaData:(BOOL)flag {
-    self.nameLabel.hidden = !flag;
+    self.nameButton.hidden = !flag;
     self.timeLabel.hidden = !flag;
 }
 
@@ -669,6 +670,15 @@
     [self parseContactsAndFindFriendsIfAuthNotDetermined];
 }
 
+- (IBAction)usernameButtonClicked:(id)sender {
+    NSString *username = self.nameButton.titleLabel.text;
+    if ([username isEqualToString:[User currentUser].flashUsername]) {
+        return;
+    } else {
+        [self performSegueWithIdentifier:@"Friends From Video" sender:username];
+        [self returnToCameraMode];
+    }
+}
 
 // --------------------------------------------
 #pragma mark - Recording
