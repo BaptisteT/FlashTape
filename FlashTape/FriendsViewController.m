@@ -335,7 +335,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self isCurrentUserUserCell:indexPath]) {
+    if ([self isAddFriendSection:indexPath.section]) {
+        [self performSegueWithIdentifier:@"Add Username From Friends" sender:nil];
+    } else if ([self isCurrentUserUserCell:indexPath]) {
         [TrackingUtils trackMyStoryClicked];
         _expandMyStory = !_expandMyStory;
         self.postToDetail = nil;

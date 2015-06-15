@@ -1155,6 +1155,7 @@
                         <outlet property="inviteButton" destination="bO2-dF-h7J" id="KZm-EF-ZrD"/>
                         <outlet property="scoreLabel" destination="WUl-fI-ihe" id="r0a-eX-m9N"/>
                         <segue destination="IGD-Zc-Fg7" kind="presentation" identifier="Read Message From Friends" animates="NO" id="vuw-LO-0He"/>
+                        <segue destination="s5X-7E-zXT" kind="presentation" identifier="Add Username From Friends" animates="NO" id="8O6-31-lPr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LZr-cM-H0D" userLabel="First Responder" sceneMemberID="firstResponder"/>
