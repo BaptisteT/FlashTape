@@ -65,12 +65,14 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
+    // Reply button underline
     CGRect frame = self.replyButton.titleLabel.frame;
     UIView *underline = [[UIView alloc] initWithFrame:CGRectMake(frame.origin.x,frame.origin.y + frame.size.height, frame.size.width, 4)];
     underline.backgroundColor = [UIColor blackColor];
     [self.replyButton addSubview:underline];
     
-    [self adjustFontSizeToFit:self.messageLabel];
+    // Message Label
+    self.messageLabel.textAlignment = [self messageLabelLineCount] <= 1 ? NSTextAlignmentCenter : NSTextAlignmentLeft;
 }
 
 // --------------------------------------------
@@ -103,33 +105,8 @@
     if (self.messagesArray.count > 0) {
         Message *message = self.messagesArray.firstObject;
         self.messageLabel.text = message.messageContent;
-        if([EMOJI_ARRAY containsObject:message.messageContent]) {
-            NSLog(@"Emoji message");
-            self.messageLabel.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:250];
-            self.messageLabel.textAlignment = NSTextAlignmentCenter;
-        } else {
-            NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString:message.messageContent];
-            
-            // todo BT
-            // clean
-//            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-//            CGFloat minMaxLineHeight = (kMessageReceivedMaxFontSize - self.messageLabel.font.ascender + self.messageLabel.font.capHeight);
-//            NSNumber *offset = @(self.messageLabel.font.capHeight - self.messageLabel.font.ascender);
-//            NSRange range = NSMakeRange(0, message.messageContent.length);
-//            [style setMinimumLineHeight:minMaxLineHeight];
-//            [style setMaximumLineHeight:minMaxLineHeight + 8.0f];
-//            [attrString addAttribute:NSParagraphStyleAttributeName
-//                               value:style
-//                               range:range];
-//            [attrString addAttribute:NSBaselineOffsetAttributeName
-//                               value:offset
-//                               range:range];
-            self.messageLabel.attributedText = attrString;
-//            if (message.messageContent.length <= 10) {
-//                self.messageLabel.textAlignment = NSTextAlignmentCenter;
-//            }
-            [self adjustFontSizeToFit:self.messageLabel];
-        }
+        NSInteger fontSize = [EMOJI_ARRAY containsObject:message.messageContent] ? kEmojiMaxFontSize : kMessageReceivedMaxFontSize;
+        self.messageLabel.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:fontSize];
         
         // unpin / delete / unread
         [ApiManager markMessageAsRead:message
@@ -141,38 +118,10 @@
     }
 }
 
-- (void)adjustFontSizeToFit:(UILabel *)label
+- (NSUInteger)messageLabelLineCount
 {
-    UIFont *font = label.font;
-    CGSize size = label.frame.size;
-    
-    for (CGFloat maxSize = kMessageReceivedMaxFontSize; maxSize >= 1; maxSize -= 1.f)
-    {
-        font = [font fontWithSize:maxSize];
-        CGSize constraintSize = CGSizeMake(size.width, size.height);
-        
-        // todo BT clean
-//        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-//        CGFloat minMaxLineHeight = (self.messageLabel.font.pointSize - self.messageLabel.font.ascender + self.messageLabel.font.capHeight);
-//        NSNumber *offset = @(self.messageLabel.font.capHeight - self.messageLabel.font.ascender);
-//        [style setMinimumLineHeight:minMaxLineHeight];
-//        [style setMaximumLineHeight:minMaxLineHeight + 8.0f];
-        
-        CGRect textRect = [label.text boundingRectWithSize:constraintSize
-                                                  options:NSStringDrawingUsesLineFragmentOrigin
-                                                attributes:nil//@{NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSBaselineOffsetAttributeName: offset}
-                                                  context:nil];
-        CGSize labelSize = textRect.size;
-        if(labelSize.height <= size.height)
-        {
-            label.font = font;
-            [label setNeedsLayout];
-            break;
-        }
-    }
-    // set the font to the minimum size anyway
-    label.font = font;
-    [label setNeedsLayout];
+    CGSize size = [self.messageLabel sizeThatFits:CGSizeMake(self.messageLabel.frame.size.width, CGFLOAT_MAX)];
+    return MAX((int)(size.height / self.messageLabel.font.lineHeight), 0);
 }
 
 @end

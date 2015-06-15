@@ -51,7 +51,8 @@ static const float kTopMessageAnimDelay = 1.5;
 
 // Messaging
 static const NSInteger kMaxMessageLength = 100;
-static const NSInteger kMessageReceivedMaxFontSize = 100;
+static const NSInteger kMessageReceivedMaxFontSize = 50;
+static const NSInteger kEmojiMaxFontSize = 250;
 
 // User
 static const NSInteger kUsernameMinLength = 3;
