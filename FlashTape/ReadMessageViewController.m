@@ -38,8 +38,9 @@
     [super viewDidLoad];
     
     // Title
-    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"read_title", nil),self.messageSender.flashUsername];
-    NSRange usernameRange = [title rangeOfString:self.messageSender.flashUsername];
+    NSString *username = self.messageSender.flashUsername ? self.messageSender.flashUsername : @"";
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"read_title", nil),username];
+    NSRange usernameRange = [title rangeOfString:username];
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:title];
     [attributedText setAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:self.titleLabel.font.pointSize]}
                             range:NSMakeRange(0, title.length)];

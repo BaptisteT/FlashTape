@@ -464,7 +464,7 @@
     CMTime observedTime;
     int ii = 0;
     CMTime playerTime = self.friendVideoView.player.currentTime;
-    CMTime gapPlayerTime = CMTimeAdd(playerTime, CMTimeMakeWithSeconds(0.02, 600));
+    CMTime gapPlayerTime = CMTimeAdd(playerTime, CMTimeMake(100, 600));
     for (NSValue *observedValue in self.videoPlayingObservedTimesArray) {
         if (observedValue == self.videoPlayingObservedTimesArray.lastObject) {
             [self returnToCameraMode];
@@ -474,12 +474,14 @@
                 // Set metadata
                 [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[ii]];
                 
+                [self.friendVideoView.player pause];
                 [self.friendVideoView.player seekToTime:observedTime toleranceBefore:CMTimeMake(100, 600) toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
                     CGFloat videoDuration = CMTimeGetSeconds(self.friendVideoView.player.currentItem.duration);
                     CGFloat currentTime = CMTimeGetSeconds(observedTime);
                     [self.playingProgressView.layer removeAllAnimations];
                     [self.playingProgressView setFrame:CGRectMake(0, 0, currentTime / videoDuration * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
                     [self animatePlayingProgressBar:videoDuration - currentTime];
+                    [self.friendVideoView.player play];
                 }];
                 return;
             }
@@ -965,6 +967,7 @@
 - (void)setReplayButtonUI {
     [self.downloadingStateTimer invalidate];
     self.replayButton.enabled = YES;
+
     if (self.failedVideoPostArray.count > 0) {
         // failed video state
         self.replayButton.backgroundColor = [ColorUtils transparentRed];
@@ -1031,12 +1034,12 @@
 
 - (void)hideUIElementOnCamera:(BOOL)flag {
     if (flag) {
-//        self.unreadMessagesCountLabel.hidden = YES;
+        self.replayButton.alpha = 0;
         self.replayButton.hidden = YES;
         self.recordTutoLabel.hidden = YES;
         self.captionTextView.hidden = YES;
     } else {
-//        self.unreadMessagesCountLabel.hidden = (self.messageCount == 0);
+        self.replayButton.alpha = 1;
         [self setReplayButtonUI];
         self.captionTextView.hidden = (self.captionTextView.text.length == 0);
         self.recordTutoLabel.hidden = !(self.captionTextView.text.length == 0);
