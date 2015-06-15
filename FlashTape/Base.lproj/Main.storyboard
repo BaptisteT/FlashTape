@@ -967,9 +967,12 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZIp-cc-i6H" id="8FS-Qg-JZE">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h3K-7S-qf4">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h3K-7S-qf4">
                                                     <rect key="frame" x="0.0" y="48" width="600" height="2"/>
                                                     <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="2" id="zXo-hX-Qa7"/>
+                                                    </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NNL-iu-UQy">
                                                     <rect key="frame" x="65" y="16" width="32" height="16"/>
@@ -1022,11 +1025,14 @@
                                                 <constraint firstItem="K6O-uu-sHK" firstAttribute="trailing" secondItem="8FS-Qg-JZE" secondAttribute="trailingMargin" constant="11" id="JiW-XM-VPr"/>
                                                 <constraint firstItem="NNL-iu-UQy" firstAttribute="leading" secondItem="lmI-ga-N82" secondAttribute="trailing" constant="10" id="Lkg-Y0-KyS"/>
                                                 <constraint firstAttribute="centerY" secondItem="IFr-6O-BoM" secondAttribute="centerY" id="Lvs-cZ-Qco"/>
+                                                <constraint firstItem="h3K-7S-qf4" firstAttribute="leading" secondItem="8FS-Qg-JZE" secondAttribute="leading" id="RqN-QR-kxC"/>
+                                                <constraint firstAttribute="bottom" secondItem="h3K-7S-qf4" secondAttribute="bottom" id="UlV-Fn-MSc"/>
                                                 <constraint firstItem="lmI-ga-N82" firstAttribute="centerY" secondItem="NNL-iu-UQy" secondAttribute="centerY" id="VNt-od-L8T"/>
                                                 <constraint firstItem="lmI-ga-N82" firstAttribute="centerY" secondItem="NNL-iu-UQy" secondAttribute="centerY" id="mVR-Pi-4oL"/>
                                                 <constraint firstAttribute="centerY" secondItem="IFr-6O-BoM" secondAttribute="centerY" id="q41-FR-7bB"/>
                                                 <constraint firstItem="lmI-ga-N82" firstAttribute="top" secondItem="8FS-Qg-JZE" secondAttribute="top" constant="6" id="qN8-O9-VQz"/>
                                                 <constraint firstItem="lmI-ga-N82" firstAttribute="leading" secondItem="8FS-Qg-JZE" secondAttribute="leading" constant="20" id="rhV-9Y-H9C"/>
+                                                <constraint firstAttribute="trailing" secondItem="h3K-7S-qf4" secondAttribute="trailing" id="sVb-4E-loI"/>
                                                 <constraint firstAttribute="centerY" secondItem="K6O-uu-sHK" secondAttribute="centerY" id="tt8-49-Lb2"/>
                                                 <constraint firstAttribute="centerY" secondItem="NNL-iu-UQy" secondAttribute="centerY" id="xDI-lB-OVc"/>
                                                 <constraint firstAttribute="centerY" secondItem="lmI-ga-N82" secondAttribute="centerY" id="ytC-Wo-sbk"/>

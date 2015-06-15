@@ -10,6 +10,7 @@
 
 #import "VideoTableViewCell.h"
 
+#import "ConstantUtils.h"
 #import "GeneralUtils.h"
 #import "NSDate+DateTools.h"
 
@@ -61,20 +62,14 @@
         NSArray *names = [DatastoreUtils getNamesOfUsersWithId:[post viewerIdsArrayWithoutPoster]];
         int ii = 0;
         for (NSString *name in names) {
-            [self addLabelWithName:name yPosition:70+20*ii];
+            [self addLabelWithName:name yPosition:kVideoCellHeight+kVideoCellViewerAdditionalHeight*ii];
             ii++;
         }
-        // todo BT @baptiste Hide separator quand la section est ouverte et ajouter un separator en bas pour fermer la section
-//        self.separatorView.hidden = detailedState;
-//        UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0,57 + 20*self.viewerNamesLabel.count, self.frame.size.width, 2)];
-//        separator.backgroundColor = [UIColor colorWithRed:255./255. green:255./255. blue:255./255. alpha:0.2];
-//        [self addSubview:separator];
-
     }
 }
 
 - (void)addLabelWithName:(NSString *)name yPosition:(CGFloat)yPosition {
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.videoThumbmail.frame.origin.x, yPosition, self.frame.size.width - 2 * self.videoThumbmail.frame.origin.x, 20)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.videoThumbmail.frame.origin.x, yPosition, self.frame.size.width - 2 * self.videoThumbmail.frame.origin.x, kVideoCellViewerAdditionalHeight)];
     label.text = name;
     label.textColor = [UIColor whiteColor];
     label.minimumScaleFactor = 2;

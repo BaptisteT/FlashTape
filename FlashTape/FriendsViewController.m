@@ -332,7 +332,7 @@
         return 80;
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
-        return (post == self.postToDetail) ? 70 + [post viewerIdsArrayWithoutPoster].count * 20 : 50;
+        return (post == self.postToDetail) ? kVideoCellHeight + [post viewerIdsArrayWithoutPoster].count * kVideoCellViewerAdditionalHeight : kVideoCellHeight;
     } else {
         // should not happen
         return 50;

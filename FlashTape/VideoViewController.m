@@ -248,7 +248,7 @@
         [self setObjectsFromFriendsArray:friends]; // retrieve video in different number of friends
         
         // Get local videos
-        self.allVideosArray = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:[self.friends array]]];
+        [self setVideoArray:[DatastoreUtils getVideoLocallyFromUsers:[self.friends array]]];
     } failure:nil];
     
     // Friend array
