@@ -13,6 +13,8 @@
 #import "ReadMessageViewController.h"
 #import "SendMessageViewController.h"
 
+#import "ConstantUtils.h"
+
 #define EMOJI_ARRAY @[@"❤️", @"😂", @"😔", @"😍", @"☺️", @"😎", @"😉", @"💋", @"😊", @"👍", @"😘", @"😡", @"😀", @"👌", @"😬", @"🙈", @"👅", @"🍻", @"😱", @"🙏", @"🐶", @"😜", @"💩", @"💪"]
 
 @interface ReadMessageViewController ()
@@ -110,22 +112,23 @@
             
             // todo BT
             // clean
-            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-            CGFloat minMaxLineHeight = (self.messageLabel.font.pointSize - self.messageLabel.font.ascender + self.messageLabel.font.capHeight);
-            NSNumber *offset = @(self.messageLabel.font.capHeight - self.messageLabel.font.ascender);
-            NSRange range = NSMakeRange(0, message.messageContent.length);
-            [style setMinimumLineHeight:minMaxLineHeight];
-            [style setMaximumLineHeight:minMaxLineHeight + 8.0f];
-            [attrString addAttribute:NSParagraphStyleAttributeName
-                               value:style
-                               range:range];
-            [attrString addAttribute:NSBaselineOffsetAttributeName
-                               value:offset
-                               range:range];
+//            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+//            CGFloat minMaxLineHeight = (kMessageReceivedMaxFontSize - self.messageLabel.font.ascender + self.messageLabel.font.capHeight);
+//            NSNumber *offset = @(self.messageLabel.font.capHeight - self.messageLabel.font.ascender);
+//            NSRange range = NSMakeRange(0, message.messageContent.length);
+//            [style setMinimumLineHeight:minMaxLineHeight];
+//            [style setMaximumLineHeight:minMaxLineHeight + 8.0f];
+//            [attrString addAttribute:NSParagraphStyleAttributeName
+//                               value:style
+//                               range:range];
+//            [attrString addAttribute:NSBaselineOffsetAttributeName
+//                               value:offset
+//                               range:range];
             self.messageLabel.attributedText = attrString;
-            if (message.messageContent.length <= 10) {
-                self.messageLabel.textAlignment = NSTextAlignmentCenter;
-            }
+//            if (message.messageContent.length <= 10) {
+//                self.messageLabel.textAlignment = NSTextAlignmentCenter;
+//            }
+            [self adjustFontSizeToFit:self.messageLabel];
         }
         
         // unpin / delete / unread
@@ -143,21 +146,21 @@
     UIFont *font = label.font;
     CGSize size = label.frame.size;
     
-    for (CGFloat maxSize = label.font.pointSize; maxSize >= 1; maxSize -= 1.f)
+    for (CGFloat maxSize = kMessageReceivedMaxFontSize; maxSize >= 1; maxSize -= 1.f)
     {
         font = [font fontWithSize:maxSize];
         CGSize constraintSize = CGSizeMake(size.width, size.height);
         
         // todo BT clean
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        CGFloat minMaxLineHeight = (self.messageLabel.font.pointSize - self.messageLabel.font.ascender + self.messageLabel.font.capHeight);
-        NSNumber *offset = @(self.messageLabel.font.capHeight - self.messageLabel.font.ascender);
-        [style setMinimumLineHeight:minMaxLineHeight];
-        [style setMaximumLineHeight:minMaxLineHeight + 8.0f];
+//        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+//        CGFloat minMaxLineHeight = (self.messageLabel.font.pointSize - self.messageLabel.font.ascender + self.messageLabel.font.capHeight);
+//        NSNumber *offset = @(self.messageLabel.font.capHeight - self.messageLabel.font.ascender);
+//        [style setMinimumLineHeight:minMaxLineHeight];
+//        [style setMaximumLineHeight:minMaxLineHeight + 8.0f];
         
         CGRect textRect = [label.text boundingRectWithSize:constraintSize
                                                   options:NSStringDrawingUsesLineFragmentOrigin
-                                                attributes:@{NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSBaselineOffsetAttributeName: offset}
+                                                attributes:nil//@{NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSBaselineOffsetAttributeName: offset}
                                                   context:nil];
         CGSize labelSize = textRect.size;
         if(labelSize.height <= size.height)

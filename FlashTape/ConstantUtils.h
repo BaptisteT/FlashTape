@@ -50,7 +50,8 @@ static const float kTopMessageAnimDuration = 0.5;
 static const float kTopMessageAnimDelay = 1.5;
 
 // Messaging
-static const float kMaxMessageLength = 100;
+static const NSInteger kMaxMessageLength = 100;
+static const NSInteger kMessageReceivedMaxFontSize = 100;
 
 // User
 static const NSInteger kUsernameMinLength = 3;
@@ -58,3 +59,4 @@ static const NSInteger kUsernameMinLength = 3;
 // Cell
 static const NSInteger kVideoCellHeight = 50;
 static const NSInteger kVideoCellViewerAdditionalHeight = 20;
+
