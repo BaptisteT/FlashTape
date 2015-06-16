@@ -26,7 +26,7 @@
     [super viewDidLoad];
 
     //Hide Status Bar & Navigation Bar Controller
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+//    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
     
     //Login Button

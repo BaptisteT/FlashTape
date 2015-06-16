@@ -108,9 +108,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
-
+    
     // Logic
     _isExporting = NO;
     _longPressRunning = NO;

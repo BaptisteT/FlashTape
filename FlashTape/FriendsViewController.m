@@ -54,6 +54,7 @@
     [super viewDidLoad];
     
     // Some init
+    self.modalPresentationCapturesStatusBarAppearance = YES;
     _expandMyStory = NO;
     self.colorView.alpha = 0.5;
     self.messagesReceivedDictionnary = [NSMutableDictionary new];
@@ -637,6 +638,7 @@
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
 }
+
 
 
 @end
