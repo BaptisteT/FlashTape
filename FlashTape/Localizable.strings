@@ -61,7 +61,7 @@
 // Friends
 "friend_controller_title" = "Invite your friends";
 "friend_score_label" = "Increase your score for more fun";
-"sharing_wording" = "Join me on Flash and watch my life second by second: %@";
+"sharing_wording" = "Join me on FlashTape and watch my life second by second: %@";
 "follow_or_block_alert_title" = "%@ does not belong to your friends";
 "follow_or_block_alert_message" = "You need to add him to read his message.";
 "follow_button" = "Add friend";

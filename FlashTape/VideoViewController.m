@@ -529,12 +529,11 @@
     if (previousCount != friends.count) {
         // Retrieve video
         [self retrieveVideo];
-        
-        // If friend controller, reload tableview
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"reload_friend_tableview"
-                                                            object:nil
-                                                          userInfo:nil];
     }
+    // If friend controller, reload tableview
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"reload_friend_tableview"
+                                                        object:nil
+                                                      userInfo:nil];
 }
 
  

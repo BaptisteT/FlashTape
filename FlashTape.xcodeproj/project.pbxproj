@@ -78,8 +78,8 @@
 		3C2C4B7B1B04B08700E0E4BF /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A8A1B04B08600E0E4BF /* FBSDKLoginKit.framework */; };
 		3C2C4B7C1B04B08700E0E4BF /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A8B1B04B08600E0E4BF /* FBSDKMessengerShareKit.framework */; };
 		3C2C4B7D1B04B08700E0E4BF /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A8C1B04B08600E0E4BF /* FBSDKShareKit.framework */; };
-		3C2C4C1D1B04DB2000E0E4BF /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4C181B04DB2000E0E4BF /* green.png */; };
 		3C2C4C221B05F73A00E0E4BF /* whiteNoise.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */; };
+		3C42DF761B308ED200C956A0 /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C42DF751B308ED200C956A0 /* green.png */; };
 		3C4ABC871B28777500897DF9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C4ABC861B28777500897DF9 /* InfoPlist.strings */; };
 		3C4ABC8C1B2889D500897DF9 /* libFlurry_6.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4ABC8B1B2889D500897DF9 /* libFlurry_6.4.0.a */; };
 		3C4ABC921B28957300897DF9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4ABC901B28957300897DF9 /* Fabric.framework */; };
@@ -336,8 +336,8 @@
 		3C2C4A8A1B04B08600E0E4BF /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		3C2C4A8B1B04B08600E0E4BF /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
 		3C2C4A8C1B04B08600E0E4BF /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
-		3C2C4C181B04DB2000E0E4BF /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green.png; sourceTree = "<group>"; };
 		3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = whiteNoise.wav; sourceTree = "<group>"; };
+		3C42DF751B308ED200C956A0 /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green.png; sourceTree = "<group>"; };
 		3C4ABC861B28777500897DF9 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		3C4ABC891B2889D500897DF9 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		3C4ABC8A1B2889D500897DF9 /* FlurryWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryWatch.h; sourceTree = "<group>"; };
@@ -860,8 +860,8 @@
 				3C2C4A591AFBD04600E0E4BF /* PushNoAnimationSegue.h */,
 				3C2C4A5A1AFBD04600E0E4BF /* PushNoAnimationSegue.m */,
 				3C2C4A4D1AFB5EB000E0E4BF /* PhoneCountries.txt */,
+				3C42DF751B308ED200C956A0 /* green.png */,
 				3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */,
-				3C2C4C181B04DB2000E0E4BF /* green.png */,
 				3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */,
 				A4CE87581B09133800DC20DC /* Fonts */,
 				A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */,
@@ -1136,8 +1136,8 @@
 				3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */,
 				3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */,
 				3C2C4A521AFB6F8E00E0E4BF /* PhoneNumberMetaData.json in Resources */,
+				3C42DF761B308ED200C956A0 /* green.png in Resources */,
 				3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */,
-				3C2C4C1D1B04DB2000E0E4BF /* green.png in Resources */,
 				3C4ABD541B299B2500897DF9 /* snapshot_config.json in Resources */,
 				3C4ABD141B299B2500897DF9 /* Media.xcassets in Resources */,
 				3C4ABC871B28777500897DF9 /* InfoPlist.strings in Resources */,
@@ -1417,8 +1417,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1436,7 +1436,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
 			};
 			name = Debug;
 		};
@@ -1445,8 +1445,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1463,7 +1463,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
 			};
 			name = Release;
 		};

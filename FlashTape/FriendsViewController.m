@@ -108,7 +108,7 @@
                                                  name:@"retrieve_message_locally"
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reload)
+                                             selector:@selector(sortFriendsAndReload)
                                                  name:@"reload_friend_tableview"
                                                object:nil];
     
@@ -145,7 +145,7 @@
     }
     
     [self setVideoControllerMessageCount];
-    [self sortFriendsAndReload];
+    [self.friendsTableView reloadData];
     
     // background color animation
     _stopAnimation = NO;
@@ -229,7 +229,6 @@
         [self.messagesSentDictionnary setObject:[NSMutableArray arrayWithObject:message] forKey:message.receiver.objectId];
     }
     [self sendMessage:message];
-    [self sortFriendsAndReload];
 }
 
 - (void)createMessagesDictionnaryAndReload:(NSArray *)unreadMessages {

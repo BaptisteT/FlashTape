@@ -49,7 +49,6 @@
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-
 // --------------------------------------------
 #pragma mark - Textfield delegate
 // --------------------------------------------
