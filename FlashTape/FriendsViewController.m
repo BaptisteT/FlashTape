@@ -152,7 +152,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString * segueName = segue.identifier;
-    if ([segueName isEqualToString: @"Find By Username From Friends"]) {
+    if ([segueName isEqualToString: @"Add Username From Friends"]) {
         ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
     } else if ([segueName isEqualToString: @"Read Message From Friends"]) {
         User *friend = (User *)sender;

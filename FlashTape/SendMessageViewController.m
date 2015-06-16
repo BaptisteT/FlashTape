@@ -73,10 +73,7 @@
     self.titleLabel.attributedText = attributedText;
     self.textView.text = @"";
     self.textViewPlaceholder.hidden = self.textView.hidden;
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    
     if (!self.textView.hidden && ![self.textView isFirstResponder]) {
         [self.textView becomeFirstResponder];
     }
@@ -124,7 +121,8 @@
 // ----------------------------------------------------------
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([text isEqualToString:@"\n"]) {
-        if (textView.text.length > 0) {
+        NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
+        if ([textView.text stringByTrimmingCharactersInSet:set].length > 0) {
             [TrackingUtils trackMessageSent:@"text"];
             [self sendMessage:textView.text];
         }

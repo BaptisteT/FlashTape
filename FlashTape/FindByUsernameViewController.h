@@ -11,7 +11,6 @@
 
 @interface FindByUsernameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, AddUserTVCDelegate>
 
-@property (strong, nonatomic) NSMutableArray *friends;
-//@property (strong, nonatomic) NSDictionary *contactDictionnary;
+@property (strong, nonatomic) NSMutableOrderedSet *friends;
 
 @end
