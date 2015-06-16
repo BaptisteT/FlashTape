@@ -11,7 +11,7 @@
 #import "ConstantUtils.h"
 
 @interface FindByUsernameViewController ()
-@property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
+@property (weak, nonatomic) IBOutlet UISearchBar *usernameTextField;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITableView *resultTableView;

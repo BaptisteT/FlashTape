@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FindByUsernameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, AddUserTVCDelegate>
+@interface FindByUsernameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate>
 
 @property (strong, nonatomic) NSMutableOrderedSet *friends;
 
