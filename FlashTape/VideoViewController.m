@@ -300,6 +300,7 @@
     
     // todo BT
     // put somewhere else
+    // Used to know identity of all viewers
     [ApiManager getFollowersAndExecuteSuccess:nil failure:nil];
 }
 
@@ -526,7 +527,6 @@
     if (![_friends containsObject:[User currentUser]]) {
         [_friends addObject:[User currentUser]];
     }
-    [self orderFriendsByScore];
     
     if (previousCount != friends.count) {
         // Retrieve video
@@ -539,17 +539,7 @@
     }
 }
 
-- (void)orderFriendsByScore {
-    // Order friends by score
-    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
-        if (obj1 == [PFUser currentUser]) {
-            return NSOrderedAscending;
-        } else if (obj2 == [PFUser currentUser]) {
-            return NSOrderedDescending;
-        } else
-            return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
-    }];
-}
+ 
 
 - (void)parseContactsAndFindFriendsIfAuthNotDetermined {
     if(ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {

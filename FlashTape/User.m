@@ -9,12 +9,14 @@
 #import <Parse/PFObject+Subclass.h>
 #import "User.h"
 
+#import "DatastoreUtils.h"
 
 @implementation User
 
 @dynamic score;
 @dynamic flashUsername;
 @dynamic transformedUsername;
+@synthesize lastMessageDate;
 
 + (void)load {
     [self registerSubclass];
@@ -38,6 +40,13 @@
 
 - (NSInteger)score {
     return [[self objectForKey:@"score"] integerValue];
+}
+
+- (void)updateLastMessageDate:(NSDate *)date {
+    if (!self.lastMessageDate || [self.lastMessageDate compare:date] == NSOrderedAscending) {
+        self.lastMessageDate = date;
+        [DatastoreUtils saveLastMessageDate:self.lastMessageDate ofUser:self.objectId];
+    }
 }
 
 @end

@@ -15,8 +15,6 @@
 
 #import "ConstantUtils.h"
 
-#define EMOJI_ARRAY @[@"❤️", @"😂", @"😔", @"😍", @"☺️", @"😎", @"😉", @"💋", @"😊", @"👍", @"😘", @"😡", @"😀", @"👌", @"😬", @"🙈", @"👅", @"🍻", @"😱", @"🙏", @"🐶", @"😜", @"💩", @"💪"]
-
 @interface ReadMessageViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *messageLabel;
 @property (weak, nonatomic) IBOutlet UIButton *replyButton;
@@ -106,7 +104,7 @@
     if (self.messagesArray.count > 0) {
         Message *message = self.messagesArray.firstObject;
         self.messageLabel.text = message.messageContent;
-        NSInteger fontSize = [EMOJI_ARRAY containsObject:message.messageContent] ? kEmojiMaxFontSize : kMessageReceivedMaxFontSize;
+        NSInteger fontSize = belonsToEmojiArray(message.messageContent) ? kEmojiMaxFontSize : kMessageReceivedMaxFontSize;
         self.messageLabel.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:fontSize];
         
         // unpin / delete / unread

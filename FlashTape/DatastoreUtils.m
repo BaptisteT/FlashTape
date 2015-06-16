@@ -11,6 +11,7 @@
 #import "ConstantUtils.h"
 #import "DatastoreUtils.h"
 
+#define LAST_MESSAGE_DICTIONNARY @"Last Message date dictionnary"
 
 @implementation DatastoreUtils
 
@@ -25,9 +26,14 @@
     PFQuery *query = [User query];
     [query fromLocalDatastore];
     [query fromPinWithName:kParseFollowingName];
-    [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            // Get last message date from user default
+            NSDictionary *lastMessageDic = [DatastoreUtils getLastMessageDateDictionnary];
+            for (User *user in objects) {
+                user.lastMessageDate = lastMessageDic[user.objectId] ? lastMessageDic[user.objectId] : [NSDate dateWithTimeIntervalSince1970:0];
+            }
+            
             if (successBlock) {
                 successBlock(objects);
             }
@@ -46,7 +52,6 @@
     PFQuery *query = [User query];
     [query fromLocalDatastore];
     [query fromPinWithName:kParseFollowersName];
-    [query orderByDescending:@"score"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             if (successBlock) {
@@ -185,6 +190,24 @@
     return results;
 }
 
+// --------------------------------------------
+#pragma mark - Last Message date
+// --------------------------------------------
++ (NSDictionary *)getLastMessageDateDictionnary {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:LAST_MESSAGE_DICTIONNARY];
+}
 
++ (void)saveLastMessageDate:(NSDate *)date ofUser:(NSString *)userId
+{
+    NSMutableDictionary *lastMessageDateDictionnary = [NSMutableDictionary dictionaryWithDictionary:[self getLastMessageDateDictionnary]];
+    if (!lastMessageDateDictionnary) {
+        lastMessageDateDictionnary = [NSMutableDictionary new];
+    }
+    [lastMessageDateDictionnary setObject:date forKey:userId];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:lastMessageDateDictionnary forKey:LAST_MESSAGE_DICTIONNARY];
+    [prefs synchronize];
+}
 
 @end

@@ -66,7 +66,7 @@
     // Refresh current User posts
     self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]]];
     [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
-        [self reload];
+        [self.friendsTableView reloadData];
     }];
     
     // Tableview
@@ -143,7 +143,7 @@
     }
     
     [self setVideoControllerMessageCount];
-    [self reload];
+    [self sortFriendsAndReload];
     
     // background color animation
     _stopAnimation = NO;
@@ -198,17 +198,19 @@
 
 // Send message
 - (void)sendMessage:(Message *)message {
+    // Update last message date
+    [message.receiver updateLastMessageDate:[NSDate date]];
+    
     // reload this section
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[self sectionForFriend:message.receiver]];
-    [self.friendsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+    [self reloadSectionOfUser:message.receiver];
     
     [ApiManager sendMessage:message
                     success:^{
                         message.status = kMessageTypeSent;
-                        [self.friendsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                        [self reloadSectionOfUser:message.receiver];
                     } failure:^(NSError *error) {
                         message.status = kMessageTypeFailed;
-                        [self.friendsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                        [self reloadSectionOfUser:message.receiver];
                     }];
 }
 // Send message
@@ -224,8 +226,8 @@
     } else {
         [self.messagesSentDictionnary setObject:[NSMutableArray arrayWithObject:message] forKey:message.receiver.objectId];
     }
-    [self reload];
     [self sendMessage:message];
+    [self sortFriendsAndReload];
 }
 
 - (void)createMessagesDictionnaryAndReload:(NSArray *)unreadMessages {
@@ -244,7 +246,7 @@
         }
     }
     self.messagesReceivedDictionnary = messagesDictionary;
-    [self reload];
+    [self sortFriendsAndReload];
 }
 
 - (void)retrieveUnreadMessages {
@@ -271,7 +273,8 @@
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
-- (void)reload {
+- (void)sortFriendsAndReload {
+    [self orderFriendsByLastMessageDateAndScore];
     [self.friendsTableView reloadData];
 }
 
@@ -341,12 +344,12 @@
         [TrackingUtils trackMyStoryClicked];
         _expandMyStory = !_expandMyStory;
         self.postToDetail = nil;
-        [self reloadCurrentUserSection];
+        [self reloadSectionOfUser:[User currentUser]];
     } else if ([self isCurrentUserPostCell:indexPath]) {
         [TrackingUtils trackMyVideoClicked];
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         self.postToDetail = (post == self.postToDetail) ? nil : post;
-        [self reloadCurrentUserSection];
+        [self reloadSectionOfUser:[User currentUser]];
     } else if ([self isFriendUserSection:indexPath.section]) {
         _expandMyStory = NO;
         self.postToDetail = nil;
@@ -406,8 +409,8 @@
     return NSLocalizedString(@"block_button", nil);
 }
 
-- (void)reloadCurrentUserSection {
-    NSInteger section = [self sectionForFriend:[User currentUser]];
+- (void)reloadSectionOfUser:(User *)user {
+    NSInteger section = [self sectionForFriend:user];
     if (section != NSNotFound) {
         NSRange range = NSMakeRange(section, 1);
         NSIndexSet *sectionToReload = [NSIndexSet indexSetWithIndexesInRange:range];
@@ -436,16 +439,54 @@
                                             // add to friends
                                             [self.friends addObject:user];
                                         }
-                                        [self reload];
+                                        [self sortFriendsAndReload];
                                     } failure:^(NSError *error) {
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                         [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
                                     }];
 }
 
+// Order friends
+- (void)orderFriendsByLastMessageDateAndScore {
+    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
+        if (obj1 == [PFUser currentUser]) {
+            return NSOrderedAscending;
+        } else if (obj2 == [PFUser currentUser]) {
+            return NSOrderedDescending;
+        } else {
+            if (!obj1.lastMessageDate) [obj1 updateLastMessageDate:[NSDate dateWithTimeIntervalSince1970:0]];
+            if (!obj2.lastMessageDate) [obj2 updateLastMessageDate:[NSDate dateWithTimeIntervalSince1970:0]];
+            if ([obj1.lastMessageDate isEqual:obj2.lastMessageDate]) {
+                return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
+            } else {
+                return [obj2.lastMessageDate compare:obj1.lastMessageDate];
+            }
+        }
+    }];
+}
+
+
 // --------------------------------------------
-#pragma mark - Cell Type
+#pragma mark - Cell Type & Logic
 // --------------------------------------------
+// 1st follower, then friends
+- (User *)friendOrFollowerForSection:(NSInteger)section {
+    if (section == 0) {
+        return nil;
+    }
+    if (section < self.followerArray.count + 1) {
+        return (User *)self.followerArray[section - 1];
+    } else if (section < self.followerArray.count + self.friends.count + 1 ) {
+        return (User *)self.friends[section - self.followerArray.count - 1];
+    } else {
+        return nil;
+    }
+}
+
+- (NSInteger)sectionForFriend:(User *)user {
+    return [self.friends indexOfObject:user] + 1 + self.followerArray.count;
+}
+
 - (BOOL)isAddFriendSection:(NSInteger)section {
     return section == 0;
 }
@@ -458,34 +499,18 @@
     return [self isCurrentUserSection:indexPath.section] && indexPath.row == 0;
 }
 
-- (BOOL)isFriendUserSection:(NSInteger)section {
-    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && (section < self.friends.count + 1);
+- (BOOL)isFollowerUserSection:(NSInteger)section {
+    return ![self isAddFriendSection:section] && section < self.followerArray.count + 1;
 }
 
-- (BOOL)isFollowerUserSection:(NSInteger)section {
-    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && ![self isFriendUserSection:section] && section < self.followerArray.count + self.friends.count + 1;
+- (BOOL)isFriendUserSection:(NSInteger)section {
+    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && ![self isFollowerUserSection:section] && (section < self.followerArray.count + self.friends.count + 1);
 }
 
 - (BOOL)isCurrentUserPostCell:(NSIndexPath *)indexPath {
     return indexPath.row != 0 && [self isCurrentUserSection:indexPath.section];
 }
 
-- (User *)friendOrFollowerForSection:(NSInteger)section {
-    if (section == 0) {
-        return nil;
-    }
-    if (section < self.friends.count + 1) {
-        return (User *)self.friends[section - 1];
-    } else if (section < self.followerArray.count + self.friends.count + 1 ) {
-        return (User *)self.followerArray[section - self.friends.count - 1];
-    } else {
-        return nil;
-    }
-}
-
-- (NSInteger)sectionForFriend:(User *)user {
-    return [self.friends indexOfObject:user] + 1;
-}
 
 // ----------------------------------------------------------
 #pragma mark SMS controller
@@ -522,9 +547,9 @@
     AVPlayerItem *pi = [VideoUtils createAVPlayerItemWithVideoPosts:self.currentUserPosts
                                           andFillObservedTimesArray:nil];
     [VideoUtils saveVideoCompositionToCameraRoll:pi.asset success:^{
-        [self reload];
+        [self.friendsTableView reloadData];
     } failure:^{
-        [self reload];
+        [self.friendsTableView reloadData];
         [GeneralUtils showAlertMessage:NSLocalizedString(@"save_story_error_message", nil) withTitle:NSLocalizedString(@"save_story_error_title", nil)];
     }];
 }
@@ -555,7 +580,7 @@
                                    [self.delegate removeVideoFromVideosArray:self.postToDelete];
                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
                                    self.postToDelete = nil;
-                                   [self reloadCurrentUserSection];
+                                   [self reloadSectionOfUser:[User currentUser]];
                                } failure:^(NSError *error) {
                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
                                    [GeneralUtils showAlertMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];

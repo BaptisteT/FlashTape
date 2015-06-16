@@ -27,4 +27,8 @@
 
 + (NSArray *)getMessagesLocallyFromUser:(User *)user;
 
++ (NSDictionary *)getLastMessageDateDictionnary;
+
++ (void)saveLastMessageDate:(NSDate *)date ofUser:(NSString *)userId;
+
 @end

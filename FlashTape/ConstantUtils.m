@@ -8,6 +8,18 @@
 
 #import "ConstantUtils.h"
 
+#define EMOJI_ARRAY @[@"❤️", @"😂", @"😔", @"😍", @"☺️", @"😎", @"😉", @"💋", @"😊", @"👍", @"😘", @"😡", @"😀", @"👌", @"😬", @"🙈", @"👅", @"🍻", @"😱", @"🙏", @"🐶", @"😜", @"💩", @"💪"]
+
 @implementation ConstantUtils
+
+NSString * getEmojiAtIndex(NSInteger index)
+{
+    NSArray *emojiArray = EMOJI_ARRAY;
+    return emojiArray[MIN(index,emojiArray.count-1)];
+}
+
+BOOL belonsToEmojiArray(NSString *emoji) {
+    return [EMOJI_ARRAY containsObject:emoji];
+}
 
 @end

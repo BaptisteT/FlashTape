@@ -13,9 +13,6 @@
 #import "KeyboardUtils.h"
 #import "TrackingUtils.h"
 
-// todo BT put this and read message emoji array somewhereelse
-#define EMOJI_ARRAY @[@"❤️", @"😂", @"😔", @"😍", @"☺️", @"😎", @"😉", @"💋", @"😊", @"👍", @"😘", @"😡", @"😀", @"👌", @"😬", @"🙈", @"👅", @"🍻", @"😱", @"🙏", @"🐶", @"😜", @"💩", @"💪"]
-
 @interface SendMessageViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -157,7 +154,7 @@
         CGFloat buttonSize = 3. / (4. * numberOfColumns + 1.) * width;
         CGFloat horizontalMargin = 1. / 3. * buttonSize;
 
-        NSInteger numberOfRows = floor((height - buttonSize/3.) / (buttonSize * 4. / 3.));
+        NSInteger numberOfRows = floor(height / (buttonSize * 4. / 3.));
         CGFloat verticalMargin = (height - numberOfRows * buttonSize) / (numberOfRows + 1.);
         
         // Get gray image for background
@@ -171,7 +168,7 @@
             for (int column = 0; column < numberOfColumns; column ++) {
                 CGRect frame = CGRectMake(horizontalMargin + column * (buttonSize + horizontalMargin), verticalMargin + row * (verticalMargin + buttonSize), buttonSize, buttonSize);
                 UIButton *button = [[UIButton alloc] initWithFrame:frame];
-                [button setTitle:(NSString *)EMOJI_ARRAY[row + column * numberOfRows] forState:UIControlStateNormal];
+                [button setTitle:getEmojiAtIndex(row + column * numberOfRows) forState:UIControlStateNormal];
                 button.titleLabel.numberOfLines = 1;
                 button.titleLabel.font = [UIFont systemFontOfSize:100];
                 button.titleLabel.adjustsFontSizeToFitWidth = YES;

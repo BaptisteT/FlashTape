@@ -454,6 +454,11 @@
             [Message unpinAllObjectsWithName:kParseMessagesName];
             [Message pinAll:objects withName:kParseMessagesName];
 
+            // Update last message date
+            for (Message *message in objects) {
+                [message.sender updateLastMessageDate:message.createdAt];
+            }
+            
             if (successBlock) {
                 successBlock(objects);
             }

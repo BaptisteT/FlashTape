@@ -14,10 +14,12 @@
 @property (nonatomic) NSInteger score;
 @property (retain) NSString *flashUsername;
 @property (retain) NSString *transformedUsername;
+@property (retain) NSDate *lastMessageDate; // last message received or sent with current user
 
 + (User *)createUserWithNumber:(NSString *)phoneNumber;
 
 + (User *)currentUser;
 
+- (void)updateLastMessageDate:(NSDate *)date;
 
 @end
