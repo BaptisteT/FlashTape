@@ -96,6 +96,7 @@
                                  success:(void(^)())successBlock
                                  failure:(void(^)())failureBlock
 {
+    if (!composition) return;
     SCAssetExportSession *exportSession = [[SCAssetExportSession alloc] initWithAsset:composition];
     exportSession.videoConfiguration.preset = SCPresetHighestQuality;
     exportSession.audioConfiguration.preset = SCPresetHighestQuality;

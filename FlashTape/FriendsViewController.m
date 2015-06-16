@@ -66,7 +66,7 @@
     // Refresh current User posts
     self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]]];
     [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
-        [self.friendsTableView reloadData];
+        [self reload];
     }];
     
     // Tableview
@@ -143,7 +143,7 @@
     }
     
     [self setVideoControllerMessageCount];
-    [self.friendsTableView reloadData];
+    [self reload];
     
     // background color animation
     _stopAnimation = NO;
@@ -224,7 +224,7 @@
     } else {
         [self.messagesSentDictionnary setObject:[NSMutableArray arrayWithObject:message] forKey:message.receiver.objectId];
     }
-    
+    [self reload];
     [self sendMessage:message];
 }
 
@@ -244,7 +244,7 @@
         }
     }
     self.messagesReceivedDictionnary = messagesDictionary;
-    [self.friendsTableView reloadData];
+    [self reload];
 }
 
 - (void)retrieveUnreadMessages {
@@ -436,7 +436,7 @@
                                             // add to friends
                                             [self.friends addObject:user];
                                         }
-                                        [self.friendsTableView reloadData];
+                                        [self reload];
                                     } failure:^(NSError *error) {
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                         [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
@@ -522,9 +522,9 @@
     AVPlayerItem *pi = [VideoUtils createAVPlayerItemWithVideoPosts:self.currentUserPosts
                                           andFillObservedTimesArray:nil];
     [VideoUtils saveVideoCompositionToCameraRoll:pi.asset success:^{
-        [self.friendsTableView reloadData];
+        [self reload];
     } failure:^{
-        [self.friendsTableView reloadData];
+        [self reload];
         [GeneralUtils showAlertMessage:NSLocalizedString(@"save_story_error_message", nil) withTitle:NSLocalizedString(@"save_story_error_title", nil)];
     }];
 }

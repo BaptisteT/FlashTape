@@ -63,8 +63,9 @@
     [super viewWillAppear:animated];
     
     // Label
-    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"send_title", nil),self.messageRecipient.flashUsername];
-    NSRange usernameRange = [title rangeOfString:self.messageRecipient.flashUsername];
+    NSString *username = self.messageRecipient.flashUsername ? self.messageRecipient.flashUsername : @"";
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"send_title", nil),username];
+    NSRange usernameRange = [title rangeOfString:username];
     NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:title];
     [attributedText setAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:self.titleLabel.font.pointSize]}
                             range:NSMakeRange(0, title.length)];
@@ -114,7 +115,7 @@
 - (void)sendMessage:(NSString *)message {
     [self.delegate sendMessage:message toUser:self.messageRecipient];
     [self.delegate closeReadAndMessageViews];
-}
+}   
 
 // ----------------------------------------------------------
 #pragma mark Textview delegate

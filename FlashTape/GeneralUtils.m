@@ -36,6 +36,8 @@
 + (UIImage *)generateThumbImage:(NSURL *)url
 {
     AVAsset *asset = [AVAsset assetWithURL:url];
+    if (!asset) return nil;
+    
     AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
     CMTime time = [asset duration];
     time.value = 0;
