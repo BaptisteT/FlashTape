@@ -99,6 +99,7 @@
     self.sendMessageController.delegate = self;
     
     // Labels
+    self.inviteButton.titleLabel.minimumScaleFactor = 0.1;
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
     

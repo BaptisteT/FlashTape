@@ -11,11 +11,10 @@
 #import "ConstantUtils.h"
 
 @interface FindByUsernameViewController ()
-@property (weak, nonatomic) IBOutlet UISearchBar *usernameTextField;
+@property (weak, nonatomic) IBOutlet UISearchBar *usernameSearchBar;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITableView *resultTableView;
-@property (weak, nonatomic) IBOutlet UIButton *eraseButton;
 
 @end
 
@@ -31,10 +30,11 @@
     self.titleLabel.text = NSLocalizedString(@"find_by_username_controller_title", nil);
     [self.backButton setTitle:NSLocalizedString(@"back_button", nil) forState:UIControlStateNormal];
     
-    self.usernameTextField.delegate = self;
-    self.usernameTextField.tintColor = [UIColor blackColor];
-    self.usernameTextField.placeholder = NSLocalizedString(@"find_by_username_textfield_placeholder", nil);
-    [self.usernameTextField becomeFirstResponder];
+    self.usernameSearchBar.delegate = self;
+    self.usernameSearchBar.showsCancelButton = NO;
+    self.usernameSearchBar.tintColor = [UIColor blackColor];
+    self.usernameSearchBar.placeholder = NSLocalizedString(@"find_by_username_textfield_placeholder", nil);
+    [self.usernameSearchBar becomeFirstResponder];
     
     self.resultTableView.delegate = self;
     self.resultTableView.dataSource = self;
@@ -49,30 +49,20 @@
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (IBAction)eraseButtonClicked:(id)sender {
-    self.usernameTextField.text = @"";
-    [self.resultTableView reloadData];
-}
 
 // --------------------------------------------
 #pragma mark - Textfield delegate
 // --------------------------------------------
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    if ([string isEqualToString:@"\n"]) {
-        return NO;
-    } else {
-        textField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
-        [self.resultTableView reloadData];
-        return NO;
-    }
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self.resultTableView reloadData];
 }
+
 
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.usernameTextField.text.length > 0 ? 1 : 0;
+    return self.usernameSearchBar.text.length > 0 ? 1 : 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -86,7 +76,7 @@
         cell = [nib objectAtIndex:0];
         cell.delegate = self;
     }
-    [cell setSearchedUsernameTo:self.usernameTextField.text];
+    [cell setSearchedUsernameTo:self.usernameSearchBar.text];
     return cell;
 }
 

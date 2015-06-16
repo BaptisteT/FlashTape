@@ -93,7 +93,7 @@
 
 // Find by username
 "find_by_username_controller_title" = "Add a new username";
-"find_by_username_textfield_placeholder" = "Search";
+"find_by_username_textfield_placeholder" = "Search Username";
 "username_section_title" = "USERNAME";
 
 // Authorisation

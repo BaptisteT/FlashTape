@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14A386a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
@@ -1186,8 +1186,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tdM-og-yc9">
-                                <rect key="frame" x="10" y="34" width="98" height="33"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tdM-og-yc9">
+                                <rect key="frame" x="10" y="35" width="96" height="33"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-55Rg" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
                                 <state key="normal" title="Back_button">
                                     <color key="titleColor" white="0.80000000000000004" alpha="1" colorSpace="calibratedWhite"/>
@@ -1197,18 +1197,18 @@
                                     <action selector="backButtonClicked:" destination="s5X-7E-zXT" eventType="touchUpInside" id="gJL-pv-1Qt"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="add_by_username_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1C-rz-sDk">
-                                <rect key="frame" x="202" y="39" width="196" height="22"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="add_by_username_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1C-rz-sDk">
+                                <rect key="frame" x="206" y="40" width="188" height="22"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FG0-3Y-U7X">
-                                <rect key="frame" x="0.0" y="108" width="600" height="492"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FG0-3Y-U7X">
+                                <rect key="frame" x="0.0" y="109" width="600" height="491"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
-                            <searchBar contentMode="redraw" misplaced="YES" searchBarStyle="minimal" placeholder="Search username" translatesAutoresizingMaskIntoConstraints="NO" id="39C-VZ-6Rx">
-                                <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search username" translatesAutoresizingMaskIntoConstraints="NO" id="39C-VZ-6Rx">
+                                <rect key="frame" x="0.0" y="65" width="600" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                         </subviews>
@@ -1218,6 +1218,7 @@
                             <constraint firstAttribute="centerX" secondItem="39C-VZ-6Rx" secondAttribute="centerX" id="85n-is-NM4"/>
                             <constraint firstItem="J1C-rz-sDk" firstAttribute="centerY" secondItem="tdM-og-yc9" secondAttribute="centerY" id="9Iu-Cb-VOM"/>
                             <constraint firstItem="39C-VZ-6Rx" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leadingMargin" constant="-16" id="HPn-At-AEL"/>
+                            <constraint firstItem="FG0-3Y-U7X" firstAttribute="top" secondItem="39C-VZ-6Rx" secondAttribute="bottom" id="QpN-FX-alY"/>
                             <constraint firstAttribute="centerX" secondItem="J1C-rz-sDk" secondAttribute="centerX" id="QvR-vG-Z3w"/>
                             <constraint firstItem="13A-JP-z0a" firstAttribute="top" secondItem="FG0-3Y-U7X" secondAttribute="bottom" id="YlK-YD-S1W"/>
                             <constraint firstItem="J1C-rz-sDk" firstAttribute="top" secondItem="XAs-cF-yRI" secondAttribute="bottom" constant="20" id="a2N-Qc-MJ6"/>
@@ -1237,7 +1238,7 @@
                         <outlet property="backButton" destination="tdM-og-yc9" id="5Td-9c-buh"/>
                         <outlet property="resultTableView" destination="FG0-3Y-U7X" id="kA5-kg-ivq"/>
                         <outlet property="titleLabel" destination="J1C-rz-sDk" id="H5b-GF-vae"/>
-                        <outlet property="usernameTextField" destination="39C-VZ-6Rx" id="Qzd-4y-Cx7"/>
+                        <outlet property="usernameSearchBar" destination="39C-VZ-6Rx" id="svf-a4-0yB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5kS-Ix-zxl" userLabel="First Responder" sceneMemberID="firstResponder"/>
