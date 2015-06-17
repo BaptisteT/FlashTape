@@ -404,16 +404,17 @@
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         [self.friendVideoView.player seekToTime:time];
     } else {
-        // Set metadata
-        CMTime observedTime;
-        for (NSValue *observedValue in [self.videoPlayingObservedTimesArray reverseObjectEnumerator]) {
-            [observedValue getValue:&observedTime];
-            if (CMTIME_COMPARE_INLINE(time, >, observedTime)) {
-                [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[[self.videoPlayingObservedTimesArray indexOfObject:observedValue]]];
-                break;
-            }
-        }
         [self.friendVideoView.player seekToTime:time completionHandler:^(BOOL finished) {
+//            // Set metadata
+//            CMTime observedTime;
+//            for (NSValue *observedValue in [self.videoPlayingObservedTimesArray reverseObjectEnumerator]) {
+//                [observedValue getValue:&observedTime];
+//                if (CMTIME_COMPARE_INLINE(self.friendVideoView.player.currentTime, >, observedTime)) {
+//                    [self setPlayingMetaDataForVideoPost:self.videosToPlayArray[[self.videoPlayingObservedTimesArray indexOfObject:observedValue]]];
+//                    break;
+//                }
+//            }
+//            
             [self.friendVideoView.player play];
         }];
         [self.whiteNoisePlayer play];

@@ -80,6 +80,7 @@
 		3C2C4B7D1B04B08700E0E4BF /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C2C4A8C1B04B08600E0E4BF /* FBSDKShareKit.framework */; };
 		3C2C4C221B05F73A00E0E4BF /* whiteNoise.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */; };
 		3C42DF761B308ED200C956A0 /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C42DF751B308ED200C956A0 /* green.png */; };
+		3C42DF791B316DEB00C956A0 /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C42DF781B316DEB00C956A0 /* ImageUtils.m */; };
 		3C4ABC871B28777500897DF9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C4ABC861B28777500897DF9 /* InfoPlist.strings */; };
 		3C4ABC8C1B2889D500897DF9 /* libFlurry_6.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4ABC8B1B2889D500897DF9 /* libFlurry_6.4.0.a */; };
 		3C4ABC921B28957300897DF9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4ABC901B28957300897DF9 /* Fabric.framework */; };
@@ -338,6 +339,8 @@
 		3C2C4A8C1B04B08600E0E4BF /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = whiteNoise.wav; sourceTree = "<group>"; };
 		3C42DF751B308ED200C956A0 /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green.png; sourceTree = "<group>"; };
+		3C42DF771B316DEB00C956A0 /* ImageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageUtils.h; sourceTree = "<group>"; };
+		3C42DF781B316DEB00C956A0 /* ImageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageUtils.m; sourceTree = "<group>"; };
 		3C4ABC861B28777500897DF9 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		3C4ABC891B2889D500897DF9 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		3C4ABC8A1B2889D500897DF9 /* FlurryWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryWatch.h; sourceTree = "<group>"; };
@@ -932,6 +935,8 @@
 				3C7BF5281B15D93700E66537 /* VideoUtils.m */,
 				3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */,
 				3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */,
+				3C42DF771B316DEB00C956A0 /* ImageUtils.h */,
+				3C42DF781B316DEB00C956A0 /* ImageUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1100,7 +1105,7 @@
 				TargetAttributes = {
 					3C5F97C91AEBB1F30098F70F = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 86N86JY2JG;
+						DevelopmentTeam = WGTUBR2K4F;
 					};
 				};
 			};
@@ -1170,7 +1175,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "./Fabric.framework/run f9ca597e689ec6ddf7ea7adc3fc05ea4f9ce6fb9 0a81e712325d94f766791e99f62e1bac477d6dfc753e67864ec3521c5ca4b210\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1212,6 +1217,7 @@
 				3C081CF71B1B54C70036D6B2 /* SCPhotoConfiguration.m in Sources */,
 				3C081CFB1B1B54C70036D6B2 /* SCRecorderTools.m in Sources */,
 				3C4ABD4A1B299B2500897DF9 /* MPUIColorToNSStringValueTransformer.m in Sources */,
+				3C42DF791B316DEB00C956A0 /* ImageUtils.m in Sources */,
 				3C4ABD391B299B2500897DF9 /* MPObjectSelector.m in Sources */,
 				3C4ABD181B299B2500897DF9 /* MPABTestDesignerChangeResponseMessage.m in Sources */,
 				3C2C4A751AFE231F00E0E4BF /* NSDate+DateTools.m in Sources */,
@@ -1417,8 +1423,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1436,7 +1442,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
+				PROVISIONING_PROFILE = "cdfb2b97-1071-440e-a23e-a2d7e6fba673";
 			};
 			name = Debug;
 		};
@@ -1445,8 +1451,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1463,7 +1469,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
+				PROVISIONING_PROFILE = "cdfb2b97-1071-440e-a23e-a2d7e6fba673";
 			};
 			name = Release;
 		};

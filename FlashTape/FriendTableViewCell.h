@@ -18,7 +18,10 @@
 - (void)initWithUser:(User *)user
        hasSeenVideos:(BOOL)hasSeenVideos
  unreadMessagesCount:(NSInteger)count
-   messagesSentArray:(NSMutableArray *)messagesSent;
+   messagesSentArray:(NSMutableArray *)messagesSent
+            isSaving:(BOOL)isSaving;
+
+- (void)savedAnimation;
 
 @end
 

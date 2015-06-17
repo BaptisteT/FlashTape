@@ -90,6 +90,7 @@
 "message_failed" = "%lu message failed";
 "messages_sending" = "sending (%lu)";
 "messages_sent" = "sent!";
+"story_saved" = "Story saved!";
 
 // Find by username
 "find_by_username_controller_title" = "Add a new username";

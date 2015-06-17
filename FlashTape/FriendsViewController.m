@@ -48,6 +48,7 @@
 @implementation FriendsViewController {
     BOOL _expandMyStory;
     BOOL _stopAnimation;
+    BOOL _isSavingStory;
 }
 
 - (void)viewDidLoad {
@@ -56,6 +57,7 @@
     // Some init
     self.modalPresentationCapturesStatusBarAppearance = YES;
     _expandMyStory = NO;
+    _isSavingStory = NO;
     self.colorView.alpha = 0.5;
     self.messagesReceivedDictionnary = [NSMutableDictionary new];
     self.messagesSentDictionnary = [NSMutableDictionary new];
@@ -307,7 +309,8 @@
         [cell initWithUser:friend
              hasSeenVideos:hasSeenVideo
        unreadMessagesCount:messageCount
-         messagesSentArray:self.messagesSentDictionnary[friend.objectId]];
+         messagesSentArray:self.messagesSentDictionnary[friend.objectId]
+                  isSaving:_isSavingStory];
         cell.delegate = self;
         return cell;
     } else if ([self isCurrentUserPostCell:indexPath]) {
@@ -543,14 +546,16 @@
 #pragma mark - Friend TVC Delegate
 // --------------------------------------------
 - (void)saveCurrentUserStoryButtonClicked {
-    // todo BT
-    // anim
+    _isSavingStory = YES;
     AVPlayerItem *pi = [VideoUtils createAVPlayerItemWithVideoPosts:self.currentUserPosts
                                           andFillObservedTimesArray:nil];
     [VideoUtils saveVideoCompositionToCameraRoll:pi.asset success:^{
-        [self.friendsTableView reloadData];
+        _isSavingStory = NO;
+        FriendTableViewCell *currentUserCell = (FriendTableViewCell *)[self.friendsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:[self sectionForFriend:[User currentUser]]]];
+        [currentUserCell savedAnimation];
     } failure:^{
-        [self.friendsTableView reloadData];
+        _isSavingStory = NO;
+        [self reloadSectionOfUser:[User currentUser]];
         [GeneralUtils showAlertMessage:NSLocalizedString(@"save_story_error_message", nil) withTitle:NSLocalizedString(@"save_story_error_title", nil)];
     }];
 }
