@@ -107,6 +107,9 @@
     [currentInstallation setDeviceTokenFromData:deviceToken];
     currentInstallation[@"user"] = [PFUser currentUser];
     [currentInstallation saveInBackground];
+    
+    // This sends the deviceToken to Mixpanel
+    [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
