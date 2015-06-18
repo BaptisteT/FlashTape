@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14A386a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
@@ -13,6 +13,7 @@
             <string>NHaasGroteskDSPro-55Rg</string>
         </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
@@ -821,7 +822,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="increase_your_score_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WUl-fI-ihe">
-                                <rect key="frame" x="16" y="58" width="568" height="20"/>
+                                <rect key="frame" x="16" y="52" width="568" height="20"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -916,9 +917,9 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-oE-oLH">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-oE-oLH">
                                                     <rect key="frame" x="512" y="31" width="32" height="17"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="14"/>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="14"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1129,7 +1130,7 @@
                             <constraint firstItem="WUl-fI-ihe" firstAttribute="trailing" secondItem="RIw-BT-qC9" secondAttribute="trailingMargin" id="cH8-Tf-5nd"/>
                             <constraint firstAttribute="centerX" secondItem="YBS-wd-gmG" secondAttribute="centerX" id="dUW-UF-IxE"/>
                             <constraint firstItem="LqB-To-ITe" firstAttribute="top" secondItem="bO2-dF-h7J" secondAttribute="bottom" id="dUc-D7-fpc"/>
-                            <constraint firstItem="ZSA-hz-LCJ" firstAttribute="top" secondItem="WUl-fI-ihe" secondAttribute="bottom" constant="10" id="eWi-Ez-ZfY"/>
+                            <constraint firstItem="ZSA-hz-LCJ" firstAttribute="top" secondItem="WUl-fI-ihe" secondAttribute="bottom" constant="16" id="eWi-Ez-ZfY"/>
                             <constraint firstAttribute="trailing" secondItem="bO2-dF-h7J" secondAttribute="trailing" constant="100" id="itp-cz-ZTk"/>
                             <constraint firstItem="WUl-fI-ihe" firstAttribute="top" secondItem="xSU-N2-FLc" secondAttribute="bottom" constant="40" id="jPX-3H-zp9"/>
                             <constraint firstItem="bO2-dF-h7J" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" constant="100" id="jeV-bw-u7D"/>
