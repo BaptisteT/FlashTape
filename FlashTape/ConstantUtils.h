@@ -14,7 +14,7 @@
 @end
 
 // System
-static NSString * const kFlashTapeAppStoreLink = @"https://itunes.apple.com/us/app/id997449435";
+static NSString * const kFlashTapeAppStoreLink = @"http://beta.flashtape.co";
 static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
 
 //Flurry token
