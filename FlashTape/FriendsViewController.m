@@ -206,7 +206,7 @@
     [message.receiver updateLastMessageDate:[NSDate date]];
     
     // reload this section
-    [self reloadSectionOfUser:message.receiver];
+    [self.friendsTableView reloadData];
     
     [ApiManager sendMessage:message
                     success:^{

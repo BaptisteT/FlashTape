@@ -910,12 +910,12 @@
 				3C5F97FE1AEBB4620098F70F /* VideoViewController.m */,
 				3C2C4A801B036F7500E0E4BF /* FriendsViewController.h */,
 				3C2C4A811B036F7500E0E4BF /* FriendsViewController.m */,
-				3C0AC28F1B231A5F0056C59C /* FindByUsernameViewController.h */,
-				3C0AC2901B231A5F0056C59C /* FindByUsernameViewController.m */,
 				3C0AC2971B24B1F50056C59C /* SendMessageViewController.h */,
 				3C0AC2981B24B1F50056C59C /* SendMessageViewController.m */,
 				3C0AC29A1B24D3930056C59C /* ReadMessageViewController.h */,
 				3C0AC29B1B24D3930056C59C /* ReadMessageViewController.m */,
+				3C0AC28F1B231A5F0056C59C /* FindByUsernameViewController.h */,
+				3C0AC2901B231A5F0056C59C /* FindByUsernameViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
