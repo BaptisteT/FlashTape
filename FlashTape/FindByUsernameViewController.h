@@ -9,7 +9,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FindByUsernameViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate>
+#import "FlashTapeParentViewController.h"
+
+@interface FindByUsernameViewController : FlashTapeParentViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate>
 
 @property (strong, nonatomic) NSMutableOrderedSet *friends;
 

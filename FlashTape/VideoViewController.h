@@ -11,9 +11,10 @@
 #import "SCRecorder.h"
 
 #import "CaptionTextView.h"
+#import "FlashTapeParentViewController.h"
 #import "FriendsViewController.h"
 
-@interface VideoViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol, UITextViewDelegate, CaptionTextViewProtocol, UIAlertViewDelegate>
+@interface VideoViewController : FlashTapeParentViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol, UITextViewDelegate, CaptionTextViewProtocol, UIAlertViewDelegate>
 
 @property (nonatomic) BOOL navigateDirectlyToFriends;
 

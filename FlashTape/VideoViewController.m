@@ -153,7 +153,7 @@
     self.captionTransform = CGAffineTransformIdentity;
     self.closeCaptionTapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapToCloseCaption)];
     [self.cameraView addGestureRecognizer:self.closeCaptionTapGestureRecogniser];
-    
+
     // Create the recorder
     self.recorder = [SCRecorder recorder];
     _recorder.delegate = self;

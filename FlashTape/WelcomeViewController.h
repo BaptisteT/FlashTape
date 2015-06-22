@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WelcomeViewController : UIViewController
+#import "FlashTapeParentViewController.h"
+
+@interface WelcomeViewController : FlashTapeParentViewController
 
 @end

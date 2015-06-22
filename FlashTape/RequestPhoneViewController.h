@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 #import "CountryCodeTableViewController.h"
+#import "FlashTapeParentViewController.h"
 
-@interface RequestPhoneViewController : UIViewController <UITextFieldDelegate, CoutryCodeTVCDelegate>
+@interface RequestPhoneViewController : FlashTapeParentViewController <UITextFieldDelegate, CoutryCodeTVCDelegate>
 
 @end

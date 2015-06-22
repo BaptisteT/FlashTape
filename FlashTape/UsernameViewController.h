@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UsernameViewController : UIViewController <UITextFieldDelegate>
+#import "FlashTapeParentViewController.h"
+
+@interface UsernameViewController : FlashTapeParentViewController <UITextFieldDelegate>
 
 @end

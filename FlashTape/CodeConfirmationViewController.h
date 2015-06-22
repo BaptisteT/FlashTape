@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CodeConfirmationViewController : UIViewController <UITextFieldDelegate>
+#import "FlashTapeParentViewController.h"
+
+@interface CodeConfirmationViewController : FlashTapeParentViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) NSString *phoneNumber;
 @property (strong, nonatomic) NSString *verificationCode;

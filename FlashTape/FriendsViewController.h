@@ -9,6 +9,7 @@
 #import <MessageUI/MessageUI.h>
 #import <UIKit/UIKit.h>
 
+#import "FlashTapeParentViewController.h"
 #import "FriendTableViewCell.h"
 #import "VideoTableViewCell.h"
 #import "SendMessageViewController.h"
@@ -17,7 +18,7 @@
 @class VideoPost;
 @protocol FriendsVCProtocol;
 
-@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate, ReadMessageVCDelegate>
+@interface FriendsViewController : FlashTapeParentViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate, ReadMessageVCDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
 @property (strong, nonatomic) NSMutableOrderedSet *friends;

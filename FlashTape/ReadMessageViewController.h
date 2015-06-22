@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import "FlashTapeParentViewController.h"
+
 @class SendMessageViewController;
 @class User;
 
 @protocol ReadMessageVCDelegate;
 
-@interface ReadMessageViewController : UIViewController
+@interface ReadMessageViewController : FlashTapeParentViewController
 
 @property (strong, nonatomic) NSMutableArray *messagesArray;
 @property (strong, nonatomic) User *messageSender;

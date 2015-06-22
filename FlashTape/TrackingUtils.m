@@ -5,10 +5,14 @@
 //  Created by Baptiste Truchot on 5/10/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "GAI.h"
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
 #import "Mixpanel.h"
 #import <Parse/parse.h>
 
 #import "TrackingUtils.h"
+
 
 @implementation TrackingUtils
 
@@ -19,6 +23,8 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel.people set:@{@"name": user.flashUsername ? user.flashUsername : @"", @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
     [mixpanel identify:user.objectId];
+    
+    [[[GAI sharedInstance] defaultTracker] set:@"&uid" value:user.objectId];
     
     if (flag) {
         [TrackingUtils trackSignUp];
@@ -31,6 +37,12 @@
     
     [PFAnalytics trackEvent:@"user.signup"];
     [[Mixpanel sharedInstance] track:@"user.signup"];
+    
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"UX"
+                                                                                        action:@"user.signup"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackSession:(NSNumber *)length
@@ -42,6 +54,14 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"session" properties:@{@"Length": length}];
     [mixpanel.people increment:@"app.open" by:[NSNumber numberWithInt:1]];
+    
+    
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createEventWithCategory:@"UX"
+                                                                           action:@"app.open"
+                                                                            label:nil
+                                                                            value:nil];
+    [builder set:@"start" forKey:kGAISessionControl];
+    [[[GAI sharedInstance] defaultTracker] send:[builder build]];
 }
 
 + (void)trackVideoSentWithProperties:(NSDictionary *)properties
@@ -52,6 +72,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.sent" properties:properties];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"video"
+                                                                                        action:@"video.sent"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackVideoSendingFailure
@@ -62,6 +87,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.failed"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"video"
+                                                                                        action:@"video.failed"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackVideoSeen
@@ -73,6 +103,11 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.seen"];
     [mixpanel.people increment:@"video.seen" by:[NSNumber numberWithInt:1]];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"video"
+                                                                                        action:@"video.seen"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackVideoDeleted
@@ -83,6 +118,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.deleted"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"video"
+                                                                                        action:@"video.deleted"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 
@@ -92,6 +132,11 @@
     [PFAnalytics trackEvent:@"video.replay"];
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.replay"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"video.replay"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackInviteButtonClicked
@@ -102,6 +147,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"invite.clicked"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"invite.clicked"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackInviteSent
@@ -112,6 +162,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"invite.sent"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"invite.sent"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackMessageSent:(NSString *)messageType
@@ -123,6 +178,11 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"message.sent" properties:@{@"type": messageType}];
     [mixpanel.people increment:@"message.sent" by:[NSNumber numberWithInt:1]];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"message"
+                                                                                        action:@"message.sent"
+                                                                                         label:messageType
+                                                                                         value:nil] build]];
 }
 
 + (void)trackMessageRead
@@ -134,6 +194,11 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"message.read"];
     [mixpanel.people increment:@"message.read" by:[NSNumber numberWithInt:1]];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"message"
+                                                                                        action:@"message.read"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackMessageSendingFailed
@@ -144,6 +209,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"message.failed"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"message"
+                                                                                        action:@"message.failed"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackAddFriend
@@ -155,6 +225,11 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"friend.add"];
     [mixpanel.people increment:@"friend.add" by:[NSNumber numberWithInt:1]];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"friend"
+                                                                                        action:@"friend.add"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackBlockFriend
@@ -166,6 +241,11 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"friend.block"];
     [mixpanel.people increment:@"friend.block" by:[NSNumber numberWithInt:1]];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"friend"
+                                                                                        action:@"friend.block"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackSaveStory
@@ -176,6 +256,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.saved"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"story"
+                                                                                        action:@"video.saved"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackSaveStoryFailed
@@ -186,6 +271,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.saving_failure"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"story"
+                                                                                        action:@"video.saving_failure"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 
@@ -196,6 +286,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"caption.clicked"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"caption.clicked"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackCameraFlipClicked {
@@ -205,6 +300,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"camera_flip.clicked"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"camera_flip.clicked"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackFriendButtonClicked {
@@ -214,6 +314,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"friend_button.clicked"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"friend_button.clicked"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackMyStoryClicked {
@@ -223,6 +328,11 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"me.story.clicked"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"me.story.clicked"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackMyVideoClicked {
@@ -232,15 +342,27 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"me.video.clicked"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"me.video.clicked"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 + (void)trackPlayingBarSlide {
     if (DEBUG)return;
     
-    [PFAnalytics trackEvent:@"playing.slide"];
+    [PFAnalytics trackEventInBackground:@"playing.slide" block:^(BOOL completed, NSError *error) {
+        NSLog(@"%@",error);
+    }];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"playing.slide"];
+    
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action"
+                                                                                        action:@"playing.slide"
+                                                                                         label:nil
+                                                                                         value:nil] build]];
 }
 
 

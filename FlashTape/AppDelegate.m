@@ -9,6 +9,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "Flurry.h"
+#import "GAI.h"
 #import "Mixpanel.h"
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
@@ -47,11 +48,10 @@
     // -------------------------------
     // Enable Parse local datastore
     [Parse enableLocalDatastore];
+    
     // Initialize Parse.
     [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
                   clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
-    // Track statistics around application opens.
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     if (!DEBUG) {
         // Flurry
@@ -63,6 +63,13 @@
         
         // Mixpanel
         [Mixpanel sharedInstanceWithToken:kMixpanelToken launchOptions:launchOptions];
+        
+        // Track statistics around application opens.
+        [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+        
+        // Google Analytics
+        [[GAI sharedInstance].logger setLogLevel:kGAILogLevelVerbose];
+        [[GAI sharedInstance] trackerWithTrackingId:@"UA-64360547-1"];
     }
     
     // Clean video data
