@@ -13,7 +13,7 @@
 
 @interface VideoTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) id<VideoTVCDelegate> delegate;
+@property (weak, nonatomic) id<VideoTVCDelegate> delegate;
 - (void)initWithPost:(VideoPost *)post detailedState:(BOOL)detailedState viewerNames:(NSArray *)names;
 
 @end

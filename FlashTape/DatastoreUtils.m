@@ -91,7 +91,7 @@
     PFQuery *userQuery = [User query];
     [userQuery fromLocalDatastore];
     [userQuery whereKey:@"this" matchesKey:@"from" inQuery:followerQuery];
-    [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followerQuery];
+    [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followingQuery];
     
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -112,9 +112,12 @@
                               success:(void(^)(NSArray *unrelatedUser))successBlock
                               failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
-    [followerQuery fromLocalDatastore];
-    [followerQuery whereKey:@"to" equalTo:[User currentUser]];
+    PFQuery *followerRelationQuery = [PFQuery queryWithClassName:@"Follow"];
+    [followerRelationQuery fromLocalDatastore];
+    [followerRelationQuery whereKey:@"to" equalTo:[User currentUser]];
+    // Strange artefact because we can't use two doesNotMatchKey: inquery: with parse
+    PFQuery *followerQuery = [User query];
+    [followerQuery whereKey:@"this" matchesKey:@"from" inQuery:followerRelationQuery];
     
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
     [followingQuery fromLocalDatastore];
@@ -123,8 +126,10 @@
     PFQuery *userQuery = [User query];
     [userQuery fromLocalDatastore];
     [userQuery whereKey:@"username" containedIn:number];
-    [userQuery whereKey:@"this" doesNotMatchKey:@"from" inQuery:followerQuery];
-    [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followerQuery];
+    
+    [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followingQuery];
+    [userQuery whereKey:@"this" doesNotMatchQuery:followerQuery];
+    
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             if (successBlock) {

@@ -1207,6 +1207,42 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FG0-3Y-U7X">
                                 <rect key="frame" x="0.0" y="109" width="600" height="491"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="InviteUserCell" id="50l-Sw-uQV" customClass="InviteContactTableViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="50l-Sw-uQV" id="I1z-6H-Osh">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ie-TH-oeM">
+                                                    <rect key="frame" x="8" y="11" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ki2-4X-Kbc">
+                                                    <rect key="frame" x="555" y="7" width="37" height="30"/>
+                                                    <state key="normal" title="Invite">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="inviteButtonClicked:" destination="50l-Sw-uQV" eventType="touchUpInside" id="1J9-FQ-yEm"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="6Ie-TH-oeM" secondAttribute="centerY" id="TOu-2H-mOo"/>
+                                                <constraint firstItem="6Ie-TH-oeM" firstAttribute="leading" secondItem="I1z-6H-Osh" secondAttribute="leadingMargin" id="aWS-zE-7lr"/>
+                                                <constraint firstAttribute="centerY" secondItem="ki2-4X-Kbc" secondAttribute="centerY" id="swK-Rw-gmW"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ki2-4X-Kbc" secondAttribute="trailing" id="wgt-Tm-eZT"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="inviteButton" destination="ki2-4X-Kbc" id="7Mn-yt-Ook"/>
+                                            <outlet property="nameLabel" destination="6Ie-TH-oeM" id="gbA-eD-CQZ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                             <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search username" translatesAutoresizingMaskIntoConstraints="NO" id="39C-VZ-6Rx">
                                 <rect key="frame" x="0.0" y="65" width="600" height="44"/>

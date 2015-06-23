@@ -82,13 +82,13 @@
             NBPhoneNumber *nbPhoneNumber = [phoneUtil parse:phoneNumber defaultRegion:defaultCountry error:&aError];
             
             if (aError == nil && [phoneUtil isValidNumber:nbPhoneNumber]) {
-                NSString *name = (__bridge NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+                NSString *firstName =  (__bridge NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+                NSString *lastName = (__bridge NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);
+                NSString *name = [NSString stringWithFormat:@"%@ %@",firstName ? firstName : @"",lastName ? lastName : @""];
                 if (!name || name.length == 0) {
-                    name = (__bridge NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);
-                    if (!name || name.length == 0) {
-                        name = @"?";
-                    }
+                    name = @"?";
                 }
+
                 // Stock potential contact
                 NSString *phoneNumber = [NSString stringWithFormat:@"+%u%llu", (unsigned int)nbPhoneNumber.countryCode, nbPhoneNumber.nationalNumber];
                 [addressBookFormattedContacts setObject:name forKey:phoneNumber];

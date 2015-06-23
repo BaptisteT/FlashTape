@@ -5,6 +5,7 @@
 //  Created by Baptiste Truchot on 6/6/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "User.h"
 
 #import "FindByUsernameViewController.h"
 
@@ -22,6 +23,10 @@
 @property (strong, nonatomic) NSDictionary *contactDictionnary;
 @property (strong, nonatomic) NSMutableArray *unrelatedArray;
 
+@property (strong, nonatomic) NSMutableArray *autocompleteContactArray;
+@property (strong, nonatomic) NSMutableArray *autocompleteUnfollowedArray;
+@property (strong, nonatomic) NSMutableArray *autocompleteUnrelatedArray;
+
 @end
 
 @implementation FindByUsernameViewController
@@ -33,19 +38,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // init
+    self.unfollowedArray = [NSMutableArray new];
+    self.unrelatedArray = [NSMutableArray new];
+    self.autocompleteUnfollowedArray = [NSMutableArray arrayWithArray:self.unfollowedArray];
+    self.autocompleteUnrelatedArray = [NSMutableArray arrayWithArray:self.unrelatedArray];
+    
+    // Contact
+    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
+    self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
+    
     // Get unfollowed follower
-    _unfollowedArray = [NSMutableArray new];
     [DatastoreUtils getUnfollowedFollowersLocallyAndExecuteSuccess:^(NSArray *followers) {
-        self.unfollowedArray = [NSMutableArray arrayWithArray:followers];
-        // todo BT reload
+        if (followers) {
+            self.unfollowedArray = [NSMutableArray arrayWithArray:followers];
+        }
+        [self reloadTableView];
     } failure:nil];
     
     // Get unrelated contacts
-    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
     [DatastoreUtils getUnrelatedUserInAddressBook:[self.contactDictionnary allKeys]
                                           success:^(NSArray *unrelatedUser) {
-                                              self.unrelatedArray = [NSMutableArray arrayWithArray:unrelatedUser];
-                                              // todo BT reload
+                                              if (unrelatedUser) {
+                                                  self.unrelatedArray = [NSMutableArray arrayWithArray:unrelatedUser];
+                                              }
+                                              [self reloadTableView];
                                           } failure:nil];
     
     self.titleLabel.text = NSLocalizedString(@"find_by_username_controller_title", nil);
@@ -55,7 +72,6 @@
     self.usernameSearchBar.showsCancelButton = NO;
     self.usernameSearchBar.tintColor = [UIColor blackColor];
     self.usernameSearchBar.placeholder = NSLocalizedString(@"find_by_username_textfield_placeholder", nil);
-    [self.usernameSearchBar becomeFirstResponder];
     
     self.resultTableView.delegate = self;
     self.resultTableView.dataSource = self;
@@ -74,30 +90,92 @@
 #pragma mark - Textfield delegate
 // --------------------------------------------
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    [self.resultTableView reloadData];
+    [self reloadTableView];
 }
 
 
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
+- (void)reloadTableView {
+    NSString *substring = self.usernameSearchBar.text;
+    
+    if (substring.length == 0) {
+        self.autocompleteUnfollowedArray = [NSMutableArray arrayWithArray:self.unfollowedArray];
+        self.autocompleteUnrelatedArray = [NSMutableArray arrayWithArray:self.unrelatedArray];
+        self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
+    } else {
+        self.autocompleteUnfollowedArray = [NSMutableArray new];
+        self.autocompleteUnrelatedArray = [NSMutableArray new];
+        self.autocompleteContactArray = [NSMutableArray new];
+        for(User *user in self.unfollowedArray) {
+            NSRange substringRange = [user.transformedUsername rangeOfString:substring options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch];
+            if (substringRange.location == 0) {
+                [self.autocompleteUnfollowedArray addObject:user];
+            }
+        }
+        for(User *user in self.unrelatedArray) {
+            NSRange substringRange = [user.transformedUsername rangeOfString:substring options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch];
+            if (substringRange.location == 0) {
+                [self.autocompleteUnrelatedArray addObject:user];
+            }
+        }
+        for(NSString *name in [self.contactDictionnary allValues]) {
+            NSRange substringRange = [name rangeOfString:substring options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch];
+            if (substringRange.location == 0) {
+                [self.autocompleteContactArray addObject:name];
+            }
+        }
+
+    }
+    [self.resultTableView reloadData];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.usernameSearchBar.text.length > 0 ? 1 : 0;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    if (section == 0) {
+        return 1;
+    } else if (section == 1) {
+        return self.autocompleteUnfollowedArray.count;
+    } else if (section == 2) {
+        return self.autocompleteUnrelatedArray.count;
+    } else if (section == 3) {
+        return self.autocompleteContactArray.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    AddUserTableViewCell *cell = (AddUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"AddUserCell"];
-    if (!cell) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"AddUserTableViewCell" owner:self options:nil];
-        cell = [nib objectAtIndex:0];
+    if (indexPath.section == 3) {
+        InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
+        
+        NSString *name = self.autocompleteContactArray[indexPath.row];
+        [cell initWithName:name number:name];
         cell.delegate = self;
+        return cell;
+    } else {
+        AddUserTableViewCell *cell = (AddUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"AddUserCell"];
+        if (!cell) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"AddUserTableViewCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+            cell.delegate = self;
+        }
+        
+        if (indexPath.section == 0) {
+            [cell setSearchedUsernameTo:self.usernameSearchBar.text];
+        } else if (indexPath.section == 1) {
+            if (indexPath.row < self.autocompleteUnfollowedArray.count)
+                [cell setCellUserTo:self.autocompleteUnfollowedArray[indexPath.row]];
+        } else if (indexPath.section == 2) {
+            if (indexPath.row < self.autocompleteUnrelatedArray.count)
+                [cell setCellUserTo:self.autocompleteUnrelatedArray[indexPath.row]];
+        }
+        return cell;
     }
-    [cell setSearchedUsernameTo:self.usernameSearchBar.text];
-    return cell;
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -107,9 +185,17 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0) {
         return NSLocalizedString(@"username_section_title", nil);
+    } else if (section == 1) {
+        return NSLocalizedString(@"follower_section_title", nil);
+    } else if (section == 2) {
+        return NSLocalizedString(@"addressbook_section_title", nil);
     } else {
-        return @"";
+        return  NSLocalizedString(@"invite_section_title", nil);;
     }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.usernameSearchBar resignFirstResponder];
 }
 
 // --------------------------------------------
@@ -129,6 +215,15 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_video"
                                                         object:nil
                                                       userInfo:nil];
+}
+
+
+// --------------------------------------------
+#pragma mark - Invite user Cell Delegate
+// --------------------------------------------
+
+- (void)inviteButtonClicked:(NSString *)number {
+    // todo BT
 }
 
 @end

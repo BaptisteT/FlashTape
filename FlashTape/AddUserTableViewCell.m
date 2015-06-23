@@ -40,19 +40,26 @@
                                    if (!user) {
                                        self.addOrDeleteFriendButton.hidden = YES;
                                    } else {
-                                       if ([transformedUsername isEqualToString:user.transformedUsername]) { // ensure this is the same state
-                                           if ([self followingRelationWithUser:user]) {
-                                               [self setAddOrDeleteButtonState:2];
-                                           } else {
-                                               [self setAddOrDeleteButtonState:1];
-                                           }
-                                           self.user = user;
+                                       if ([transformedUsername isEqualToString:user.transformedUsername]) { // ensure same state
+                                           [self setCellUserTo:user];
                                        }
                                    }
                                }
                                failure:nil];
     } else {
         self.addOrDeleteFriendButton.hidden = YES;
+    }
+}
+
+- (void)setCellUserTo:(User *)user {
+    self.user = user;
+    self.usernameLabel.text = user.flashUsername;
+    if (user == [User currentUser]) {
+        self.addOrDeleteFriendButton.hidden = YES;
+    } else if ([self followingRelationWithUser:user]) {
+        [self setAddOrDeleteButtonState:2];
+    } else {
+        [self setAddOrDeleteButtonState:1];
     }
 }
 

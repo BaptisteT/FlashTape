@@ -10,12 +10,14 @@
 
 @protocol AddUserTVCDelegate;
 @class Follow;
+@class User;
 
 @interface AddUserTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) id<AddUserTVCDelegate> delegate;
 
 - (void)setSearchedUsernameTo:(NSString *)username;
+- (void)setCellUserTo:(User *)user;
 
 @end
 
