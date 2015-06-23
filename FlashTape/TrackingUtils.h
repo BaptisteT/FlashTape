@@ -38,7 +38,15 @@
 
 + (void)trackAddFriend;
 
++ (void)trackDeleteFriend;
+
++ (void)trackMuteFriend;
+
++ (void)trackUnmuteFriend;
+
 + (void)trackBlockFriend;
+
++ (void)trackUnBlockFriend;
 
 + (void)trackSaveStory;
 

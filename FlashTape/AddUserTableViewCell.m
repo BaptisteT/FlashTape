@@ -6,12 +6,14 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import "ApiManager.h"
+#import "Follow.h"
 #import "User.h"
 
 #import "AddUserTableViewCell.h"
 
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
+#import "MBProgressHUD.h"
 
 @interface AddUserTableViewCell()
 
@@ -39,12 +41,12 @@
                                        self.addOrDeleteFriendButton.hidden = YES;
                                    } else {
                                        if ([transformedUsername isEqualToString:user.transformedUsername]) { // ensure this is the same state
-                                           self.user = user;
-                                           if ([[self.delegate friends] containsObject:user]) {
+                                           if ([self followingRelationWithUser:user]) {
                                                [self setAddOrDeleteButtonState:2];
                                            } else {
                                                [self setAddOrDeleteButtonState:1];
                                            }
+                                           self.user = user;
                                        }
                                    }
                                }
@@ -59,20 +61,32 @@
         return;
     }
     [self setAddOrDeleteButtonState:0];
-    BOOL block = [[self.delegate friends] containsObject:self.user];
     
-    [ApiManager updateRelationWithFollowing:self.user
-                                      block:block
-                                    success:^{
-                                        if (!block) {
-                                            [self.delegate addFriendAndReloadVideo:self.user];
-                                        } else {
-                                            [self.delegate removeFriendAndReloadVideo:self.user];
-                                        }
-                                        [self setAddOrDeleteButtonState:block ? 1 : 2];
-                                    } failure:^(NSError *error) {
-                                        [self setAddOrDeleteButtonState:block ? 2 : 1];
-                                    }];
+    Follow *follow = [self followingRelationWithUser:self.user];
+    
+    [MBProgressHUD showHUDAddedTo:self.superview animated:YES];
+    if (follow) {
+        // delete
+        [ApiManager deleteRelation:follow
+                           success:^{
+                               [MBProgressHUD hideHUDForView:self.superview animated:YES];
+                               [self.delegate removeFollowingRelationAndReloadVideo:follow];
+                               [self setAddOrDeleteButtonState:1];
+                           } failure:^(NSError *error) {
+                               [MBProgressHUD hideHUDForView:self.superview animated:YES];
+                               [self setAddOrDeleteButtonState:2];
+                           }];
+    } else {
+        [ApiManager createRelationWithFollowing:self.user
+                                        success:^(Follow *following) {
+                                            [MBProgressHUD hideHUDForView:self.superview animated:YES];
+                                            [self.delegate addFollowingRelationAndReloadVideo:following];
+                                            [self setAddOrDeleteButtonState:2];
+                                        } failure:^(NSError *error) {
+                                            [MBProgressHUD hideHUDForView:self.superview animated:YES];
+                                            [self setAddOrDeleteButtonState:1];
+                                        }];
+    }
 }
 
 - (void)setAddOrDeleteButtonState:(NSInteger)state
@@ -84,11 +98,19 @@
     } else {
         self.addOrDeleteFriendButton.enabled = YES;
         if (state == 1) {
-            [self.addOrDeleteFriendButton setTitle:@"Add" forState:UIControlStateNormal];
+            [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"add_button",nil) forState:UIControlStateNormal];
         } else {
-            [self.addOrDeleteFriendButton setTitle:@"Remove" forState:UIControlStateNormal];
+            [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"delete_button",nil) forState:UIControlStateNormal];
         }
     }
 }
 
+- (Follow *)followingRelationWithUser:(User *)user {
+    for (Follow *follow in [self.delegate followingRelations]) {
+        if ([follow.to.objectId isEqualToString:user.objectId]) {
+            return follow;
+        }
+    }
+    return nil;
+}
 @end

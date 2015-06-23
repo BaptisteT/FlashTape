@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol AddUserTVCDelegate;
-@class User;
+@class Follow;
 
 @interface AddUserTableViewCell : UITableViewCell
 
@@ -21,8 +21,8 @@
 
 @protocol AddUserTVCDelegate <NSObject>
 
-- (NSArray *)friends;
-- (void)addFriendAndReloadVideo:(User *)user;
-- (void)removeFriendAndReloadVideo:(User *)user;
+- (NSArray *)followingRelations;
+- (void)addFollowingRelationAndReloadVideo:(Follow *)user;
+- (void)removeFollowingRelationAndReloadVideo:(Follow *)user;
 
 @end

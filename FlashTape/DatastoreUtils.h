@@ -7,15 +7,38 @@
 //
 #import <Foundation/Foundation.h>
 @class User;
+@class Follow;
 
 @interface DatastoreUtils : NSObject
 
-+ (void)getFollowingFromLocalDatastoreAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
+// --------------------------------------------
+#pragma mark - Users
+// --------------------------------------------
+
+// Following
++ (void)getFollowingRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followingRelations))successBlock
                                               failure:(void(^)(NSError *error))failureBlock;
+
+// Followers
++ (void)getFollowerRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followerRelations))successBlock
+                                             failure:(void(^)(NSError *error))failureBlock;
+
++ (Follow *)getRelationWithFollower:(User *)follower
+                          following:(User *)following;
 
 + (NSArray *)getNamesOfUsersWithId:(NSArray *)idsArray;
 
-+ (NSArray *)getVideoLocallyFromUsers:(NSArray *)users;
+
++ (NSDictionary *)getLastMessageDateDictionnary;
+
++ (void)saveLastMessageDate:(NSDate *)date ofUser:(NSString *)userId;
+
+// --------------------------------------------
+#pragma mark - Video
+// --------------------------------------------
++ (void)getVideoLocallyFromUsers:(NSArray *)users
+                         success:(void(^)(NSArray *videos))successBlock
+                         failure:(void(^)(NSError *error))failureBlock;
 
 + (void)getExpiredVideoFromLocalDataStoreAndExecute:(void(^)(NSArray *posts))block;
 
@@ -23,12 +46,14 @@
 
 + (void)deleteLocalPostsNotInRemotePosts:(NSArray *)remotelyRetrievedPosts;
 
+
+// --------------------------------------------
+#pragma mark - Messages
+// --------------------------------------------
+
 + (NSArray *)getUnreadMessagesLocally;
 
 + (NSArray *)getMessagesLocallyFromUser:(User *)user;
 
-+ (NSDictionary *)getLastMessageDateDictionnary;
-
-+ (void)saveLastMessageDate:(NSDate *)date ofUser:(NSString *)userId;
 
 @end

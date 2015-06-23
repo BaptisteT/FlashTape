@@ -10,6 +10,7 @@
 #import <Parse/parse.h>
 
 #import "ApiManager.h"
+#import "Follow.h"
 #import "User.h"
 #import "Message.h"
 #import "VideoPost.h"
@@ -146,60 +147,38 @@
     }];
 }
 
-+ (void)getFollowersAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
-                              failure:(void(^)(NSError *error))failureBlock
+// Get All relationships (follower + following relations)
++ (void)getRelationshipsRemotelyAndExecuteSuccess:(void(^)())successBlock
+                                          failure:(void(^)(NSError *error))failureBlock
 {
     // set up the query on the Follow table
-    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
-    [query whereKey:@"to" equalTo:[PFUser currentUser]];
-    [query whereKey:@"removed" notEqualTo:[NSNumber numberWithBool:YES]];
-    [query includeKey:@"from"];
+    PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
+    [followerQuery whereKey:@"to" equalTo:[PFUser currentUser]];
+    
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
+    [followingQuery whereKey:@"from" equalTo:[PFUser currentUser]];
+    
+    PFQuery *relationshipQuery = [PFQuery orQueryWithSubqueries:@[followerQuery,followingQuery]];
+    [relationshipQuery setLimit:1000];
+    [relationshipQuery includeKey:@"from"];
+    [relationshipQuery includeKey:@"to"];
+    
     // execute the query
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [relationshipQuery findObjectsInBackgroundWithBlock:^(NSArray *relations, NSError *error) {
         if (!error) {
-            NSMutableArray *friends = [NSMutableArray new];
-            for(PFObject *object in objects) {
-                if ([object objectForKey:@"from"])
-                    [friends addObject:[object objectForKey:@"from"]];
-            }
-            [User unpinAllObjectsInBackgroundWithName:kParseFollowersName block:^void(BOOL success, NSError *error) {
+            [Follow unpinAllObjectsInBackgroundWithName:kParseRelationshipsName block:^void(BOOL success, NSError *error) {
                 // Cache the new results.
-                [User pinAllInBackground:friends withName:kParseFollowersName];
+                [Follow pinAllInBackground:relations withName:kParseRelationshipsName];
             }];
+            
             if (successBlock) {
-                successBlock(friends);
+                successBlock();
             }
-        } else {
-            // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
-            if (failureBlock)
-                failureBlock(error);
-        }
-    }];
-}
-
-+ (void)getFollowingAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
-                              failure:(void(^)(NSError *error))failureBlock
-{
-    // set up the query on the Follow table
-    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
-    [query whereKey:@"from" equalTo:[PFUser currentUser]];
-    [query whereKey:@"removed" equalTo:[NSNumber numberWithBool:NO]];
-    [query includeKey:@"to"];
-    // execute the query
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSLog(@"Successfully retrieved %lu following.", (unsigned long)objects.count);
-            NSMutableArray *friends = [NSMutableArray new];
-            for(PFObject *object in objects) {
-                [friends addObject:[object objectForKey:@"to"]];
-            }
-            [User unpinAllObjectsInBackgroundWithName:kParseFollowingName block:^void(BOOL success, NSError *error) {
-                // Cache the new results.
-                [User pinAllInBackground:friends withName:kParseFollowingName];
-            }];
-            if (successBlock) {
-                successBlock(friends);
+            
+            for (Follow *follow in relations) {
+                if (![follow.from isKindOfClass:[User class]] || ![follow.to isKindOfClass:[User class]]) {
+                    [follow deleteInBackground];
+                }
             }
         } else {
             // Log details of the failure
@@ -212,76 +191,49 @@
 
 
 // Fill followers table
-+ (void)fillFollowTableWithContacts:(NSArray *)contacts
-                            success:(void(^)(NSArray *friends))successBlock
-                            failure:(void(^)(NSError *error))failureBlock
-{
-    [PFCloud callFunctionInBackground:@"fillFollowTable"
-                       withParameters:@{@"contacts": contacts}
-                                block:^(NSArray *followings, NSError *error) {
-                                    if (!error) {
-                                        NSMutableArray *friendArray = [NSMutableArray new];
-                                        // Get user from follow
-                                        for(PFObject *follow in followings) {
-                                            User *otherUser = [follow objectForKey:@"to"];
-                                            if (otherUser)
-                                                [friendArray addObject:otherUser];
-                                        }
-                                        
-                                        // Pin
-                                        [User unpinAllObjectsInBackgroundWithName:kParseFollowingName block:^void(BOOL success, NSError *error) {
-                                            // Cache the new results.
-                                            [User pinAllInBackground:friendArray withName:kParseFollowingName];
-                                        }];
-                                        if (successBlock) {
-                                            successBlock(friendArray);
-                                        }
-                                    } else {
-                                        if (failureBlock) {
-                                            failureBlock(error);
-                                        }
-                                    }
-                                }];
-}
+//+ (void)fillFollowTableWithContacts:(NSArray *)contacts
+//                            success:(void(^)(NSArray *friends))successBlock
+//                            failure:(void(^)(NSError *error))failureBlock
+//{
+//    [PFCloud callFunctionInBackground:@"fillFollowTable"
+//                       withParameters:@{@"contacts": contacts}
+//                                block:^(NSArray *followings, NSError *error) {
+//                                    if (!error) {
+//                                        NSMutableArray *friendArray = [NSMutableArray new];
+//                                        // Get user from follow
+//                                        for(PFObject *follow in followings) {
+//                                            User *otherUser = [follow objectForKey:@"to"];
+//                                            if (otherUser)
+//                                                [friendArray addObject:otherUser];
+//                                        }
+//                                        
+//                                        // Pin
+//                                        [User unpinAllObjectsInBackgroundWithName:kParseFollowingName block:^void(BOOL success, NSError *error) {
+//                                            // Cache the new results.
+//                                            [User pinAllInBackground:friendArray withName:kParseFollowingName];
+//                                        }];
+//                                        if (successBlock) {
+//                                            successBlock(friendArray);
+//                                        }
+//                                    } else {
+//                                        if (failureBlock) {
+//                                            failureBlock(error);
+//                                        }
+//                                    }
+//                                }];
+//}
 
-+ (void)updateRelationWithFollowing:(User *)followedUser
-                              block:(BOOL)block
-                            success:(void(^)())successBlock
-                            failure:(void(^)(NSError *error))failureBlock
++ (void)saveRelation:(Follow *)follow
+             success:(void(^)())successBlock
+             failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
-    [query whereKey:@"from" equalTo:[User currentUser]];
-    [query whereKey:@"to" equalTo:followedUser];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *follows, NSError *error) {
-        if (!error) {
-            PFObject * follow;
-            if (follows.count > 0) {
-                follow = follows.firstObject;
-            } else {
-                follow = [PFObject objectWithClassName:@"Follow"];
-                follow[@"to"] = followedUser;
-                follow[@"from"] = [User currentUser];
+    // todo BT
+    // tracking (block / unblock / mute / unmute
+    [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            if (successBlock) {
+                successBlock();
             }
-            follow[@"removed"] = [NSNumber numberWithBool:block];
-            [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    if (block) {
-                        [followedUser unpinInBackgroundWithName:kParseFollowingName];
-                        [PFObject unpinAllInBackground:[DatastoreUtils getMessagesLocallyFromUser:followedUser] withName:kParseMessagesName];
-                        [TrackingUtils trackBlockFriend];
-                    } else {
-                        [followedUser pinInBackgroundWithName:kParseFollowingName];
-                        [TrackingUtils trackAddFriend];
-                    }
-                    if (successBlock) {
-                        successBlock();
-                    }
-                } else {
-                    if (failureBlock) {
-                        failureBlock(error);
-                    }
-                }
-            }];
         } else {
             if (failureBlock) {
                 failureBlock(error);
@@ -289,6 +241,46 @@
         }
     }];
 }
+
++ (void)createRelationWithFollowing:(User *)following
+                            success:(void(^)(Follow *follow))successBlock
+                            failure:(void(^)(NSError *error))failureBlock
+{
+    Follow *follow = [Follow createRelationWithFollowing:following];
+    [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [follow pinInBackgroundWithName:kParseRelationshipsName];
+            [TrackingUtils trackAddFriend];
+            if (successBlock) {
+                successBlock(follow);
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+
++ (void)deleteRelation:(Follow *)follow
+               success:(void(^)())successBlock
+               failure:(void(^)(NSError *error))failureBlock
+{
+    [follow deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [follow unpinInBackgroundWithName:kParseRelationshipsName];
+            [TrackingUtils trackBlockFriend];
+            if (successBlock) {
+                successBlock();
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+     
 
 
 // --------------------------------------------
@@ -358,7 +350,7 @@
                      failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
-    [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
+    [query whereKey:@"recordedAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
     [query whereKey:@"user" containedIn:friends];
     [query orderByAscending:@"recordedAt"];
     [query includeKey:@"user"];

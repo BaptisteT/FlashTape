@@ -10,6 +10,7 @@
 
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
+#import "Follow.h"
 #import "Message.h"
 #import "User.h"
 #import "VideoPost.h"
@@ -39,8 +40,8 @@
 @property (strong, nonatomic) SendMessageViewController *sendMessageController;
 @property (strong, nonatomic) NSMutableDictionary *messagesReceivedDictionnary;
 @property (strong, nonatomic) NSMutableDictionary *messagesSentDictionnary;
-@property (strong, nonatomic) NSMutableArray *followerArray;
-@property (strong, nonatomic) User *userToFollowOrBlock;
+@property (strong, nonatomic) NSMutableArray *followerRelations;
+@property (strong, nonatomic) Follow *selectedRelation;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 @end
@@ -61,16 +62,20 @@
     self.colorView.alpha = 0.5;
     self.messagesReceivedDictionnary = [NSMutableDictionary new];
     self.messagesSentDictionnary = [NSMutableDictionary new];
-    self.followerArray = [NSMutableArray new];
+    self.followerRelations = [NSMutableArray new];
     
     // Retrieve Messages Locally
     [self retrieveUnreadMessagesLocally];
     
     // Refresh current User posts
-    self.currentUserPosts = [NSMutableArray arrayWithArray:[DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]]];
-    [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
-        [self.friendsTableView reloadData];
-    }];
+    // Get local videos
+    [DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]
+                                     success:^(NSArray *videos) {
+                                         self.currentUserPosts = [NSMutableArray arrayWithArray:videos];
+                                         [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
+                                             [self.friendsTableView reloadData];
+                                         }];
+                                     } failure:nil];
     
     // Tableview
     self.friendsTableView.allowsMultipleSelectionDuringEditing = NO;
@@ -137,9 +142,9 @@
     
     // Open send message if coming from click on name label
     if (self.friendUsername) {
-        for (User *friend in self.friends) {
-            if ([friend.flashUsername isEqualToString:self.friendUsername]) {
-                [self presentSendViewController:friend];
+        for (Follow *follow in self.followingRelations) {
+            if ([follow.to.flashUsername isEqualToString:self.friendUsername]) {
+                [self presentSendViewController:follow.to];
                 self.friendUsername = nil;
                 return;
             }
@@ -157,7 +162,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"Add Username From Friends"]) {
-        ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
+        ((FriendsViewController *) [segue destinationViewController]).followingRelations = self.followingRelations;
     } else if ([segueName isEqualToString: @"Read Message From Friends"]) {
         User *friend = (User *)sender;
         ((ReadMessageViewController *) [segue destinationViewController]).messageSender = friend;
@@ -211,10 +216,10 @@
     [ApiManager sendMessage:message
                     success:^{
                         message.status = kMessageTypeSent;
-                        [self reloadSectionOfUser:message.receiver];
+                        [self.friendsTableView reloadData];
                     } failure:^(NSError *error) {
                         message.status = kMessageTypeFailed;
-                        [self reloadSectionOfUser:message.receiver];
+                        [self.friendsTableView reloadData];
                     }];
 }
 // Send message
@@ -244,8 +249,11 @@
             [messagesDictionary setObject:[NSMutableArray arrayWithObject:message] forKey:message.sender.objectId];
         }
         // Add user to follower if not a friend
-        if (![self.friends containsObject:message.sender]) {
-            [self.followerArray addObject:message.sender];
+        if (![self userBelongsToFollowing:message.sender]) {
+            Follow *followerRelation = [DatastoreUtils getRelationWithFollower:message.sender following:[User currentUser]];
+            if (followerRelation) {
+                [self.followerRelations addObject:followerRelation];
+            }
         }
     }
     self.messagesReceivedDictionnary = messagesDictionary;
@@ -273,6 +281,8 @@
     [self.delegate setMessageCount:count];
 }
 
+
+
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
@@ -282,7 +292,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1 + self.friends.count + self.followerArray.count;
+    return 2 + self.followingRelations.count + self.followerRelations.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -297,20 +307,24 @@
 {
     if ([self isAddFriendSection:indexPath.section]) {
         return [tableView dequeueReusableCellWithIdentifier:@"AddFriendCell"];
-    } else if ([self isCurrentUserUserCell:indexPath] || [self isFriendUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
-        // Data
+    } else if ([self isCurrentUserUserCell:indexPath]) {
         FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-        User *friend = [self friendOrFollowerForSection:indexPath.section];
+        [cell InitWithCurrentUserAndIsSaving:_isSavingStory];
+        cell.delegate = self;
+        return cell;
+    } else if ([self isFollowingUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
+        FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
+        Follow *follow = [self relationForSection:indexPath.section];
         NSArray *viewerIdsArray = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray : nil;
-        BOOL hasSeenVideo = (viewerIdsArray) ? ([viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : NO;
-        NSInteger messageCount = self.messagesReceivedDictionnary[friend.objectId] ? ((NSArray *)self.messagesReceivedDictionnary[friend.objectId]).count : 0;
+        BOOL hasSeenVideo = (viewerIdsArray) ? ([viewerIdsArray indexOfObject:follow.to.objectId] != NSNotFound) : NO;
+        NSInteger messageCount = self.messagesReceivedDictionnary[follow.to.objectId] ? ((NSArray *)self.messagesReceivedDictionnary[follow.to.objectId]).count : 0;
         
         // Create cell
-        [cell initWithUser:friend
+        [cell initWithUser:[self isFollowingUserSection:indexPath.section] ? follow.to : follow.from
              hasSeenVideos:hasSeenVideo
        unreadMessagesCount:messageCount
-         messagesSentArray:self.messagesSentDictionnary[friend.objectId]
-                  isSaving:_isSavingStory];
+         messagesSentArray:self.messagesSentDictionnary[follow.to.objectId]
+                     muted:[self isFollowingUserSection:indexPath.section] && follow.mute == YES];
         cell.delegate = self;
         return cell;
     } else if ([self isCurrentUserPostCell:indexPath]) {
@@ -330,7 +344,7 @@
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self isAddFriendSection:indexPath.section] || [self isCurrentUserUserCell:indexPath] || [self isFriendUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
+    if ([self isAddFriendSection:indexPath.section] || [self isCurrentUserUserCell:indexPath] || [self isFollowingUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
         return 80;
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
@@ -348,16 +362,17 @@
         [TrackingUtils trackMyStoryClicked];
         _expandMyStory = !_expandMyStory;
         self.postToDetail = nil;
-        [self reloadSectionOfUser:[User currentUser]];
+        [self reloadSection:indexPath.section];
     } else if ([self isCurrentUserPostCell:indexPath]) {
         [TrackingUtils trackMyVideoClicked];
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         self.postToDetail = (post == self.postToDetail) ? nil : post;
-        [self reloadSectionOfUser:[User currentUser]];
-    } else if ([self isFriendUserSection:indexPath.section]) {
+        [self reloadSection:indexPath.section];
+    } else if ([self isFollowingUserSection:indexPath.section]) {
         _expandMyStory = NO;
         self.postToDetail = nil;
-        User *friend = [self friendOrFollowerForSection:indexPath.section];
+        Follow *followingRelation = [self relationForSection:indexPath.section];
+        User *friend = followingRelation.to;
 
         // Check if we have failure
         NSMutableArray *failedMessageArray = [NSMutableArray new];
@@ -386,9 +401,10 @@
     else if ([self isFollowerUserSection:indexPath.section]) {
         _expandMyStory = NO;
         self.postToDetail = nil;
-        self.userToFollowOrBlock = [self friendOrFollowerForSection:indexPath.section];
+        self.selectedRelation = [self relationForSection:indexPath.section];
+        
         // Present alert view
-        [[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"follow_or_block_alert_title", nil), self.userToFollowOrBlock.flashUsername]
+        [[[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"follow_or_block_alert_title", nil), self.selectedRelation.from.flashUsername]
                                     message:NSLocalizedString(@"follow_or_block_alert_message", nil)
                                    delegate:self
                           cancelButtonTitle:NSLocalizedString(@"block_button", nil)
@@ -398,51 +414,111 @@
 
 // Edit only friend cells
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self isFriendUserSection:indexPath.section];
+    return [self isFollowingUserSection:indexPath.section];
 }
 
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete && [self isFriendUserSection:indexPath.section]) {
-        User *friend = [self friendOrFollowerForSection:indexPath.section];
-        [self updateRelationshipWithUser:friend block:YES];
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self isFollowingUserSection:indexPath.section]) {
+        Follow *relation = (Follow *)[self relationForSection:indexPath.section];
+        BOOL mute = !relation.mute;
+        UITableViewRowAction *muteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal
+                                                                              title:mute ? NSLocalizedString(@"mute_button",nil) : NSLocalizedString(@"unmute_button",nil)
+            handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                if (mute) {
+                    if ([GeneralUtils explainBeforeMute]) {
+                        self.selectedRelation = relation;
+                        // Present alert view
+                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"mute_following_alert_title", nil)
+                                                    message:[NSString stringWithFormat:NSLocalizedString(@"mute_following_alert_message", nil), relation.to.flashUsername]
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"cancel_button_title", nil)
+                                          otherButtonTitles:NSLocalizedString(@"mute_and_stop_explaining_button", nil),NSLocalizedString(@"mute_button", nil), nil] show];
+                    } else {
+                        // mute
+                        [self muteFollowing:relation];
+                    }
+                } else {
+                    // unmute
+                    [self unmuteFollowing:relation];
+                }
+            }];
+        UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive
+                                                                              title:NSLocalizedString(@"delete_button",nil)
+            handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                if ([GeneralUtils explainBeforeDelete]) {
+                    self.selectedRelation = relation;
+                    // Present alert view
+                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"delete_following_alert_title", nil)
+                                                message:[NSString stringWithFormat:NSLocalizedString(@"delete_following_alert_message", nil), relation.to.flashUsername]
+                                               delegate:self
+                                      cancelButtonTitle:NSLocalizedString(@"cancel_button_title", nil)
+                                      otherButtonTitles:NSLocalizedString(@"delete_and_stop_explaining_button", nil),NSLocalizedString(@"delete_button", nil), nil] show];
+                } else {
+                    // delete
+                    [self deleteFollow:relation];
+                }
+            }];
+        return @[muteAction,deleteAction];
+    } else {
+        return nil;
     }
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NSLocalizedString(@"block_button", nil);
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // bug apple : necessary for above to work
 }
 
-- (void)reloadSectionOfUser:(User *)user {
-    NSInteger section = [self sectionForFriend:user];
+- (void)reloadSectionOfRelation:(Follow *)relation {
+    NSInteger section = [self sectionForRelation:relation];
     if (section != NSNotFound) {
-        NSRange range = NSMakeRange(section, 1);
-        NSIndexSet *sectionToReload = [NSIndexSet indexSetWithIndexesInRange:range];
-        [self.friendsTableView reloadSections:sectionToReload withRowAnimation:UITableViewRowAnimationNone];
+        [self reloadSection:section];
     }
+}
+
+- (void)reloadSection:(NSInteger)section {
+    NSRange range = NSMakeRange(section, 1);
+    NSIndexSet *sectionToReload = [NSIndexSet indexSetWithIndexesInRange:range];
+    [self.friendsTableView reloadSections:sectionToReload withRowAnimation:UITableViewRowAnimationNone];
 }
 
 // --------------------------------------------
 #pragma mark - Friends
 // --------------------------------------------
-// Follow or block user
-- (void)updateRelationshipWithUser:(User *)user
-                             block:(BOOL)block
+- (BOOL)userBelongsToFollowing:(User *)user {
+    for (Follow *follow in self.followingRelations) {
+        if ([follow.to.objectId isEqualToString:user.objectId]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Block user
+- (void)blockUserFromFollow:(Follow *)follow
+{
+    follow.blocked = YES;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ApiManager saveRelation:follow
+                     success:^{
+                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                         [self.followerRelations removeObject:follow];
+                         [self.messagesReceivedDictionnary removeObjectForKey:follow.from.objectId];
+                         [self sortFriendsAndReload];
+                         [TrackingUtils trackBlockFriend];
+                     } failure:^(NSError *error) {
+                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                         [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
+                     }];
+}
+
+- (void)createRelationshipFromFollow:(Follow *)follow
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [ApiManager updateRelationWithFollowing:user
-                                      block:block
-                                    success:^{
-                                        [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                        [self.followerArray removeObject:user];
-                                        if (block) {
-                                            [self.friends removeObject:user];
-                                            // remove messages
-                                            [self.messagesReceivedDictionnary removeObjectForKey:user.objectId];
-                                        } else {
-                                            // add to friends
-                                            [self.friends addObject:user];
-                                        }
+    [ApiManager createRelationWithFollowing:follow.from
+                                    success:^(Follow *following){
+                                        [self.followingRelations addObject:following];
                                         [self sortFriendsAndReload];
                                     } failure:^(NSError *error) {
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -452,43 +528,89 @@
 
 // Order friends
 - (void)orderFriendsByLastMessageDateAndScore {
-    [self.friends sortUsingComparator:^NSComparisonResult(User *obj1, User *obj2) {
-        if (obj1 == [PFUser currentUser]) {
+    [self.followingRelations sortUsingComparator:^NSComparisonResult(Follow *obj1, Follow *obj2) {
+        User *user1 = obj1.to;
+        User *user2 = obj2.to;
+        if (user1 == [PFUser currentUser]) {
             return NSOrderedAscending;
-        } else if (obj2 == [PFUser currentUser]) {
+        } else if (user2 == [PFUser currentUser]) {
             return NSOrderedDescending;
         } else {
-            if (!obj1.lastMessageDate) [obj1 updateLastMessageDate:[NSDate dateWithTimeIntervalSince1970:0]];
-            if (!obj2.lastMessageDate) [obj2 updateLastMessageDate:[NSDate dateWithTimeIntervalSince1970:0]];
-            if ([obj1.lastMessageDate isEqual:obj2.lastMessageDate]) {
-                return obj1.score > obj2.score ? NSOrderedAscending : NSOrderedDescending;
+            if (!user1.lastMessageDate) [user1 updateLastMessageDate:[NSDate dateWithTimeIntervalSince1970:0]];
+            if (!user2.lastMessageDate) [user2 updateLastMessageDate:[NSDate dateWithTimeIntervalSince1970:0]];
+            if ([user1.lastMessageDate isEqual:user2.lastMessageDate]) {
+                return user1.score > user2.score ? NSOrderedAscending : NSOrderedDescending;
             } else {
-                return [obj2.lastMessageDate compare:obj1.lastMessageDate];
+                return [user2.lastMessageDate compare:user1.lastMessageDate];
             }
         }
     }];
+}
+
+- (void)muteFollowing:(Follow *)follow {
+    follow.mute = YES;
+    [self saveRelation:follow];
+}
+
+- (void)unmuteFollowing:(Follow *)follow {
+    follow.mute = NO;
+    [self saveRelation:follow];
+}
+
+- (void)saveRelation:(Follow *)follow {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ApiManager saveRelation:follow
+                     success:^{
+                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                         [self.friendsTableView reloadData];
+                         [self reloadFeedVideo];
+                     } failure:^(NSError *error) {
+                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                         [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil)
+                                              withTitle:NSLocalizedString(@"unexpected_error", nil)];
+                     }];
+}
+
+- (void)deleteFollow:(Follow *)follow {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ApiManager deleteRelation:follow
+                       success:^{
+                           [MBProgressHUD hideHUDForView:self.view animated:YES];
+                           [self.followingRelations removeObject:follow];
+                           [self.friendsTableView reloadData];
+                           [self reloadFeedVideo];
+                       } failure:^(NSError *error) {
+                           [MBProgressHUD hideHUDForView:self.view animated:YES];
+                           [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil)
+                                                withTitle:NSLocalizedString(@"unexpected_error", nil)];
+                       }];
+}
+
+- (void)reloadFeedVideo {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_video"
+                                                        object:nil
+                                                      userInfo:nil];
 }
 
 
 // --------------------------------------------
 #pragma mark - Cell Type & Logic
 // --------------------------------------------
-// 1st follower, then friends
-- (User *)friendOrFollowerForSection:(NSInteger)section {
-    if (section == 0) {
+// 1st me, then followers, then friends
+- (Follow *)relationForSection:(NSInteger)section {
+    if (section == 0 || section == 1) {
         return nil;
-    }
-    if (section < self.followerArray.count + 1) {
-        return (User *)self.followerArray[section - 1];
-    } else if (section < self.followerArray.count + self.friends.count + 1 ) {
-        return (User *)self.friends[section - self.followerArray.count - 1];
+    } else if (section < self.followerRelations.count + 2) {
+        return (Follow *)self.followerRelations[section - 2];
+    } else if (section < self.followingRelations.count + self.followerRelations.count + 2) {
+        return (Follow *)self.followingRelations[section - self.followerRelations.count - 2];
     } else {
         return nil;
     }
 }
 
-- (NSInteger)sectionForFriend:(User *)user {
-    return [self.friends indexOfObject:user] + 1 + self.followerArray.count;
+- (NSInteger)sectionForRelation:(Follow *)relation {
+    return [self.followingRelations indexOfObject:relation] + 1 + self.followerRelations.count;
 }
 
 - (BOOL)isAddFriendSection:(NSInteger)section {
@@ -496,7 +618,11 @@
 }
 
 - (BOOL)isCurrentUserSection:(NSInteger)section {
-    return [self friendOrFollowerForSection:section] == [User currentUser];
+    return section == [self currentUserSection];
+}
+
+- (NSInteger)currentUserSection {
+    return 1;
 }
 
 - (BOOL)isCurrentUserUserCell:(NSIndexPath *)indexPath {
@@ -504,11 +630,11 @@
 }
 
 - (BOOL)isFollowerUserSection:(NSInteger)section {
-    return ![self isAddFriendSection:section] && section < self.followerArray.count + 1;
+    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && section < self.followerRelations.count + 2;
 }
 
-- (BOOL)isFriendUserSection:(NSInteger)section {
-    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && ![self isFollowerUserSection:section] && (section < self.followerArray.count + self.friends.count + 1);
+- (BOOL)isFollowingUserSection:(NSInteger)section {
+    return ![self isAddFriendSection:section] && ![self isCurrentUserSection:section] && ![self isFollowerUserSection:section] && (section < self.followerRelations.count + self.followingRelations.count + 2);
 }
 
 - (BOOL)isCurrentUserPostCell:(NSIndexPath *)indexPath {
@@ -551,11 +677,11 @@
                                           andFillObservedTimesArray:nil];
     [VideoUtils saveVideoCompositionToCameraRoll:pi.asset success:^{
         _isSavingStory = NO;
-        FriendTableViewCell *currentUserCell = (FriendTableViewCell *)[self.friendsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:[self sectionForFriend:[User currentUser]]]];
+        FriendTableViewCell *currentUserCell = (FriendTableViewCell *)[self.friendsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:[self currentUserSection]]];
         [currentUserCell savedAnimation];
     } failure:^{
         _isSavingStory = NO;
-        [self reloadSectionOfUser:[User currentUser]];
+        [self reloadSection:[self currentUserSection]];
         [GeneralUtils showAlertMessage:NSLocalizedString(@"save_story_error_message", nil) withTitle:NSLocalizedString(@"save_story_error_title", nil)];
     }];
 }
@@ -586,7 +712,7 @@
                                    [self.delegate removeVideoFromVideosArray:self.postToDelete];
                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
                                    self.postToDelete = nil;
-                                   [self reloadSectionOfUser:[User currentUser]];
+                                   [self reloadSection:[self currentUserSection]];
                                } failure:^(NSError *error) {
                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
                                    [GeneralUtils showAlertMessage:NSLocalizedString(@"delete_flash_error_message", nil) withTitle:NSLocalizedString(@"delete_flash_error_title", nil)];
@@ -594,14 +720,40 @@
             }
         }
     } else if([alertView.message isEqualToString:NSLocalizedString(@"follow_or_block_alert_message", nil)]) {
-        // Follow or block user
         BOOL block = [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"block_button", nil)];
-        [self updateRelationshipWithUser:self.userToFollowOrBlock block:block];
-        self.userToFollowOrBlock = nil;
+        // Block User
+        if (block) {
+            [self blockUserFromFollow:self.selectedRelation];
+        } else {
+            [self createRelationshipFromFollow:self.selectedRelation];
+        }
+        self.selectedRelation = nil;
 
     } else if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
             [GeneralUtils openSettings];
+        }
+    } else if ([alertView.title isEqualToString:NSLocalizedString(@"delete_following_alert_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"cancel_button_title", nil)]) {
+            return;
+        } else {
+            // delete
+            [self deleteFollow:self.selectedRelation];
+            self.selectedRelation = nil;
+            if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"delete_and_stop_explaining_button", nil)]) {
+                [GeneralUtils setDeleteExplanationHidden:YES];
+            }
+        }
+    } else if ([alertView.title isEqualToString:NSLocalizedString(@"mute_following_alert_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"cancel_button_title", nil)]) {
+            return;
+        } else {
+            // mute
+            [self muteFollowing:self.selectedRelation];
+            self.selectedRelation = nil;
+            if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"mute_and_stop_explaining_button", nil)]) {
+                [GeneralUtils setMuteExplanationHidden:YES];
+            }
         }
     }
 }

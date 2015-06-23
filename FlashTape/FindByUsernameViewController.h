@@ -13,6 +13,6 @@
 
 @interface FindByUsernameViewController : FlashTapeParentViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate>
 
-@property (strong, nonatomic) NSMutableOrderedSet *friends;
+@property (strong, nonatomic) NSMutableOrderedSet *followingRelations;
 
 @end

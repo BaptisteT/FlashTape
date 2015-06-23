@@ -232,18 +232,63 @@
                                                                                          value:nil] build]];
 }
 
-+ (void)trackBlockFriend
++ (void)trackDeleteFriend
 {
     if (DEBUG)return;
     
-    [PFAnalytics trackEvent:@"friend.block"];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"friend.block"];
-    [mixpanel.people increment:@"friend.block" by:[NSNumber numberWithInt:1]];
-    
+    NSString *event = @"friend.delete";
+    [PFAnalytics trackEvent:event];
+    [[Mixpanel sharedInstance] track:event];
     [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"friend"
-                                                                                        action:@"friend.block"
+                                                                                        action:event
+                                                                                         label:nil
+                                                                                        value:nil] build]];
+}
+
++ (void)trackMuteFriend
+{
+    if (DEBUG)return;
+    NSString *event = @"friend.mute";
+    [PFAnalytics trackEvent:event];
+    [[Mixpanel sharedInstance] track:event];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"friend"
+                                                                                        action:event
+                                                                                         label:nil
+                                                                                         value:nil] build]];
+}
+
++ (void)trackUnmuteFriend
+{
+    if (DEBUG)return;
+    NSString *event = @"friend.unmute";
+    [PFAnalytics trackEvent:event];
+    [[Mixpanel sharedInstance] track:event];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"friend"
+                                                                                        action:event
+                                                                                         label:nil
+                                                                                         value:nil] build]];
+}
+
++ (void)trackBlockFriend
+{
+    if (DEBUG)return;
+    NSString *event = @"friend.block";
+    [PFAnalytics trackEvent:event];
+    [[Mixpanel sharedInstance] track:event];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"friend"
+                                                                                        action:event
+                                                                                         label:nil
+                                                                                         value:nil] build]];
+}
+
++ (void)trackUnBlockFriend
+{
+    if (DEBUG)return;
+    NSString *event = @"friend.block";
+    [PFAnalytics trackEvent:event];
+    [[Mixpanel sharedInstance] track:event];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"friend"
+                                                                                        action:event
                                                                                          label:nil
                                                                                          value:nil] build]];
 }

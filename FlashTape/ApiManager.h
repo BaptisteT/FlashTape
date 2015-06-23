@@ -12,6 +12,7 @@
 @class VideoPost;
 @class User;
 @class Message;
+@class Follow;
 
 @interface ApiManager : NSObject
 
@@ -41,17 +42,24 @@
                    success:(void(^)(User *user))successBlock
                    failure:(void(^)(NSError *error))failureBlock;
 
-+ (void)getFollowersAndExecuteSuccess:(void(^)(NSArray *friends))successBlock
-                              failure:(void(^)(NSError *error))failureBlock;
++ (void)getRelationshipsRemotelyAndExecuteSuccess:(void(^)())successBlock
+                                          failure:(void(^)(NSError *error))failureBlock;
 
-+ (void)fillFollowTableWithContacts:(NSArray *)contacts
-                            success:(void(^)(NSArray *friends))successBlock
+//+ (void)fillFollowTableWithContacts:(NSArray *)contacts
+//                            success:(void(^)(NSArray *friends))successBlock
+//                            failure:(void(^)(NSError *error))failureBlock;
+
++ (void)saveRelation:(Follow *)follow
+             success:(void(^)())successBlock
+             failure:(void(^)(NSError *error))failureBlock;
+
++ (void)createRelationWithFollowing:(User *)following
+                            success:(void(^)(Follow *follow))successBlock
                             failure:(void(^)(NSError *error))failureBlock;
 
-+ (void)updateRelationWithFollowing:(User *)followedUser
-                              block:(BOOL)block
-                            success:(void(^)())successBlock
-                            failure:(void(^)(NSError *error))failureBlock;
++ (void)deleteRelation:(Follow *)follow
+               success:(void(^)())successBlock
+               failure:(void(^)(NSError *error))failureBlock;
 
 // --------------------------------------------
 #pragma mark - Video

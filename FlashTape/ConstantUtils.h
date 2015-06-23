@@ -15,7 +15,7 @@
 
 // System
 static NSString * const kFlashTapeAppStoreLink = @"http://beta.flashtape.co";
-static NSString * const kFlashTapeWebsiteLink = @""; // todo BT
+static NSString * const kFlashTapeWebsiteLink = @"http://flashtape.co/";
 
 //Flurry token
 static NSString * const kProdFlurryToken = @"5PFZ5RNNFKH6J6D6V4ZY";
@@ -25,9 +25,8 @@ static NSString * const kMixpanelToken = @"51d7f02e924b3babe98ea09ca2dd423b";
 
 // Parse
 static NSString * const kParsePostsName = @"Posts";
-static NSString * const kParseFollowingName = @"Friends";
-static NSString * const kParseFollowersName = @"Followers";
 static NSString * const kParseMessagesName = @"Messages";
+static NSString * const kParseRelationshipsName = @"Relationships";
 
 // Download / feed
 static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;

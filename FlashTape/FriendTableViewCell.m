@@ -34,12 +34,31 @@
 // -------------------
 // Life Cycle
 // ------------------
+- (void)InitWithCurrentUserAndIsSaving:(BOOL)isSaving
+{
+    [self initWithUser:[User currentUser]
+         hasSeenVideos:NO
+   unreadMessagesCount:0
+     messagesSentArray:nil
+                 muted:NO];
+    
+    // Save
+    self.saveButton.enabled = YES;
+    self.saveButton.hidden = NO;
+    if (self.savingCircleShape) {
+        [self.savingCircleShape removeAllAnimations];
+        [self.savingCircleShape removeFromSuperlayer];
+        if (isSaving) {
+            [self startSavingAnimation];
+        }
+    }
+}
 
 - (void)initWithUser:(User *)user
        hasSeenVideos:(BOOL)hasSeenVideos
  unreadMessagesCount:(NSInteger)count
    messagesSentArray:(NSMutableArray *)messagesSent
-            isSaving:(BOOL)isSaving
+               muted:(BOOL)muted
 {
     self.nameLabel.text = user.flashUsername;
     self.scoreLabel.text = [NSString stringWithFormat:@"%lu",(long)(user.score ? user.score : 0)];
@@ -49,19 +68,15 @@
     BOOL isCurrentUser = [User currentUser] == user;
     
     self.seemView.hidden = !hasSeenVideos || isCurrentUser;
-    self.backgroundColor = [UIColor clearColor];
+    if (muted) {
+        self.backgroundColor = [UIColor lightGrayColor];
+    } else {
+        self.backgroundColor = [UIColor clearColor];
+    }
     self.accessoryImage.hidden = !isCurrentUser;
     
     // Save
-    self.saveButton.enabled = YES;
-    self.saveButton.hidden = !isCurrentUser;
-    if (self.savingCircleShape) {
-        [self.savingCircleShape removeAllAnimations];
-        [self.savingCircleShape removeFromSuperlayer];
-        if (isSaving) {
-            [self startSavingAnimation];
-        }
-    }
+    self.saveButton.hidden = YES;
     
     // Unread Messages label
     if (count != 0) {

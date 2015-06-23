@@ -15,6 +15,7 @@
 
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
+#import "Follow.h"
 #import "VideoPost.h"
 
 #import "CaptionTextView.h"
@@ -36,7 +37,7 @@
 
 // Contacts
 @property (nonatomic) ABAddressBookRef addressBook;
-@property (strong, nonatomic) NSMutableOrderedSet *friends;
+@property (strong, nonatomic) NSMutableOrderedSet *followingRelations;
 
 // Playing
 @property (strong, nonatomic) NSMutableArray *allVideosArray;
@@ -241,12 +242,10 @@
     self.previewView.hidden = YES;
     
     // Retrieve friends from local datastore
-    _friends = [NSMutableOrderedSet new];
-    [DatastoreUtils getFollowingFromLocalDatastoreAndExecuteSuccess:^(NSArray *friends) {
-        [self setObjectsFromFriendsArray:friends]; // retrieve video in different number of friends
-        
-        // Get local videos
-        [self setVideoArray:[DatastoreUtils getVideoLocallyFromUsers:[self.friends array]]];
+    _followingRelations = [NSMutableOrderedSet new];
+    [self retrieveFollowingLocallyAndVideosRemotely];
+    [ApiManager getRelationshipsRemotelyAndExecuteSuccess:^{
+        [self retrieveFollowingLocallyAndVideosRemotely];
     } failure:nil];
     
     // Friend array
@@ -284,7 +283,7 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(retrieveVideo)
+                                             selector:@selector(retrieveVideoRemotely)
                                                  name:@"retrieve_video"
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -295,11 +294,6 @@
                                              selector:@selector(navigateToFriends)
                                                  name:@"new_message_clicked"
                                                object:nil];
-    
-    // todo BT
-    // put somewhere else
-    // Used to know identity of all viewers
-    [ApiManager getFollowersAndExecuteSuccess:nil failure:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -329,7 +323,7 @@
 }
 
 - (void)willBecomeActiveCallback {
-    [self retrieveVideo];
+    [self retrieveVideoRemotely];
     [self retrieveUnreadMessages];
     [self parseContactsAndFindFriendsIfAlreadyAuthorized];
 }
@@ -339,7 +333,7 @@
     if ([segueName isEqualToString: @"Friends From Video"]) {
         [self hideUIElementOnCamera:YES];
         ((FriendsViewController *) [segue destinationViewController]).delegate = self;
-        ((FriendsViewController *) [segue destinationViewController]).friends = self.friends;
+        ((FriendsViewController *) [segue destinationViewController]).followingRelations = self.followingRelations;
         if (sender && [sender isKindOfClass:[NSString class]]) {
             ((FriendsViewController *) [segue destinationViewController]).friendUsername = sender;
         }
@@ -439,7 +433,6 @@
 - (IBAction)flipCameraButtonClicked:(id)sender {
     [TrackingUtils trackCameraFlipClicked];
     self.recorder.device = self.recorder.device == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
-    [GeneralUtils saveLastVideoSelfieModePref:(self.recorder.device == AVCaptureDevicePositionFront)];
 }
 
 - (IBAction)friendsButtonClicked:(id)sender {
@@ -494,8 +487,8 @@
 // --------------------------------------------
 #pragma mark - Feed
 // --------------------------------------------
-- (void)retrieveVideo {
-    [ApiManager getVideoFromFriends:[self.friends array]
+- (void)retrieveVideoRemotely {
+    [ApiManager getVideoFromFriends:[self visibleUsersFromFollowingRelations]
                              success:^(NSArray *posts) {
                                  [self setVideoArray:posts];
                              } failure:nil];
@@ -519,17 +512,28 @@
 // --------------------------------------------
 #pragma mark - Friends
 // --------------------------------------------
-- (void)setObjectsFromFriendsArray:(NSArray *)friends {
-    NSUInteger previousCount = _friends ? _friends.count : 0;
-    [_friends removeAllObjects];
-    [_friends addObjectsFromArray:friends];
-    if (![_friends containsObject:[User currentUser]]) {
-        [_friends addObject:[User currentUser]];
-    }
+- (void)retrieveFollowingLocallyAndVideosRemotely {
+    [DatastoreUtils getFollowingRelationsLocallyAndExecuteSuccess:^(NSArray *followingRelations) {
+        [self setObjectsFromFollowingRelationsArray:followingRelations];
+    } failure:nil];
+}
+
+- (void)setObjectsFromFollowingRelationsArray:(NSArray *)followingRelations {
+    NSUInteger previousCount = self.followingRelations ? [self visibleUsersFromFollowingRelations].count - 1 : 0;
     
-    if (previousCount != friends.count) {
-        // Retrieve video
-        [self retrieveVideo];
+    // Same array, new relation (for pointer compat with chat controller)
+    [self.followingRelations removeAllObjects];
+    [self.followingRelations addObjectsFromArray:followingRelations];
+    
+    // Get local videos
+    [DatastoreUtils getVideoLocallyFromUsers:[self visibleUsersFromFollowingRelations]
+                                     success:^(NSArray *videos) {
+                                         [self setVideoArray:videos];
+                                     } failure:nil];
+    
+    // Retrieve video if different number of relations
+    if (previousCount != self.followingRelations.count) {
+        [self retrieveVideoRemotely];
     }
     // If friend controller, reload tableview
     [[NSNotificationCenter defaultCenter] postNotificationName:@"reload_friend_tableview"
@@ -537,7 +541,19 @@
                                                       userInfo:nil];
 }
 
- 
+// Users which are not muted / did not block current users
+- (NSArray *)visibleUsersFromFollowingRelations {
+    NSMutableArray *userArray = [NSMutableArray new];
+    for (Follow *follow in self.followingRelations) {
+        if (!follow.mute && !follow.blocked && follow.to) {
+            [userArray addObject:follow.to];
+        }
+    }
+    if (![userArray containsObject:[User currentUser]]) {
+        [userArray addObject:[User currentUser]];
+    }
+    return userArray;
+}
 
 - (void)parseContactsAndFindFriendsIfAuthNotDetermined {
     if(ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
@@ -551,21 +567,23 @@
     }
 }
 - (void)parseContactsAndFindFriends {
-    ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-        if (granted) {
-            NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-            [contactDictionnary setObject:[User currentUser].flashUsername forKey:[User currentUser].username];
-            
-            // fill following table
-            [ApiManager fillFollowTableWithContacts:[contactDictionnary allKeys]
-                                            success:^(NSArray *friends) {
-                                                [self setObjectsFromFriendsArray:friends];
-                                            } failure:nil];
-            
-            [contactDictionnary removeObjectForKey:[User currentUser].username];
-            [AddressbookUtils saveContactDictionnary:contactDictionnary];
-        }
-    });
+    // todo BT
+    // address book
+//    ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
+//        if (granted) {
+//            NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+//            [contactDictionnary setObject:[User currentUser].flashUsername forKey:[User currentUser].username];
+//            
+//            // fill following table
+//            [ApiManager fillFollowTableWithContacts:[contactDictionnary allKeys]
+//                                            success:^(NSArray *friends) {
+//                                                [self setObjectsFromFriendsArray:friends];
+//                                            } failure:nil];
+//            
+//            [contactDictionnary removeObjectForKey:[User currentUser].username];
+//            [AddressbookUtils saveContactDictionnary:contactDictionnary];
+//        }
+//    });
 }
 
 // --------------------------------------------
@@ -745,8 +763,6 @@
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];
         exporter.outputUrl = recordSession.outputUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
-//        exporter.videoConfiguration.preset = SCPresetMediumQuality;
-//        exporter.audioConfiguration.preset = SCPresetMediumQuality;
         if (self.captionTextView.text.length > 0) {
             AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
             exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];

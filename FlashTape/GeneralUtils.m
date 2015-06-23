@@ -12,26 +12,11 @@
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
 
-#define LAST_VIDEO_SEEN_DATE @"Last Video Seen Date"
-#define LAST_VIDEO_SELFIE_MODE @"Last Video Selfie Mode"
+#define MUTE_EXPLANATION_HIDDEN_PREF @"Mute Explanation Hidden"
+#define DELETE_EXPLANATION_HIDDEN_PREF @"Delete Explanation Hidden"
+
 
 @implementation GeneralUtils
-
-+ (void)saveLastVideoSeenDate:(NSDate *)date
-{
-    if (!date)
-        return;
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSDate *maxDate = [date compare:[GeneralUtils getLastVideoSeenDate]] == NSOrderedAscending ? [GeneralUtils getLastVideoSeenDate] : date;
-    [prefs setObject:maxDate forKey:LAST_VIDEO_SEEN_DATE];
-    [prefs synchronize];
-}
-
-+ (NSDate *)getLastVideoSeenDate
-{
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    return [prefs objectForKey:LAST_VIDEO_SEEN_DATE] ? [prefs objectForKey:LAST_VIDEO_SEEN_DATE]: [NSDate dateWithTimeIntervalSince1970:0];
-}
 
 + (UIImage *)generateThumbImage:(NSURL *)url
 {
@@ -120,17 +105,30 @@
     return [[UIScreen mainScreen] bounds].size.height == 480;
 }
 
-+ (void)saveLastVideoSelfieModePref:(BOOL)selfieMode
++ (void)setMuteExplanationHidden:(BOOL)hide
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:[NSNumber numberWithBool:selfieMode] forKey:LAST_VIDEO_SELFIE_MODE];
+    [prefs setObject:[NSNumber numberWithBool:hide] forKey:MUTE_EXPLANATION_HIDDEN_PREF];
     [prefs synchronize];
 }
 
-+ (BOOL)getLastVideoSelfieModePref
++ (BOOL)explainBeforeMute
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    return [prefs objectForKey:LAST_VIDEO_SELFIE_MODE] ? [[prefs objectForKey:LAST_VIDEO_SELFIE_MODE ] boolValue] : NO;
+    return [prefs objectForKey:MUTE_EXPLANATION_HIDDEN_PREF] ? ![[prefs objectForKey:MUTE_EXPLANATION_HIDDEN_PREF] boolValue] : YES;
+}
+
++ (void)setDeleteExplanationHidden:(BOOL)hide
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithBool:hide] forKey:DELETE_EXPLANATION_HIDDEN_PREF];
+    [prefs synchronize];
+}
+
++ (BOOL)explainBeforeDelete
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:DELETE_EXPLANATION_HIDDEN_PREF] ? ![[prefs objectForKey:DELETE_EXPLANATION_HIDDEN_PREF] boolValue] : YES;
 }
 
 

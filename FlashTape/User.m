@@ -16,6 +16,7 @@
 @dynamic score;
 @dynamic flashUsername;
 @dynamic transformedUsername;
+
 @synthesize lastMessageDate;
 
 + (void)load {

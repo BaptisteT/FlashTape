@@ -23,12 +23,16 @@
 
 + (BOOL)isiPhone4;
 
-+ (void)saveLastVideoSelfieModePref:(BOOL)selfieMode;
-
-+ (BOOL)getLastVideoSelfieModePref;
-
 + (NSString *)transformedUsernameFromOriginal:(NSString *)original;
 
 + (void)openSettings;
+
++ (void)setMuteExplanationHidden:(BOOL)hide;
+
++ (BOOL)explainBeforeMute;
+
++ (void)setDeleteExplanationHidden:(BOOL)hide;
+
++ (BOOL)explainBeforeDelete;
 
 @end

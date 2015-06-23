@@ -21,7 +21,7 @@
 @interface FriendsViewController : FlashTapeParentViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate, ReadMessageVCDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
-@property (strong, nonatomic) NSMutableOrderedSet *friends;
+@property (strong, nonatomic) NSMutableOrderedSet *followingRelations;
 
 // On click on feed friend name
 @property (strong, nonatomic) NSString *friendUsername;

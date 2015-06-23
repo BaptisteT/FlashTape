@@ -104,7 +104,7 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-     NSNumber *seconds = @([[NSDate date] timeIntervalSinceDate:self.sessionStartDate]);
+     NSNumber *seconds = @([[NSDate date] timeIntervalSinceDate:self.sessionStartDate] * 1000);
     [TrackingUtils trackSession:seconds];
 }
 

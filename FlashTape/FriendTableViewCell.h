@@ -15,11 +15,13 @@
 
 @property (weak, nonatomic) id<FriendTVCDelegate> delegate;
 
+- (void)InitWithCurrentUserAndIsSaving:(BOOL)isSaving;
+
 - (void)initWithUser:(User *)user
        hasSeenVideos:(BOOL)hasSeenVideos
  unreadMessagesCount:(NSInteger)count
    messagesSentArray:(NSMutableArray *)messagesSent
-            isSaving:(BOOL)isSaving;
+               muted:(BOOL)muted;
 
 - (void)savedAnimation;
 

@@ -94,13 +94,13 @@
 // --------------------------------------------
 #pragma mark - Add user Cell Delegate
 // --------------------------------------------
-- (void)addFriendAndReloadVideo:(User *)user {
-    [self.friends insertObject:user atIndex:1];
+- (void)addFollowingRelationAndReloadVideo:(Follow *)follow {
+    [self.followingRelations insertObject:follow atIndex:0];
     [self reloadFeedVideo];
 }
 
-- (void)removeFriendAndReloadVideo:(User *)user {
-    [self.friends removeObject:user];
+- (void)removeFollowingRelationAndReloadVideo:(Follow *)follow {
+    [self.followingRelations removeObject:follow];
     [self reloadFeedVideo];
 }
 
