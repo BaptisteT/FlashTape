@@ -23,6 +23,10 @@
 + (void)getFollowerRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followerRelations))successBlock
                                              failure:(void(^)(NSError *error))failureBlock;
 
+// Unfollowed Followers
++ (void)getUnfollowedFollowerRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followerRelations))successBlock
+                                                       failure:(void(^)(NSError *error))failureBlock;
+
 + (Follow *)getRelationWithFollower:(User *)follower
                           following:(User *)following;
 

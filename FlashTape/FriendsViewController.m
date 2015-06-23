@@ -251,7 +251,7 @@
         // Add user to follower if not a friend
         if (![self userBelongsToFollowing:message.sender]) {
             Follow *followerRelation = [DatastoreUtils getRelationWithFollower:message.sender following:[User currentUser]];
-            if (followerRelation) {
+            if (followerRelation && ![self.followerRelations containsObject:followerRelation]) {
                 [self.followerRelations addObject:followerRelation];
             }
         }
@@ -315,16 +315,19 @@
     } else if ([self isFollowingUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
         FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
         Follow *follow = [self relationForSection:indexPath.section];
+        
+        BOOL isFollowing = [self isFollowingUserSection:indexPath.section];
+        User *friend = isFollowing ? follow.to : follow.from;
         NSArray *viewerIdsArray = (self.currentUserPosts && self.currentUserPosts.count > 0) ? ((VideoPost *)self.currentUserPosts.lastObject).viewerIdsArray : nil;
-        BOOL hasSeenVideo = (viewerIdsArray) ? ([viewerIdsArray indexOfObject:follow.to.objectId] != NSNotFound) : NO;
-        NSInteger messageCount = self.messagesReceivedDictionnary[follow.to.objectId] ? ((NSArray *)self.messagesReceivedDictionnary[follow.to.objectId]).count : 0;
+        BOOL hasSeenVideo = (viewerIdsArray && isFollowing) ? ([viewerIdsArray indexOfObject:friend.objectId] != NSNotFound) : NO;
+        NSInteger messageCount = self.messagesReceivedDictionnary[friend.objectId] ? ((NSArray *)self.messagesReceivedDictionnary[friend.objectId]).count : 0;
         
         // Create cell
-        [cell initWithUser:[self isFollowingUserSection:indexPath.section] ? follow.to : follow.from
+        [cell initWithUser:friend
              hasSeenVideos:hasSeenVideo
        unreadMessagesCount:messageCount
-         messagesSentArray:self.messagesSentDictionnary[follow.to.objectId]
-                     muted:[self isFollowingUserSection:indexPath.section] && follow.mute == YES];
+         messagesSentArray:self.messagesSentDictionnary[friend.objectId]
+                     muted:isFollowing && follow.mute == YES];
         cell.delegate = self;
         return cell;
     } else if ([self isCurrentUserPostCell:indexPath]) {
@@ -518,7 +521,8 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ApiManager createRelationWithFollowing:follow.from
                                     success:^(Follow *following){
-                                        [self.followingRelations addObject:following];
+                                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                         [self.followingRelations addObject:following];
                                         [self sortFriendsAndReload];
                                     } failure:^(NSError *error) {
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -550,11 +554,13 @@
 - (void)muteFollowing:(Follow *)follow {
     follow.mute = YES;
     [self saveRelation:follow];
+    [TrackingUtils trackMuteFriend];
 }
 
 - (void)unmuteFollowing:(Follow *)follow {
     follow.mute = NO;
     [self saveRelation:follow];
+    [TrackingUtils trackUnmuteFriend];
 }
 
 - (void)saveRelation:(Follow *)follow {

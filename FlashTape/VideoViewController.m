@@ -325,7 +325,6 @@
 - (void)willBecomeActiveCallback {
     [self retrieveVideoRemotely];
     [self retrieveUnreadMessages];
-    [self parseContactsAndFindFriendsIfAlreadyAuthorized];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -567,23 +566,15 @@
     }
 }
 - (void)parseContactsAndFindFriends {
-    // todo BT
-    // address book
-//    ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-//        if (granted) {
-//            NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-//            [contactDictionnary setObject:[User currentUser].flashUsername forKey:[User currentUser].username];
-//            
-//            // fill following table
-//            [ApiManager fillFollowTableWithContacts:[contactDictionnary allKeys]
-//                                            success:^(NSArray *friends) {
-//                                                [self setObjectsFromFriendsArray:friends];
-//                                            } failure:nil];
-//            
-//            [contactDictionnary removeObjectForKey:[User currentUser].username];
-//            [AddressbookUtils saveContactDictionnary:contactDictionnary];
-//        }
-//    });
+    ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
+        if (granted) {
+            NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+            [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
+                                                     success:nil
+                                                     failure:nil];
+            [AddressbookUtils saveContactDictionnary:contactDictionnary];
+        }
+    });
 }
 
 // --------------------------------------------

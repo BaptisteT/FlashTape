@@ -23,7 +23,7 @@
 
 // Following
 + (void)getFollowingRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followingRelations))successBlock
-                                                failure:(void(^)(NSError *error))failureBlock
+                                              failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
     [query fromLocalDatastore];
@@ -63,6 +63,37 @@
     [query includeKey:@"from"];
     [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (successBlock) {
+                successBlock(objects);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error in folloers from local datastore: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
+}
+
+// Unfollowed Followers
++ (void)getUnfollowedFollowerRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followerRelations))successBlock
+                                                       failure:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
+    [followerQuery fromLocalDatastore];
+    [followerQuery whereKey:@"to" equalTo:[User currentUser]];
+    
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
+    [followingQuery fromLocalDatastore];
+    [followingQuery whereKey:@"from" equalTo:[User currentUser]];
+    
+    PFQuery *userQuery = [User query];
+    [userQuery fromLocalDatastore];
+    [userQuery whereKey:@"this" matchesKey:@"from" inQuery:followerQuery];
+    [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followerQuery];
+    
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             if (successBlock) {
                 successBlock(objects);

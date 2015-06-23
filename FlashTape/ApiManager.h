@@ -45,9 +45,9 @@
 + (void)getRelationshipsRemotelyAndExecuteSuccess:(void(^)())successBlock
                                           failure:(void(^)(NSError *error))failureBlock;
 
-//+ (void)fillFollowTableWithContacts:(NSArray *)contacts
-//                            success:(void(^)(NSArray *friends))successBlock
-//                            failure:(void(^)(NSError *error))failureBlock;
++ (void)findFlashUsersContainedInAddressBook:(NSArray *)phoneNumbers
+                                    success:(void(^)(NSArray *userArray))successBlock
+                                    failure:(void(^)(NSError *error))failureBlock;
 
 + (void)saveRelation:(Follow *)follow
              success:(void(^)())successBlock
