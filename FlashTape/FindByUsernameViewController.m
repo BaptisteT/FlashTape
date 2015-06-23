@@ -8,13 +8,19 @@
 
 #import "FindByUsernameViewController.h"
 
+#import "AddressbookUtils.h"
 #import "ConstantUtils.h"
+#import "DatastoreUtils.h"
 
 @interface FindByUsernameViewController ()
 @property (weak, nonatomic) IBOutlet UISearchBar *usernameSearchBar;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITableView *resultTableView;
+
+@property (strong, nonatomic) NSMutableArray *unfollowedArray;
+@property (strong, nonatomic) NSDictionary *contactDictionnary;
+@property (strong, nonatomic) NSMutableArray *unrelatedArray;
 
 @end
 
@@ -26,6 +32,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Get unfollowed follower
+    _unfollowedArray = [NSMutableArray new];
+    [DatastoreUtils getUnfollowedFollowersLocallyAndExecuteSuccess:^(NSArray *followers) {
+        self.unfollowedArray = [NSMutableArray arrayWithArray:followers];
+        // todo BT reload
+    } failure:nil];
+    
+    // Get unrelated contacts
+    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
+    [DatastoreUtils getUnrelatedUserInAddressBook:[self.contactDictionnary allKeys]
+                                          success:^(NSArray *unrelatedUser) {
+                                              self.unrelatedArray = [NSMutableArray arrayWithArray:unrelatedUser];
+                                              // todo BT reload
+                                          } failure:nil];
     
     self.titleLabel.text = NSLocalizedString(@"find_by_username_controller_title", nil);
     [self.backButton setTitle:NSLocalizedString(@"back_button", nil) forState:UIControlStateNormal];

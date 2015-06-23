@@ -24,8 +24,13 @@
                                              failure:(void(^)(NSError *error))failureBlock;
 
 // Unfollowed Followers
-+ (void)getUnfollowedFollowerRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followerRelations))successBlock
-                                                       failure:(void(^)(NSError *error))failureBlock;
++ (void)getUnfollowedFollowersLocallyAndExecuteSuccess:(void(^)(NSArray *followers))successBlock
+                                               failure:(void(^)(NSError *error))failureBlock;
+
+// Get unrelated user in addressbook
++ (void)getUnrelatedUserInAddressBook:(NSArray *)number
+                              success:(void(^)(NSArray *unrelatedUser))successBlock
+                              failure:(void(^)(NSError *error))failureBlock;
 
 + (Follow *)getRelationWithFollower:(User *)follower
                           following:(User *)following;

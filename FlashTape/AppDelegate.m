@@ -144,6 +144,10 @@
                                                                 object:nil
                                                               userInfo:nil];
         }
+    } else if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_follow"]) {
+        if (state == UIApplicationStateActive) {
+            // todo BT
+        }
     }
 }
 

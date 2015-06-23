@@ -36,7 +36,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 @property (strong, nonatomic) NSMutableArray *currentUserPosts;
 @property (weak, nonatomic) VideoPost *postToDelete;
-@property (weak, nonatomic) VideoPost *postToDetail;
+@property (weak, nonatomic) NSIndexPath *postToDetailIndexPath;
 @property (strong, nonatomic) SendMessageViewController *sendMessageController;
 @property (strong, nonatomic) NSMutableDictionary *messagesReceivedDictionnary;
 @property (strong, nonatomic) NSMutableDictionary *messagesSentDictionnary;
@@ -335,7 +335,7 @@
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         BOOL showViewers = NO;
         NSMutableArray *names = [NSMutableArray new];
-        showViewers = (post == self.postToDetail);
+        showViewers = (indexPath == self.postToDetailIndexPath);
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
@@ -351,7 +351,7 @@
         return 80;
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
-        return (post == self.postToDetail) ? kVideoCellHeight + [post viewerIdsArrayWithoutPoster].count * kVideoCellViewerAdditionalHeight : kVideoCellHeight;
+        return (indexPath == self.postToDetailIndexPath) ? kVideoCellHeight + [post viewerIdsArrayWithoutPoster].count * kVideoCellViewerAdditionalHeight : kVideoCellHeight;
     } else {
         // should not happen
         return 50;
@@ -364,16 +364,31 @@
     } else if ([self isCurrentUserUserCell:indexPath]) {
         [TrackingUtils trackMyStoryClicked];
         _expandMyStory = !_expandMyStory;
-        self.postToDetail = nil;
+        self.postToDetailIndexPath = nil;
         [self reloadSection:indexPath.section];
     } else if ([self isCurrentUserPostCell:indexPath]) {
         [TrackingUtils trackMyVideoClicked];
-        VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
-        self.postToDetail = (post == self.postToDetail) ? nil : post;
-        [self reloadSection:indexPath.section];
+        
+        NSArray *pathArray;
+        NSIndexPath *previousIndexPath = self.postToDetailIndexPath;
+        if (previousIndexPath) {
+            if (indexPath == previousIndexPath) {
+                self.postToDetailIndexPath = nil;
+                pathArray = @[indexPath];
+            } else {
+                self.postToDetailIndexPath = indexPath;
+                pathArray = indexPath.row > previousIndexPath.row ? @[previousIndexPath, indexPath] : @[indexPath, previousIndexPath];
+            }
+        } else {
+            self.postToDetailIndexPath = indexPath;
+            pathArray = @[indexPath];
+        }
+        [self.friendsTableView beginUpdates];
+        [self.friendsTableView reloadRowsAtIndexPaths:pathArray withRowAnimation:UITableViewRowAnimationNone];
+        [self.friendsTableView endUpdates];
     } else if ([self isFollowingUserSection:indexPath.section]) {
         _expandMyStory = NO;
-        self.postToDetail = nil;
+        self.postToDetailIndexPath = nil;
         Follow *followingRelation = [self relationForSection:indexPath.section];
         User *friend = followingRelation.to;
 
@@ -403,7 +418,7 @@
     }
     else if ([self isFollowerUserSection:indexPath.section]) {
         _expandMyStory = NO;
-        self.postToDetail = nil;
+        self.postToDetailIndexPath = nil;
         self.selectedRelation = [self relationForSection:indexPath.section];
         
         // Present alert view

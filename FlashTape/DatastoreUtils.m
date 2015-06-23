@@ -69,7 +69,7 @@
             }
         } else {
             // Log details of the failure
-            NSLog(@"Error in folloers from local datastore: %@ %@", error, [error userInfo]);
+            NSLog(@"Error in followers from local datastore: %@ %@", error, [error userInfo]);
             if (failureBlock)
                 failureBlock(error);
         }
@@ -77,8 +77,8 @@
 }
 
 // Unfollowed Followers
-+ (void)getUnfollowedFollowerRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followerRelations))successBlock
-                                                       failure:(void(^)(NSError *error))failureBlock
++ (void)getUnfollowedFollowersLocallyAndExecuteSuccess:(void(^)(NSArray *followers))successBlock
+                                               failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
     [followerQuery fromLocalDatastore];
@@ -93,6 +93,38 @@
     [userQuery whereKey:@"this" matchesKey:@"from" inQuery:followerQuery];
     [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followerQuery];
     
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (successBlock) {
+                successBlock(objects);
+            }
+        } else {
+            // Log details of the failure
+            NSLog(@"Error in folloers from local datastore: %@ %@", error, [error userInfo]);
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
+}
+
+// Get unrelated user in addressbook
++ (void)getUnrelatedUserInAddressBook:(NSArray *)number
+                              success:(void(^)(NSArray *unrelatedUser))successBlock
+                              failure:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
+    [followerQuery fromLocalDatastore];
+    [followerQuery whereKey:@"to" equalTo:[User currentUser]];
+    
+    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
+    [followingQuery fromLocalDatastore];
+    [followingQuery whereKey:@"from" equalTo:[User currentUser]];
+    
+    PFQuery *userQuery = [User query];
+    [userQuery fromLocalDatastore];
+    [userQuery whereKey:@"username" containedIn:number];
+    [userQuery whereKey:@"this" doesNotMatchKey:@"from" inQuery:followerQuery];
+    [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followerQuery];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             if (successBlock) {
@@ -156,8 +188,8 @@
 // --------------------------------------------
 
 + (void)getVideoLocallyFromUsers:(NSArray *)users
-                              success:(void(^)(NSArray *videos))successBlock
-                              failure:(void(^)(NSError *error))failureBlock
+                         success:(void(^)(NSArray *videos))successBlock
+                         failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
     [query fromLocalDatastore];
