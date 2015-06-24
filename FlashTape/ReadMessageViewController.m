@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleSubLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 
 @property (strong, nonatomic) UITapGestureRecognizer *tapGestureRecogniser;
 
@@ -102,10 +103,17 @@
 // --------------------------------------------
 - (void)setFirstMessage {
     if (self.messagesArray.count > 0) {
+        // Message
         Message *message = self.messagesArray.firstObject;
         self.messageLabel.text = message.messageContent;
         NSInteger fontSize = belonsToEmojiArray(message.messageContent) ? kEmojiMaxFontSize : kMessageReceivedMaxFontSize;
         self.messageLabel.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:fontSize];
+        
+        // Date
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm"];
+        NSString *stringDate = [dateFormatter stringFromDate:message.createdAt];
+        self.dateLabel.text = stringDate;
         
         // unpin / delete / unread
         [ApiManager markMessageAsRead:message

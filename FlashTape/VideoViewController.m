@@ -330,6 +330,9 @@
 - (void)willBecomeActiveCallback {
     [self retrieveVideoRemotely];
     [self retrieveUnreadMessages];
+    
+    // todo BT strategy to know when new follower
+    [ApiManager getRelationshipsRemotelyAndExecuteSuccess:nil failure:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
