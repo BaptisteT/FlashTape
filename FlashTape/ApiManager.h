@@ -21,7 +21,6 @@
 // --------------------------------------------
 
 + (void)requestSmsCode:(NSString *)phoneNumber
-                 retry:(BOOL)retry
                success:(void(^)(NSInteger code))successBlock
                failure:(void(^)())failureBlock;
 
@@ -101,4 +100,11 @@
 
 + (void)updateBadge:(NSInteger)count;
 
+// --------------------------------------------
+#pragma mark - Invite
+// --------------------------------------------
+
++ (void)sendInviteTo:(NSString *)phoneNumber
+             success:(void(^)())successBlock
+             failure:(void(^)())failureBlock;
 @end

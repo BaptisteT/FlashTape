@@ -72,6 +72,7 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"video.sent" properties:properties];
+    [mixpanel.people increment:@"video.seen" by:[NSNumber numberWithInt:1]];
     
     [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"video"
                                                                                         action:@"video.sent"

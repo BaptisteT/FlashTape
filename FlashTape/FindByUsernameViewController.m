@@ -5,13 +5,15 @@
 //  Created by Baptiste Truchot on 6/6/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "ApiManager.h"
+#import "DatastoreUtils.h"
 #import "User.h"
 
 #import "FindByUsernameViewController.h"
 
 #import "AddressbookUtils.h"
 #import "ConstantUtils.h"
-#import "DatastoreUtils.h"
+#import "MBProgressHUD.h"
 
 @interface FindByUsernameViewController ()
 @property (weak, nonatomic) IBOutlet UISearchBar *usernameSearchBar;
@@ -20,9 +22,10 @@
 @property (weak, nonatomic) IBOutlet UITableView *resultTableView;
 
 @property (strong, nonatomic) NSMutableArray *unfollowedArray;
-@property (strong, nonatomic) NSDictionary *contactDictionnary;
+@property (strong, nonatomic) NSMutableDictionary *contactDictionnary;
 @property (strong, nonatomic) NSMutableArray *unrelatedArray;
 
+@property (strong, nonatomic) NSMutableArray *autocompleteNumberArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteContactArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteUnfollowedArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteUnrelatedArray;
@@ -45,7 +48,8 @@
     self.autocompleteUnrelatedArray = [NSMutableArray arrayWithArray:self.unrelatedArray];
     
     // Contact
-    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
+    self.contactDictionnary = [NSMutableDictionary dictionaryWithDictionary:[AddressbookUtils getContactDictionnary]];
+    self.autocompleteNumberArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
     self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
     
     // Get unfollowed follower
@@ -103,10 +107,12 @@
     if (substring.length == 0) {
         self.autocompleteUnfollowedArray = [NSMutableArray arrayWithArray:self.unfollowedArray];
         self.autocompleteUnrelatedArray = [NSMutableArray arrayWithArray:self.unrelatedArray];
+        self.autocompleteNumberArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
         self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
     } else {
         self.autocompleteUnfollowedArray = [NSMutableArray new];
         self.autocompleteUnrelatedArray = [NSMutableArray new];
+        self.autocompleteNumberArray = [NSMutableArray new];
         self.autocompleteContactArray = [NSMutableArray new];
         for(User *user in self.unfollowedArray) {
             NSRange substringRange = [user.transformedUsername rangeOfString:substring options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch];
@@ -120,10 +126,13 @@
                 [self.autocompleteUnrelatedArray addObject:user];
             }
         }
-        for(NSString *name in [self.contactDictionnary allValues]) {
+        
+        for(NSString *number in [self.contactDictionnary allKeys]) {
+            NSString *name = self.contactDictionnary[number];
             NSRange substringRange = [name rangeOfString:substring options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch];
             if (substringRange.location == 0) {
                 [self.autocompleteContactArray addObject:name];
+                [self.autocompleteNumberArray addObject:number];
             }
             // todo BT
             // check it's not another user
@@ -154,8 +163,9 @@
     if (indexPath.section == 3) {
         InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
         
+        NSString *number = self.autocompleteNumberArray[indexPath.row];
         NSString *name = self.autocompleteContactArray[indexPath.row];
-        [cell initWithName:name number:name];
+        [cell initWithName:name number:number];
         cell.delegate = self;
         return cell;
     } else {
@@ -196,7 +206,7 @@
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.usernameSearchBar resignFirstResponder];
 }
 
@@ -224,8 +234,17 @@
 #pragma mark - Invite user Cell Delegate
 // --------------------------------------------
 
-- (void)inviteButtonClicked:(NSString *)number {
-    // todo BT
+- (void)inviteUser:(NSString *)name number:(NSString *)number {
+    [ApiManager sendInviteTo:number
+                     success:^{
+                         // do nothing
+                     } failure:nil];
+    
+    // Remove user
+    [self.contactDictionnary removeObjectForKey:number];
+    
+    // Reload addressbook section
+    [self reloadTableView];
 }
 
 @end

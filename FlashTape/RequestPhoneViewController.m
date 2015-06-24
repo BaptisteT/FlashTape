@@ -162,7 +162,7 @@
 - (void)sendCodeRequest:(NSString *)phoneNumber
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [ApiManager requestSmsCode:phoneNumber retry:NO success:^(NSInteger code) {
+    [ApiManager requestSmsCode:phoneNumber success:^(NSInteger code) {
         NSLog(@"%lu",(long)code);
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [self performSegueWithIdentifier:@"Code From Phone" sender:@[phoneNumber,[[NSNumber numberWithLong:code] stringValue]]];

@@ -67,7 +67,7 @@
     [attributedText setAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:self.titleLabel.font.pointSize]}
                             range:NSMakeRange(0, title.length)];
     [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:usernameRange];
-    [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0,usernameRange.location)];
+    [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0,usernameRange.location-1)];
     self.titleLabel.attributedText = attributedText;
     self.textView.text = @"";
     self.textViewPlaceholder.hidden = self.textView.hidden;

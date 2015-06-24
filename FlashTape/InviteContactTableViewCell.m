@@ -24,7 +24,7 @@
 }
 
 - (IBAction)inviteButtonClicked:(id)sender {
-    [self.delegate inviteButtonClicked:self.number];
+    [self.delegate inviteUser:self.nameLabel.text number:self.number];
 }
 
 @end

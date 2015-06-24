@@ -19,6 +19,6 @@
 
 @protocol InviteContactTVCDelegate
 
-- (void)inviteButtonClicked:(NSString *)number;
+- (void)inviteUser:(NSString *)name number:(NSString *)number;
 
 @end

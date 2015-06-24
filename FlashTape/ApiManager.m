@@ -27,7 +27,6 @@
 // --------------------------------------------
 
 + (void)requestSmsCode:(NSString *)phoneNumber
-                 retry:(BOOL)retry
                success:(void(^)(NSInteger code))successBlock
                failure:(void(^)())failureBlock
 {
@@ -482,6 +481,28 @@
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     currentInstallation.badge = count;
     [currentInstallation saveInBackground];
+}
+
+// --------------------------------------------
+#pragma mark - Invite
+// --------------------------------------------
+
++ (void)sendInviteTo:(NSString *)phoneNumber
+             success:(void(^)())successBlock
+             failure:(void(^)())failureBlock
+{
+    [PFCloud callFunctionInBackground:@"sendInvite"
+                       withParameters:@{ @"phoneNumber" : phoneNumber }
+                                block:^(id object, NSError *error) {
+                                    if (error != nil) {
+                                        if (failureBlock)
+                                            failureBlock();
+                                    } else {
+                                        if (successBlock) {
+                                            successBlock([object integerValue]);
+                                        }
+                                    }
+                                }];
 }
 
 
