@@ -806,7 +806,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bO2-dF-h7J">
-                                <rect key="frame" x="100" y="0.0" width="400" height="90"/>
+                                <rect key="frame" x="50" y="0.0" width="500" height="90"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="E9B-MM-HH1"/>
@@ -1131,9 +1131,9 @@
                             <constraint firstAttribute="centerX" secondItem="YBS-wd-gmG" secondAttribute="centerX" id="dUW-UF-IxE"/>
                             <constraint firstItem="LqB-To-ITe" firstAttribute="top" secondItem="bO2-dF-h7J" secondAttribute="bottom" id="dUc-D7-fpc"/>
                             <constraint firstItem="ZSA-hz-LCJ" firstAttribute="top" secondItem="WUl-fI-ihe" secondAttribute="bottom" constant="16" id="eWi-Ez-ZfY"/>
-                            <constraint firstAttribute="trailing" secondItem="bO2-dF-h7J" secondAttribute="trailing" constant="100" id="itp-cz-ZTk"/>
+                            <constraint firstAttribute="trailing" secondItem="bO2-dF-h7J" secondAttribute="trailing" constant="50" id="itp-cz-ZTk"/>
                             <constraint firstItem="WUl-fI-ihe" firstAttribute="top" secondItem="xSU-N2-FLc" secondAttribute="bottom" constant="40" id="jPX-3H-zp9"/>
-                            <constraint firstItem="bO2-dF-h7J" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" constant="100" id="jeV-bw-u7D"/>
+                            <constraint firstItem="bO2-dF-h7J" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" constant="50" id="jeV-bw-u7D"/>
                             <constraint firstAttribute="centerX" secondItem="5uH-OJ-Xuh" secondAttribute="centerX" id="lDa-KQ-reu"/>
                             <constraint firstItem="YBS-wd-gmG" firstAttribute="top" secondItem="RIw-BT-qC9" secondAttribute="top" id="mUF-kq-pTb"/>
                             <constraint firstItem="YBS-wd-gmG" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" id="n9a-id-s7h"/>

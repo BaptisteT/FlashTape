@@ -64,11 +64,20 @@
     self.messagesSentDictionnary = [NSMutableDictionary new];
     self.followerRelations = [NSMutableArray new];
     
+    // Notif
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(retrieveUnreadMessagesLocally)
+                                                 name:@"retrieve_message_locally"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(sortFriendsAndReload)
+                                                 name:@"reload_friend_tableview"
+                                               object:nil];
+    
     // Retrieve Messages Locally
     [self retrieveUnreadMessagesLocally];
     
-    // Refresh current User posts
-    // Get local videos
+    // Get local videos & refresh
     [DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]
                                      success:^(NSArray *videos) {
                                          self.currentUserPosts = [NSMutableArray arrayWithArray:videos];
@@ -109,15 +118,6 @@
     self.inviteButton.titleLabel.minimumScaleFactor = 0.1;
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(retrieveUnreadMessagesLocally)
-                                                 name:@"retrieve_message_locally"
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(sortFriendsAndReload)
-                                                 name:@"reload_friend_tableview"
-                                               object:nil];
     
     // If first time, ask access to contact
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
@@ -537,6 +537,7 @@
     [ApiManager createRelationWithFollowing:follow.from
                                     success:^(Follow *following){
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                        [self.followerRelations removeObject:follow];
                                          [self.followingRelations addObject:following];
                                         [self sortFriendsAndReload];
                                     } failure:^(NSError *error) {

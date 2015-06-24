@@ -37,10 +37,10 @@
         NSString *transformedUsername = [GeneralUtils transformedUsernameFromOriginal:username];
         [ApiManager findUserByUsername:transformedUsername
                                success:^(User *user) {
-                                   if (!user) {
-                                       self.addOrDeleteFriendButton.hidden = YES;
-                                   } else {
-                                       if ([transformedUsername isEqualToString:user.transformedUsername]) { // ensure same state
+                                   if ([transformedUsername isEqualToString:user.transformedUsername]) { // avoid asynchro issue
+                                       if (!user) {
+                                           self.addOrDeleteFriendButton.hidden = YES;
+                                       } else {
                                            [self setCellUserTo:user];
                                        }
                                    }

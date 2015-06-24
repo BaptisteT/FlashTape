@@ -125,6 +125,8 @@
             if (substringRange.location == 0) {
                 [self.autocompleteContactArray addObject:name];
             }
+            // todo BT
+            // check it's not another user
         }
 
     }
