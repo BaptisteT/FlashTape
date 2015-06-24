@@ -20,13 +20,13 @@
 @synthesize localUrl;
 @synthesize isDownloading;
 @synthesize thumbmail;
+@synthesize videoProperties;
 
 // Variable saved on parse
 @dynamic videoFile;
 @dynamic user;
 @dynamic viewerIdsArray;
 @dynamic recordedAt;
-@dynamic videoProperties;
 
 static int downloadingCount = 0;
 

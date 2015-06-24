@@ -57,6 +57,7 @@
 @property (strong, nonatomic) NSArray *metadataColorArray;
 
 // Recording
+@property (strong, nonatomic) NSTimer *recordingMaxDurationTimer;
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
 @property (strong, nonatomic) SCRecorder *recorder;
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressGestureRecogniser;
@@ -162,7 +163,7 @@
     _recorder.device = AVCaptureDevicePositionBack;
      _recorder.autoSetVideoOrientation = NO;
     _recorder.keepMirroringOnWrite = YES;
-    _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
+//    _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeMPEG4;
     _recorder.session = session;
@@ -687,10 +688,12 @@
     _recordingRunning = YES;
     [self.recorder.session removeAllSegments];
     [self setRecordingMode];
+    self.recordingMaxDurationTimer = [NSTimer scheduledTimerWithTimeInterval:kRecordSessionMaxDuration + kVideoEndCutDuration target:self selector:@selector(recordMaxDurationReached) userInfo:nil repeats:NO];
     [self.recorder record];
 }
 
-- (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
+- (void)recordMaxDurationReached {
+//- (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
     [self terminateSessionAndExport];
 }
 
@@ -715,6 +718,7 @@
     }
     _isExporting = YES;
     _recordingRunning = NO;
+    [self.recordingMaxDurationTimer invalidate];
     
     // Pause and export
     [self endRecordingMode];
@@ -870,9 +874,6 @@
         
     }
     
-//    self.unreadMessagesCountLabel.text = [NSString stringWithFormat:@"%lu",(long)messageCount];
-//    self.unreadMessagesCountLabel.hidden = (messageCount == 0);
-    
     // Update Badge
     [ApiManager updateBadge:messageCount + self.unreadVideoCount];
 }
@@ -935,7 +936,7 @@
     // Start UI + progress bar anim
     self.recordingProgressContainer.hidden = NO;
     self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
-    [UIView animateWithDuration:kRecordSessionMaxDuration
+    [UIView animateWithDuration:kRecordSessionMaxDuration + kVideoEndCutDuration
                           delay:0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
