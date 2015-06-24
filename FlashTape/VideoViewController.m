@@ -101,6 +101,7 @@
     BOOL _recordingRunning;
     BOOL _cancelRecording;
     int _metadataColorIndex;
+    NSDate *_longPressStartDate;
 }
 
 // --------------------------------------------
@@ -367,6 +368,7 @@
         if (!_isExporting) {
             _longPressRunning = YES;
             [self startRecording];
+            _longPressStartDate = [NSDate date];
         }
         [self.captionTextView resignFirstResponder];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
@@ -437,6 +439,7 @@
     [TrackingUtils trackCaptionClicked];
     self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     [self.captionTextView becomeFirstResponder];
+    self.captionTextView.hidden = NO;
 }
 
 -(IBAction)backToCameraButtonClicked:(id)sender {
@@ -728,6 +731,11 @@
         } failure:^{
             _isExporting = NO;
             [self setCameraMode];
+            
+            // If record too short => open caption
+            if ([[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
+                [self captionButtonClicked:nil];
+            }
         }];
     }];
 }
@@ -738,8 +746,6 @@
 {
     SCRecordSession *recordSession = self.recorder.session;
     if (CMTimeGetSeconds(recordSession.segmentsDuration) < kRecordMinDuration) {
-        if (CMTimeGetSeconds(recordSession.segmentsDuration) != 0) // to avoid pb segment not ready
-            [GeneralUtils displayTopMessage:NSLocalizedString(@"video_too_short", nil) onView:self.view];
         if (failureBlock)
             failureBlock();
         NSLog(@"too short");
@@ -1030,7 +1036,7 @@
     } else {
         self.replayButton.alpha = 1;
         [self setReplayButtonUI];
-        self.captionTextView.hidden = (self.captionTextView.text.length == 0);
+        self.captionTextView.hidden = NO;
         self.recordTutoLabel.hidden = !(self.captionTextView.text.length == 0);
     }
     self.cameraSwitchButton.hidden = flag;
@@ -1098,7 +1104,7 @@
 - (void)textViewDidChange:(UITextView *)textView {
     CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(self.view.frame.size.width, 1000)];
     CGRect previousFrame = self.captionTextView.frame;
-    self.captionTextView.frame = CGRectMake(previousFrame.origin.x + (previousFrame.size.width - size.width) / 2, previousFrame.origin.y + previousFrame.size.height - size.height, size.width, size.height);
+    self.captionTextView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
 }
 
 
@@ -1115,8 +1121,8 @@
     NSDictionary *userInfo = [notification userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
-    self.captionTextView.transform = CGAffineTransformIdentity;
     CGFloat width = self.view.frame.size.width;
+    self.captionTextView.transform = CGAffineTransformIdentity;
     CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(width, 1000)];
     self.captionTextView.frame = CGRectMake(0, keyboardRect.origin.y - size.height, width, size.height);
 }

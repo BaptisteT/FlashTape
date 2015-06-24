@@ -104,8 +104,8 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-     NSNumber *seconds = @([[NSDate date] timeIntervalSinceDate:self.sessionStartDate] * 1000);
-    [TrackingUtils trackSession:seconds];
+     NSNumber *milliSeconds = @([[NSDate date] timeIntervalSinceDate:self.sessionStartDate] * 1000);
+    [TrackingUtils trackSession:milliSeconds];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
