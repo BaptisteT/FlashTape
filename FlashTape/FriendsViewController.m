@@ -15,6 +15,7 @@
 #import "User.h"
 #import "VideoPost.h"
 
+#import "AddFriendTableViewCell.h"
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
 #import "ReadMessageViewController.h"
@@ -306,7 +307,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self isAddFriendSection:indexPath.section]) {
-        return [tableView dequeueReusableCellWithIdentifier:@"AddFriendCell"];
+        AddFriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddFriendCell"];
+        [cell setNewUserToAddTo:[GeneralUtils getNewUnfollowedFollowerCount] + [GeneralUtils getNewAddressbookFlasherCount]];
+        return cell;
     } else if ([self isCurrentUserUserCell:indexPath]) {
         FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
         [cell InitWithCurrentUserAndIsSaving:_isSavingStory];

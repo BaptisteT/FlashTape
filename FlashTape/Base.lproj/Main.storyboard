@@ -63,6 +63,7 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -840,7 +841,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddFriendCell" rowHeight="80" id="0gh-c7-OHO">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddFriendCell" rowHeight="80" id="0gh-c7-OHO" customClass="AddFriendTableViewCell">
                                         <rect key="frame" x="0.0" y="260" width="600" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="AddFriendCell" tableViewCell="0gh-c7-OHO" id="SHt-Hd-s5V">
@@ -855,15 +856,38 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add_icon" translatesAutoresizingMaskIntoConstraints="NO" id="mU8-Lc-iRw">
                                                     <rect key="frame" x="555" y="25" width="30" height="30"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNV-PK-2Xd">
+                                                    <rect key="frame" x="21" y="27" width="26" height="26"/>
+                                                    <color key="backgroundColor" red="0.20784313730000001" green="0.71764705880000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="26" id="0aa-xt-vA8"/>
+                                                        <constraint firstAttribute="width" secondItem="JNV-PK-2Xd" secondAttribute="height" multiplier="1:1" id="Ant-Lz-L1S"/>
+                                                        <constraint firstAttribute="height" constant="26" id="Z2v-Ry-m5Y"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="Ant-Lz-L1S"/>
+                                                        </mask>
+                                                    </variation>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="uav-2k-Ck6" firstAttribute="leading" secondItem="SHt-Hd-s5V" secondAttribute="leading" constant="20" id="7tL-DY-ZOy"/>
                                                 <constraint firstAttribute="centerY" secondItem="mU8-Lc-iRw" secondAttribute="centerY" id="Iff-rP-Evg"/>
                                                 <constraint firstAttribute="centerY" secondItem="uav-2k-Ck6" secondAttribute="centerY" id="LM3-ZM-Djn"/>
+                                                <constraint firstAttribute="centerY" secondItem="JNV-PK-2Xd" secondAttribute="centerY" id="cQ6-2D-WXy"/>
+                                                <constraint firstItem="JNV-PK-2Xd" firstAttribute="leading" secondItem="SHt-Hd-s5V" secondAttribute="leadingMargin" constant="13" id="dwu-7Y-G2M"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="mU8-Lc-iRw" secondAttribute="trailing" constant="7" id="haL-39-S2m"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <outlet property="addFriendLabel" destination="uav-2k-Ck6" id="zPt-up-U9x"/>
+                                            <outlet property="userCountLabel" destination="JNV-PK-2Xd" id="y9S-Bs-N4i"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FriendCell" rowHeight="80" id="Y8i-4U-BMg" customClass="FriendTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>

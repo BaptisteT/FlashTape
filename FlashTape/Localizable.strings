@@ -49,11 +49,11 @@
 "video_sent_label" = "flash posted";
 "videos_sent_label" = "flashes posted";
 "video_too_short" = "Hold Longer";
-"video_sending_failed" = "1 Video Failed to Send";
-"videos_sending_failed" = "%lu Videos Failed To Send";
+"video_sending_failed" = "1 Video Failed";
+"videos_sending_failed" = "%lu Videos Failed";
 
 // Preview
-"release_to_send" = "Release to send";
+"release_to_send" = "Release to post";
 "release_to_cancel" = "Release to cancel";
 "message_canceled" = "Message canceled";
 "move_your_finger_to_cancel" = "Move your finger here to cancel";

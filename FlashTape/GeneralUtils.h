@@ -35,4 +35,20 @@
 
 + (BOOL)explainBeforeDelete;
 
++ (NSDate *)getLastUnfollowedFollowerRetrieveDate;
+
++ (void)setLastUnfollowedFollowerRetrieveDate:(NSDate *)date;
+
++ (NSDate *)getLastAddressBookFlasherRetrieveDate;
+
++ (void)setLastAddressBookFlasherRetrieveDate:(NSDate *)date;
+
++ (NSInteger)getNewUnfollowedFollowerCount;
+
++ (void)setNewUnfollowedFollowerCount:(NSInteger)count;
+
++ (NSInteger)getNewAddressbookFlasherCount;
+
++ (void)setNewNewAddressbookFlasherCount:(NSInteger)count;
+
 @end

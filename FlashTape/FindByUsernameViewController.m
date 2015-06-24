@@ -13,6 +13,7 @@
 
 #import "AddressbookUtils.h"
 #import "ConstantUtils.h"
+#import "GeneralUtils.h"
 #import "MBProgressHUD.h"
 
 @interface FindByUsernameViewController ()
@@ -80,6 +81,10 @@
     self.resultTableView.delegate = self;
     self.resultTableView.dataSource = self;
     self.resultTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    // Reset new flasher / follower at 0
+    [GeneralUtils setNewNewAddressbookFlasherCount:0];
+    [GeneralUtils setNewUnfollowedFollowerCount:0];
 }
 
 

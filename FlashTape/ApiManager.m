@@ -152,11 +152,11 @@
 {
     // set up the query on the Follow table
     PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
-    [followerQuery whereKey:@"to" equalTo:[PFUser currentUser]];
+    [followerQuery whereKey:@"to" equalTo:[User currentUser]];
     [followerQuery whereKey:@"blocked" notEqualTo:[NSNumber numberWithBool:YES]];
     
     PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
-    [followingQuery whereKey:@"from" equalTo:[PFUser currentUser]];
+    [followingQuery whereKey:@"from" equalTo:[User currentUser]];
     
     PFQuery *relationshipQuery = [PFQuery orQueryWithSubqueries:@[followerQuery,followingQuery]];
     [relationshipQuery setLimit:1000];
@@ -175,11 +175,26 @@
                 }];
             }];
             
+            // Delete follow with no to or from
             for (Follow *follow in relations) {
                 if (![follow.from isKindOfClass:[User class]] || ![follow.to isKindOfClass:[User class]]) {
                     [follow deleteInBackground];
                 }
             }
+            
+            // Check if new unfollowed follower
+            NSDate *previousDate = [GeneralUtils getLastUnfollowedFollowerRetrieveDate];
+            int count = 0;
+            for (Follow *follow in relations) {
+                if (follow.to == [User currentUser] && follow.from != [User currentUser] && [follow.createdAt compare:previousDate] == NSOrderedDescending) {
+                    count ++;
+                }
+            }
+            [GeneralUtils setNewUnfollowedFollowerCount:count];
+            [GeneralUtils setLastUnfollowedFollowerRetrieveDate:[NSDate date]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"reset_notif_count"
+                                                                object:nil
+                                                              userInfo:nil];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -197,6 +212,7 @@
     [query whereKey:@"username" containedIn:phoneNumbers];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            // Pin and return
             [PFObject unpinAllObjectsInBackgroundWithName:kParseAddressbookContacts block:^(BOOL succeeded, NSError *error) {
                 [PFObject pinAllInBackground:objects withName:kParseAddressbookContacts block:^(BOOL succeeded, NSError *error) {
                     if (successBlock) {
@@ -204,6 +220,22 @@
                     }
                 }];
             }];
+            
+            // Check if new user in our addressbok
+            [DatastoreUtils getUnrelatedUserInAddressBook:phoneNumbers success:^(NSArray *unrelatedUser) {
+                NSDate *previousDate = [GeneralUtils getLastAddressBookFlasherRetrieveDate];
+                int count = 0;
+                for (PFObject *object in unrelatedUser) {
+                    if ([object.createdAt compare:previousDate] == NSOrderedDescending) {
+                        count ++;
+                    }
+                }
+                [GeneralUtils setNewNewAddressbookFlasherCount:count];
+                [GeneralUtils setLastAddressBookFlasherRetrieveDate:[NSDate date]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"reset_notif_count"
+                                                                    object:nil
+                                                                  userInfo:nil];
+            } failure:nil];
         } else {
             if (failureBlock) {
                 failureBlock(error);
@@ -418,7 +450,7 @@
                                         failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *innerQuery = [PFQuery queryWithClassName:@"Follow"];
-    [innerQuery whereKey:@"to" equalTo:[PFUser currentUser]];
+    [innerQuery whereKey:@"to" equalTo:[User currentUser]];
     [innerQuery whereKey:@"blocked" equalTo:[NSNumber numberWithBool:YES]];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Message"];

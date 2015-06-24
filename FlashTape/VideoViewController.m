@@ -300,6 +300,10 @@
                                              selector:@selector(navigateToFriends)
                                                  name:@"new_message_clicked"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resetNotifCount)
+                                                 name:@"reset_notif_count"
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -693,7 +697,6 @@
 }
 
 - (void)recordMaxDurationReached {
-//- (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
     [self terminateSessionAndExport];
 }
 
@@ -864,18 +867,25 @@
 
 - (void)setMessageCount:(NSInteger)messageCount {
     _messageCount = messageCount;
-    
-    if (messageCount > 0) {
-        [self.friendListButton setTitle:[NSString stringWithFormat:@"%lu",(long)messageCount] forState:UIControlStateNormal];
+    [self resetNotifCount];
+}
+
+- (void)setNotificationCount:(NSInteger)notifCount {
+    if (notifCount > 0) {
+        [self.friendListButton setTitle:[NSString stringWithFormat:@"%lu",(long)notifCount] forState:UIControlStateNormal];
         [self.friendListButton setBackgroundImage:nil forState:UIControlStateNormal];
     } else {
         [self.friendListButton setBackgroundImage:[UIImage imageNamed:@"friends_button"] forState:UIControlStateNormal];
         [self.friendListButton setTitle:nil forState:UIControlStateNormal];
-        
     }
     
     // Update Badge
-    [ApiManager updateBadge:messageCount + self.unreadVideoCount];
+    [ApiManager updateBadge:notifCount + self.unreadVideoCount];
+}
+
+- (void)resetNotifCount {
+    NSInteger notifCount = self.messageCount + [GeneralUtils getNewAddressbookFlasherCount] + [GeneralUtils getNewUnfollowedFollowerCount];
+    [self setNotificationCount:notifCount];
 }
 
 // --------------------------------------------

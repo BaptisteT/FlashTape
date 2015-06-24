@@ -15,6 +15,11 @@
 #define MUTE_EXPLANATION_HIDDEN_PREF @"Mute Explanation Hidden"
 #define DELETE_EXPLANATION_HIDDEN_PREF @"Delete Explanation Hidden"
 
+#define LAST_UNFOLLOWED_FOLLOWER_RETRIEVE_DATE @"Last Unfollowed Follower Retrieve Date"
+#define NEW_UNFOLLOWED_FOLLOWER_COUNT @"New Unfollowed Follower Count"
+#define LAST_ADDRESSBOOK_FLASHER_RETRIEVE_DATE @"Last Addressbook Flashers Retrieve Date"
+#define NEW_ADDRESSBOOK_FLASHER_COUNT @"New Addressbook Flashers Count"
+
 
 @implementation GeneralUtils
 
@@ -131,7 +136,6 @@
     return [prefs objectForKey:DELETE_EXPLANATION_HIDDEN_PREF] ? ![[prefs objectForKey:DELETE_EXPLANATION_HIDDEN_PREF] boolValue] : YES;
 }
 
-
 + (NSString *)transformedUsernameFromOriginal:(NSString *)original {
     NSMutableString *transformedUsername = [original mutableCopy];
     CFStringTransform((__bridge CFMutableStringRef)transformedUsername, NULL, kCFStringTransformStripCombiningMarks, NO);
@@ -145,6 +149,58 @@
         NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         [[UIApplication sharedApplication] openURL:url];
     }
+}
+
++ (NSDate *)getLastUnfollowedFollowerRetrieveDate
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:LAST_UNFOLLOWED_FOLLOWER_RETRIEVE_DATE] ? [prefs objectForKey:LAST_UNFOLLOWED_FOLLOWER_RETRIEVE_DATE] : [NSDate date];
+}
+
++ (void)setLastUnfollowedFollowerRetrieveDate:(NSDate *)date
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:date forKey:LAST_UNFOLLOWED_FOLLOWER_RETRIEVE_DATE];
+    [prefs synchronize];
+}
+
++ (NSDate *)getLastAddressBookFlasherRetrieveDate
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:LAST_ADDRESSBOOK_FLASHER_RETRIEVE_DATE] ? [prefs objectForKey:LAST_ADDRESSBOOK_FLASHER_RETRIEVE_DATE] : [NSDate date];
+}
+
++ (void)setLastAddressBookFlasherRetrieveDate:(NSDate *)date
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:date forKey:LAST_ADDRESSBOOK_FLASHER_RETRIEVE_DATE];
+    [prefs synchronize];
+}
+
++ (NSInteger)getNewUnfollowedFollowerCount
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:NEW_UNFOLLOWED_FOLLOWER_COUNT] ? [[prefs objectForKey:NEW_UNFOLLOWED_FOLLOWER_COUNT] integerValue]: 0;
+}
+
++ (void)setNewUnfollowedFollowerCount:(NSInteger)count
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithInteger:count] forKey:NEW_UNFOLLOWED_FOLLOWER_COUNT];
+    [prefs synchronize];
+}
+
++ (NSInteger)getNewAddressbookFlasherCount
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:NEW_ADDRESSBOOK_FLASHER_COUNT] ? [[prefs objectForKey:NEW_ADDRESSBOOK_FLASHER_COUNT] integerValue]: 0;
+}
+
++ (void)setNewNewAddressbookFlasherCount:(NSInteger)count
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithInteger:count] forKey:NEW_ADDRESSBOOK_FLASHER_COUNT];
+    [prefs synchronize];
 }
 
 @end
