@@ -360,6 +360,7 @@
 }
 
 - (void)navigateToFriends {
+    [self setCameraMode];
     [self.captionTextView resignFirstResponder];
     [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
 }
@@ -448,6 +449,7 @@
     self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     [self.captionTextView becomeFirstResponder];
     self.captionTextView.hidden = NO;
+    self.recordTutoLabel.hidden = YES;
 }
 
 -(IBAction)backToCameraButtonClicked:(id)sender {
@@ -1012,6 +1014,10 @@
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
         self.replayButton.hidden = NO;
+        
+        // Update Badge
+        [ApiManager updateBadge:self.messageCount + self.unreadVideoCount];
+
     }
 }
 
@@ -1051,7 +1057,7 @@
         self.replayButton.alpha = 1;
         [self setReplayButtonUI];
         self.captionTextView.hidden = NO;
-        self.recordTutoLabel.hidden = !(self.captionTextView.text.length == 0);
+        self.recordTutoLabel.hidden = self.captionTextView.text.length == 0 || [self.captionTextView isFirstResponder];
     }
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;

@@ -47,9 +47,6 @@
     [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0,usernameRange.location)];
     self.titleLabel.attributedText = attributedText;
     self.titleSubLabel.text = NSLocalizedString(@"read_subtitle", nil);
-    if (self.messagesArray.count < 2) {
-        self.titleSubLabel.hidden = YES;
-    }
     
     // Reply
     [self.replyButton setTitle:NSLocalizedString(@"reply_button", nil) forState:UIControlStateNormal];
@@ -120,6 +117,8 @@
                               success:nil
                               failure:nil];
         [self.messagesArray removeObject:message];
+        
+        self.titleSubLabel.hidden = self.messagesArray.count == 0;
     } else {
         [self dismissViewControllerAnimated:NO completion:nil];
     }

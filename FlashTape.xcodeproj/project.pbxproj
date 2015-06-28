@@ -198,6 +198,8 @@
 		3CBD0D3B1B384AE0001DFE17 /* Follow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D3A1B384AE0001DFE17 /* Follow.m */; };
 		3CBD0D3E1B39D140001DFE17 /* InviteContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D3D1B39D140001DFE17 /* InviteContactTableViewCell.m */; };
 		3CBD0D411B3AE932001DFE17 /* AddFriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D401B3AE932001DFE17 /* AddFriendTableViewCell.m */; };
+		3CBD0D441B401687001DFE17 /* InternalNotifView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D431B401687001DFE17 /* InternalNotifView.m */; };
+		3CBD0D461B40169A001DFE17 /* InternalNotifView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CBD0D451B40169A001DFE17 /* InternalNotifView.xib */; };
 		3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0F81B1CA00000E923D2 /* Message.m */; };
 		3CD6D0FC1B1CA91F00E923D2 /* KeyboardUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
@@ -547,6 +549,9 @@
 		3CBD0D3D1B39D140001DFE17 /* InviteContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteContactTableViewCell.m; sourceTree = "<group>"; };
 		3CBD0D3F1B3AE932001DFE17 /* AddFriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddFriendTableViewCell.h; sourceTree = "<group>"; };
 		3CBD0D401B3AE932001DFE17 /* AddFriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddFriendTableViewCell.m; sourceTree = "<group>"; };
+		3CBD0D421B401687001DFE17 /* InternalNotifView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternalNotifView.h; sourceTree = "<group>"; };
+		3CBD0D431B401687001DFE17 /* InternalNotifView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternalNotifView.m; sourceTree = "<group>"; };
+		3CBD0D451B40169A001DFE17 /* InternalNotifView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternalNotifView.xib; sourceTree = "<group>"; };
 		3CD6D0F71B1CA00000E923D2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		3CD6D0F81B1CA00000E923D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardUtils.h; sourceTree = "<group>"; };
@@ -989,6 +994,9 @@
 				3CBD0D3D1B39D140001DFE17 /* InviteContactTableViewCell.m */,
 				3CBD0D3F1B3AE932001DFE17 /* AddFriendTableViewCell.h */,
 				3CBD0D401B3AE932001DFE17 /* AddFriendTableViewCell.m */,
+				3CBD0D421B401687001DFE17 /* InternalNotifView.h */,
+				3CBD0D431B401687001DFE17 /* InternalNotifView.m */,
+				3CBD0D451B40169A001DFE17 /* InternalNotifView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1214,6 +1222,7 @@
 				3C2C4A6F1AFE231F00E0E4BF /* DateTools.bundle in Resources */,
 				3C2C4C221B05F73A00E0E4BF /* whiteNoise.wav in Resources */,
 				3C4ABD2D1B299B2500897DF9 /* MPCloseBtn@2x.png in Resources */,
+				3CBD0D461B40169A001DFE17 /* InternalNotifView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1297,6 +1306,7 @@
 				3C081D031B1B54C70036D6B2 /* SCWeakSelectorTarget.m in Sources */,
 				3C4ABD1C1B299B2500897DF9 /* MPABTestDesignerDeviceInfoRequestMessage.m in Sources */,
 				3C4ABD421B299B2500897DF9 /* MPSurveyNavigationController.m in Sources */,
+				3CBD0D441B401687001DFE17 /* InternalNotifView.m in Sources */,
 				3C4ABD401B299B2500897DF9 /* MPSurvey.m in Sources */,
 				3C4ABD121B299B2500897DF9 /* _MPTweakBindObserver.m in Sources */,
 				3C4ABD381B299B2500897DF9 /* MPObjectIdentityProvider.m in Sources */,

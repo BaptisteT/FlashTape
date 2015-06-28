@@ -62,5 +62,10 @@ static const NSInteger kUsernameMinLength = 3;
 static const NSInteger kVideoCellHeight = 50;
 static const NSInteger kVideoCellViewerAdditionalHeight = 20;
 
+// Notif
+static float const kInternalNotifDuration = 3;
+static NSInteger const kInternalNotifHeight = 60;
+static float const kNotifAnimationDuration = 0.5;
+
 NSString * getEmojiAtIndex(NSInteger index);
 BOOL belonsToEmojiArray(NSString *emoji) ;

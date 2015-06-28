@@ -195,6 +195,10 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"reset_notif_count"
                                                                 object:nil
                                                               userInfo:nil];
+            // If friend controller, reload tableview
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"reload_friend_tableview"
+                                                                object:nil
+                                                              userInfo:nil];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);

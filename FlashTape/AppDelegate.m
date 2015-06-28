@@ -15,9 +15,11 @@
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import <AVFoundation/AVFoundation.h>
 
+#import "ApiManager.h"
 #import "User.h"
 
 #import "AppDelegate.h"
+#import "InternalNotifView.h"
 #import "WelcomeViewController.h"
 
 #import "ColorUtils.h"
@@ -131,6 +133,9 @@
         }
     } else if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_message"]) {
         if (state == UIApplicationStateActive) {
+            // internal notif
+            [self displayInternalNotif:userInfo];
+            
             // sound
             AudioServicesPlaySystemSound(1114);
             
@@ -146,10 +151,28 @@
         }
     } else if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_follow"]) {
         if (state == UIApplicationStateActive) {
-            // todo BT
+            // internal notif
+            [self displayInternalNotif:userInfo];
+            
+            // Load relation ship
+            [ApiManager getRelationshipsRemotelyAndExecuteSuccess:nil failure:nil];
         }
     }
 }
 
+
+// --------------------------------------------
+#pragma mark - Internal notif
+// --------------------------------------------
+- (void)displayInternalNotif:(NSDictionary *)userInfo {
+    InternalNotifView *internalNotif = [[[NSBundle mainBundle] loadNibNamed:@"InternalNotifView" owner:self options:nil] objectAtIndex:0];
+    UIView * superView = self.window.rootViewController.view;;
+    [internalNotif initWithType:[userInfo valueForKey:@"notif_type"] frame:CGRectMake(0, - kInternalNotifHeight, superView.frame.size.width, kInternalNotifHeight) userId:[userInfo valueForKey:@"userId"] alert:[[userInfo valueForKey:@"aps"] valueForKey:@"alert"]];
+    [superView addSubview:internalNotif];
+    [UIView animateWithDuration:kNotifAnimationDuration
+                     animations:^(){
+                         internalNotif.frame = CGRectMake(0, 0, superView.frame.size.width, kInternalNotifHeight);
+                     } completion:nil];
+}
 
 @end
