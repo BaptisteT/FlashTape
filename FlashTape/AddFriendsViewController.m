@@ -1,5 +1,5 @@
 //
-//  FindByUsernameViewController.m
+//  AddFriendsViewController.m
 //  FlashTape
 //
 //  Created by Baptiste Truchot on 6/6/15.
@@ -9,14 +9,14 @@
 #import "DatastoreUtils.h"
 #import "User.h"
 
-#import "FindByUsernameViewController.h"
+#import "AddFriendsViewController.h"
 
 #import "AddressbookUtils.h"
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
 #import "MBProgressHUD.h"
 
-@interface FindByUsernameViewController ()
+@interface AddFriendsViewController ()
 @property (weak, nonatomic) IBOutlet UISearchBar *usernameSearchBar;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation FindByUsernameViewController
+@implementation AddFriendsViewController
 
 // --------------------------------------------
 #pragma mark - Life Cycle

@@ -35,6 +35,5 @@
 - (void)removeVideoFromVideosArray:(VideoPost *)video;
 - (void)setMessageCount:(NSInteger)messageCount;
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion;
-- (void)parseContactsAndFindFriendsIfAuthNotDetermined;
 
 @end

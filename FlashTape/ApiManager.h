@@ -56,6 +56,10 @@
                             success:(void(^)(Follow *follow))successBlock
                             failure:(void(^)(NSError *error))failureBlock;
 
++ (void)createRelationWithFollowings:(NSArray *)followings
+                             success:(void(^)())successBlock
+                             failure:(void(^)(NSError *error))failureBlock;
+
 + (void)deleteRelation:(Follow *)follow
                success:(void(^)())successBlock
                failure:(void(^)(NSError *error))failureBlock;

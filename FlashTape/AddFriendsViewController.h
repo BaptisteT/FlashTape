@@ -1,5 +1,5 @@
 //
-//  FindByUsernameViewController.h
+//  AddFriendsViewController.h
 //  FlashTape
 //
 //  Created by Baptiste Truchot on 6/6/15.
@@ -11,7 +11,7 @@
 #import "FlashTapeParentViewController.h"
 #import "InviteContactTableViewCell.h"
 
-@interface FindByUsernameViewController : FlashTapeParentViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate, InviteContactTVCDelegate>
+@interface AddFriendsViewController : FlashTapeParentViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate, InviteContactTVCDelegate>
 
 @property (strong, nonatomic) NSMutableOrderedSet *followingRelations;
 

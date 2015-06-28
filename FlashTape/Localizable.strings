@@ -33,8 +33,20 @@
 "save_username_error_message" = "Please, try again.";
 "already_taken_username_error_message" = "Please, pick another one";
 "already_taken_username_error_title" = "Sorry, this username is already taken";
-"short_username_error_message" = " minimum length is 3 characters";
+"short_username_error_message" = "Minimum length is 3 characters";
 "short_username_error_title" = "Oops that username is too short";
+
+// AB Access
+"allow_contact_button" = "Allow Access To Contacts";
+
+// AB Flashers
+"flashers_found_label" = "We found %lu flashers in your addressbook";
+"add_friends_button" = "Add %lu friends";
+
+// 1st flash
+"tap_to_next" = "Tap to next";
+"first_flash_message_1" = "You just posted your first flash, Congrats!";
+"first_flash_message_2" = "Only your friend can watch your flashes.";
 
 // Auth
 "authentification_error_title" = "Authentification error";

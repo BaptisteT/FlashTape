@@ -160,10 +160,9 @@
     // Create the recorder
     self.recorder = [SCRecorder recorder];
     _recorder.delegate = self;
-    _recorder.device = AVCaptureDevicePositionBack;
+    _recorder.device = [User currentUser].score == 0 ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
      _recorder.autoSetVideoOrientation = NO;
     _recorder.keepMirroringOnWrite = YES;
-//    _recorder.maxRecordDuration = CMTimeMakeWithSeconds(kRecordSessionMaxDuration + kVideoEndCutDuration, 600);
     SCRecordSession *session = [SCRecordSession recordSession];
     session.fileType = AVFileTypeMPEG4;
     _recorder.session = session;
@@ -262,7 +261,15 @@
     
     // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    [self parseContactsAndFindFriendsIfAlreadyAuthorized];
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
+                                    message:NSLocalizedString(@"contact_access_error_message",nil)
+                                   delegate:self
+                          cancelButtonTitle:NSLocalizedString(@"later_button",nil)
+                          otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
+    } else {
+        [self parseContactsAndFindFriends];
+    }
     
     // Retrieve unread messages
     [self retrieveUnreadMessages];
@@ -360,7 +367,8 @@
 }
 
 - (void)navigateToFriends {
-    [self setCameraMode];
+    if ([self isPlayingMode])
+        [self setCameraMode];
     [self.captionTextView resignFirstResponder];
     [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
 }
@@ -561,17 +569,6 @@
     return userArray;
 }
 
-- (void)parseContactsAndFindFriendsIfAuthNotDetermined {
-    if(ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        [self parseContactsAndFindFriends];
-    }
-}
-
-- (void)parseContactsAndFindFriendsIfAlreadyAuthorized {
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-        [self parseContactsAndFindFriends];
-    }
-}
 - (void)parseContactsAndFindFriends {
     ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
         if (granted) {
@@ -672,8 +669,6 @@
 - (void)returnToCameraMode {
     [self setCameraMode];
     [ApiManager updateVideoPosts:self.videosToPlayArray];
-    // First time, ask contact access
-    [self parseContactsAndFindFriendsIfAuthNotDetermined];
 }
 
 - (IBAction)usernameButtonClicked:(id)sender {
@@ -745,7 +740,7 @@
             [self setCameraMode];
             
             // If record too short => open caption
-            if ([[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
+            if ([User currentUser].score > kMaxScoreBeforeHidingTuto && [[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
                 [self captionButtonClicked:nil];
             }
         }];
@@ -820,6 +815,14 @@
                     [self setReplayButtonUI];
                 // Track
                 [TrackingUtils trackVideoSentWithProperties:post.videoProperties];
+                
+                // 1st flash NUX
+                if ([User currentUser].score == 1) {
+                    // todo BT NUX
+                    [self performSegueWithIdentifier:@"First Flash From Video" sender:nil];
+                    
+                    // todo BT videos
+                }
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];
@@ -1057,7 +1060,7 @@
         self.replayButton.alpha = 1;
         [self setReplayButtonUI];
         self.captionTextView.hidden = NO;
-        self.recordTutoLabel.hidden = self.captionTextView.text.length == 0 || [self.captionTextView isFirstResponder];
+        self.recordTutoLabel.hidden = self.captionTextView.text.length != 0 || [self.captionTextView isFirstResponder];
     }
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;
@@ -1190,6 +1193,10 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if ([alertView.message isEqualToString:NSLocalizedString(@"camera_access_error_message", nil)]) {
         [GeneralUtils openSettings];
+    } else if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
+            [GeneralUtils openSettings];
+        }
     }
 }
 

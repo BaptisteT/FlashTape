@@ -60,14 +60,14 @@
 // ----------------------------------------------------------
 - (IBAction)doneButtonClicked:(id)sender {
     if (self.usernameTextfield.text.length < kUsernameMinLength) {
-        [GeneralUtils showAlertMessage:NSLocalizedString(@"short_username_error_message", nil) withTitle:NSLocalizedString(@"short_username_error_message", nil)];
+        [GeneralUtils showAlertMessage:NSLocalizedString(@"short_username_error_message", nil) withTitle:NSLocalizedString(@"short_username_error_title", nil)];
         return;
     }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ApiManager saveUsername:self.usernameTextfield.text
                      success:^{
                          [MBProgressHUD hideHUDForView:self.view animated:YES];
-                         [self performSegueWithIdentifier:@"Videos From Username" sender:nil];
+                         [self performSegueWithIdentifier:@"ABAccess From Username" sender:nil];
                          // Identify user
                          [TrackingUtils identifyUser:[User currentUser] signup:YES];
                      } failure:^(NSError *error) {

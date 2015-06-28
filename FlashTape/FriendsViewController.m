@@ -120,20 +120,8 @@
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
     
-    // If first time, ask access to contact
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        [self.delegate parseContactsAndFindFriendsIfAuthNotDetermined];
-    }
-    // If contact access denied, propose to redirect to settings
-    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
-                                    message:NSLocalizedString(@"contact_access_error_message",nil)
-                                   delegate:self
-                          cancelButtonTitle:NSLocalizedString(@"later_button",nil)
-                          otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
-    }
     // Notif
-    else if (![NotifUtils isRegisteredForRemoteNotification]) {
+    if (![NotifUtils isRegisteredForRemoteNotification]) {
         [NotifUtils registerForRemoteNotif];
     }
 }
@@ -754,10 +742,6 @@
         }
         self.selectedRelation = nil;
 
-    } else if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
-        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
-            [GeneralUtils openSettings];
-        }
     } else if ([alertView.title isEqualToString:NSLocalizedString(@"delete_following_alert_title", nil)]) {
         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"cancel_button_title", nil)]) {
             return;

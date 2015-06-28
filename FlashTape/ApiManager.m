@@ -285,6 +285,34 @@
     }];
 }
 
++ (void)createRelationWithFollowings:(NSArray *)followings
+                             success:(void(^)())successBlock
+                             failure:(void(^)(NSError *error))failureBlock
+{
+    if (!followings || followings.count == 0) {
+        if (successBlock) successBlock();
+        return;
+    }
+    
+    NSMutableArray *followArray = [NSMutableArray new];
+    for (User *user in followings) {
+        [followArray addObject:[Follow createRelationWithFollowing:user]];
+    }
+    [PFObject saveAllInBackground:followArray block:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [PFObject pinAllInBackground:followArray withName:kParseRelationshipsName];
+            [TrackingUtils trackAddFriend];
+            if (successBlock) {
+                successBlock();
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+
 + (void)deleteRelation:(Follow *)follow
                success:(void(^)())successBlock
                failure:(void(^)(NSError *error))failureBlock
