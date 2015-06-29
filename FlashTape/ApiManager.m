@@ -243,7 +243,7 @@
             } failure:nil];
             
             // Fill Contacts
-            [ApiManager fillFollowTableWithContacts:phoneNumbers success:nil failure:nil];
+            [ApiManager fillContactTableWithContacts:phoneNumbers aBFlasher:objects success:nil failure:nil];
         } else {
             if (failureBlock) {
                 failureBlock(error);
@@ -253,9 +253,10 @@
 }
 
 // Fill contacts table
-+ (void)fillFollowTableWithContacts:(NSArray *)contacts
-                            success:(void(^)())successBlock
-                            failure:(void(^)(NSError *error))failureBlock
++ (void)fillContactTableWithContacts:(NSArray *)contacts
+                           aBFlasher:(NSArray *)aBFlashers
+                             success:(void(^)())successBlock
+                             failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
     [query whereKey:@"number" containedIn:contacts];
@@ -274,6 +275,7 @@
                 if (!contactObject) {
                     contactObject = [ABContact createRelationWithNumber:contact];
                 }
+                contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers];
                 [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
                 [contactObjectArray addObject:contactObject];
             }

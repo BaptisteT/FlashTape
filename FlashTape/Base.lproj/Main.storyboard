@@ -66,6 +66,8 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -784,6 +786,7 @@
                         <outlet property="timeLabel" destination="gMp-L0-adU" id="M2N-71-MnR"/>
                         <segue destination="gUo-G0-jbW" kind="presentation" identifier="Friends From Video" modalPresentationStyle="overCurrentContext" animates="NO" id="0bv-ip-Mhx"/>
                         <segue destination="Fmf-mq-cd1" kind="presentation" identifier="First Flash From Video" animates="NO" id="DR2-2J-Y4R"/>
+                        <segue destination="jni-Tb-Tnl" kind="presentation" identifier="Invite From Video" animates="NO" id="8YA-2t-PyU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6HK-3Y-Fgl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1542,6 +1545,73 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YwV-uc-yO7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5444" y="747"/>
+        </scene>
+        <!--Invite Contact View Controller-->
+        <scene sceneID="vb8-5x-Fl1">
+            <objects>
+                <viewController id="jni-Tb-Tnl" customClass="InviteContactViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zWL-3n-wLE"/>
+                        <viewControllerLayoutGuide type="bottom" id="Zo1-Ti-gTk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lLb-Es-bX6">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="😊" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EEA-eH-GHF">
+                                <rect key="frame" x="175" y="151" width="250" height="299"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="250"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb2-kp-bGF">
+                                <rect key="frame" x="20" y="30" width="560" height="29"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="24"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.37554632867132864" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GiR-d2-K6l">
+                                <rect key="frame" x="20" y="509" width="560" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="not_now_button">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="notNowButtonClicked:" destination="jni-Tb-Tnl" eventType="touchUpInside" id="uKd-Mw-igQ"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tap_to_invite_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEE-T5-HNi" customClass="UICustomLineLabel">
+                                <rect key="frame" x="212" y="80" width="177" height="27"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="EEA-eH-GHF" secondAttribute="centerY" id="1Pc-hd-AdU"/>
+                            <constraint firstItem="CEE-T5-HNi" firstAttribute="top" secondItem="pb2-kp-bGF" secondAttribute="bottom" constant="21" id="2S5-0l-I47"/>
+                            <constraint firstItem="GiR-d2-K6l" firstAttribute="top" relation="greaterThanOrEqual" secondItem="EEA-eH-GHF" secondAttribute="bottom" constant="5" id="IwA-KX-WaY"/>
+                            <constraint firstItem="pb2-kp-bGF" firstAttribute="top" secondItem="zWL-3n-wLE" secondAttribute="bottom" constant="30" id="JRl-4p-GNB"/>
+                            <constraint firstItem="Zo1-Ti-gTk" firstAttribute="top" secondItem="GiR-d2-K6l" secondAttribute="bottom" priority="750" constant="57" id="JiW-74-S0V"/>
+                            <constraint firstAttribute="centerX" secondItem="CEE-T5-HNi" secondAttribute="centerX" id="LJ9-6b-ns4"/>
+                            <constraint firstAttribute="centerX" secondItem="pb2-kp-bGF" secondAttribute="centerX" id="QVq-t0-e5y"/>
+                            <constraint firstItem="pb2-kp-bGF" firstAttribute="leading" secondItem="lLb-Es-bX6" secondAttribute="leading" constant="20" id="apL-55-0J8"/>
+                            <constraint firstItem="GiR-d2-K6l" firstAttribute="leading" secondItem="lLb-Es-bX6" secondAttribute="leading" constant="20" id="fiX-ei-yD6"/>
+                            <constraint firstAttribute="centerX" secondItem="GiR-d2-K6l" secondAttribute="centerX" id="ofw-pD-cPI"/>
+                            <constraint firstAttribute="centerX" secondItem="EEA-eH-GHF" secondAttribute="centerX" id="pZP-Gi-TNr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="nameLabel" destination="pb2-kp-bGF" id="JSr-I6-xoT"/>
+                        <outlet property="notNowButton" destination="GiR-d2-K6l" id="1zf-yY-vfX"/>
+                        <outlet property="tapToInviteLabel" destination="CEE-T5-HNi" id="Pis-tj-bGS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fVX-XF-IAZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5444" y="1413"/>
         </scene>
         <!--Send Message View Controller-->
         <scene sceneID="UEH-EB-br7">

@@ -156,6 +156,7 @@
 		3C4ABD561B299B2500897DF9 /* UIColor+MPColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4ABD0D1B299B2400897DF9 /* UIColor+MPColor.m */; };
 		3C4ABD571B299B2500897DF9 /* UIImage+MPAverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4ABD0F1B299B2400897DF9 /* UIImage+MPAverageColor.m */; };
 		3C4ABD581B299B2500897DF9 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4ABD111B299B2500897DF9 /* UIImage+MPImageEffects.m */; };
+		3C5BD8301B419F8000B3FCB8 /* InviteContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5BD82F1B419F8000B3FCB8 /* InviteContactViewController.m */; };
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
@@ -487,6 +488,8 @@
 		3C4ABD0F1B299B2400897DF9 /* UIImage+MPAverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MPAverageColor.m"; sourceTree = "<group>"; };
 		3C4ABD101B299B2400897DF9 /* UIImage+MPImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MPImageEffects.h"; sourceTree = "<group>"; };
 		3C4ABD111B299B2500897DF9 /* UIImage+MPImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MPImageEffects.m"; sourceTree = "<group>"; };
+		3C5BD82E1B419F8000B3FCB8 /* InviteContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteContactViewController.h; sourceTree = "<group>"; };
+		3C5BD82F1B419F8000B3FCB8 /* InviteContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteContactViewController.m; sourceTree = "<group>"; };
 		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -942,6 +945,8 @@
 				3C0AC29B1B24D3930056C59C /* ReadMessageViewController.m */,
 				3C0AC28F1B231A5F0056C59C /* AddFriendsViewController.h */,
 				3C0AC2901B231A5F0056C59C /* AddFriendsViewController.m */,
+				3C5BD82E1B419F8000B3FCB8 /* InviteContactViewController.h */,
+				3C5BD82F1B419F8000B3FCB8 /* InviteContactViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -1298,6 +1303,7 @@
 				3C081CF51B1B54C70036D6B2 /* SCImageView.m in Sources */,
 				3C4ABD191B299B2500897DF9 /* MPABTestDesignerClearRequestMessage.m in Sources */,
 				3CBD0D3B1B384AE0001DFE17 /* Follow.m in Sources */,
+				3C5BD8301B419F8000B3FCB8 /* InviteContactViewController.m in Sources */,
 				3CBD0D361B37F9FF001DFE17 /* FlashTapeParentViewController.m in Sources */,
 				3C4ABD571B299B2500897DF9 /* UIImage+MPAverageColor.m in Sources */,
 				3CBD0D4A1B402F0D001DFE17 /* ABAccessViewController.m in Sources */,

@@ -55,4 +55,15 @@
     }
 }
 
++ (BOOL)contactNumber:(NSString *)number
+       belongsToUsers:(NSArray *)users
+{
+    for (User *user in users) {
+        if ([user.username isEqualToString:number]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 @end

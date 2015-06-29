@@ -24,4 +24,7 @@
 
 - (void)updateLastMessageDate:(NSDate *)date;
 
++ (BOOL)contactNumber:(NSString *)number
+       belongsToUsers:(NSArray *)users;
+
 @end

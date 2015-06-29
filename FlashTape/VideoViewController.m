@@ -14,12 +14,14 @@
 #import "UICustomLineLabel.h"
 
 #import "ApiManager.h"
+#import "ABContact.h"
 #import "DatastoreUtils.h"
 #import "Follow.h"
 #import "VideoPost.h"
 
 #import "CaptionTextView.h"
 #import "FriendsViewController.h"
+#import "InviteContactViewController.h"
 #import "VideoViewController.h"
 
 #import "AddressbookUtils.h"
@@ -94,6 +96,9 @@
 @property (nonatomic) NSInteger messageCount;
 @property (nonatomic) NSInteger unreadVideoCount;
 
+// Invite
+@property (nonatomic) ABContact *potentialContactToInvite;
+
 @end
 
 @implementation VideoViewController {
@@ -123,6 +128,7 @@
     self.isSendingCount = 0;
     self.unreadVideoCount = 0;
     self.friendVideoView.hidden = YES;
+    self.potentialContactToInvite = nil;
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
@@ -344,8 +350,6 @@
 - (void)willBecomeActiveCallback {
     [self retrieveVideoRemotely];
     [self retrieveUnreadMessages];
-    
-    // todo BT strategy to know when new follower
     [ApiManager getRelationshipsRemotelyAndExecuteSuccess:nil failure:nil];
 }
 
@@ -358,6 +362,8 @@
         if (sender && [sender isKindOfClass:[NSString class]]) {
             ((FriendsViewController *) [segue destinationViewController]).friendUsername = sender;
         }
+    } else if ([segueName isEqualToString: @"Invite From Video"]) {
+        ((InviteContactViewController *) [segue destinationViewController]).contact = (ABContact *)sender;
     }
 }
 
@@ -669,10 +675,14 @@
 }
 
 - (void)returnToCameraMode {
-    [self setCameraMode];
-    
     // Update posts viewer Ids
     [ApiManager updateVideoPosts:self.videosToPlayArray];
+    
+    if (self.potentialContactToInvite != nil) {
+        [self performSegueWithIdentifier:@"Invite From Video" sender:self.potentialContactToInvite];
+        self.potentialContactToInvite = nil;
+    }
+    [self setCameraMode];
     
     // tuto admin messages
     if (_createTutoAdminMessages) {

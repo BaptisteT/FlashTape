@@ -53,6 +53,10 @@
 "welcome_admin_message_2" = "React to your friend by tapping on their name.";
 "welcome_admin_message_3" = "👌";
 
+// invite
+"tap_to_invite" = "Tap to invite";
+"not_now" = "Not now";
+"mutual_friend_label" = "You have %lu mutual friends with %@";
 
 // Auth
 "authentification_error_title" = "Authentification error";

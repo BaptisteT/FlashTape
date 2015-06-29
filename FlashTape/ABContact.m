@@ -12,6 +12,8 @@
 
 @dynamic users;
 @dynamic number;
+@dynamic inviteCount;
+@dynamic isFlasher;
 
 + (void)load {
     [self registerSubclass];
@@ -25,6 +27,7 @@
 + (ABContact *)createRelationWithNumber:(NSString *)number {
     ABContact *contact = [ABContact new];
     contact.number = number;
+    contact.inviteCount = 0;
     return contact;
 }
 
