@@ -281,9 +281,13 @@
             }
             [PFObject saveAllInBackground:contactObjectArray block:^(BOOL completed, NSError *error) {
                 if (completed) {
-                    if (successBlock) {
-                        successBlock();
-                    }
+                    [PFObject unpinAllObjectsInBackgroundWithName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
+                        [PFObject pinAllInBackground:contactObjectArray withName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
+                            if (successBlock) {
+                                successBlock(successBlock);
+                            }
+                        }];
+                    }];
                 } else if (failureBlock) {
                     failureBlock(error);
                 }
@@ -640,6 +644,7 @@
                                         if (failureBlock)
                                             failureBlock();
                                     } else {
+                                        [TrackingUtils trackInviteSent];
                                         if (successBlock) {
                                             successBlock([object integerValue]);
                                         }

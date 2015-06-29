@@ -28,6 +28,7 @@ static NSString * const kParsePostsName = @"Posts";
 static NSString * const kParseMessagesName = @"Messages";
 static NSString * const kParseRelationshipsName = @"Relationships";
 static NSString * const kParseAddressbookFlashers = @"ABFlashers";
+static NSString * const kParseABContacts = @"ABContacts";
 
 // Admin
 static NSString * const kAdminUserObjectId = @"dMKXpnzELi";
@@ -72,3 +73,7 @@ static float const kNotifAnimationDuration = 0.5;
 
 NSString * getEmojiAtIndex(NSInteger index);
 BOOL belonsToEmojiArray(NSString *emoji) ;
+
+// Invite
+static float const kMinInvitePresentedInterval = 12 * 3600;
+static NSInteger const kMaxInvitePresentedCount = 20;

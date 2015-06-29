@@ -30,6 +30,8 @@
 
 + (void)trackInviteSent;
 
++ (void)trackInviteControllerPresented;
+
 + (void)trackMessageSent:(NSString *)messageType;
 
 + (void)trackMessageRead;

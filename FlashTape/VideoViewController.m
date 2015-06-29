@@ -28,6 +28,7 @@
 #import "ConstantUtils.h"
 #import "ColorUtils.h"
 #import "GeneralUtils.h"
+#import "InviteUtils.h"
 #import "NSDate+DateTools.h"
 #import "TrackingUtils.h"
 #import "VideoUtils.h"
@@ -446,6 +447,13 @@
         [self createCompositionAndPlayVideos];
         if (unseenArray.count == 0) {
             [TrackingUtils trackReplayVideos];
+        }
+        
+        if ([InviteUtils shouldPresentInviteController]) {
+            // select user to invite
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                self.potentialContactToInvite = [InviteUtils contactToBePresented];
+            });
         }
     }
 }

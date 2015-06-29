@@ -157,6 +157,7 @@
 		3C4ABD571B299B2500897DF9 /* UIImage+MPAverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4ABD0F1B299B2400897DF9 /* UIImage+MPAverageColor.m */; };
 		3C4ABD581B299B2500897DF9 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4ABD111B299B2500897DF9 /* UIImage+MPImageEffects.m */; };
 		3C5BD8301B419F8000B3FCB8 /* InviteContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5BD82F1B419F8000B3FCB8 /* InviteContactViewController.m */; };
+		3C5BD8331B41B7DF00B3FCB8 /* InviteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5BD8321B41B7DF00B3FCB8 /* InviteUtils.m */; };
 		3C5F97D01AEBB1F30098F70F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97CF1AEBB1F30098F70F /* main.m */; };
 		3C5F97D31AEBB1F30098F70F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F97D21AEBB1F30098F70F /* AppDelegate.m */; };
 		3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5F97DA1AEBB1F30098F70F /* Main.storyboard */; };
@@ -490,6 +491,8 @@
 		3C4ABD111B299B2500897DF9 /* UIImage+MPImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MPImageEffects.m"; sourceTree = "<group>"; };
 		3C5BD82E1B419F8000B3FCB8 /* InviteContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteContactViewController.h; sourceTree = "<group>"; };
 		3C5BD82F1B419F8000B3FCB8 /* InviteContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteContactViewController.m; sourceTree = "<group>"; };
+		3C5BD8311B41B7DF00B3FCB8 /* InviteUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteUtils.h; sourceTree = "<group>"; };
+		3C5BD8321B41B7DF00B3FCB8 /* InviteUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteUtils.m; sourceTree = "<group>"; };
 		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -993,6 +996,8 @@
 				3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */,
 				3C42DF771B316DEB00C956A0 /* ImageUtils.h */,
 				3C42DF781B316DEB00C956A0 /* ImageUtils.m */,
+				3C5BD8311B41B7DF00B3FCB8 /* InviteUtils.h */,
+				3C5BD8321B41B7DF00B3FCB8 /* InviteUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1367,6 +1372,7 @@
 				3C2C4A3F1AFB5A3B00E0E4BF /* NBNumberFormat.m in Sources */,
 				3C4ABD431B299B2500897DF9 /* MPSurveyQuestion.m in Sources */,
 				3C081CF01B1B54C70036D6B2 /* SCAudioTools.m in Sources */,
+				3C5BD8331B41B7DF00B3FCB8 /* InviteUtils.m in Sources */,
 				3C0AC2951B244F700056C59C /* AddUserTableViewCell.m in Sources */,
 				3C4ABD481B299B2500897DF9 /* MPTweakStore.m in Sources */,
 				3C081CF21B1B54C70036D6B2 /* SCFilter.m in Sources */,

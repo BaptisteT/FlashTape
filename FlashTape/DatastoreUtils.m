@@ -5,6 +5,7 @@
 //  Created by Baptiste Truchot on 5/26/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "ABContact.h"
 #import "Follow.h"
 #import "Message.h"
 #import "User.h"
@@ -90,6 +91,7 @@
     [followingQuery whereKey:@"from" equalTo:[User currentUser]];
     
     PFQuery *userQuery = [User query];
+    [userQuery setLimit:1000];
     [userQuery fromLocalDatastore];
     [userQuery whereKey:@"this" matchesKey:@"from" inQuery:followerQuery];
     [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followingQuery];
@@ -125,6 +127,7 @@
     [followingQuery whereKey:@"from" equalTo:[User currentUser]];
     
     PFQuery *userQuery = [User query];
+    [userQuery setLimit:1000];
     [userQuery fromLocalDatastore];
     [userQuery whereKey:@"username" containedIn:number];
     
@@ -149,6 +152,7 @@
                           following:(User *)following
 {
     PFQuery *query = [PFQuery queryWithClassName:[Follow parseClassName]];
+    [query setLimit:1000];
     [query fromLocalDatastore];
     [query whereKey:@"to" equalTo:following];
     [query whereKey:@"from" equalTo:follower];
@@ -187,6 +191,17 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:lastMessageDateDictionnary forKey:LAST_MESSAGE_DICTIONNARY];
     [prefs synchronize];
+}
+
+// --------------------------------------------
+#pragma mark - ABContacts
+// --------------------------------------------
++ (NSArray *)getAllABContactsLocally
+{
+    PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
+    [query setLimit:1000];
+    [query fromLocalDatastore];
+    return [query findObjects];
 }
 
 // --------------------------------------------

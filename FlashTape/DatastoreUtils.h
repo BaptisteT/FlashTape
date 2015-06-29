@@ -43,6 +43,11 @@
 + (void)saveLastMessageDate:(NSDate *)date ofUser:(NSString *)userId;
 
 // --------------------------------------------
+#pragma mark - ABContacts
+// --------------------------------------------
++ (NSArray *)getAllABContactsLocally;
+
+// --------------------------------------------
 #pragma mark - Video
 // --------------------------------------------
 + (void)getVideoLocallyFromUsers:(NSArray *)users

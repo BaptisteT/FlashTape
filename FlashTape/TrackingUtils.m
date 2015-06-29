@@ -170,6 +170,16 @@
                                                                                          value:nil] build]];
 }
 
++ (void)trackInviteControllerPresented
+{
+    if (DEBUG)return;
+    
+    [PFAnalytics trackEvent:@"invite.presented"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"invite.presented"];
+}
+
 + (void)trackMessageSent:(NSString *)messageType
 {
     if (DEBUG)return;

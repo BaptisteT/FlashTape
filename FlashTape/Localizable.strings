@@ -56,7 +56,7 @@
 // invite
 "tap_to_invite" = "Tap to invite";
 "not_now" = "Not now";
-"mutual_friend_label" = "You have %lu mutual friends with %@";
+"mutual_friend_label" = "You have %lu mutual friends with %@ on Flashtape";
 
 // Auth
 "authentification_error_title" = "Authentification error";
