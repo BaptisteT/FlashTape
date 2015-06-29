@@ -27,7 +27,7 @@ static NSString * const kMixpanelToken = @"51d7f02e924b3babe98ea09ca2dd423b";
 static NSString * const kParsePostsName = @"Posts";
 static NSString * const kParseMessagesName = @"Messages";
 static NSString * const kParseRelationshipsName = @"Relationships";
-static NSString * const kParseAddressbookContacts = @"Contacts";
+static NSString * const kParseAddressbookFlashers = @"ABFlashers";
 
 // Admin
 static NSString * const kAdminUserObjectId = @"dMKXpnzELi";

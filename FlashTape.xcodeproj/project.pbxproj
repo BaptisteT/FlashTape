@@ -206,6 +206,7 @@
 		3CBD0D531B407BAB001DFE17 /* FirstFlashTutoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D521B407BAB001DFE17 /* FirstFlashTutoViewController.m */; };
 		3CBD0D551B413732001DFE17 /* tuto_video_1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3CBD0D541B413732001DFE17 /* tuto_video_1.mp4 */; };
 		3CBD0D571B413747001DFE17 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3CBD0D561B413747001DFE17 /* tuto_video_2.mp4 */; };
+		3CBD0D5A1B415F04001DFE17 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D591B415F04001DFE17 /* ABContact.m */; };
 		3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0F81B1CA00000E923D2 /* Message.m */; };
 		3CD6D0FC1B1CA91F00E923D2 /* KeyboardUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
@@ -568,6 +569,8 @@
 		3CBD0D521B407BAB001DFE17 /* FirstFlashTutoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstFlashTutoViewController.m; sourceTree = "<group>"; };
 		3CBD0D541B413732001DFE17 /* tuto_video_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_1.mp4; sourceTree = "<group>"; };
 		3CBD0D561B413747001DFE17 /* tuto_video_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_2.mp4; sourceTree = "<group>"; };
+		3CBD0D581B415F04001DFE17 /* ABContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABContact.h; sourceTree = "<group>"; };
+		3CBD0D591B415F04001DFE17 /* ABContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABContact.m; sourceTree = "<group>"; };
 		3CD6D0F71B1CA00000E923D2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		3CD6D0F81B1CA00000E923D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardUtils.h; sourceTree = "<group>"; };
@@ -958,6 +961,8 @@
 				3CBD0D3A1B384AE0001DFE17 /* Follow.m */,
 				3CD6D0F71B1CA00000E923D2 /* Message.h */,
 				3CD6D0F81B1CA00000E923D2 /* Message.m */,
+				3CBD0D581B415F04001DFE17 /* ABContact.h */,
+				3CBD0D591B415F04001DFE17 /* ABContact.m */,
 			);
 			name = Backend;
 			sourceTree = "<group>";
@@ -1306,6 +1311,7 @@
 				3C4ABD1D1B299B2500897DF9 /* MPABTestDesignerDeviceInfoResponseMessage.m in Sources */,
 				3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */,
 				3C2C4A5B1AFBD04600E0E4BF /* PushNoAnimationSegue.m in Sources */,
+				3CBD0D5A1B415F04001DFE17 /* ABContact.m in Sources */,
 				3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */,
 				3C2C4A721AFE231F00E0E4BF /* DTTimePeriodChain.m in Sources */,
 				3C2C4A711AFE231F00E0E4BF /* DTTimePeriod.m in Sources */,

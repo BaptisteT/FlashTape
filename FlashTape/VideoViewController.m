@@ -766,7 +766,6 @@
     if (CMTimeGetSeconds(recordSession.segmentsDuration) < kRecordMinDuration) {
         if (failureBlock)
             failureBlock();
-        NSLog(@"too short");
     } else {
         AVAsset *asset = recordSession.assetRepresentingSegments;
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];

@@ -9,6 +9,7 @@
 #import <Bolts/Bolts.h>
 #import <Parse/parse.h>
 
+#import "ABContact.h"
 #import "ApiManager.h"
 #import "Follow.h"
 #import "User.h"
@@ -151,11 +152,11 @@
                                           failure:(void(^)(NSError *error))failureBlock
 {
     // set up the query on the Follow table
-    PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *followerQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [followerQuery whereKey:@"to" equalTo:[User currentUser]];
     [followerQuery whereKey:@"blocked" notEqualTo:[NSNumber numberWithBool:YES]];
     
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *followingQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [followingQuery whereKey:@"from" equalTo:[User currentUser]];
     
     PFQuery *relationshipQuery = [PFQuery orQueryWithSubqueries:@[followerQuery,followingQuery]];
@@ -217,8 +218,8 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // Pin and return
-            [PFObject unpinAllObjectsInBackgroundWithName:kParseAddressbookContacts block:^(BOOL succeeded, NSError *error) {
-                [PFObject pinAllInBackground:objects withName:kParseAddressbookContacts block:^(BOOL succeeded, NSError *error) {
+            [PFObject unpinAllObjectsInBackgroundWithName:kParseAddressbookFlashers block:^(BOOL succeeded, NSError *error) {
+                [PFObject pinAllInBackground:objects withName:kParseAddressbookFlashers block:^(BOOL succeeded, NSError *error) {
                     if (successBlock) {
                         successBlock(objects);
                     }
@@ -240,6 +241,9 @@
                                                                     object:nil
                                                                   userInfo:nil];
             } failure:nil];
+            
+            // Fill Contacts
+            [ApiManager fillFollowTableWithContacts:phoneNumbers success:nil failure:nil];
         } else {
             if (failureBlock) {
                 failureBlock(error);
@@ -247,6 +251,49 @@
         }
     }];
 }
+
+// Fill contacts table
++ (void)fillFollowTableWithContacts:(NSArray *)contacts
+                            success:(void(^)())successBlock
+                            failure:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
+    [query whereKey:@"number" containedIn:contacts];
+    [query setLimit:1000];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+        if (!error) {
+            NSMutableArray *contactObjectArray = [NSMutableArray new];
+            for (NSString *contact in contacts) {
+                ABContact *contactObject = nil;
+                for (ABContact *resultContactObject in results) {
+                    if ([resultContactObject.number isEqualToString:contact]) {
+                        contactObject = resultContactObject;
+                        break;
+                    }
+                }
+                if (!contactObject) {
+                    contactObject = [ABContact createRelationWithNumber:contact];
+                }
+                [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
+                [contactObjectArray addObject:contactObject];
+            }
+            [PFObject saveAllInBackground:contactObjectArray block:^(BOOL completed, NSError *error) {
+                if (completed) {
+                    if (successBlock) {
+                        successBlock();
+                    }
+                } else if (failureBlock) {
+                    failureBlock(error);
+                }
+            }];
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+
 
 + (void)saveRelation:(Follow *)follow
              success:(void(^)())successBlock
@@ -400,7 +447,7 @@
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    PFQuery *query = [PFQuery queryWithClassName:[VideoPost parseClassName]];
     [query whereKey:@"recordedAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
     [query whereKey:@"user" containedIn:friends];
     [query orderByAscending:@"recordedAt"];
@@ -488,11 +535,11 @@
 + (void)retrieveUnreadMessagesAndExecuteSuccess:(void(^)(NSArray *messagesArray))successBlock
                                         failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *innerQuery = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *innerQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [innerQuery whereKey:@"to" equalTo:[User currentUser]];
     [innerQuery whereKey:@"blocked" equalTo:[NSNumber numberWithBool:YES]];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
+    PFQuery *query = [PFQuery queryWithClassName:[Message parseClassName]];
     [query whereKey:@"receiver" equalTo:[User currentUser]];
     [query whereKey:@"read" equalTo:[NSNumber numberWithBool:false]];
     [query whereKey:@"sender" doesNotMatchKey:@"from" inQuery:innerQuery];

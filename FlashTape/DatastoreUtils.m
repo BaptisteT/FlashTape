@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import "Follow.h"
+#import "Message.h"
 #import "User.h"
 #import "VideoPost.h"
 
@@ -25,7 +26,7 @@
 + (void)getFollowingRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followingRelations))successBlock
                                               failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *query = [PFQuery queryWithClassName:[Follow parseClassName]];
     [query fromLocalDatastore];
     [query whereKey:@"from" equalTo:[User currentUser]];
     [query whereKey:@"to" notEqualTo:[User currentUser]];
@@ -56,7 +57,7 @@
 + (void)getFollowerRelationsLocallyAndExecuteSuccess:(void(^)(NSArray *followerRelations))successBlock
                                              failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *query = [PFQuery queryWithClassName:[Follow parseClassName]];
     [query fromLocalDatastore];
     [query whereKey:@"to" equalTo:[User currentUser]];
     [query whereKey:@"from" notEqualTo:[User currentUser]];
@@ -80,11 +81,11 @@
 + (void)getUnfollowedFollowersLocallyAndExecuteSuccess:(void(^)(NSArray *followers))successBlock
                                                failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *followerQuery = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *followerQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [followerQuery fromLocalDatastore];
     [followerQuery whereKey:@"to" equalTo:[User currentUser]];
     
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *followingQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [followingQuery fromLocalDatastore];
     [followingQuery whereKey:@"from" equalTo:[User currentUser]];
     
@@ -112,14 +113,14 @@
                               success:(void(^)(NSArray *unrelatedUser))successBlock
                               failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *followerRelationQuery = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *followerRelationQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [followerRelationQuery fromLocalDatastore];
     [followerRelationQuery whereKey:@"to" equalTo:[User currentUser]];
     // Strange artefact because we can't use two doesNotMatchKey: inquery: with parse
     PFQuery *followerQuery = [User query];
     [followerQuery whereKey:@"this" matchesKey:@"from" inQuery:followerRelationQuery];
     
-    PFQuery *followingQuery = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *followingQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [followingQuery fromLocalDatastore];
     [followingQuery whereKey:@"from" equalTo:[User currentUser]];
     
@@ -147,7 +148,7 @@
 + (Follow *)getRelationWithFollower:(User *)follower
                           following:(User *)following
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"Follow"];
+    PFQuery *query = [PFQuery queryWithClassName:[Follow parseClassName]];
     [query fromLocalDatastore];
     [query whereKey:@"to" equalTo:following];
     [query whereKey:@"from" equalTo:follower];
@@ -196,7 +197,7 @@
                          success:(void(^)(NSArray *videos))successBlock
                          failure:(void(^)(NSError *error))failureBlock
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    PFQuery *query = [PFQuery queryWithClassName:[VideoPost parseClassName]];
     [query fromLocalDatastore];
     [query whereKey:@"createdAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
     [query whereKey:@"user" containedIn:users];
@@ -239,7 +240,7 @@
 
 + (void)getVideoInLocalDatastoreAndExecute:(void(^)(NSArray *posts))block
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    PFQuery *query = [PFQuery queryWithClassName:[VideoPost parseClassName]];
     [query fromLocalDatastore];
     [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -253,7 +254,7 @@
 
 + (void)getExpiredVideoFromLocalDataStoreAndExecute:(void(^)(NSArray *posts))block
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"VideoPost"];
+    PFQuery *query = [PFQuery queryWithClassName:[VideoPost parseClassName]];
     [query fromLocalDatastore];
     [query whereKey:@"createdAt" lessThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
     [query setLimit:1000];
@@ -290,7 +291,7 @@
 
 + (NSArray *)getUnreadMessagesLocally
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
+    PFQuery *query = [PFQuery queryWithClassName:[Message parseClassName]];
     [query fromLocalDatastore];
     [query orderByAscending:@"createdAt"];
     [query whereKey:@"read" equalTo:[NSNumber numberWithBool:false]];
@@ -302,7 +303,7 @@
 
 + (NSArray *)getMessagesLocallyFromUser:(User *)user
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
+    PFQuery *query = [PFQuery queryWithClassName:[Message parseClassName]];
     [query fromLocalDatastore];
     [query whereKey:@"sender" equalTo:user];
     [query setLimit:1000];
