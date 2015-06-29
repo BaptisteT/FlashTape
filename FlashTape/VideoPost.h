@@ -34,4 +34,6 @@
 
 - (NSMutableArray *)viewerIdsArrayWithoutPoster;
 
++ (void)createTutoVideoAndExecuteSuccess:(void(^)(NSArray *videoArray))successBlock
+                            failureBlock:(void(^)(NSError *error))failureBlock;
 @end

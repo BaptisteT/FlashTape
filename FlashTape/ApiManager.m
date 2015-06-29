@@ -433,7 +433,14 @@
 
 // Update post (get latest list of viewers)
 + (void)updateVideoPosts:(NSArray *)videoPosts {
-    [VideoPost saveAllInBackground:videoPosts];
+    // Remove Admin video
+    NSMutableArray *videosArray = [NSMutableArray new];
+    for (VideoPost *post in videoPosts) {
+        if (![post.user.objectId isEqualToString:kAdminUserObjectId]) {
+            [videosArray addObject:post];
+        }
+    }
+    [VideoPost saveAllInBackground:videosArray];
 }
 
 // Delete Post
@@ -525,6 +532,28 @@
     // Save as read on parse
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         [TrackingUtils trackMessageRead];
+        if (succeeded) {
+            if (successBlock) {
+                successBlock();
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
+
++ (void)createAdminMessagesLocallyWithContent:(NSArray *)messageContents
+                                      success:(void(^)())successBlock
+                                 failureBlock:(void(^)(NSError *error))failureBlock
+{
+    User *sender = [User objectWithoutDataWithObjectId:kAdminUserObjectId];
+    NSMutableArray *array = [NSMutableArray new];
+    for (NSString *messageContent in messageContents) {
+        [array addObject:[Message createMessageWithContent:messageContent sender:sender]];
+    }
+    [PFObject saveAllInBackground:array block:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             if (successBlock) {
                 successBlock();

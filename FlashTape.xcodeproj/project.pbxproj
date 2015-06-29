@@ -204,6 +204,8 @@
 		3CBD0D4D1B40307D001DFE17 /* ABFlashersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D4C1B40307D001DFE17 /* ABFlashersViewController.m */; };
 		3CBD0D501B404A30001DFE17 /* ABFlasherTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D4F1B404A30001DFE17 /* ABFlasherTableViewCell.m */; };
 		3CBD0D531B407BAB001DFE17 /* FirstFlashTutoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D521B407BAB001DFE17 /* FirstFlashTutoViewController.m */; };
+		3CBD0D551B413732001DFE17 /* tuto_video_1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3CBD0D541B413732001DFE17 /* tuto_video_1.mp4 */; };
+		3CBD0D571B413747001DFE17 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3CBD0D561B413747001DFE17 /* tuto_video_2.mp4 */; };
 		3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0F81B1CA00000E923D2 /* Message.m */; };
 		3CD6D0FC1B1CA91F00E923D2 /* KeyboardUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
@@ -564,6 +566,8 @@
 		3CBD0D4F1B404A30001DFE17 /* ABFlasherTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABFlasherTableViewCell.m; sourceTree = "<group>"; };
 		3CBD0D511B407BAB001DFE17 /* FirstFlashTutoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstFlashTutoViewController.h; sourceTree = "<group>"; };
 		3CBD0D521B407BAB001DFE17 /* FirstFlashTutoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstFlashTutoViewController.m; sourceTree = "<group>"; };
+		3CBD0D541B413732001DFE17 /* tuto_video_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_1.mp4; sourceTree = "<group>"; };
+		3CBD0D561B413747001DFE17 /* tuto_video_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_2.mp4; sourceTree = "<group>"; };
 		3CD6D0F71B1CA00000E923D2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		3CD6D0F81B1CA00000E923D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardUtils.h; sourceTree = "<group>"; };
@@ -911,6 +915,8 @@
 				3C42DF751B308ED200C956A0 /* green.png */,
 				3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */,
 				3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */,
+				3CBD0D541B413732001DFE17 /* tuto_video_1.mp4 */,
+				3CBD0D561B413747001DFE17 /* tuto_video_2.mp4 */,
 				A4CE87581B09133800DC20DC /* Fonts */,
 				A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */,
 			);
@@ -1239,9 +1245,11 @@
 				3C4ABD141B299B2500897DF9 /* Media.xcassets in Resources */,
 				3C4ABC871B28777500897DF9 /* InfoPlist.strings in Resources */,
 				3C4ABD411B299B2500897DF9 /* MPSurvey.storyboard in Resources */,
+				3CBD0D571B413747001DFE17 /* tuto_video_2.mp4 in Resources */,
 				A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */,
 				3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */,
 				3C4ABD2C1B299B2500897DF9 /* MPCloseBtn.png in Resources */,
+				3CBD0D551B413732001DFE17 /* tuto_video_1.mp4 in Resources */,
 				A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */,
 				3C4ABD551B299B2500897DF9 /* test_variant.json in Resources */,
 				3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */,

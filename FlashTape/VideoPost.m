@@ -110,4 +110,24 @@ static int downloadingCount = 0;
     return viewerIdsArrayWithoutPoster;
 }
 
++ (void)createTutoVideoAndExecuteSuccess:(void(^)(NSArray *videoArray))successBlock
+                            failureBlock:(void(^)(NSError *error))failureBlock
+{
+    PFQuery *userQuery = [User query];
+    [userQuery whereKey:@"objectId" equalTo:kAdminUserObjectId];
+    [userQuery getFirstObjectInBackgroundWithBlock:^(PFObject *user, NSError *error) {
+        if (!error) {
+            VideoPost *post1 = [VideoPost createPostWithRessourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_1" ofType:@"mp4"]]];
+            post1.user = (User *)user;
+            VideoPost *post2 = [VideoPost createPostWithRessourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_2" ofType:@"mp4"]]];
+            post2.user = (User *)user;
+            if (successBlock) {
+                successBlock(@[post1,post2]);
+            }
+        } else {
+            if (failureBlock) failureBlock(error);
+        }
+    }];
+}
+
 @end

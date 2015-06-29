@@ -20,6 +20,8 @@
 
 + (User *)currentUser;
 
++ (BOOL)isAdminUser:(User *)user ;
+
 - (void)updateLastMessageDate:(NSDate *)date;
 
 @end

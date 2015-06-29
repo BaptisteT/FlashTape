@@ -237,8 +237,22 @@
         } else {
             [messagesDictionary setObject:[NSMutableArray arrayWithObject:message] forKey:message.sender.objectId];
         }
-        // Add user to follower if not a friend
-        if (![self userBelongsToFollowing:message.sender]) {
+        // Admin message => add flashteam (make sur only once)
+        if ([User isAdminUser:message.sender]) {
+            BOOL addToArray = YES;
+            for (Follow *follow in self.followingRelations) {
+                if ([follow.to.objectId isEqualToString:message.sender.objectId]) {
+                    addToArray = NO;
+                    break;
+                }
+            }
+            if (addToArray) {
+                Follow *follow = [Follow createRelationWithFollowing:message.sender];
+                [self.followingRelations addObject:follow];
+            }
+        }
+        // Else add user to follower if not a friend
+        else if (![self userBelongsToFollowing:message.sender]) {
             Follow *followerRelation = [DatastoreUtils getRelationWithFollower:message.sender following:[User currentUser]];
             if (followerRelation && ![self.followerRelations containsObject:followerRelation]) {
                 [self.followerRelations addObject:followerRelation];

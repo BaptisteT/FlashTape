@@ -29,4 +29,7 @@ typedef NS_ENUM(NSInteger,MessageStatus) {
 + (Message *)createMessageWithContent:(NSString *)messageContent
                              receiver:(User *)receiver;
 
++ (Message *)createMessageWithContent:(NSString *)messageContent
+                               sender:(User *)sender;
+
 @end

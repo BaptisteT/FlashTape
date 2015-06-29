@@ -98,6 +98,11 @@
                   success:(void(^)())successBlock
                   failure:(void(^)(NSError *error))failureBlock;
 
+// Used for admin messages after sign up
++ (void)createAdminMessagesLocallyWithContent:(NSArray *)messageContents
+                                      success:(void(^)())successBlock
+                                 failureBlock:(void(^)(NSError *error))failureBlock;
+
 // --------------------------------------------
 #pragma mark - Installation
 // --------------------------------------------

@@ -11,6 +11,8 @@
 
 #import "DatastoreUtils.h"
 
+#import "ConstantUtils.h"
+
 @implementation User
 
 @dynamic score;
@@ -38,6 +40,9 @@
     return (User *)[PFUser currentUser];
 }
 
++ (BOOL)isAdminUser:(User *)user {
+    return [user.objectId isEqualToString:kAdminUserObjectId];
+}
 
 - (NSInteger)score {
     return [[self objectForKey:@"score"] integerValue];

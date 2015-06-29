@@ -103,6 +103,7 @@
     BOOL _cancelRecording;
     int _metadataColorIndex;
     NSDate *_longPressStartDate;
+    BOOL _createTutoAdminMessages;
 }
 
 // --------------------------------------------
@@ -113,6 +114,7 @@
     [super viewDidLoad];
     
     // Logic
+    _createTutoAdminMessages = NO;
     _isExporting = NO;
     _longPressRunning = NO;
     _recordingRunning = NO;
@@ -668,7 +670,16 @@
 
 - (void)returnToCameraMode {
     [self setCameraMode];
+    
+    // Update posts viewer Ids
     [ApiManager updateVideoPosts:self.videosToPlayArray];
+    
+    // tuto admin messages
+    if (_createTutoAdminMessages) {
+        [ApiManager createAdminMessagesLocallyWithContent:@[NSLocalizedString(@"welcome_admin_message_1", nil),NSLocalizedString(@"welcome_admin_message_2", nil),NSLocalizedString(@"welcome_admin_message_3", nil)] success:^{
+            [self retrieveUnreadMessages];
+        } failureBlock:nil];
+    }
 }
 
 - (IBAction)usernameButtonClicked:(id)sender {
@@ -816,12 +827,17 @@
                 // Track
                 [TrackingUtils trackVideoSentWithProperties:post.videoProperties];
                 
-                // 1st flash NUX
+                // 1st flash
                 if ([User currentUser].score == 1) {
-                    // todo BT NUX
+                    // Tuto NUX
                     [self performSegueWithIdentifier:@"First Flash From Video" sender:nil];
                     
-                    // todo BT videos
+                    // Add tuto videos
+                    [VideoPost createTutoVideoAndExecuteSuccess:^(NSArray *videoArray) {
+                        [self.allVideosArray addObjectsFromArray:videoArray];
+                        [self setReplayButtonUI];
+                        _createTutoAdminMessages = YES;
+                    } failureBlock:nil];
                 }
             } failure:^(NSError *error) {
                 self.isSendingCount --;

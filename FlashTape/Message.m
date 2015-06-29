@@ -8,6 +8,8 @@
 
 #import "Message.h"
 
+#import "ConstantUtils.h"
+
 @implementation Message
 
 @dynamic sender;
@@ -36,6 +38,19 @@
     message.read = [NSNumber numberWithBool:false];
     return message;
 }
+
++ (Message *)createMessageWithContent:(NSString *)messageContent
+                               sender:(User *)sender
+{
+    Message *message = [Message object];
+    message.receiver = [User currentUser];
+    message.sender = sender;
+    message.messageContent = messageContent;
+    message.read = [NSNumber numberWithBool:false];
+    return message;
+}
+
+
 
 
 @end

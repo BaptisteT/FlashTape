@@ -29,6 +29,9 @@ static NSString * const kParseMessagesName = @"Messages";
 static NSString * const kParseRelationshipsName = @"Relationships";
 static NSString * const kParseAddressbookContacts = @"Contacts";
 
+// Admin
+static NSString * const kAdminUserObjectId = @"dMKXpnzELi";
+
 // Download / feed
 static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;
 static NSInteger const kDelayBeforeRetryDownload = 3;
@@ -36,10 +39,10 @@ static const NSInteger kFeedHistoryInHours = 24;
 
 // Recording
 static const float kRecordSessionMaxDuration = 2.0;
-static const float kRecordMinDuration = 0.25;
+static const float kRecordMinDuration = 0.35;
 static const float kCaptionTapMaxDuration = 0.25;
 static const float kVideoEndCutDuration = 0.1;
-static const NSInteger kMaxScoreBeforeHidingTuto = 20000;
+static const NSInteger kMaxScoreBeforeHidingTuto = 20;
 
 // Playing
 static const NSInteger kPlayerQueueLength = 3;
