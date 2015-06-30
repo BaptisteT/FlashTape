@@ -333,27 +333,29 @@
 #pragma mark - Messages
 // --------------------------------------------
 
-+ (NSArray *)getUnreadMessagesLocally
++ (void)getUnreadMessagesLocallySuccess:(void(^)(NSArray *messages))successBlock
+                                failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:[Message parseClassName]];
     [query fromLocalDatastore];
-    [query orderByAscending:@"createdAt"];
+    [query orderByAscending:@"sentAt"];
     [query whereKey:@"read" equalTo:[NSNumber numberWithBool:false]];
     [query includeKey:@"sender"];
     [query setLimit:1000];
-    NSArray *results = [query findObjects];
-    return results;
+    [query findObjectsInBackgroundWithBlock:^(NSArray *messages, NSError *error) {
+        if (!error) {
+            if (successBlock) {
+                successBlock(messages);
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
 }
 
-+ (NSArray *)getMessagesLocallyFromUser:(User *)user
-{
-    PFQuery *query = [PFQuery queryWithClassName:[Message parseClassName]];
-    [query fromLocalDatastore];
-    [query whereKey:@"sender" equalTo:user];
-    [query setLimit:1000];
-    NSArray *results = [query findObjects];
-    return results;
-}
+
 
 
 @end

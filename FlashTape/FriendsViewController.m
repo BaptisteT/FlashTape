@@ -119,11 +119,6 @@
     self.inviteButton.titleLabel.minimumScaleFactor = 0.1;
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
-    
-    // Notif
-    if (![NotifUtils isRegisteredForRemoteNotification]) {
-        [NotifUtils registerForRemoteNotif];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -176,6 +171,10 @@
 }
 
 - (IBAction)closeButtonClicked:(id)sender {
+    // Notif
+    if (![NotifUtils isRegisteredForRemoteNotification]) {
+        [NotifUtils registerForRemoteNotif];
+    }
     [self dismissFriendsController];
 }
 
@@ -255,7 +254,11 @@
         else if (![self userBelongsToFollowing:message.sender]) {
             Follow *followerRelation = [DatastoreUtils getRelationWithFollower:message.sender following:[User currentUser]];
             if (followerRelation && ![self.followerRelations containsObject:followerRelation]) {
-                [self.followerRelations addObject:followerRelation];
+                if (followerRelation.blocked) {
+                    [messagesDictionary removeObjectForKey:message.sender.objectId];
+                } else {
+                    [self.followerRelations addObject:followerRelation];
+                }
             }
         }
     }
@@ -273,7 +276,9 @@
 }
 
 - (void)retrieveUnreadMessagesLocally {
-    [self createMessagesDictionnaryAndReload:[DatastoreUtils getUnreadMessagesLocally]];
+    [DatastoreUtils getUnreadMessagesLocallySuccess:^(NSArray *messages) {
+        [self createMessagesDictionnaryAndReload:messages];
+    } failure:nil];
 }
 
 - (void)setVideoControllerMessageCount {

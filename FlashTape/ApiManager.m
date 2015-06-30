@@ -600,8 +600,12 @@
 {
     User *sender = [User objectWithoutDataWithObjectId:kAdminUserObjectId];
     NSMutableArray *array = [NSMutableArray new];
+    int i = 0;
     for (NSString *messageContent in messageContents) {
-        [array addObject:[Message createMessageWithContent:messageContent sender:sender]];
+        Message *message = [Message createMessageWithContent:messageContent sender:sender];
+        message.sentAt = [NSDate dateWithTimeInterval:i sinceDate:message.sentAt];
+        [array addObject:message];
+        i++;
     }
     [PFObject saveAllInBackground:array block:^(BOOL succeeded, NSError *error) {
         if (succeeded) {

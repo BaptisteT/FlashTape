@@ -56,22 +56,24 @@
     
     // Ask access and parse contacts
     ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-        if (granted) {
-            NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-            [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
-                                                     success:^(NSArray *flashersArray) {
-                                                         if (flashersArray && flashersArray.count > 0) {
-                                                             [self navigateToABFlashersController:flashersArray];
-                                                         } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+                if (granted) {
+                NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
+                                                         success:^(NSArray *flashersArray) {
+                                                             if (flashersArray && flashersArray.count > 0) {
+                                                                 [self navigateToABFlashersController:flashersArray];
+                                                             } else {
+                                                                 [self navigateToVideoController];
+                                                             }
+                                                         } failure:^(NSError *error) {
                                                              [self navigateToVideoController];
-                                                         }
-                                                     } failure:^(NSError *error) {
-                                                         [self navigateToVideoController];
-                                                     }];
-            [AddressbookUtils saveContactDictionnary:contactDictionnary];
-        } else {
-            [self navigateToVideoController];
-        }
+                                                         }];
+                [AddressbookUtils saveContactDictionnary:contactDictionnary];
+            } else {
+                [self navigateToVideoController];
+            }
+        });
     });
     
 }

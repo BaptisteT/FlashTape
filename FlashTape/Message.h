@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger,MessageStatus) {
 @property (retain) NSString *messageContent;
 @property (retain) NSNumber *read;
 @property (nonatomic) MessageStatus status;
+@property (retain) NSDate *sentAt;
 
 + (Message *)createMessageWithContent:(NSString *)messageContent
                              receiver:(User *)receiver;

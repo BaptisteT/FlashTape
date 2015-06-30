@@ -32,7 +32,7 @@
     user.flashUsername = @"";
     user.transformedUsername = @"";
     user.password = @"";
-    user.score = 0;
+    user.score = kUserInitialScore;
     return user;
 }
 

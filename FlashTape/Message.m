@@ -16,6 +16,7 @@
 @dynamic receiver;
 @dynamic messageContent;
 @dynamic read;
+@dynamic sentAt;
 
 @synthesize status;
 
@@ -36,6 +37,7 @@
     message.receiver = receiver;
     message.messageContent = messageContent;
     message.read = [NSNumber numberWithBool:false];
+    message.sentAt = [NSDate date];
     return message;
 }
 
@@ -47,6 +49,7 @@
     message.sender = sender;
     message.messageContent = messageContent;
     message.read = [NSNumber numberWithBool:false];
+    message.sentAt = [NSDate date];
     return message;
 }
 

@@ -169,7 +169,7 @@
     // Create the recorder
     self.recorder = [SCRecorder recorder];
     _recorder.delegate = self;
-    _recorder.device = [User currentUser].score == 0 ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    _recorder.device = [User currentUser].score == kUserInitialScore ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
      _recorder.autoSetVideoOrientation = NO;
     _recorder.keepMirroringOnWrite = YES;
     SCRecordSession *session = [SCRecordSession recordSession];
@@ -273,15 +273,7 @@
     
     // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
-                                    message:NSLocalizedString(@"contact_access_error_message",nil)
-                                   delegate:self
-                          cancelButtonTitle:NSLocalizedString(@"later_button",nil)
-                          otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
-    } else {
-        [self parseContactsAndFindFriends];
-    }
+    [self parseContactsAndFindFriends];
     
     // Retrieve unread messages
     [self retrieveUnreadMessages];
@@ -467,8 +459,8 @@
 }
 
 - (IBAction)friendsButtonClicked:(id)sender {
-    [TrackingUtils trackEvent:EVENT_FRIEND_BUTTON_CLICKED properties:nil];
     [self navigateToFriends];
+    [TrackingUtils trackEvent:EVENT_FRIEND_BUTTON_CLICKED properties:nil];
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
@@ -596,6 +588,12 @@
                                                      success:nil
                                                      failure:nil];
             [AddressbookUtils saveContactDictionnary:contactDictionnary];
+        } else if ([User currentUser].score != kUserInitialScore) {
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
+                                        message:NSLocalizedString(@"contact_access_error_message",nil)
+                                       delegate:self
+                              cancelButtonTitle:NSLocalizedString(@"later_button",nil)
+                              otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
         }
     });
 }
@@ -698,6 +696,7 @@
     // tuto admin messages
     if (_createTutoAdminMessages) {
         [ApiManager createAdminMessagesLocallyWithContent:@[NSLocalizedString(@"welcome_admin_message_1", nil),NSLocalizedString(@"welcome_admin_message_2", nil),NSLocalizedString(@"welcome_admin_message_3", nil)] success:^{
+            _createTutoAdminMessages = NO;
             [self retrieveUnreadMessages];
         } failureBlock:nil];
     }
@@ -836,6 +835,8 @@
 // --------------------------------------------
 - (void)sendVideoPost:(VideoPost *)post
 {
+    NSInteger userScore = [User currentUser].score;
+    
     [DatastoreUtils pinVideoAsUnsend:post];
     self.isSendingCount ++;
     [ApiManager saveVideoPost:post
@@ -850,19 +851,6 @@
                     [self setReplayButtonUI];
                 // Track
                 [TrackingUtils trackEvent:EVENT_VIDEO_SENT properties:post.videoProperties];
-                
-                // 1st flash
-                if ([User currentUser].score == 1) {
-                    // Tuto NUX
-                    [self performSegueWithIdentifier:@"First Flash From Video" sender:nil];
-                    
-                    // Add tuto videos
-                    [VideoPost createTutoVideoAndExecuteSuccess:^(NSArray *videoArray) {
-                        [self.allVideosArray addObjectsFromArray:videoArray];
-                        [self setReplayButtonUI];
-                        _createTutoAdminMessages = YES;
-                    } failureBlock:nil];
-                }
             } failure:^(NSError *error) {
                 self.isSendingCount --;
                 [self.failedVideoPostArray addObject:post];
@@ -871,6 +859,19 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self.captionTextView.text = @"";
         self.captionTextView.hidden = YES;
+        
+        // 1st flash
+        if (userScore == kUserInitialScore) {
+            // Tuto NUX
+            [self performSegueWithIdentifier:@"First Flash From Video" sender:nil];
+            
+            // Add tuto videos
+            [VideoPost createTutoVideoAndExecuteSuccess:^(NSArray *videoArray) {
+                [self.allVideosArray addObjectsFromArray:videoArray];
+                [self setReplayButtonUI];
+                _createTutoAdminMessages = YES;
+            } failureBlock:nil];
+        }
     });
 }
 

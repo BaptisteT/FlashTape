@@ -72,9 +72,8 @@
 #pragma mark - Messages
 // --------------------------------------------
 
-+ (NSArray *)getUnreadMessagesLocally;
-
-+ (NSArray *)getMessagesLocallyFromUser:(User *)user;
++ (void)getUnreadMessagesLocallySuccess:(void(^)(NSArray *messages))successBlock
+                                failure:(void(^)(NSError *error))failureBlock;
 
 
 @end

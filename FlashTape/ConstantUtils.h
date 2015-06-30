@@ -62,6 +62,7 @@ static const NSInteger kEmojiMaxFontSize = 250;
 
 // User
 static const NSInteger kUsernameMinLength = 3;
+static const NSInteger kUserInitialScore = 1;
 
 // Cell
 static const NSInteger kVideoCellHeight = 50;
