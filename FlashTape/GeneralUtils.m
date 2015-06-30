@@ -111,6 +111,11 @@
     return [[UIScreen mainScreen] bounds].size.height == 480;
 }
 
++ (BOOL)isIOS7
+{
+    return [[[UIDevice currentDevice] systemVersion] floatValue] < 8.0;
+}
+
 + (void)setMuteExplanationHidden:(BOOL)hide
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
