@@ -35,6 +35,10 @@
 
 + (BOOL)explainBeforeDelete;
 
++ (void)setSaveStoryExplanationHidden:(BOOL)hide;
+
++ (BOOL)explainBeforeSavingStory;
+
 + (NSDate *)getLastUnfollowedFollowerRetrieveDate;
 
 + (void)setLastUnfollowedFollowerRetrieveDate:(NSDate *)date;

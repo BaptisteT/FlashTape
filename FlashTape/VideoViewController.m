@@ -264,6 +264,9 @@
     
     // Friend array
     self.failedVideoPostArray = [NSMutableArray new];
+    [DatastoreUtils getUnsendVideosSuccess:^(NSArray *videos) {
+        [self.failedVideoPostArray addObjectsFromArray:videos];
+    } failure:nil];
     
     // Start with camera
     [self setCameraMode];
@@ -785,22 +788,24 @@
         if (failureBlock)
             failureBlock();
     } else {
+        // Create and pin post
+        VideoPost *post = [VideoPost createCurrentUserPost];
+        
+        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
+        post.videoProperties = properties;
+        
         AVAsset *asset = recordSession.assetRepresentingSegments;
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];
-        exporter.outputUrl = recordSession.outputUrl;
+        exporter.outputUrl = post.localUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
         if (self.captionTextView.text.length > 0) {
             AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
             exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
             exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
         }
-        
-        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
 
         [exporter exportAsynchronouslyWithCompletionHandler: ^{
             if (exporter.error == nil) {
-                VideoPost *post = [VideoPost createPostWithRessourceUrl:recordSession.outputUrl];
-                post.videoProperties = properties;
                 if (successBlock)
                     successBlock(post);
             } else {
@@ -831,9 +836,11 @@
 // --------------------------------------------
 - (void)sendVideoPost:(VideoPost *)post
 {
+    [DatastoreUtils pinVideoAsUnsend:post];
     self.isSendingCount ++;
     [ApiManager saveVideoPost:post
             andExecuteSuccess:^() {
+                [DatastoreUtils unpinVideoAsUnsend:post];
                 self.isSendingCount --;
                 [self.allVideosArray addObject:post];
                 [self.allVideosArray sortUsingComparator:^NSComparisonResult(VideoPost *obj1, VideoPost *obj2) {
@@ -881,7 +888,7 @@
     _isSendingCount = isSendingCount;
     dispatch_async(dispatch_get_main_queue(), ^{
         // sending anim
-        if (_isSendingCount !=0) {
+        if (_isSendingCount > 0) {
             [self.sendingHud show:YES];
         } else {
             [self.sendingHud hide:YES];

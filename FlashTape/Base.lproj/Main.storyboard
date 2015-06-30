@@ -69,6 +69,7 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -1095,7 +1096,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZK-D3-zfC">
-                                                    <rect key="frame" x="524" y="25" width="30" height="30"/>
+                                                    <rect key="frame" x="521" y="25" width="30" height="30"/>
                                                     <state key="normal" image="save_camera_roll">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
@@ -1127,7 +1128,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-oE-oLH">
-                                                    <rect key="frame" x="510" y="31" width="34" height="17"/>
+                                                    <rect key="frame" x="505" y="31" width="34" height="17"/>
                                                     <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="14"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -1139,18 +1140,30 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow_icon" translatesAutoresizingMaskIntoConstraints="NO" id="DFf-ve-L7r">
                                                     <rect key="frame" x="563" y="26" width="30" height="30"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1PX-qd-SJW">
+                                                    <rect key="frame" x="543" y="42" width="14" height="14"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="1PX-qd-SJW" secondAttribute="height" multiplier="1:1" id="pCj-pn-0qR"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="11"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leadingMargin" constant="13" id="3uC-Eo-7uN"/>
+                                                <constraint firstItem="DFf-ve-L7r" firstAttribute="leading" secondItem="1PX-qd-SJW" secondAttribute="trailing" constant="6" id="41Y-cT-tvh"/>
                                                 <constraint firstItem="9jK-Tx-agv" firstAttribute="trailing" secondItem="bDY-Zb-eof" secondAttribute="trailingMargin" constant="3" id="5fB-kF-OqI"/>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="leading" secondItem="ipD-oW-FC9" secondAttribute="trailing" constant="13" id="6Bp-Jf-tHh"/>
                                                 <constraint firstAttribute="centerY" secondItem="9jK-Tx-agv" secondAttribute="centerY" id="7u6-jB-H59"/>
                                                 <constraint firstItem="y1L-4Y-drw" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leadingMargin" constant="13" id="9jg-6y-lup"/>
                                                 <constraint firstItem="y1L-4Y-drw" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="HUd-DI-Feb"/>
                                                 <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="ipD-oW-FC9" secondAttribute="trailing" constant="33" id="Pq8-aE-sxc"/>
-                                                <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" id="QFb-Qb-pDj"/>
+                                                <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" constant="3" id="QFb-Qb-pDj"/>
                                                 <constraint firstItem="CZK-D3-zfC" firstAttribute="leading" relation="lessThanOrEqual" secondItem="y1L-4Y-drw" secondAttribute="trailing" constant="10" id="RiC-OJ-0FC"/>
-                                                <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="0KZ-oE-oLH" secondAttribute="trailing" constant="10" id="XcK-lq-O7v"/>
+                                                <constraint firstItem="DFf-ve-L7r" firstAttribute="leading" secondItem="1PX-qd-SJW" secondAttribute="trailing" constant="12" id="Rqi-Ri-wKU"/>
+                                                <constraint firstItem="1PX-qd-SJW" firstAttribute="leading" secondItem="CZK-D3-zfC" secondAttribute="trailing" constant="-8" id="Uw1-sA-bL4"/>
+                                                <constraint firstItem="9jK-Tx-agv" firstAttribute="leading" secondItem="0KZ-oE-oLH" secondAttribute="trailing" constant="15" id="XcK-lq-O7v"/>
                                                 <constraint firstItem="CZK-D3-zfC" firstAttribute="leading" secondItem="y1L-4Y-drw" secondAttribute="trailing" constant="10" id="ZCG-3T-lWi"/>
                                                 <constraint firstItem="XLB-UB-kNZ" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leading" constant="20" id="aO8-i6-tv2"/>
                                                 <constraint firstItem="ipD-oW-FC9" firstAttribute="leading" secondItem="bDY-Zb-eof" secondAttribute="leadingMargin" constant="13" id="clA-iG-1SU"/>
@@ -1167,6 +1180,7 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="9jK-Tx-agv" secondAttribute="trailing" constant="11" id="wVC-gi-R3W"/>
                                                 <constraint firstAttribute="centerY" secondItem="ipD-oW-FC9" secondAttribute="centerY" id="xIm-dP-e5n"/>
                                                 <constraint firstAttribute="centerY" secondItem="CZK-D3-zfC" secondAttribute="centerY" constant="-0.5" id="yLP-hv-AuJ"/>
+                                                <constraint firstAttribute="centerY" secondItem="1PX-qd-SJW" secondAttribute="centerY" constant="-9" id="z9g-ly-rBj"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -1182,6 +1196,8 @@
                                                     <exclude reference="7u6-jB-H59"/>
                                                     <exclude reference="Pq8-aE-sxc"/>
                                                     <exclude reference="oW8-Dv-l1T"/>
+                                                    <exclude reference="41Y-cT-tvh"/>
+                                                    <exclude reference="Rqi-Ri-wKU"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
@@ -1195,6 +1211,7 @@
                                             <outlet property="saveButton" destination="CZK-D3-zfC" id="ARm-oF-k6L"/>
                                             <outlet property="scoreLabel" destination="XLB-UB-kNZ" id="MwL-xE-gef"/>
                                             <outlet property="seemView" destination="9jK-Tx-agv" id="fZW-FG-joI"/>
+                                            <outlet property="storyVideosCountLabel" destination="1PX-qd-SJW" id="ZBE-E3-LUD"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="VideoCell" rowHeight="50" id="ZIp-cc-i6H" customClass="VideoTableViewCell">

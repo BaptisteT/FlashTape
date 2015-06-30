@@ -111,6 +111,11 @@
 "delete_flash_error_message" = "Sorry, we could not delete your flash";
 "save_story_error_title" = "";
 "save_story_error_message" = "Sorry, we could not save your flashes";
+"save_story_alert_title" = "Save your tape ?";
+"save_story_alert_message" = "Are you sure you want to stitch your videos of the day and save it to your camera roll?
+";
+"save_and_stop_explaining_button" = "Save and don't ask me again";
+"save_button" = "Save";
 "current_user_TVC_name" = "me";
 "story_views_label" = "%lu";
 

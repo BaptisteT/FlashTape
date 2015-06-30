@@ -314,7 +314,7 @@
         return cell;
     } else if ([self isCurrentUserUserCell:indexPath]) {
         FriendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
-        [cell InitWithCurrentUserAndIsSaving:_isSavingStory];
+        [cell InitWithCurrentUser:self.currentUserPosts.count isSaving:_isSavingStory];
         cell.delegate = self;
         return cell;
     } else if ([self isFollowingUserSection:indexPath.section] || [self isFollowerUserSection:indexPath.section]) {
@@ -699,7 +699,21 @@
 #pragma mark - Friend TVC Delegate
 // --------------------------------------------
 - (void)saveCurrentUserStoryButtonClicked {
+    if ([GeneralUtils explainBeforeSavingStory]) {
+        // Present alert view
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"save_story_alert_title", nil)
+                                    message:NSLocalizedString(@"save_story_alert_message", nil)
+                                   delegate:self
+                          cancelButtonTitle:NSLocalizedString(@"cancel_button_title", nil)
+                          otherButtonTitles:NSLocalizedString(@"save_and_stop_explaining_button", nil),NSLocalizedString(@"save_button", nil), nil] show];
+    } else {
+        [self saveStory];
+    }
+}
+    
+- (void)saveStory {
     _isSavingStory = YES;
+    [self reloadSection:[self currentUserSection]];
     AVPlayerItem *pi = [VideoUtils createAVPlayerItemWithVideoPosts:self.currentUserPosts
                                           andFillObservedTimesArray:nil];
     [VideoUtils saveVideoCompositionToCameraRoll:pi.asset success:^{
@@ -776,6 +790,16 @@
             self.selectedRelation = nil;
             if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"mute_and_stop_explaining_button", nil)]) {
                 [GeneralUtils setMuteExplanationHidden:YES];
+            }
+        }
+    } else if ([alertView.title isEqualToString:NSLocalizedString(@"save_story_alert_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"cancel_button_title", nil)]) {
+            return;
+        } else {
+            // save
+            [self saveStory];
+            if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"mute_and_stop_explaining_button", nil)]) {
+                [GeneralUtils setSaveStoryExplanationHidden:YES];
             }
         }
     }

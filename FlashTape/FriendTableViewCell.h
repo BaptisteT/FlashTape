@@ -15,7 +15,7 @@
 
 @property (weak, nonatomic) id<FriendTVCDelegate> delegate;
 
-- (void)InitWithCurrentUserAndIsSaving:(BOOL)isSaving;
+- (void)InitWithCurrentUser:(NSInteger)currentUserPostsCount isSaving:(BOOL)isSaving;
 
 - (void)initWithUser:(User *)user
        hasSeenVideos:(BOOL)hasSeenVideos

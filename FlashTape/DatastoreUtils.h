@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 @class User;
 @class Follow;
+@class VideoPost;
 
 @interface DatastoreUtils : NSObject
 
@@ -60,6 +61,12 @@
 
 + (void)deleteLocalPostsNotInRemotePosts:(NSArray *)remotelyRetrievedPosts;
 
++ (void)unpinVideoAsUnsend:(VideoPost *)post;
+
++ (void)pinVideoAsUnsend:(VideoPost *)post;
+
++ (void)getUnsendVideosSuccess:(void(^)(NSArray *videos))successBlock
+                       failure:(void(^)(NSError *error))failureBlock;
 
 // --------------------------------------------
 #pragma mark - Messages

@@ -12,6 +12,7 @@
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
 
+#define SAVE_STORY_EXPLANATION_HIDDEN_PREF @"Save Story Explanation Hidden"
 #define MUTE_EXPLANATION_HIDDEN_PREF @"Mute Explanation Hidden"
 #define DELETE_EXPLANATION_HIDDEN_PREF @"Delete Explanation Hidden"
 
@@ -134,6 +135,19 @@
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     return [prefs objectForKey:DELETE_EXPLANATION_HIDDEN_PREF] ? ![[prefs objectForKey:DELETE_EXPLANATION_HIDDEN_PREF] boolValue] : YES;
+}
+
++ (void)setSaveStoryExplanationHidden:(BOOL)hide
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithBool:hide] forKey:SAVE_STORY_EXPLANATION_HIDDEN_PREF];
+    [prefs synchronize];
+}
+
++ (BOOL)explainBeforeSavingStory
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:SAVE_STORY_EXPLANATION_HIDDEN_PREF] ? ![[prefs objectForKey:SAVE_STORY_EXPLANATION_HIDDEN_PREF] boolValue] : YES;
 }
 
 + (NSString *)transformedUsernameFromOriginal:(NSString *)original {

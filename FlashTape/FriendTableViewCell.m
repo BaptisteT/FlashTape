@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *seemView;
+@property (weak, nonatomic) IBOutlet UILabel *storyVideosCountLabel;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (nonatomic, strong) CAShapeLayer *savingCircleShape;
 @property (weak, nonatomic) IBOutlet UILabel *messageCountLabel;
@@ -34,7 +35,7 @@
 // -------------------
 // Life Cycle
 // ------------------
-- (void)InitWithCurrentUserAndIsSaving:(BOOL)isSaving
+- (void)InitWithCurrentUser:(NSInteger)currentUserPostsCount isSaving:(BOOL)isSaving
 {
     [self initWithUser:[User currentUser]
          hasSeenVideos:NO
@@ -44,7 +45,15 @@
     
     // Save
     self.saveButton.enabled = YES;
-    self.saveButton.hidden = NO;
+    if (currentUserPostsCount != 0) {
+        self.saveButton.hidden = NO;
+        self.storyVideosCountLabel.hidden = NO;
+        self.storyVideosCountLabel.text = [NSString stringWithFormat:@"%lu",currentUserPostsCount];
+        self.storyVideosCountLabel.layer.borderWidth = 1;
+        self.storyVideosCountLabel.layer.borderColor = [UIColor whiteColor].CGColor;
+        self.storyVideosCountLabel.layer.cornerRadius = self.storyVideosCountLabel.frame.size.height / 2;
+    }
+    
     if (self.savingCircleShape) {
         [self.savingCircleShape removeAllAnimations];
         [self.savingCircleShape removeFromSuperlayer];
@@ -77,6 +86,7 @@
     
     // Save
     self.saveButton.hidden = YES;
+    self.storyVideosCountLabel.hidden = YES;
     
     // Unread Messages label
     if (count != 0) {
@@ -142,7 +152,6 @@
 }
 
 - (IBAction)saveButtonClicked:(id)sender {
-    [self startSavingAnimation];
     [self.delegate saveCurrentUserStoryButtonClicked];
 }
 
@@ -172,6 +181,7 @@
 
 - (void)savedAnimation {
     self.saveButton.hidden = YES;
+    self.storyVideosCountLabel.hidden = YES;
     self.messageSentLabel.alpha = 0;
     self.messageSentLabel.text = NSLocalizedString(@"story_saved", nil);
     [UIView animateWithDuration:1 animations:^{

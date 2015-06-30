@@ -299,6 +299,35 @@
     }];
 }
 
++ (void)unpinVideoAsUnsend:(VideoPost *)post {
+    [post unpinInBackgroundWithName:kParseFailedPostsName];
+}
+
++ (void)pinVideoAsUnsend:(VideoPost *)post {
+    [post pinInBackgroundWithName:kParseFailedPostsName];
+}
+
++ (void)getUnsendVideosSuccess:(void(^)(NSArray *videos))successBlock
+                       failure:(void(^)(NSError *error))failureBlock {
+    PFQuery *query = [PFQuery queryWithClassName:[VideoPost parseClassName]];
+    [query fromLocalDatastore];
+    [query fromPinWithName:kParseFailedPostsName];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error == nil) {
+            for (VideoPost *post in objects) {
+                post.localUrl = [post videoLocalURL];
+            }
+            if (successBlock) {
+                successBlock(objects);
+            }
+            [PFObject unpinAllObjectsInBackgroundWithName:kParseFailedPostsName];
+        } else {
+            if (failureBlock) {
+                failureBlock(error);
+            }
+        }
+    }];
+}
 
 // --------------------------------------------
 #pragma mark - Messages

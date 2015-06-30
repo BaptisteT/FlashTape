@@ -16,7 +16,6 @@
 
 // Local
 @synthesize downloadProgress;
-@synthesize videoData;
 @synthesize localUrl;
 @synthesize isDownloading;
 @synthesize thumbmail;
@@ -27,6 +26,7 @@
 @dynamic user;
 @dynamic viewerIdsArray;
 @dynamic recordedAt;
+@dynamic tempId;
 
 static int downloadingCount = 0;
 
@@ -39,12 +39,21 @@ static int downloadingCount = 0;
     return NSStringFromClass([self class]);
 }
 
-+ (VideoPost *)createPostWithRessourceUrl:(NSURL *)url
-{
++ (VideoPost *)createCurrentUserPost {
     VideoPost *post = [VideoPost object];
-    post.localUrl = url;
     post.user = [User currentUser];
     post.recordedAt = [NSDate date];
+    post.tempId = [[NSUUID UUID] UUIDString];
+    post.localUrl = [post videoLocalURL];
+    return post;
+}
+
++ (VideoPost *)createPostWithUser:(User *)user ressourceUrl:(NSURL *)url
+{
+    VideoPost *post = [VideoPost object];
+    post.user = user;
+    post.recordedAt = [NSDate date];
+    post.localUrl = url;
     return post;
 }
 
@@ -82,17 +91,28 @@ static int downloadingCount = 0;
     }
 }
 
+- (void)migrateDataFromTemporaryToPermanentURL {
+    if (!self.objectId || self.objectId.length == 0 || !self.localUrl)
+        return;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager moveItemAtURL:self.localUrl toURL:[self videoLocalURL] error:nil]) {
+        self.localUrl = [self videoLocalURL];
+    };
+}
+
 - (void)saveDataToLocalURL:(NSData *)data {
     NSError * savingError = nil;
     if (![data writeToURL:[self videoLocalURL] options:NSAtomicWrite error:&savingError] || savingError) {
         NSLog(@"Could not Get Available Data. Error:%@",savingError);
+    } else {
+        self.localUrl = [self videoLocalURL];
     }
-    self.localUrl = [self videoLocalURL];
 }
 
 - (NSURL *)videoLocalURL {
     NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
-    return [[tmpDirURL URLByAppendingPathComponent:self.objectId] URLByAppendingPathExtension:@"mp4"];
+    NSString *postId = self.objectId && self.objectId.length > 0 ? self.objectId : (self.tempId ? self.tempId : @"");
+    return [[tmpDirURL URLByAppendingPathComponent:postId] URLByAppendingPathExtension:@"mp4"];
 }
 
 + (void)downloadVideoFromPosts:(NSArray *)fbPosts
@@ -117,10 +137,8 @@ static int downloadingCount = 0;
     [userQuery whereKey:@"objectId" equalTo:kAdminUserObjectId];
     [userQuery getFirstObjectInBackgroundWithBlock:^(PFObject *user, NSError *error) {
         if (!error) {
-            VideoPost *post1 = [VideoPost createPostWithRessourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_1" ofType:@"mp4"]]];
-            post1.user = (User *)user;
-            VideoPost *post2 = [VideoPost createPostWithRessourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_2" ofType:@"mp4"]]];
-            post2.user = (User *)user;
+            VideoPost *post1 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_1" ofType:@"mp4"]]];
+            VideoPost *post2 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_2" ofType:@"mp4"]]];
             if (successBlock) {
                 successBlock(@[post1,post2]);
             }

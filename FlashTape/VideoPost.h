@@ -16,19 +16,21 @@
 @property (retain) PFFile *videoFile;
 @property (retain) NSArray *viewerIdsArray;
 @property (retain) NSDate *recordedAt;
+@property (retain) NSString *tempId;
 
 @property (retain) NSURL *localUrl;
-@property (retain) NSData *videoData; // use for failure (url is reused for other videos..)
 @property (nonatomic) NSInteger downloadProgress;
 @property (nonatomic) BOOL isDownloading;
 @property (retain) UIImage *thumbmail;
 @property (retain) NSDictionary *videoProperties;
 
-+ (VideoPost *)createPostWithRessourceUrl:(NSURL *)url;
++ (VideoPost *)createCurrentUserPost ;
 
 + (NSString *)parseClassName;
 
 + (void)downloadVideoFromPosts:(NSArray *)fbPosts;
+
+- (void)migrateDataFromTemporaryToPermanentURL ;
 
 - (NSURL *)videoLocalURL;
 

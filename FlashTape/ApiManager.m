@@ -401,20 +401,15 @@
         return;
     }
     // Upload data
-    if (!post.videoData)
-        post.videoData = [NSData dataWithContentsOfURL:url];
-    PFFile *file = [PFFile fileWithName:@"video.mp4" data:post.videoData];
+    NSData *videoData = [NSData dataWithContentsOfURL:url];
+    PFFile *file = [PFFile fileWithName:@"video.mp4" data:videoData];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             post.videoFile = file;
             [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    // save the data to a permanent url and release it
-                    post.localUrl = [post videoLocalURL];
-                    if (![post.videoData writeToURL:post.localUrl options:NSAtomicWrite error:nil]) {
-                        NSLog(@"Failure saving created post");
-                    }
-                    post.videoData = nil;
+                    // save the data to a permanent url
+                    [post migrateDataFromTemporaryToPermanentURL];
                     
                     // Increment user score
                     [post.user incrementKey:@"score"];
