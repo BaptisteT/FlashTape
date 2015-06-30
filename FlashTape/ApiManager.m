@@ -326,7 +326,7 @@
     [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             [follow pinInBackgroundWithName:kParseRelationshipsName];
-            [TrackingUtils trackAddFriend];
+            [TrackingUtils trackEvent:EVENT_FRIEND_ADD properties:nil];
             if (successBlock) {
                 successBlock(follow);
             }
@@ -354,7 +354,9 @@
     [PFObject saveAllInBackground:followArray block:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             [PFObject pinAllInBackground:followArray withName:kParseRelationshipsName];
-            [TrackingUtils trackAddFriend];
+            for (int i=0;i<followArray.count;i++) {
+                [TrackingUtils trackEvent:EVENT_FRIEND_ADD properties:nil];
+            }
             if (successBlock) {
                 successBlock();
             }
@@ -373,7 +375,7 @@
     [follow deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             [follow unpinInBackgroundWithName:kParseRelationshipsName];
-            [TrackingUtils trackBlockFriend];
+            [TrackingUtils trackEvent:EVENT_FRIEND_DELETE properties:nil];
             if (successBlock) {
                 successBlock();
             }
@@ -428,13 +430,13 @@
                         failureBlock(error);
                     
                     // Track
-                    [TrackingUtils trackVideoSendingFailure];
+                    [TrackingUtils trackEvent:EVENT_VIDEO_FAILED properties:nil];
                 }
             }];
         } else {
             // Track
-            [TrackingUtils trackVideoSendingFailure];
-            
+            [TrackingUtils trackEvent:EVENT_VIDEO_FAILED properties:nil];
+
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             if (failureBlock)
@@ -498,7 +500,7 @@
 {
     [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            [TrackingUtils trackVideoDeleted];
+            [TrackingUtils trackEvent:EVENT_VIDEO_DELETED properties:nil];
             if (successBlock) {
                 successBlock();
             }
@@ -524,7 +526,7 @@
                 successBlock();
             }
         } else {
-            [TrackingUtils trackMessageSendingFailed];
+            [TrackingUtils trackEvent:EVENT_MESSAGE_FAILED properties:nil];
             if (failureBlock) {
                 failureBlock(error);
             }
@@ -579,7 +581,7 @@
     [message unpinInBackgroundWithName:kParseMessagesName];
     // Save as read on parse
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        [TrackingUtils trackMessageRead];
+        [TrackingUtils trackEvent:EVENT_MESSAGE_READ properties:nil];
         if (succeeded) {
             if (successBlock) {
                 successBlock();
@@ -639,7 +641,7 @@
                                         if (failureBlock)
                                             failureBlock();
                                     } else {
-                                        [TrackingUtils trackInviteSent];
+                                        [TrackingUtils trackEvent:EVENT_INVITE_SENT properties:@{@"type":@"twillio"}];
                                         if (successBlock) {
                                             successBlock([object integerValue]);
                                         }

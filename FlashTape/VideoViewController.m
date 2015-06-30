@@ -424,7 +424,7 @@
     CMTime time = CMTimeMakeWithSeconds(CMTimeGetSeconds(self.friendVideoView.player.itemDuration) * widthRatio, self.friendVideoView.player.itemDuration.timescale);
     [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        [TrackingUtils trackPlayingBarSlide];
+        [TrackingUtils trackEvent:EVENT_PLAYING_SLIDE properties:nil];
         [self showMetaData:NO];
         [self.friendVideoView.player pause];
         [self.whiteNoisePlayer pause];
@@ -449,7 +449,7 @@
         self.videosToPlayArray = unseenArray.count > 0 ? unseenArray : self.allVideosArray;
         [self createCompositionAndPlayVideos];
         if (unseenArray.count == 0) {
-            [TrackingUtils trackReplayVideos];
+            [TrackingUtils trackEvent:EVENT_VIDEO_REPLAY properties:nil];
         }
         
         if ([InviteUtils shouldPresentInviteController]) {
@@ -462,17 +462,17 @@
 }
 
 - (IBAction)flipCameraButtonClicked:(id)sender {
-    [TrackingUtils trackCameraFlipClicked];
+    [TrackingUtils trackEvent:EVENT_CAMERA_FLIP_CLICKED properties:nil];
     self.recorder.device = self.recorder.device == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
 }
 
 - (IBAction)friendsButtonClicked:(id)sender {
-    [TrackingUtils trackFriendButtonClicked];
+    [TrackingUtils trackEvent:EVENT_FRIEND_BUTTON_CLICKED properties:nil];
     [self navigateToFriends];
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
-    [TrackingUtils trackCaptionClicked];
+    [TrackingUtils trackEvent:EVENT_CAPTION_CLICKED properties:nil];
     self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     [self.captionTextView becomeFirstResponder];
     self.captionTextView.hidden = NO;
@@ -677,7 +677,7 @@
     [post addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
     
     // Track
-    [TrackingUtils trackVideoSeen];
+    [TrackingUtils trackEvent:EVENT_VIDEO_SEEN properties:nil];
 }
 
 - (void)showMetaData:(BOOL)flag {
@@ -849,7 +849,7 @@
                 if (![self isPlayingMode])
                     [self setReplayButtonUI];
                 // Track
-                [TrackingUtils trackVideoSentWithProperties:post.videoProperties];
+                [TrackingUtils trackEvent:EVENT_VIDEO_SENT properties:post.videoProperties];
                 
                 // 1st flash
                 if ([User currentUser].score == 1) {

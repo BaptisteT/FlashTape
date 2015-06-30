@@ -63,7 +63,7 @@
     [InviteUtils incrementInvitePresentedCount];
     
     // Tracking
-    [TrackingUtils trackInviteControllerPresented];
+    [TrackingUtils trackEvent:EVENT_INVITE_PRESENTED properties:nil];
 }
 
 // --------------------------------------------

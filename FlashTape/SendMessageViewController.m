@@ -105,7 +105,7 @@
 }
 
 - (void)emojiClicked:(UIButton *)sender {
-    [TrackingUtils trackMessageSent:@"emoji"];
+    [TrackingUtils trackEvent:EVENT_MESSAGE_SENT properties:@{@"type": @"emoji"}];
     [self sendMessage:sender.titleLabel.text];
 }
 
@@ -121,7 +121,7 @@
     if ([text isEqualToString:@"\n"]) {
         NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
         if ([textView.text stringByTrimmingCharactersInSet:set].length > 0) {
-            [TrackingUtils trackMessageSent:@"text"];
+            [TrackingUtils trackEvent:EVENT_MESSAGE_SENT properties:@{@"type": @"text"}];
             [self sendMessage:textView.text];
         }
         return NO;

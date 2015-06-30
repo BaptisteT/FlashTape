@@ -367,12 +367,12 @@
     if ([self isAddFriendSection:indexPath.section]) {
         [self performSegueWithIdentifier:@"Add Username From Friends" sender:nil];
     } else if ([self isCurrentUserUserCell:indexPath]) {
-        [TrackingUtils trackMyStoryClicked];
+        [TrackingUtils trackEvent:EVENT_ME_STORY_CLICKED properties:nil];
         _expandMyStory = !_expandMyStory;
         self.postToDetailIndexPath = nil;
         [self reloadSection:indexPath.section];
     } else if ([self isCurrentUserPostCell:indexPath]) {
-        [TrackingUtils trackMyVideoClicked];
+        [TrackingUtils trackEvent:EVENT_ME_VIDEO_CLICKED properties:nil];
         
         NSArray *pathArray;
         NSIndexPath *previousIndexPath = self.postToDetailIndexPath;
@@ -529,7 +529,7 @@
                          [self.followerRelations removeObject:follow];
                          [self.messagesReceivedDictionnary removeObjectForKey:follow.from.objectId];
                          [self sortFriendsAndReload];
-                         [TrackingUtils trackBlockFriend];
+                         [TrackingUtils trackEvent:EVENT_FRIEND_BLOCK properties:nil];
                      } failure:^(NSError *error) {
                          [MBProgressHUD hideHUDForView:self.view animated:YES];
                          [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];
@@ -575,13 +575,13 @@
 - (void)muteFollowing:(Follow *)follow {
     follow.mute = YES;
     [self saveRelation:follow];
-    [TrackingUtils trackMuteFriend];
+    [TrackingUtils trackEvent:EVENT_FRIEND_MUTE properties:nil];
 }
 
 - (void)unmuteFollowing:(Follow *)follow {
     follow.mute = NO;
     [self saveRelation:follow];
-    [TrackingUtils trackUnmuteFriend];
+    [TrackingUtils trackEvent:EVENT_FRIEND_UNMUTE properties:nil];
 }
 
 - (void)saveRelation:(Follow *)follow {
@@ -673,7 +673,7 @@
 #pragma mark SMS controller
 // ----------------------------------------------------------
 - (IBAction)inviteButtonClicked:(id)sender{
-    [TrackingUtils trackInviteButtonClicked];
+    [TrackingUtils trackEvent:EVENT_INVITE_CLICKED properties:nil];
     
     // Redirect to sms
     if(![MFMessageComposeViewController canSendText]) {
@@ -689,7 +689,7 @@
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
     if (result == MessageComposeResultSent) {
-        [TrackingUtils trackInviteSent];
+        [TrackingUtils trackEvent:EVENT_INVITE_SENT properties:@{@"type":@"sms"}];
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];

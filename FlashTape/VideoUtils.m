@@ -129,7 +129,7 @@
     [exportSession exportAsynchronouslyWithCompletionHandler:^{
         if (exportSession.error) {
             NSLog(@"%@",exportSession.error.description);
-            [TrackingUtils trackSaveStoryFailed];
+            [TrackingUtils trackEvent:EVENT_VIDEO_SAVING_FAILURE properties:nil];
             if (failureBlock) {
                 failureBlock();
             }
@@ -138,13 +138,13 @@
             [library writeVideoAtPathToSavedPhotosAlbum:exportURL
                                         completionBlock:^(NSURL *assetURL, NSError *error) {
                                             if (error == nil) {
-                                                [TrackingUtils trackSaveStory];
+                                                [TrackingUtils trackEvent:EVENT_VIDEO_SAVED properties:nil];
                                                 if (successBlock) {
                                                     successBlock();
                                                 }
                                             } else {
                                                 NSLog(@"%@",error.description);
-                                                [TrackingUtils trackSaveStoryFailed];
+                                                [TrackingUtils trackEvent:EVENT_VIDEO_SAVING_FAILURE properties:nil];
                                                 if (failureBlock) {
                                                     failureBlock();
                                                 }
