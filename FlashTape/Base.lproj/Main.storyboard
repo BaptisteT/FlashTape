@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14A386a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -15,6 +15,10 @@
             <string>NHaasGroteskDSPro-55Rg</string>
         </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
@@ -847,21 +851,26 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AB_access_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7jm-lY-gw3" customClass="UICustomLineLabel">
-                                <rect key="frame" x="20" y="45" width="560" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="20" y="116" width="560" height="36"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="30"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="7jm-lY-gw3" secondAttribute="centerX" id="0Co-DP-Ebb"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tnb-zp-TWb" secondAttribute="trailing" constant="15" id="9Rf-D7-uED"/>
                             <constraint firstAttribute="centerX" secondItem="7jm-lY-gw3" secondAttribute="centerX" id="KeV-44-OWZ"/>
+                            <constraint firstItem="tnb-zp-TWb" firstAttribute="top" secondItem="7jm-lY-gw3" secondAttribute="bottom" constant="20" id="Mtn-I4-xWj"/>
+                            <constraint firstItem="7jm-lY-gw3" firstAttribute="top" secondItem="26e-GV-dEm" secondAttribute="bottom" constant="96" id="NVG-26-aos"/>
                             <constraint firstItem="xfp-FD-Ug4" firstAttribute="leading" secondItem="Pm8-cT-n8L" secondAttribute="leadingMargin" id="Qk0-aW-S4J"/>
                             <constraint firstItem="o11-Gg-8ue" firstAttribute="top" secondItem="xfp-FD-Ug4" secondAttribute="bottom" constant="20" id="VGD-KZ-CcB"/>
                             <constraint firstItem="wba-wb-Sz0" firstAttribute="leading" secondItem="Pm8-cT-n8L" secondAttribute="leadingMargin" id="WK1-7V-mxP"/>
+                            <constraint firstItem="7jm-lY-gw3" firstAttribute="leading" secondItem="Pm8-cT-n8L" secondAttribute="leadingMargin" constant="4" id="WYM-YS-vBc"/>
                             <constraint firstItem="7jm-lY-gw3" firstAttribute="top" secondItem="26e-GV-dEm" secondAttribute="bottom" constant="25" id="Zj0-cM-wMx"/>
                             <constraint firstItem="xfp-FD-Ug4" firstAttribute="trailing" secondItem="Pm8-cT-n8L" secondAttribute="trailingMargin" id="aTe-1k-1UF"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="7jm-lY-gw3" secondAttribute="trailing" constant="4" id="bRi-s8-kZ8"/>
                             <constraint firstItem="xfp-FD-Ug4" firstAttribute="top" secondItem="wba-wb-Sz0" secondAttribute="bottom" constant="9" id="f5d-aH-zfx"/>
                             <constraint firstItem="tnb-zp-TWb" firstAttribute="top" secondItem="7jm-lY-gw3" secondAttribute="bottom" constant="106" id="gtM-Bp-7dY"/>
                             <constraint firstItem="wba-wb-Sz0" firstAttribute="trailing" secondItem="Pm8-cT-n8L" secondAttribute="trailingMargin" id="iHV-aR-v9Q"/>
@@ -870,7 +879,17 @@
                             <constraint firstAttribute="centerX" secondItem="wba-wb-Sz0" secondAttribute="centerX" id="lyX-Yt-1zN"/>
                             <constraint firstAttribute="centerX" secondItem="tnb-zp-TWb" secondAttribute="centerX" id="pRH-ZX-gXv"/>
                             <constraint firstAttribute="centerX" secondItem="xfp-FD-Ug4" secondAttribute="centerX" id="rtu-6F-Ca3"/>
+                            <constraint firstItem="tnb-zp-TWb" firstAttribute="top" secondItem="7jm-lY-gw3" secondAttribute="bottom" constant="35" id="xCS-53-ZvY"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="KeV-44-OWZ"/>
+                                <exclude reference="Zj0-cM-wMx"/>
+                                <exclude reference="kar-Ew-j9b"/>
+                                <exclude reference="gtM-Bp-7dY"/>
+                                <exclude reference="xCS-53-ZvY"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="ABAccessContactLabel" destination="7jm-lY-gw3" id="3kI-ZI-qn0"/>
@@ -901,15 +920,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="90"/>
                                 <color key="backgroundColor" red="0.20784313730000001" green="0.71764705880000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ul4-Fy-V9s">
-                                <rect key="frame" x="0.0" y="560" width="600" height="3"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="3" id="HnZ-RP-KYa"/>
-                                </constraints>
-                            </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="64" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="0zk-0L-7MW">
-                                <rect key="frame" x="0.0" y="90" width="600" height="470"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="64" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="0zk-0L-7MW">
+                                <rect key="frame" x="0.0" y="93" width="600" height="446"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ABFlasherTableViewCell" rowHeight="64" id="vvi-Nn-cNw" customClass="ABFlasherTableViewCell">
@@ -919,8 +931,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlp-DJ-cqK">
-                                                    <rect key="frame" x="8" y="22" width="88" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="8" y="22" width="84" height="21"/>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -965,24 +977,33 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PBv-nx-1YL">
+                                <rect key="frame" x="276" y="39" width="48.5" height="24"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="20"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jvW-f0-sHS">
-                                <rect key="frame" x="0.0" y="560" width="600" height="40"/>
+                                <rect key="frame" x="0.0" y="536" width="600" height="64"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="kvA-k1-gdE"/>
+                                    <constraint firstAttribute="height" constant="64" id="kvA-k1-gdE"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="20"/>
                                 <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="addFriendsButtonClicked:" destination="Wah-0P-KHI" eventType="touchUpInside" id="Tf5-UO-f1Y"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PBv-nx-1YL">
-                                <rect key="frame" x="279" y="39" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ul4-Fy-V9s">
+                                <rect key="frame" x="0.0" y="536" width="600" height="3"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="3" id="HnZ-RP-KYa"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1019,6 +1040,7 @@
                                 <exclude reference="6Cr-XT-I0O"/>
                                 <exclude reference="HoC-Bq-s54"/>
                                 <exclude reference="PjI-gz-4k1"/>
+                                <exclude reference="XI8-ZB-TEt"/>
                                 <exclude reference="hLc-c2-tyn"/>
                                 <exclude reference="wfG-jH-xYX"/>
                                 <exclude reference="yQz-z1-HnF"/>
@@ -2141,6 +2163,6 @@
         <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YXT-I7-Opd"/>
+        <segue reference="y2f-tE-bmP"/>
     </inferredMetricsTieBreakers>
 </document>
