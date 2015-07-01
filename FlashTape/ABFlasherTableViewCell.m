@@ -41,7 +41,7 @@
 - (void)setAddFriendState:(BOOL)toAdd
 {
     _addFriend = toAdd;
-    NSString *imageName = _addFriend ? @"added_icon" : @"to_add_icon";
+    NSString *imageName = _addFriend ? @"check_icon" : @"";
     [self.addFriendButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
 }
 
