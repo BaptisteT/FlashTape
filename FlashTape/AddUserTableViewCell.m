@@ -14,6 +14,7 @@
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
 #import "MBProgressHUD.h"
+#import "ColorUtils.h"
 
 @interface AddUserTableViewCell()
 
@@ -106,8 +107,11 @@
         self.addOrDeleteFriendButton.enabled = YES;
         if (state == 1) {
             [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"add_button",nil) forState:UIControlStateNormal];
+            [self.addOrDeleteFriendButton setBackgroundColor:[ColorUtils k]];
+
         } else {
             [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"delete_button",nil) forState:UIControlStateNormal];
+            [self.addOrDeleteFriendButton setBackgroundColor:[ColorUtils pink]];
         }
     }
 }

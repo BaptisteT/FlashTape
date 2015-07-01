@@ -5,6 +5,12 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+        </mutableArray>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -16,27 +22,45 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="3" translatesAutoresizingMaskIntoConstraints="NO" id="34R-3x-bIF">
-                        <rect key="frame" x="8" y="11" width="79" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <rect key="frame" x="8" y="12" width="78.5" height="20"/>
+                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f1O-k8-QR3">
-                        <rect key="frame" x="222" y="7" width="90" height="30"/>
-                        <state key="normal" title="Add/Remove">
+                        <rect key="frame" x="286" y="9" width="26" height="26"/>
+                        <color key="backgroundColor" red="0.20784313730000001" green="0.71764705880000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="26" id="2lk-jo-qCl"/>
+                            <constraint firstAttribute="height" constant="26" id="SlU-bX-XMS"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="24"/>
+                        <state key="normal" title="+">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
                         <connections>
                             <action selector="addOrDeleteButtonClicked:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="nsY-T3-eKh"/>
                         </connections>
                     </button>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EQP-M3-3N6">
+                        <rect key="frame" x="0.0" y="40.5" width="320" height="3"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="3" id="OZp-2f-3uQ"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="centerX" secondItem="EQP-M3-3N6" secondAttribute="centerX" id="GEz-aJ-elx"/>
                     <constraint firstItem="f1O-k8-QR3" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="LWG-bV-BfB"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="EQP-M3-3N6" secondAttribute="bottom" constant="-8" id="M4E-qR-WtQ"/>
                     <constraint firstAttribute="centerY" secondItem="f1O-k8-QR3" secondAttribute="centerY" constant="-0.5" id="Y6d-T9-inu"/>
                     <constraint firstAttribute="centerY" secondItem="34R-3x-bIF" secondAttribute="centerY" id="fou-cd-8Gl"/>
                     <constraint firstItem="f1O-k8-QR3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="34R-3x-bIF" secondAttribute="trailing" constant="10" id="i7x-bW-m8y"/>
                     <constraint firstItem="34R-3x-bIF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="m1c-QR-fQX"/>
+                    <constraint firstItem="EQP-M3-3N6" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="qCo-ej-faN"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="EQP-M3-3N6" secondAttribute="trailing" constant="-8" id="uoN-ig-Rmw"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

@@ -78,6 +78,8 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
+            <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -1518,38 +1520,61 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FG0-3Y-U7X">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FG0-3Y-U7X">
                                 <rect key="frame" x="0.0" y="109" width="600" height="491"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="InviteUserCell" id="50l-Sw-uQV" customClass="InviteContactTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="InviteUserCell" rowHeight="58" id="50l-Sw-uQV" customClass="InviteContactTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="50l-Sw-uQV" id="I1z-6H-Osh">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ie-TH-oeM">
-                                                    <rect key="frame" x="8" y="11" width="42" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="8" y="18" width="41.5" height="20.5"/>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ki2-4X-Kbc">
-                                                    <rect key="frame" x="555" y="7" width="37" height="30"/>
-                                                    <state key="normal" title="Invite">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ki2-4X-Kbc">
+                                                    <rect key="frame" x="566" y="16" width="26" height="26"/>
+                                                    <color key="backgroundColor" red="1" green="0.46274509800000002" blue="0.22352941179999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="26" id="6U5-z7-URw"/>
+                                                        <constraint firstAttribute="height" constant="26" id="QIh-dY-QiY"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="24"/>
+                                                    <state key="normal" title="+">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="inviteButtonClicked:" destination="50l-Sw-uQV" eventType="touchUpInside" id="1J9-FQ-yEm"/>
                                                     </connections>
                                                 </button>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9C-xx-eI5">
+                                                    <rect key="frame" x="0.0" y="54" width="600" height="3"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="3" id="tse-nH-hpZ"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="f9C-xx-eI5" secondAttribute="centerX" id="3qB-gP-qNg"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="f9C-xx-eI5" secondAttribute="trailing" constant="-8" id="CZe-Sl-8vu"/>
                                                 <constraint firstAttribute="centerY" secondItem="6Ie-TH-oeM" secondAttribute="centerY" id="TOu-2H-mOo"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ki2-4X-Kbc" secondAttribute="trailing" constant="-8" id="X6j-RT-bGM"/>
                                                 <constraint firstItem="6Ie-TH-oeM" firstAttribute="leading" secondItem="I1z-6H-Osh" secondAttribute="leadingMargin" id="aWS-zE-7lr"/>
+                                                <constraint firstItem="f9C-xx-eI5" firstAttribute="leading" secondItem="I1z-6H-Osh" secondAttribute="leadingMargin" constant="-8" id="qVP-zn-7MU"/>
                                                 <constraint firstAttribute="centerY" secondItem="ki2-4X-Kbc" secondAttribute="centerY" id="swK-Rw-gmW"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="ki2-4X-Kbc" secondAttribute="trailing" id="wgt-Tm-eZT"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="f9C-xx-eI5" secondAttribute="bottom" constant="-7" id="zSd-HH-KzF"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="X6j-RT-bGM"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="inviteButton" destination="ki2-4X-Kbc" id="7Mn-yt-Ook"/>

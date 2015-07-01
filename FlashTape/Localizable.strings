@@ -99,8 +99,8 @@
 "mute_and_stop_explaining_button" = "Mute and don't ask me again";
 
 // Add & delete
-"add_button" = "Add";
-"delete_button" = "Delete";
+"add_button" = "+";
+"delete_button" = "–";
 "delete_following_alert_title" = "Delete ?";
 "delete_following_alert_message" = "%@ won't appear in this list anymore. You won't see his / her flashes and you won't be able to send him messages.";
 "delete_and_stop_explaining_button" = "Delete and don't ask me again";
