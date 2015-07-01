@@ -31,7 +31,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [ColorUtils blue];
+    if (self.contactArray.count == 0) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+        return;
+    }
+    
+    self.view.backgroundColor = self.backgroundColor ? self.backgroundColor : [ColorUtils blue];
+    
     UITapGestureRecognizer *tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
     [self.view addGestureRecognizer:tapGestureRecogniser];
     
@@ -45,14 +51,7 @@
     [self.notNowButton setAttributedTitle:attributedString forState:UIControlStateNormal];
     
     // Name label
-    self.nameLabel.numberOfLines = 0;
-    NSDictionary *contactDictionnary = [AddressbookUtils getContactDictionnary];
-    NSString *name = contactDictionnary[self.contact.number] ? contactDictionnary[self.contact.number] : @"" ;
-    NSMutableAttributedString *nameAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"mutual_friend_label", nil),name,MAX(2, self.contact.users.count)]];
-    
-    NSRange whiteRange = [[nameAttributedString string] rangeOfString:name];
-    [nameAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:whiteRange];
-    self.nameLabel.attributedText = nameAttributedString;
+    [self setNameLabelWithContact:self.contactArray.firstObject];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -60,23 +59,44 @@
     
     // Reset video seen since last invite count
     [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
-    
-    // Tracking invite presented
-    [TrackingUtils trackEvent:EVENT_INVITE_PRESENTED properties:nil];
-    [ApiManager incrementInviteSeenCount:self.contact];
 }
 
 // --------------------------------------------
 #pragma mark - Actions
 // --------------------------------------------
 - (void)handleTap {
-    [ApiManager sendInviteTo:self.contact.number success:nil failure:nil];
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [ApiManager sendInviteTo:((ABContact *)self.contactArray.firstObject).number success:nil failure:nil];
+    [self nextOrDismiss];
 }
 
 - (IBAction)notNowButtonClicked:(id)sender {
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self nextOrDismiss];
 }
 
+- (void)nextOrDismiss {
+    if (self.contactArray.count < 2) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    } else {
+        [self.contactArray removeObjectAtIndex:0];
+        [self setNameLabelWithContact:self.contactArray.firstObject];
+    }
+}
+
+// --------------------------------------------
+#pragma mark - UI
+// --------------------------------------------
+- (void)setNameLabelWithContact:(ABContact *)contact {
+    self.nameLabel.numberOfLines = 0;
+    NSDictionary *contactDictionnary = [AddressbookUtils getContactDictionnary];
+    NSString *name = contactDictionnary[contact.number] ? contactDictionnary[contact.number] : @"" ;
+    NSMutableAttributedString *nameAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"mutual_friend_label", nil),name,MAX(2, contact.users.count)]];
+    NSRange whiteRange = [[nameAttributedString string] rangeOfString:name];
+    [nameAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:whiteRange];
+    self.nameLabel.attributedText = nameAttributedString;
+    
+    // Tracking invite presented
+    [TrackingUtils trackEvent:EVENT_INVITE_PRESENTED properties:nil];
+    [ApiManager incrementInviteSeenCount:contact];
+}
 
 @end

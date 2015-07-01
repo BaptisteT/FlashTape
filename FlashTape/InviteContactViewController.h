@@ -12,6 +12,8 @@
 
 @interface InviteContactViewController : FlashTapeParentViewController
 
-@property (strong, nonatomic) ABContact *contact;
+@property (strong, nonatomic) NSMutableArray *contactArray;
+
+@property (strong, nonatomic) UIColor *backgroundColor;
 
 @end

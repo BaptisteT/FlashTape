@@ -98,7 +98,7 @@
 @property (nonatomic) NSInteger unreadVideoCount;
 
 // Invite
-@property (nonatomic) ABContact *potentialContactToInvite;
+@property (nonatomic) NSMutableArray *potentialContactsToInvite;
 
 @end
 
@@ -129,7 +129,7 @@
     self.isSendingCount = 0;
     self.unreadVideoCount = 0;
     self.friendVideoView.hidden = YES;
-    self.potentialContactToInvite = nil;
+    self.potentialContactsToInvite = nil;
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
@@ -359,7 +359,8 @@
             ((FriendsViewController *) [segue destinationViewController]).friendUsername = sender;
         }
     } else if ([segueName isEqualToString: @"Invite From Video"]) {
-        ((InviteContactViewController *) [segue destinationViewController]).contact = (ABContact *)sender;
+        ((InviteContactViewController *) [segue destinationViewController]).contactArray = sender;
+        ((InviteContactViewController *) [segue destinationViewController]).backgroundColor = self.metadataColorArray[_metadataColorIndex];
     }
 }
 
@@ -673,7 +674,7 @@
     if ([InviteUtils shouldPresentInviteController]) {
         // select user to invite
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.potentialContactToInvite = [InviteUtils contactToBePresented];
+            self.potentialContactsToInvite = [NSMutableArray arrayWithObject:[InviteUtils contactToBePresented]];
         });
     }
     
@@ -690,9 +691,9 @@
     // Update posts viewer Ids
     [ApiManager updateVideoPosts:self.videosToPlayArray];
     
-    if (self.potentialContactToInvite != nil) {
-        [self performSegueWithIdentifier:@"Invite From Video" sender:self.potentialContactToInvite];
-        self.potentialContactToInvite = nil;
+    if (self.potentialContactsToInvite != nil) {
+        [self performSegueWithIdentifier:@"Invite From Video" sender:self.potentialContactsToInvite];
+        self.potentialContactsToInvite = nil;
     }
     [self setCameraMode];
     
