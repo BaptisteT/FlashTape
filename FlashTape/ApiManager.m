@@ -408,6 +408,10 @@
     }
     // Upload data
     NSData *videoData = [NSData dataWithContentsOfURL:url];
+    if (!videoData) {
+        failureBlock(nil, NO);
+        return;
+    }
     PFFile *file = [PFFile fileWithName:@"video.mp4" data:videoData];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
@@ -665,7 +669,9 @@
         contact.inviteSeenCount = 1;
     }
     [contact saveInBackgroundWithBlock:^(BOOL completed, NSError *error) {
-        
+        if (error) {
+            
+        }
     }];
 }
 

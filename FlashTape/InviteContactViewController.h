@@ -14,6 +14,6 @@
 
 @property (strong, nonatomic) NSMutableArray *contactArray;
 
-@property (strong, nonatomic) UIColor *backgroundColor;
+@property (strong, nonatomic) NSArray *colorArray;
 
 @end

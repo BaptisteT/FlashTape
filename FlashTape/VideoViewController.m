@@ -360,7 +360,7 @@
         }
     } else if ([segueName isEqualToString: @"Invite From Video"]) {
         ((InviteContactViewController *) [segue destinationViewController]).contactArray = sender;
-        ((InviteContactViewController *) [segue destinationViewController]).backgroundColor = self.metadataColorArray[_metadataColorIndex];
+        ((InviteContactViewController *) [segue destinationViewController]).colorArray = self.metadataColorArray;
     }
 }
 
@@ -444,6 +444,16 @@
         if (unseenArray.count == 0) {
             [TrackingUtils trackEvent:EVENT_VIDEO_REPLAY properties:nil];
         }
+        
+        // get invite contacts
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            for (VideoPost *post in self.videosToPlayArray) {
+                if (post.user == [User currentUser]) {
+                    return;
+                }
+            }
+            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:MIN(self.videosToPlayArray.count,kMinInviteCount + arc4random_uniform(kMaxInviteCount - kMinInviteCount + 1))]];
+        });
     }
 }
 
@@ -671,13 +681,13 @@
     
     // Update video seen
     [InviteUtils incrementVideoSeenSinceLastInvitePresentedCount];
-    if (self.potentialContactsToInvite == nil && [InviteUtils shouldPresentInviteController]) {
-        // select user to invite
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:1]];
-        });
-        [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
-    }
+//    if (self.potentialContactsToInvite == nil && [InviteUtils shouldPresentInviteController]) {
+//        // select user to invite
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:1]];
+//        });
+//        [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
+//    }
     
     // Track
     [TrackingUtils trackEvent:EVENT_VIDEO_SEEN properties:nil];
@@ -860,6 +870,8 @@
                 self.isSendingCount --;
                 if (addToFailArray) {
                     [self.failedVideoPostArray addObject:post];
+                } else {
+                    [DatastoreUtils unpinVideoAsUnsend:post];
                 }
                 [self setReplayButtonUI];
             }];
@@ -878,12 +890,6 @@
                 [self setReplayButtonUI];
                 _createTutoAdminMessages = YES;
             } failureBlock:nil];
-            
-            // get invite contacts
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                // todo BT
-                self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:kSignupInviteCount]];
-            });
         }
     });
 }

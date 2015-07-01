@@ -16,10 +16,13 @@
 #import "UICustomLineLabel.h"
 #import "TrackingUtils.h"
 
+#define INVITE_EMOJI_ARRAY @[@"😀", @"😊", @"😍", @"😎", @"😜"]
+
 @interface InviteContactViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *tapToInviteLabel;
 @property (weak, nonatomic) IBOutlet UIButton *notNowButton;
+@property (weak, nonatomic) IBOutlet UILabel *emojiLabel;
 
 @end
 
@@ -35,8 +38,6 @@
         [self dismissViewControllerAnimated:NO completion:nil];
         return;
     }
-    
-    self.view.backgroundColor = self.backgroundColor ? self.backgroundColor : [ColorUtils blue];
     
     UITapGestureRecognizer *tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
     [self.view addGestureRecognizer:tapGestureRecogniser];
@@ -80,6 +81,9 @@
 #pragma mark - UI
 // --------------------------------------------
 - (void)setNameLabelWithContact:(ABContact *)contact {
+    self.view.backgroundColor = self.colorArray[arc4random_uniform((int)self.colorArray.count)];
+    self.emojiLabel.text = INVITE_EMOJI_ARRAY[arc4random_uniform((int)INVITE_EMOJI_ARRAY.count)];
+    
     self.nameLabel.numberOfLines = 0;
     NSDictionary *contactDictionnary = [AddressbookUtils getContactDictionnary];
     NSString *name = contactDictionnary[contact.number] ? contactDictionnary[contact.number] : @"" ;

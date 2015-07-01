@@ -1689,6 +1689,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="emojiLabel" destination="EEA-eH-GHF" id="Pid-gX-6dv"/>
                         <outlet property="nameLabel" destination="pb2-kp-bGF" id="JSr-I6-xoT"/>
                         <outlet property="notNowButton" destination="GiR-d2-K6l" id="1zf-yY-vfX"/>
                         <outlet property="tapToInviteLabel" destination="CEE-T5-HNi" id="Pis-tj-bGS"/>
