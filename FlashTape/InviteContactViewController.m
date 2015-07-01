@@ -58,12 +58,12 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // Update invite markers
-    [InviteUtils setLastInvitePresentedDate:[NSDate date]];
-    [InviteUtils incrementInvitePresentedCount];
+    // Reset video seen since last invite count
+    [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
     
-    // Tracking
+    // Tracking invite presented
     [TrackingUtils trackEvent:EVENT_INVITE_PRESENTED properties:nil];
+    [ApiManager incrementInviteSeenCount:self.contact];
 }
 
 // --------------------------------------------

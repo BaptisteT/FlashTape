@@ -16,8 +16,11 @@
 @property (retain) NSString *number;
 @property (retain) NSArray *users;
 @property (nonatomic) NSInteger inviteCount;
+@property (nonatomic) NSInteger inviteSeenCount;
 @property (nonatomic) BOOL isFlasher;
 
 + (ABContact *)createRelationWithNumber:(NSString *)number;
+
+- (NSInteger)contactScore;
 
 @end

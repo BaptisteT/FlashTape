@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class ABContact;
 @class VideoPost;
 @class User;
 @class Message;
@@ -116,4 +117,7 @@
 + (void)sendInviteTo:(NSString *)phoneNumber
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock;
+
++ (void)incrementInviteSeenCount:(ABContact *)contact;
+
 @end

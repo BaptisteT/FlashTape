@@ -17,14 +17,13 @@
 // Phone
 "phone_number_error_message" = "Invalid phone number.";
 "number_text_field_placeholder" = "Phone Number";
-"disclaimer_phone_number" = "Please pick your contry code and enter your phone number.";
+"disclaimer_phone_number" = "Please pick your country code and enter your phone number.";
 "disclaimer_verification_code" = "We sent you a verication code. Please enter it below.";
 
 // Code
 "confirmation_code_error_message" = "We failed to send your confirmation code, the provided phone number might be invalid.";
-"code_resent_label_text" = "We sent a second SMS.";
 "invalid_code_error_message" = "Invalid code, please try again.";
-"sms_instruction_label" = "We have sent you an SMS";
+"sms_instruction_label" = "We have just sent you an SMS";
 
 // username
 "username_title" = "Username";
@@ -56,7 +55,7 @@
 // invite
 "tap_to_invite" = "Tap to invite";
 "not_now" = "Not now";
-"mutual_friend_label" = "You have %lu mutual friends with %@ on Flashtape";
+"mutual_friend_label" = "You have %lu mutual friends with %@";
 
 // Auth
 "authentification_error_title" = "Authentification error";

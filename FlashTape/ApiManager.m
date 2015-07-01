@@ -653,5 +653,16 @@
                                 }];
 }
 
++ (void)incrementInviteSeenCount:(ABContact *)contact
+{
+    if (contact.inviteSeenCount) {
+        [contact incrementKey:@"inviteSeenCount"];
+    } else {
+        contact.inviteSeenCount = 1;
+    }
+    [contact saveInBackgroundWithBlock:^(BOOL completed, NSError *error) {
+        
+    }];
+}
 
 @end

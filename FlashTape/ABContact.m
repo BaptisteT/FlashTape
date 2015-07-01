@@ -13,6 +13,7 @@
 @dynamic users;
 @dynamic number;
 @dynamic inviteCount;
+@dynamic inviteSeenCount;
 @dynamic isFlasher;
 
 + (void)load {
@@ -28,8 +29,14 @@
     ABContact *contact = [ABContact new];
     contact.number = number;
     contact.inviteCount = 0;
+    contact.inviteSeenCount = 0;
     return contact;
 }
 
+- (NSInteger)contactScore {
+    NSInteger inviteSendCount = self.inviteCount ? self.inviteCount : 0;
+    NSInteger invitePresentedCount = self.inviteSeenCount ? self.inviteSeenCount : 0;
+    return self.users.count / ( 1 + inviteSendCount + invitePresentedCount / 5);
+}
 
 @end

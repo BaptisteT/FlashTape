@@ -11,8 +11,7 @@
 #import "ConstantUtils.h"
 #import "InviteUtils.h"
 
-#define LAST_INVITE_PRESENTED_DATE @"Last Invite Presented Date"
-#define INVITE_PRESENTED_COUNT @"Invite Presented Count"
+#define VIDEO_SEEN_SINCE_LAST_INVITE @"Video Seen Since Last Invite Presented Count"
 
 @implementation InviteUtils
 
@@ -24,13 +23,15 @@
     NSInteger maxScore = 0;
     NSMutableArray *maxScoreContacts = [NSMutableArray new];
     for (ABContact *contact in aBContacts) {
-        NSInteger score = contact.users.count / (1 + contact.inviteCount);
-        if (score == maxScore) {
-            [maxScoreContacts addObject:contact];
-        } else if (score > maxScore) {
-            maxScore = score;
-            [maxScoreContacts removeAllObjects];
-            [maxScoreContacts addObject:contact];
+        if (!contact.isFlasher) {
+            NSInteger score = [contact contactScore];
+            if (score == maxScore) {
+                [maxScoreContacts addObject:contact];
+            } else if (score > maxScore) {
+                maxScore = score;
+                [maxScoreContacts removeAllObjects];
+                [maxScoreContacts addObject:contact];
+            }
         }
     }
     
@@ -39,33 +40,26 @@
 }
 
 + (BOOL)shouldPresentInviteController {
-    return [InviteUtils getInvitePresentedCount] < kMaxInvitePresentedCount && ([[NSDate date] compare:[[InviteUtils getLastInvitePresentedDate] dateByAddingTimeInterval:kMinInvitePresentedInterval]] == NSOrderedDescending);
+    return [InviteUtils getVideoSeenSinceLastInvitePresentedCount] > kMaxVideoSeenBetweenInvite;
 }
 
-+ (NSDate *)getLastInvitePresentedDate
++ (NSInteger)getVideoSeenSinceLastInvitePresentedCount
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    return [prefs objectForKey:LAST_INVITE_PRESENTED_DATE] ? [prefs objectForKey:LAST_INVITE_PRESENTED_DATE] : [NSDate date];
+    return [prefs objectForKey:VIDEO_SEEN_SINCE_LAST_INVITE] ? [[prefs objectForKey:VIDEO_SEEN_SINCE_LAST_INVITE] integerValue]: 0;
 }
 
-+ (void)setLastInvitePresentedDate:(NSDate *)date
++ (void)incrementVideoSeenSinceLastInvitePresentedCount
 {
+    NSInteger count = [InviteUtils getVideoSeenSinceLastInvitePresentedCount] + 1;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:date forKey:LAST_INVITE_PRESENTED_DATE];
+    [prefs setObject:[NSNumber numberWithInteger:count] forKey:VIDEO_SEEN_SINCE_LAST_INVITE];
     [prefs synchronize];
 }
 
-+ (NSInteger)getInvitePresentedCount
-{
++ (void)resetVideoSeenSinceLastInvitePresentedCount {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    return [prefs objectForKey:INVITE_PRESENTED_COUNT] ? [[prefs objectForKey:INVITE_PRESENTED_COUNT] integerValue]: 0;
-}
-
-+ (void)incrementInvitePresentedCount
-{
-    NSInteger count = [InviteUtils getInvitePresentedCount] + 1;
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:[NSNumber numberWithInteger:count] forKey:INVITE_PRESENTED_COUNT];
+    [prefs setObject:[NSNumber numberWithInteger:0] forKey:VIDEO_SEEN_SINCE_LAST_INVITE];
     [prefs synchronize];
 }
 

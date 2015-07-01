@@ -674,6 +674,9 @@
     // Update viewer ids
     [post addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
     
+    // Update video seen
+    [InviteUtils incrementVideoSeenSinceLastInvitePresentedCount];
+    
     // Track
     [TrackingUtils trackEvent:EVENT_VIDEO_SEEN properties:nil];
 }

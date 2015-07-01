@@ -16,13 +16,9 @@
 
 + (BOOL)shouldPresentInviteController;
 
-+ (NSDate *)getLastInvitePresentedDate;
++ (void)incrementVideoSeenSinceLastInvitePresentedCount;
 
-+ (void)setLastInvitePresentedDate:(NSDate *)date;
-
-+ (NSInteger)getInvitePresentedCount;
-
-+ (void)incrementInvitePresentedCount;
++ (void)resetVideoSeenSinceLastInvitePresentedCount;
 
 
 @end

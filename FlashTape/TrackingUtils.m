@@ -36,7 +36,7 @@
     if (DEBUG)return;
     
     // Parse
-    [PFAnalytics trackEventInBackground:eventName dimensions:properties block:nil];
+    [PFAnalytics trackEventInBackground:eventName block:nil];
     
     // Mixpanel
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
