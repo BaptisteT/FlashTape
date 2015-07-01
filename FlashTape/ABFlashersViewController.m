@@ -8,6 +8,7 @@
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
 #import "User.h"
+#import "ColorUtils.h"
 
 #import "ABFlashersViewController.h"
 
@@ -21,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *flashersTableView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) NSMutableArray *flashersToAddArray;
+@property (strong, nonatomic) IBOutlet UIView *colorTopView;
 
 @end
 
@@ -54,6 +56,17 @@
     
     // Button
     [self setAddFriendsButtonTitle];
+    
+    //Status Bar
+    [self setNeedsStatusBarAppearanceUpdate];
+    
+    //Color background
+    [self doBackgroundColorAnimation];
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent; // Set status bar color to white
 }
 
 - (void)navigateToVideoController {
@@ -84,7 +97,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44;
+    return 58;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
@@ -115,6 +128,29 @@
 // ----------------------------------------------------------
 - (void)setAddFriendsButtonTitle {
     [self.addFriendsButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"add_friends_button",nil),self.flashersToAddArray.count] forState:UIControlStateNormal];
+}
+
+// --------------------------------------------
+#pragma mark - Background Color Cycle
+// --------------------------------------------
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+        self.colorTopView.backgroundColor = [colors objectAtIndex:i];
+        [self.addFriendsButton setTitleColor:[colors objectAtIndex:i] forState:UIControlStateNormal];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
 }
 
 @end

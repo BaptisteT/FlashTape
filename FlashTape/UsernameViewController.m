@@ -16,6 +16,7 @@
 #import "ColorUtils.h"
 #import "TrackingUtils.h"
 
+#define ACCEPTABLE_CHARACTERS @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 @interface UsernameViewController ()
 
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *viewTitleLabel;
@@ -40,6 +41,7 @@
     self.viewTitleLabel.text = NSLocalizedString(@"username_title", nil);
     self.viewExplanationLabel.text = NSLocalizedString(@"username_explanation", nil);
     self.usernameTextfield.delegate = self;
+    self.usernameTextfield.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.viewTitleLabel.lineType = LineTypeDown;
     self.viewTitleLabel.lineHeight = 4.0f;
 }
@@ -83,12 +85,13 @@
 // ----------------------------------------------------------
 #pragma mark TextView delegate
 // ----------------------------------------------------------
-// Can not jump first line
+// Can not jump first line and type space.
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if ([string isEqualToString:@"\n"]) {
-        return NO;
-    }
-    return YES;
+    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
+    
+    NSString *filtered = [[string componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
+    
+    return [string isEqualToString:filtered];
 }
 
 // --------------------------------------------

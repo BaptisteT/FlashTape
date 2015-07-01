@@ -15,12 +15,14 @@
 #import "AddressbookUtils.h"
 #import "ColorUtils.h"
 #import "ImageUtils.h"
+#import "UICustomLineLabel.h"
 
 @interface ABAccessViewController ()
 
 @property (nonatomic) ABAddressBookRef addressBook;
-@property (weak, nonatomic) IBOutlet UIButton *allowABAccessButton;
-@property (nonatomic, strong) CAShapeLayer *ABAccessButtonCircleShape;
+@property (strong, nonatomic) IBOutlet UIButton *allowButton;
+@property (strong, nonatomic) IBOutlet UICustomLineLabel *ABAccessContactLabel;
+@property (strong, nonatomic) IBOutlet UILabel *ABExplanationLabel;
 
 @end
 
@@ -34,9 +36,18 @@
     
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     
+    // Label
+    self.ABAccessContactLabel.lineHeight = 4.0f;
+    self.ABAccessContactLabel.lineType = LineTypeDown;
+    self.ABAccessContactLabel.text = NSLocalizedString(@"allow_contact_label", nil);
+    self.ABExplanationLabel.text = NSLocalizedString(@"adressbook_explanation", nil);
+    
+    // Button
+    [self.allowButton setTitle:NSLocalizedString(@"allow_contact_button", nil) forState:UIControlStateNormal];
+    
     // Contact button
-    [self setAllowContactButtonUI];
-    [self initLoadingCircleShape];
+    [self doBackgroundColorAnimation];
+
 }
 
 
@@ -91,42 +102,35 @@
 // ----------------------------------------------------------
 #pragma mark UI
 // ----------------------------------------------------------
-- (void)setAllowContactButtonUI {
-    self.allowABAccessButton.layer.cornerRadius = self.allowABAccessButton.frame.size.height / 2;
-    self.allowABAccessButton.layer.borderWidth = 1;
-    self.allowABAccessButton.layer.borderColor = [ColorUtils blue].CGColor;
-    self.allowABAccessButton.titleLabel.numberOfLines = 0;
-    self.allowABAccessButton.clipsToBounds = NO;
-    [self.allowABAccessButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.allowABAccessButton setTitle:NSLocalizedString(@"allow_contact_button", nil) forState:UIControlStateNormal];
-}
-
 - (void)startLoadingAnimation
 {
-    self.allowABAccessButton.enabled = NO;
-    self.allowABAccessButton.layer.borderColor = [UIColor clearColor].CGColor;
-
-    // Add to parent layer
-    [self.allowABAccessButton.layer addSublayer:self.ABAccessButtonCircleShape];
-    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotationAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
-    rotationAnimation.toValue = [NSNumber numberWithFloat:2*M_PI];
-    rotationAnimation.duration = 0.7;
-    rotationAnimation.repeatCount = INFINITY;
-    [self.ABAccessButtonCircleShape addAnimation:rotationAnimation forKey:@"indeterminateAnimation"];
 }
 
 - (void)stopLoadingAnimation {
-    [self.ABAccessButtonCircleShape removeAllAnimations];
-    [self.ABAccessButtonCircleShape removeFromSuperlayer];
-    self.allowABAccessButton.enabled = YES;
-    self.allowABAccessButton.layer.borderColor = [ColorUtils blue].CGColor;
+}
+// --------------------------------------------
+#pragma mark - Background Color Cycle
+// --------------------------------------------
+- (void) doBackgroundColorAnimation {
+    static NSInteger i = 0;
+    NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
+                       [ColorUtils purple],
+                       [ColorUtils blue],
+                       [ColorUtils green],
+                       [ColorUtils orange], nil];
+    if(i >= [colors count]) {
+        i = 0;
+    }
+    
+    [UIView animateWithDuration:1.5f delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+        self.allowButton.backgroundColor = [colors objectAtIndex:i];
+    } completion:^(BOOL finished) {
+        ++i;
+        [self doBackgroundColorAnimation];
+    }];
+    
 }
 
-- (void)initLoadingCircleShape
-{
-    self.ABAccessButtonCircleShape = [ImageUtils createGradientCircleLayerWithFrame:CGRectMake(0,0,self.allowABAccessButton.frame.size.width,self.allowABAccessButton.frame.size.height) borderWidth:1 Color:[ColorUtils blue] subDivisions:100];
-}
 
 
 @end
