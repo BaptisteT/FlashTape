@@ -25,7 +25,7 @@
 {
     self.flasher = flasher;
     self.nameLabel.text = name;
-    _addFriend = toAdd;
+    [self setAddFriendState:toAdd];
 }
 
 - (IBAction)addFriendButtonClicked:(id)sender {
@@ -41,8 +41,8 @@
 - (void)setAddFriendState:(BOOL)toAdd
 {
     _addFriend = toAdd;
-    NSString *imageName = _addFriend ? @"check_icon" : @"";
-    [self.addFriendButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    UIImage *image = _addFriend ? [UIImage imageNamed:@"check_icon"] : nil;
+    [self.addFriendButton setImage:image forState:UIControlStateNormal];
 }
 
 @end

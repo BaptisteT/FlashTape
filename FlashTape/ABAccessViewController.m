@@ -16,6 +16,7 @@
 #import "ColorUtils.h"
 #import "ImageUtils.h"
 #import "UICustomLineLabel.h"
+#import "MBProgressHUD.h"
 
 @interface ABAccessViewController ()
 
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *allowButton;
 @property (strong, nonatomic) IBOutlet UICustomLineLabel *ABAccessContactLabel;
 @property (strong, nonatomic) IBOutlet UILabel *ABExplanationLabel;
+@property (weak, nonatomic) IBOutlet UIButton *skipButton;
 
 @end
 
@@ -44,10 +46,10 @@
     
     // Button
     [self.allowButton setTitle:NSLocalizedString(@"allow_contact_button", nil) forState:UIControlStateNormal];
+    [self.skipButton setTitle:NSLocalizedString(@"later_button", nil) forState:UIControlStateNormal];
     
     // Contact button
     [self doBackgroundColorAnimation];
-
 }
 
 
@@ -62,8 +64,7 @@
 #pragma mark Actions
 // ----------------------------------------------------------
 - (IBAction)allowABAccessButtonClicked:(id)sender {
-    // UI
-    [self startLoadingAnimation];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // Ask access and parse contacts
     ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
@@ -89,25 +90,20 @@
     
 }
 
+- (IBAction)laterButtonClicked:(id)sender {
+    [self navigateToVideoController];
+}
+
 - (void)navigateToVideoController {
-    [self stopLoadingAnimation];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [self performSegueWithIdentifier:@"Video From ABAccess" sender:nil];
 }
 
 - (void)navigateToABFlashersController:(NSArray *)flashers {
-    [self stopLoadingAnimation];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [self performSegueWithIdentifier:@"ABFlashers From ABAccess" sender:flashers];
 }
 
-// ----------------------------------------------------------
-#pragma mark UI
-// ----------------------------------------------------------
-- (void)startLoadingAnimation
-{
-}
-
-- (void)stopLoadingAnimation {
-}
 // --------------------------------------------
 #pragma mark - Background Color Cycle
 // --------------------------------------------
