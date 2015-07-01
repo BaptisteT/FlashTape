@@ -77,6 +77,6 @@ NSString * getEmojiAtIndex(NSInteger index);
 BOOL belonsToEmojiArray(NSString *emoji) ;
 
 // Invite
-static NSInteger const kMaxVideoSeenBetweenInvite = 20;
+static NSInteger const kMaxVideoSeenBetweenInvite = 10;
 static NSInteger const kMinInviteCount = 2;
-static NSInteger const kMaxInviteCount = 5;
+static NSInteger const kMaxInviteCount = 4;

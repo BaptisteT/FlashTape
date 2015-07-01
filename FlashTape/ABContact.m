@@ -36,7 +36,7 @@
 - (CGFloat)contactScore {
     CGFloat inviteSendCount = self.inviteCount ? self.inviteCount : 0.;
     CGFloat invitePresentedCount = self.inviteSeenCount ? self.inviteSeenCount : 0.;
-    return (CGFloat) self.users.count / ( 1 + inviteSendCount + invitePresentedCount / 5.);
+    return (CGFloat) self.users.count / ( 1 + inviteSendCount + invitePresentedCount / 3.);
 }
 
 @end

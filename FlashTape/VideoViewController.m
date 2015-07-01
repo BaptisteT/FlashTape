@@ -444,16 +444,6 @@
         if (unseenArray.count == 0) {
             [TrackingUtils trackEvent:EVENT_VIDEO_REPLAY properties:nil];
         }
-        
-        // get invite contacts
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            for (VideoPost *post in self.videosToPlayArray) {
-                if (post.user == [User currentUser]) {
-                    return;
-                }
-            }
-            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:MIN(self.videosToPlayArray.count,kMinInviteCount + arc4random_uniform(kMaxInviteCount - kMinInviteCount + 1))]];
-        });
     }
 }
 
@@ -680,14 +670,16 @@
     [post addUniqueObject:[User currentUser].objectId forKey:@"viewerIdsArray"];
     
     // Update video seen
-    [InviteUtils incrementVideoSeenSinceLastInvitePresentedCount];
-//    if (self.potentialContactsToInvite == nil && [InviteUtils shouldPresentInviteController]) {
-//        // select user to invite
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:1]];
-//        });
-//        [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
-//    }
+    if (!(post.user == [User currentUser])) {
+        [InviteUtils incrementVideoSeenSinceLastInvitePresentedCount];
+    }
+    if (self.potentialContactsToInvite == nil && [InviteUtils shouldPresentInviteController]) {
+        // select user to invite
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:MIN(self.videosToPlayArray.count,kMinInviteCount + arc4random_uniform(kMaxInviteCount - kMinInviteCount + 1))]];
+            [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
+        });
+    }
     
     // Track
     [TrackingUtils trackEvent:EVENT_VIDEO_SEEN properties:nil];
@@ -890,6 +882,11 @@
                 [self setReplayButtonUI];
                 _createTutoAdminMessages = YES;
             } failureBlock:nil];
+            
+            // 3 invite for the first time
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:3]];
+            });
         }
     });
 }

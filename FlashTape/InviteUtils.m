@@ -7,6 +7,7 @@
 //
 #import "ABContact.h"
 #import "DatastoreUtils.h"
+#import "User.h"
 
 #import "ConstantUtils.h"
 #import "InviteUtils.h"
@@ -35,7 +36,7 @@
 }
 
 + (BOOL)shouldPresentInviteController {
-    return [InviteUtils getVideoSeenSinceLastInvitePresentedCount] > kMaxVideoSeenBetweenInvite;
+    return [InviteUtils getVideoSeenSinceLastInvitePresentedCount] > kMaxVideoSeenBetweenInvite * (1 + [User currentUser].score / 25.);
 }
 
 + (NSInteger)getVideoSeenSinceLastInvitePresentedCount
