@@ -201,6 +201,7 @@
     PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
     [query setLimit:1000];
     [query fromLocalDatastore];
+    [query whereKey:@"isFlasher" notEqualTo:[NSNumber numberWithBool:true]];
     return [query findObjects];
 }
 

@@ -15,32 +15,23 @@
 
 @implementation InviteUtils
 
-+ (ABContact *)contactToBePresented {
++ (NSArray *)pickContactsToPresent:(NSInteger)count
+{
     // get all contacts
     NSArray *aBContacts = [DatastoreUtils getAllABContactsLocally];
     
-    // attribute score
-    NSInteger maxScore = 0;
-    NSMutableArray *maxScoreContacts = [NSMutableArray new];
-    for (ABContact *contact in aBContacts) {
-        if (!contact.isFlasher) {
-            NSInteger score = [contact contactScore];
-            if (score == maxScore) {
-                [maxScoreContacts addObject:contact];
-            } else if (score > maxScore) {
-                maxScore = score;
-                [maxScoreContacts removeAllObjects];
-                [maxScoreContacts addObject:contact];
-            }
-        }
+    if (aBContacts.count <= count) {
+        return aBContacts;
     }
     
-    // Get one randomly
-    if (maxScoreContacts.count == 0) {
-        return nil;
-    } else {
-        return [maxScoreContacts objectAtIndex:(arc4random() % [maxScoreContacts count])];
-    }
+    NSArray *sortedContacts = [aBContacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
+        if ([obj1 contactScore] >= [obj2 contactScore]) {
+            return NSOrderedAscending;
+        } else {
+            return NSOrderedDescending;
+        }
+    }];
+    return [sortedContacts subarrayWithRange:NSMakeRange(0, count)];
 }
 
 + (BOOL)shouldPresentInviteController {

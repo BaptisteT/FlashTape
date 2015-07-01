@@ -21,6 +21,6 @@
 
 + (ABContact *)createRelationWithNumber:(NSString *)number;
 
-- (NSInteger)contactScore;
+- (CGFloat)contactScore;
 
 @end

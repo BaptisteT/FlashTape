@@ -48,7 +48,6 @@
     
     NSArray *arrayWithMixpanelPeopleTracking = @[EVENT_SESSION, EVENT_VIDEO_SENT, EVENT_VIDEO_SEEN, EVENT_MESSAGE_SENT, EVENT_FRIEND_ADD];
     if ([arrayWithMixpanelPeopleTracking indexOfObject:eventName] != NSNotFound) {
-        // todo BT test
         [mixpanel.people increment:eventName by:[NSNumber numberWithInt:1]];
     }
     

@@ -78,3 +78,4 @@ BOOL belonsToEmojiArray(NSString *emoji) ;
 
 // Invite
 static NSInteger const kMaxVideoSeenBetweenInvite = 20;
+static NSInteger const kSignupInviteCount = 3;

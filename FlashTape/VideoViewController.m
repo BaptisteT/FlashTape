@@ -671,11 +671,12 @@
     
     // Update video seen
     [InviteUtils incrementVideoSeenSinceLastInvitePresentedCount];
-    if ([InviteUtils shouldPresentInviteController]) {
+    if (self.potentialContactsToInvite == nil && [InviteUtils shouldPresentInviteController]) {
         // select user to invite
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.potentialContactsToInvite = [NSMutableArray arrayWithObject:[InviteUtils contactToBePresented]];
+            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:1]];
         });
+        [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
     }
     
     // Track
@@ -877,6 +878,12 @@
                 [self setReplayButtonUI];
                 _createTutoAdminMessages = YES;
             } failureBlock:nil];
+            
+            // get invite contacts
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                // todo BT
+                self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:kSignupInviteCount]];
+            });
         }
     });
 }

@@ -12,7 +12,7 @@
 
 @interface InviteUtils : NSObject
 
-+ (ABContact *)contactToBePresented;
++ (NSArray *)pickContactsToPresent:(NSInteger)count;
 
 + (BOOL)shouldPresentInviteController;
 

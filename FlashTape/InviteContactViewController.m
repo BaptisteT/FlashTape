@@ -54,12 +54,6 @@
     [self setNameLabelWithContact:self.contactArray.firstObject];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    // Reset video seen since last invite count
-    [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
-}
 
 // --------------------------------------------
 #pragma mark - Actions
