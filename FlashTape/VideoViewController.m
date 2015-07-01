@@ -443,13 +443,6 @@
         if (unseenArray.count == 0) {
             [TrackingUtils trackEvent:EVENT_VIDEO_REPLAY properties:nil];
         }
-        
-        if ([InviteUtils shouldPresentInviteController]) {
-            // select user to invite
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                self.potentialContactToInvite = [InviteUtils contactToBePresented];
-            });
-        }
     }
 }
 
@@ -479,6 +472,7 @@
     if (![self isPlayingMode]) {
         return;
     }
+    [TrackingUtils trackEvent:EVENT_PLAYING_TAP properties:nil];
     CMTime observedTime;
     int ii = 0;
     CMTime playerTime = self.friendVideoView.player.currentTime;
@@ -676,6 +670,12 @@
     
     // Update video seen
     [InviteUtils incrementVideoSeenSinceLastInvitePresentedCount];
+    if ([InviteUtils shouldPresentInviteController]) {
+        // select user to invite
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            self.potentialContactToInvite = [InviteUtils contactToBePresented];
+        });
+    }
     
     // Track
     [TrackingUtils trackEvent:EVENT_VIDEO_SEEN properties:nil];
@@ -854,9 +854,11 @@
                     [self setReplayButtonUI];
                 // Track
                 [TrackingUtils trackEvent:EVENT_VIDEO_SENT properties:post.videoProperties];
-            } failure:^(NSError *error) {
+            } failure:^(NSError *error, BOOL addToFailArray) {
                 self.isSendingCount --;
-                [self.failedVideoPostArray addObject:post];
+                if (addToFailArray) {
+                    [self.failedVideoPostArray addObject:post];
+                }
                 [self setReplayButtonUI];
             }];
     dispatch_async(dispatch_get_main_queue(), ^{

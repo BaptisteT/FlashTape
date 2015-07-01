@@ -36,7 +36,11 @@
     }
     
     // Get one randomly
-    return [maxScoreContacts objectAtIndex:(arc4random() % [maxScoreContacts count])];
+    if (maxScoreContacts.count == 0) {
+        return nil;
+    } else {
+        return [maxScoreContacts objectAtIndex:(arc4random() % [maxScoreContacts count])];
+    }
 }
 
 + (BOOL)shouldPresentInviteController {

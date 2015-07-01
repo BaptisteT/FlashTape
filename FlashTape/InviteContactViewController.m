@@ -48,7 +48,7 @@
     self.nameLabel.numberOfLines = 0;
     NSDictionary *contactDictionnary = [AddressbookUtils getContactDictionnary];
     NSString *name = contactDictionnary[self.contact.number] ? contactDictionnary[self.contact.number] : @"" ;
-    NSMutableAttributedString *nameAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"mutual_friend_label", nil),MAX(1, self.contact.users.count - 1),name]];
+    NSMutableAttributedString *nameAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"mutual_friend_label", nil),name,MAX(2, self.contact.users.count)]];
     
     NSRange whiteRange = [[nameAttributedString string] rangeOfString:name];
     [nameAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:whiteRange];

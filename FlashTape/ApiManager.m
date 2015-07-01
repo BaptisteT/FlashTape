@@ -395,11 +395,11 @@
 // Save
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
-              failure:(void(^)(NSError *error))failureBlock
+              failure:(void(^)(NSError *error, BOOL addToFailArray))failureBlock
 {
     NSURL *url = post.localUrl;
     if (!url || !post.user) {
-        failureBlock(nil);
+        failureBlock(nil, NO);
         return;
     }
     // Upload data
@@ -427,7 +427,7 @@
                     // Log details of the failure
                     NSLog(@"Error: %@ %@", error, [error userInfo]);
                     if (failureBlock)
-                        failureBlock(error);
+                        failureBlock(error, YES);
                     
                     // Track
                     [TrackingUtils trackEvent:EVENT_VIDEO_FAILED properties:nil];
@@ -440,7 +440,7 @@
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             if (failureBlock)
-                failureBlock(error);
+                failureBlock(error, YES);
         }
     }];
 }

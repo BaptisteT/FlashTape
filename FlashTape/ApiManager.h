@@ -71,7 +71,7 @@
 
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
-              failure:(void(^)(NSError *error))failureBlock;
+              failure:(void(^)(NSError *error, BOOL addToFailArray))failureBlock;
 
 + (void)getVideoFromFriends:(NSArray *)friends
                      success:(void(^)(NSArray *posts))successBlock

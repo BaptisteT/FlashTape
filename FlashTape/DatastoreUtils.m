@@ -320,7 +320,6 @@
             if (successBlock) {
                 successBlock(objects);
             }
-            [PFObject unpinAllObjectsInBackgroundWithName:kParseFailedPostsName];
         } else {
             if (failureBlock) {
                 failureBlock(error);

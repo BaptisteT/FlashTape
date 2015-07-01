@@ -37,6 +37,7 @@
 #define EVENT_ME_STORY_CLICKED @"me.story.clicked"
 #define EVENT_ME_VIDEO_CLICKED @"me.video.clicked"
 #define EVENT_PLAYING_SLIDE @"playing.slide"
+#define EVENT_PLAYING_TAP @"playing.tap"
 
 @interface TrackingUtils : NSObject
 
