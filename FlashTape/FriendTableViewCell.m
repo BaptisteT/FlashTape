@@ -49,8 +49,8 @@
         self.saveButton.hidden = NO;
         self.storyVideosCountLabel.hidden = NO;
         self.storyVideosCountLabel.text = [NSString stringWithFormat:@"%lu",(long)currentUserPostsCount];
-        self.storyVideosCountLabel.layer.borderWidth = 1;
-        self.storyVideosCountLabel.layer.borderColor = [UIColor whiteColor].CGColor;
+        self.storyVideosCountLabel.backgroundColor = [ColorUtils pink];
+        self.storyVideosCountLabel.clipsToBounds=YES;
         self.storyVideosCountLabel.layer.cornerRadius = self.storyVideosCountLabel.frame.size.height / 2;
     }
     
