@@ -1693,7 +1693,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="😊" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EEA-eH-GHF">
-                                <rect key="frame" x="175" y="151" width="250" height="299"/>
+                                <rect key="frame" x="175" y="151" width="250" height="298.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="250" id="0qz-Sy-EM3"/>
+                                    <constraint firstAttribute="height" constant="298.5" id="eZ4-tD-oVj"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="250"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1701,14 +1705,14 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb2-kp-bGF">
                                 <rect key="frame" x="20" y="30" width="560" height="29"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="24"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.37554632867132864" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GiR-d2-K6l">
-                                <rect key="frame" x="20" y="507" width="560" height="36"/>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="20"/>
+                                <rect key="frame" x="20" y="514" width="560" height="39"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="not_now_button">
+                                <state key="normal" title="Not now">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1716,27 +1720,75 @@
                                     <action selector="notNowButtonClicked:" destination="jni-Tb-Tnl" eventType="touchUpInside" id="uKd-Mw-igQ"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tap_to_invite_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEE-T5-HNi" customClass="UICustomLineLabel">
-                                <rect key="frame" x="212" y="80" width="177" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to invite" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEE-T5-HNi" customClass="UICustomLineLabel">
+                                <rect key="frame" x="243.5" y="80" width="114" height="26.5"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kLL-Cs-vQD">
+                                <rect key="frame" x="260" y="547" width="80" height="4"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="b5K-tQ-cgP"/>
+                                    <constraint firstAttribute="height" constant="4" id="gCq-Gr-uLO"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d4r-fh-1mr">
+                                <rect key="frame" x="243.5" y="105" width="114" height="4"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="4" id="0zi-Gr-VqP"/>
+                                    <constraint firstAttribute="width" constant="114" id="Rsw-3j-Ar6"/>
+                                    <constraint firstAttribute="height" constant="4" id="mFP-f5-7x9"/>
+                                    <constraint firstAttribute="width" constant="114" id="tOT-Bx-Pn9"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="0zi-Gr-VqP"/>
+                                        <exclude reference="tOT-Bx-Pn9"/>
+                                    </mask>
+                                </variation>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstAttribute="centerY" secondItem="EEA-eH-GHF" secondAttribute="centerY" id="1Ah-ud-OJQ"/>
                             <constraint firstAttribute="centerY" secondItem="EEA-eH-GHF" secondAttribute="centerY" id="1Pc-hd-AdU"/>
                             <constraint firstItem="CEE-T5-HNi" firstAttribute="top" secondItem="pb2-kp-bGF" secondAttribute="bottom" constant="21" id="2S5-0l-I47"/>
+                            <constraint firstAttribute="centerX" secondItem="EEA-eH-GHF" secondAttribute="centerX" id="3yB-UN-WZ7"/>
+                            <constraint firstItem="Zo1-Ti-gTk" firstAttribute="top" secondItem="GiR-d2-K6l" secondAttribute="bottom" constant="47" id="GAM-Q4-3j9"/>
+                            <constraint firstAttribute="centerX" secondItem="kLL-Cs-vQD" secondAttribute="centerX" id="Hta-Cc-Q2w"/>
                             <constraint firstItem="GiR-d2-K6l" firstAttribute="top" relation="greaterThanOrEqual" secondItem="EEA-eH-GHF" secondAttribute="bottom" constant="5" id="IwA-KX-WaY"/>
                             <constraint firstItem="pb2-kp-bGF" firstAttribute="top" secondItem="zWL-3n-wLE" secondAttribute="bottom" constant="30" id="JRl-4p-GNB"/>
                             <constraint firstItem="Zo1-Ti-gTk" firstAttribute="top" secondItem="GiR-d2-K6l" secondAttribute="bottom" priority="750" constant="57" id="JiW-74-S0V"/>
+                            <constraint firstItem="EEA-eH-GHF" firstAttribute="top" secondItem="CEE-T5-HNi" secondAttribute="bottom" constant="44.5" id="KBJ-gT-qm0"/>
                             <constraint firstAttribute="centerX" secondItem="CEE-T5-HNi" secondAttribute="centerX" id="LJ9-6b-ns4"/>
                             <constraint firstAttribute="centerX" secondItem="pb2-kp-bGF" secondAttribute="centerX" id="QVq-t0-e5y"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="GiR-d2-K6l" secondAttribute="trailing" constant="4" id="Ur0-3m-FVb"/>
                             <constraint firstItem="pb2-kp-bGF" firstAttribute="leading" secondItem="lLb-Es-bX6" secondAttribute="leading" constant="20" id="apL-55-0J8"/>
+                            <constraint firstItem="d4r-fh-1mr" firstAttribute="top" secondItem="pb2-kp-bGF" secondAttribute="bottom" constant="46" id="bJg-qQ-y6y"/>
                             <constraint firstItem="GiR-d2-K6l" firstAttribute="leading" secondItem="lLb-Es-bX6" secondAttribute="leading" constant="20" id="fiX-ei-yD6"/>
+                            <constraint firstAttribute="centerX" secondItem="EEA-eH-GHF" secondAttribute="centerX" id="hi4-mF-qat"/>
+                            <constraint firstItem="Zo1-Ti-gTk" firstAttribute="top" secondItem="kLL-Cs-vQD" secondAttribute="bottom" constant="49" id="nEE-Me-lAX"/>
                             <constraint firstAttribute="centerX" secondItem="GiR-d2-K6l" secondAttribute="centerX" id="ofw-pD-cPI"/>
                             <constraint firstAttribute="centerX" secondItem="EEA-eH-GHF" secondAttribute="centerX" id="pZP-Gi-TNr"/>
+                            <constraint firstAttribute="centerX" secondItem="d4r-fh-1mr" secondAttribute="centerX" id="prs-3Y-DJe"/>
+                            <constraint firstItem="GiR-d2-K6l" firstAttribute="leading" secondItem="lLb-Es-bX6" secondAttribute="leadingMargin" constant="4" id="s0l-qB-wbx"/>
+                            <constraint firstAttribute="centerX" secondItem="GiR-d2-K6l" secondAttribute="centerX" id="yYt-pr-RnL"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="1Pc-hd-AdU"/>
+                                <exclude reference="3yB-UN-WZ7"/>
+                                <exclude reference="KBJ-gT-qm0"/>
+                                <exclude reference="pZP-Gi-TNr"/>
+                                <exclude reference="IwA-KX-WaY"/>
+                                <exclude reference="fiX-ei-yD6"/>
+                                <exclude reference="ofw-pD-cPI"/>
+                                <exclude reference="JiW-74-S0V"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="nameLabel" destination="pb2-kp-bGF" id="JSr-I6-xoT"/>
