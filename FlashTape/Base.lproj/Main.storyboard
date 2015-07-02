@@ -11,9 +11,9 @@
             <string>NHaasGroteskDSPro-55Rg</string>
             <string>NHaasGroteskDSPro-55Rg</string>
             <string>NHaasGroteskDSPro-55Rg</string>
-            <string>NHaasGroteskDSPro-55Rg</string>
         </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
@@ -1920,7 +1920,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="reveive_title_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFW-yJ-1WE">
-                                <rect key="frame" x="234" y="40" width="133" height="21"/>
+                                <rect key="frame" x="234" y="40" width="132.5" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="rPZ-Yf-K6P"/>
                                 </constraints>
@@ -1944,7 +1944,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="5ho-Jc-1R7">
-                                <rect key="frame" x="30" y="118" width="540" height="402"/>
+                                <rect key="frame" x="30" y="112" width="540" height="408"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5ho-Jc-1R7" secondAttribute="height" multiplier="1:1" id="0dw-If-ouJ"/>
                                 </constraints>
@@ -1958,16 +1958,16 @@
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sub_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OrM-x1-26I">
-                                <rect key="frame" x="265" y="92" width="71" height="21"/>
+                                <rect key="frame" x="272" y="79" width="57.5" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="8BP-Qx-EWF"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-55Rg" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="14"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="date_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0yI-WZ-TNB">
-                                <rect key="frame" x="260" y="66" width="81" height="21"/>
+                                <rect key="frame" x="260" y="63" width="80.5" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="mzu-jB-OGE"/>
                                 </constraints>
@@ -1978,18 +1978,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="5ho-Jc-1R7" firstAttribute="top" secondItem="OrM-x1-26I" secondAttribute="bottom" constant="5" id="63s-Jo-PNM"/>
+                            <constraint firstItem="5ho-Jc-1R7" firstAttribute="top" secondItem="OrM-x1-26I" secondAttribute="bottom" constant="12" id="63s-Jo-PNM"/>
                             <constraint firstAttribute="centerY" secondItem="5ho-Jc-1R7" secondAttribute="centerY" id="CgU-Eu-hbS"/>
-                            <constraint firstAttribute="centerX" secondItem="OrM-x1-26I" secondAttribute="centerX" constant="-0.5" id="Gy7-eB-Iqp"/>
+                            <constraint firstAttribute="centerX" secondItem="OrM-x1-26I" secondAttribute="centerX" id="Gy7-eB-Iqp"/>
                             <constraint firstItem="ela-iu-zn5" firstAttribute="leading" secondItem="iKk-vN-Za5" secondAttribute="leading" constant="5" id="IRQ-Lx-kLP"/>
                             <constraint firstAttribute="centerX" secondItem="5ho-Jc-1R7" secondAttribute="centerX" id="NrC-wP-a3B"/>
                             <constraint firstItem="0uF-mn-PEo" firstAttribute="top" secondItem="5ho-Jc-1R7" secondAttribute="bottom" constant="5" id="Oq4-by-cM9"/>
                             <constraint firstAttribute="centerX" secondItem="0uF-mn-PEo" secondAttribute="centerX" id="QA7-7p-diE"/>
                             <constraint firstItem="OrM-x1-26I" firstAttribute="top" secondItem="CFW-yJ-1WE" secondAttribute="bottom" constant="3" id="QAR-WM-HX3"/>
-                            <constraint firstItem="OrM-x1-26I" firstAttribute="top" secondItem="0yI-WZ-TNB" secondAttribute="bottom" constant="5" id="R2t-KL-T5h"/>
+                            <constraint firstItem="OrM-x1-26I" firstAttribute="top" secondItem="0yI-WZ-TNB" secondAttribute="bottom" constant="-5" id="R2t-KL-T5h"/>
                             <constraint firstItem="ela-iu-zn5" firstAttribute="centerY" secondItem="CFW-yJ-1WE" secondAttribute="centerY" id="UgX-7s-Twe"/>
                             <constraint firstItem="CFW-yJ-1WE" firstAttribute="top" secondItem="FZ9-ot-eqO" secondAttribute="bottom" constant="20" id="WLN-9x-j2D"/>
-                            <constraint firstItem="0yI-WZ-TNB" firstAttribute="top" secondItem="CFW-yJ-1WE" secondAttribute="bottom" constant="5" id="ZK0-9G-e2D"/>
+                            <constraint firstItem="0yI-WZ-TNB" firstAttribute="top" secondItem="CFW-yJ-1WE" secondAttribute="bottom" constant="2" id="ZK0-9G-e2D"/>
                             <constraint firstAttribute="centerX" secondItem="0yI-WZ-TNB" secondAttribute="centerX" constant="-0.5" id="aFf-P8-lnv"/>
                             <constraint firstItem="5ho-Jc-1R7" firstAttribute="leading" secondItem="iKk-vN-Za5" secondAttribute="leading" constant="30" id="idP-Pi-PTc"/>
                             <constraint firstAttribute="centerX" secondItem="CFW-yJ-1WE" secondAttribute="centerX" id="r8c-nX-eQm"/>

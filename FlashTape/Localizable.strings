@@ -124,7 +124,7 @@
 // Message
 "send_title" = "Send to %@";
 "read_title" = "From %@";
-"read_subtitle" = "Tap to see the next message";
+"read_subtitle" = "Tap for next message";
 "message_receive_title" = "From %@";
 "create_message_placeholder" = "Type here";
 "back_button" = "Back";
