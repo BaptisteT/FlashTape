@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *addOrDeleteFriendButton;
 @property (strong, nonatomic) User *user;
+@property (strong, nonatomic) IBOutlet UIButton *separatorView;
 
 @end
 
@@ -107,7 +108,7 @@
         self.addOrDeleteFriendButton.enabled = YES;
         if (state == 1) {
             [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"add_button",nil) forState:UIControlStateNormal];
-            [self.addOrDeleteFriendButton setBackgroundColor:[ColorUtils k]];
+            [self.addOrDeleteFriendButton setBackgroundColor:[ColorUtils blue]];
 
         } else {
             [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"delete_button",nil) forState:UIControlStateNormal];

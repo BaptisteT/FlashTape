@@ -22,7 +22,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="3" translatesAutoresizingMaskIntoConstraints="NO" id="34R-3x-bIF">
-                        <rect key="frame" x="8" y="12" width="78.5" height="20"/>
+                        <rect key="frame" x="8" y="12" width="76" height="20"/>
                         <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -65,6 +65,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="addOrDeleteFriendButton" destination="f1O-k8-QR3" id="Mf5-bg-7Lq"/>
+                <outlet property="separatorView" destination="f1O-k8-QR3" id="HBF-6s-Isw"/>
                 <outlet property="usernameLabel" destination="34R-3x-bIF" id="EIO-8h-VwU"/>
             </connections>
         </tableViewCell>

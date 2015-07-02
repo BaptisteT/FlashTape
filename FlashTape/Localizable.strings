@@ -137,10 +137,10 @@
 
 // Find by username
 "find_by_username_controller_title" = "Add Friends";
-"follower_section_title" = "Flasher who added you";
-"addressbook_section_title" = "Flasher in your addressbook";
+"follower_section_title" = "Added you";
+"addressbook_section_title" = "My Contacts";
 "invite_section_title" = "Invite";
-"find_by_username_textfield_placeholder" = "Search";
+"find_by_username_textfield_placeholder" = "Search for users";
 "username_section_title" = "Flasher by username";
 
 // Authorisation

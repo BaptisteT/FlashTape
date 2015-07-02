@@ -15,6 +15,7 @@
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
 #import "MBProgressHUD.h"
+#import "ColorUtils.h"
 
 @interface AddFriendsViewController ()
 @property (weak, nonatomic) IBOutlet UISearchBar *usernameSearchBar;
@@ -77,7 +78,13 @@
     self.usernameSearchBar.showsCancelButton = NO;
     self.usernameSearchBar.tintColor = [UIColor blackColor];
     self.usernameSearchBar.placeholder = NSLocalizedString(@"find_by_username_textfield_placeholder", nil);
-    
+    [self.usernameSearchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"searchbar"]forState:UIControlStateNormal];
+    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setDefaultTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:15],}];
+    [[UILabel appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[UIColor colorWithRed:0./255. green:0./255. blue:0./255. alpha:0.2]];
+    [self.usernameSearchBar setImage:[UIImage imageNamed:@"searchbar_icon"] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
+    self.usernameSearchBar.searchTextPositionAdjustment = UIOffsetMake(5.0f, 0.0f);
+
+
     self.resultTableView.delegate = self;
     self.resultTableView.dataSource = self;
     self.resultTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -85,6 +92,9 @@
     // Reset new flasher / follower at 0
     [GeneralUtils setNewNewAddressbookFlasherCount:0];
     [GeneralUtils setNewUnfollowedFollowerCount:0];
+}
+
+- (void)setImage:(UIImage *)iconImage forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state {
 }
 
 
@@ -195,6 +205,7 @@
     return nil;
 }
 
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 58;
 }
@@ -207,13 +218,46 @@
     } else if (section == 2) {
         return NSLocalizedString(@"addressbook_section_title", nil);
     } else {
-        return  NSLocalizedString(@"invite_section_title", nil);;
+        return  NSLocalizedString(@"invite_section_title", nil);
     }
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(16, 0, tableView.frame.size.width-8, 18)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 2, tableView.frame.size.width, 18)];
+    [label setFont:[UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:14]];
+    label.textColor = [UIColor colorWithRed:0./255 green:0./255 blue:0./255 alpha:0.2];
+    if (section == 0) {
+        NSString *string = NSLocalizedString(@"username_section_title", nil);
+        [label setText:string];
+    } else if (section == 1) {
+        NSString *string = NSLocalizedString(@"follower_section_title", nil);
+        [label setText:string];
+    } else if (section == 2) {
+        NSString *string = NSLocalizedString(@"addressbook_section_title", nil);
+        [label setText:string];
+    } else {
+        NSString *string = NSLocalizedString(@"invite_section_title", nil);
+        [label setText:string];
+    }
+    [view addSubview:label];
+    [view setBackgroundColor:[UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1.0]];
+    return view;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.usernameSearchBar resignFirstResponder];
 }
+
+// @BaptisteT: Delete the last separatorView for the last row of each section :)
+
+//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSInteger totalRow = [tableView numberOfRowsInSection:indexPath.section];
+//    if(indexPath.row == totalRow -1){
+//    }
+//}
+
 
 // --------------------------------------------
 #pragma mark - Add user Cell Delegate
@@ -251,5 +295,4 @@
     // Reload addressbook section
     [self reloadTableView];
 }
-
 @end

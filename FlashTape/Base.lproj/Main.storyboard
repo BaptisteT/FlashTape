@@ -12,9 +12,9 @@
             <string>NHaasGroteskDSPro-55Rg</string>
             <string>NHaasGroteskDSPro-55Rg</string>
             <string>NHaasGroteskDSPro-55Rg</string>
-            <string>NHaasGroteskDSPro-55Rg</string>
         </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
@@ -1504,24 +1504,24 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tdM-og-yc9">
-                                <rect key="frame" x="10" y="35" width="96" height="33"/>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-55Rg" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
+                                <rect key="frame" x="10" y="29" width="95" height="33"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
                                 <state key="normal" title="Back_button">
                                     <color key="titleColor" white="0.80000000000000004" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="backButtonClicked:" destination="s5X-7E-zXT" eventType="touchUpInside" id="gJL-pv-1Qt"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="add_by_username_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1C-rz-sDk">
-                                <rect key="frame" x="206" y="40" width="188" height="22"/>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
+                                <rect key="frame" x="211" y="35" width="177.5" height="20.5"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FG0-3Y-U7X">
-                                <rect key="frame" x="0.0" y="109" width="600" height="491"/>
+                                <rect key="frame" x="0.0" y="105" width="600" height="494.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="InviteUserCell" rowHeight="58" id="50l-Sw-uQV" customClass="InviteContactTableViewCell">
@@ -1584,7 +1584,7 @@
                                 </prototypes>
                             </tableView>
                             <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search username" translatesAutoresizingMaskIntoConstraints="NO" id="39C-VZ-6Rx">
-                                <rect key="frame" x="0.0" y="65" width="600" height="44"/>
+                                <rect key="frame" x="-10" y="64" width="618" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                         </subviews>
@@ -1593,13 +1593,13 @@
                             <constraint firstAttribute="trailing" secondItem="FG0-3Y-U7X" secondAttribute="trailing" id="45N-ml-w19"/>
                             <constraint firstAttribute="centerX" secondItem="39C-VZ-6Rx" secondAttribute="centerX" id="85n-is-NM4"/>
                             <constraint firstItem="J1C-rz-sDk" firstAttribute="centerY" secondItem="tdM-og-yc9" secondAttribute="centerY" id="9Iu-Cb-VOM"/>
-                            <constraint firstItem="39C-VZ-6Rx" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leadingMargin" constant="-16" id="HPn-At-AEL"/>
-                            <constraint firstItem="FG0-3Y-U7X" firstAttribute="top" secondItem="39C-VZ-6Rx" secondAttribute="bottom" id="QpN-FX-alY"/>
+                            <constraint firstItem="39C-VZ-6Rx" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leadingMargin" constant="-26" id="HPn-At-AEL"/>
+                            <constraint firstItem="FG0-3Y-U7X" firstAttribute="top" secondItem="39C-VZ-6Rx" secondAttribute="bottom" constant="-3" id="QpN-FX-alY"/>
                             <constraint firstAttribute="centerX" secondItem="J1C-rz-sDk" secondAttribute="centerX" id="QvR-vG-Z3w"/>
                             <constraint firstItem="13A-JP-z0a" firstAttribute="top" secondItem="FG0-3Y-U7X" secondAttribute="bottom" id="YlK-YD-S1W"/>
-                            <constraint firstItem="J1C-rz-sDk" firstAttribute="top" secondItem="XAs-cF-yRI" secondAttribute="bottom" constant="20" id="a2N-Qc-MJ6"/>
-                            <constraint firstItem="39C-VZ-6Rx" firstAttribute="top" secondItem="J1C-rz-sDk" secondAttribute="bottom" constant="3" id="arv-Cf-7Y3"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="39C-VZ-6Rx" secondAttribute="trailing" constant="-16" id="hrA-OT-SfZ"/>
+                            <constraint firstItem="J1C-rz-sDk" firstAttribute="top" secondItem="XAs-cF-yRI" secondAttribute="bottom" constant="15" id="a2N-Qc-MJ6"/>
+                            <constraint firstItem="39C-VZ-6Rx" firstAttribute="top" secondItem="J1C-rz-sDk" secondAttribute="bottom" constant="8" id="arv-Cf-7Y3"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="39C-VZ-6Rx" secondAttribute="trailing" constant="-24" id="hrA-OT-SfZ"/>
                             <constraint firstItem="FG0-3Y-U7X" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leading" id="n8h-ZI-GY9"/>
                             <constraint firstItem="J1C-rz-sDk" firstAttribute="top" secondItem="XAs-cF-yRI" secondAttribute="top" constant="20" id="rhs-px-Tgc"/>
                             <constraint firstItem="tdM-og-yc9" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leading" constant="10" id="vTw-Gh-waT"/>
@@ -2188,6 +2188,6 @@
         <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="y2f-tE-bmP"/>
+        <segue reference="YXT-I7-Opd"/>
     </inferredMetricsTieBreakers>
 </document>
