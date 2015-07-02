@@ -10,9 +10,9 @@
         <mutableArray key="NHaasGroteskDSPro-55Rg.ttf">
             <string>NHaasGroteskDSPro-55Rg</string>
             <string>NHaasGroteskDSPro-55Rg</string>
-            <string>NHaasGroteskDSPro-55Rg</string>
         </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
@@ -1637,21 +1637,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sub_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VWd-uD-du0">
-                                <rect key="frame" x="20" y="549" width="560" height="21"/>
+                                <rect key="frame" x="20" y="534" width="560" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="dlc-Bv-JGH"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-55Rg" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdZ-qz-hYJ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdZ-qz-hYJ">
                                 <rect key="frame" x="20" y="50" width="560" height="449"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="kdZ-qz-hYJ" secondAttribute="height" multiplier="1:1" id="0oV-c5-ndR"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="50"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="40"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -1660,13 +1660,13 @@
                                 </variation>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.20784313730000001" green="0.71764705880000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="kdZ-qz-hYJ" firstAttribute="top" secondItem="vvC-UV-LOw" secondAttribute="bottom" constant="50" id="26P-9M-VTK"/>
                             <constraint firstAttribute="centerX" secondItem="kdZ-qz-hYJ" secondAttribute="centerX" id="5ub-8j-fvE"/>
                             <constraint firstAttribute="centerX" secondItem="VWd-uD-du0" secondAttribute="centerX" id="9CI-Ny-uG8"/>
-                            <constraint firstItem="VWd-uD-du0" firstAttribute="top" secondItem="kdZ-qz-hYJ" secondAttribute="bottom" constant="50" id="CD3-EK-vWD"/>
-                            <constraint firstItem="yUo-Pt-ngH" firstAttribute="top" secondItem="VWd-uD-du0" secondAttribute="bottom" constant="30" id="V9G-BM-YIs"/>
+                            <constraint firstItem="VWd-uD-du0" firstAttribute="top" secondItem="kdZ-qz-hYJ" secondAttribute="bottom" constant="35" id="CD3-EK-vWD"/>
+                            <constraint firstItem="yUo-Pt-ngH" firstAttribute="top" secondItem="VWd-uD-du0" secondAttribute="bottom" constant="45" id="V9G-BM-YIs"/>
                             <constraint firstItem="VWd-uD-du0" firstAttribute="leading" secondItem="8tb-4M-JQY" secondAttribute="leading" constant="20" id="nUi-hb-HdQ"/>
                             <constraint firstItem="kdZ-qz-hYJ" firstAttribute="leading" secondItem="8tb-4M-JQY" secondAttribute="leading" constant="20" id="wUC-w4-kYp"/>
                         </constraints>
