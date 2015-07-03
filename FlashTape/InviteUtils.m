@@ -36,6 +36,8 @@
 }
 
 + (BOOL)shouldPresentInviteController {
+    // todo BT
+    // limit during a day
     return [InviteUtils getVideoSeenSinceLastInvitePresentedCount] > kMaxVideoSeenBetweenInvite * (1 + [User currentUser].score / 25.);
 }
 
