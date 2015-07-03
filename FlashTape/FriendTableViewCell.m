@@ -49,8 +49,8 @@
         self.saveButton.hidden = NO;
         self.storyVideosCountLabel.hidden = NO;
         self.storyVideosCountLabel.text = [NSString stringWithFormat:@"%lu",(long)currentUserPostsCount];
-        self.storyVideosCountLabel.layer.borderWidth = 1;
-        self.storyVideosCountLabel.layer.borderColor = [UIColor whiteColor].CGColor;
+        self.storyVideosCountLabel.backgroundColor = [ColorUtils pink];
+        self.storyVideosCountLabel.clipsToBounds=YES;
         self.storyVideosCountLabel.layer.cornerRadius = self.storyVideosCountLabel.frame.size.height / 2;
     }
     
@@ -78,9 +78,14 @@
     
     self.seemView.hidden = !hasSeenVideos || isCurrentUser;
     if (muted) {
-        self.backgroundColor = [UIColor lightGrayColor];
+        self.backgroundColor = [UIColor colorWithRed:0./255 green:0./255 blue:0./255 alpha:0.2];
+        self.nameLabel.layer.opacity = 0.5;
+        self.scoreLabel.layer.opacity = 0.5;
+        self.scoreLabel.text = @"Muted";
     } else {
         self.backgroundColor = [UIColor clearColor];
+        self.nameLabel.layer.opacity = 1;
+        self.scoreLabel.layer.opacity = 1;
     }
     self.accessoryImage.hidden = !isCurrentUser;
     

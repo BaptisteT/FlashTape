@@ -84,7 +84,7 @@
 
 // Friends
 "friend_controller_title" = "Invite your friends";
-"friend_score_label" = "Increase your score for more fun";
+"friend_score_label" = "Flashtape is more fun with buddies!";
 "sharing_wording" = "Join me on FlashTape and watch my life second by second: %@";
 "follow_or_block_alert_title" = "%@ does not belong to your friends";
 "follow_or_block_alert_message" = "You need to add him to read his message.";
@@ -99,8 +99,8 @@
 "mute_and_stop_explaining_button" = "Mute and don't ask me again";
 
 // Add & delete
-"add_button" = "Add";
-"delete_button" = "Delete";
+"add_button" = "+";
+"delete_button" = "–";
 "delete_following_alert_title" = "Delete ?";
 "delete_following_alert_message" = "%@ won't appear in this list anymore. You won't see his / her flashes and you won't be able to send him messages.";
 "delete_and_stop_explaining_button" = "Delete and don't ask me again";
@@ -124,7 +124,7 @@
 // Message
 "send_title" = "Send to %@";
 "read_title" = "From %@";
-"read_subtitle" = "Tap to see the next message";
+"read_subtitle" = "Tap for next message";
 "message_receive_title" = "From %@";
 "create_message_placeholder" = "Type here";
 "back_button" = "Back";
@@ -137,10 +137,10 @@
 
 // Find by username
 "find_by_username_controller_title" = "Add Friends";
-"follower_section_title" = "Flasher who added you";
-"addressbook_section_title" = "Flasher in your addressbook";
+"follower_section_title" = "Added you";
+"addressbook_section_title" = "My Contacts";
 "invite_section_title" = "Invite";
-"find_by_username_textfield_placeholder" = "Search";
+"find_by_username_textfield_placeholder" = "Search for users";
 "username_section_title" = "Flasher by username";
 
 // Authorisation

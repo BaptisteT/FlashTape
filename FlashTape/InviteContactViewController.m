@@ -46,11 +46,7 @@
     self.tapToInviteLabel.text = NSLocalizedString(@"tap_to_invite", nil);
     self.tapToInviteLabel.lineType = LineTypeDown;
     self.tapToInviteLabel.lineHeight = 2.0f;
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"not_now", nil)];
-    [attributedString addAttributes:@{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSUnderlineColorAttributeName: [UIColor whiteColor]} range:NSMakeRange(0,attributedString.length)];
-    [self.notNowButton setAttributedTitle:attributedString forState:UIControlStateNormal];
-    
+        
     // Name label
     [self setNameLabelWithContact:self.contactArray.firstObject];
 }
