@@ -487,7 +487,14 @@
                     [self deleteFollow:relation];
                 }
             }];
-        return @[muteAction,deleteAction];
+        UITableViewRowAction *reportAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal
+                                                                                title:NSLocalizedString(@"report_action",nil)
+                                                                              handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                                                                                  [ApiManager createReportWithUser:relation.to];
+                                                                                  [self.friendsTableView reloadData];
+                                                                              }];
+        reportAction.backgroundColor = [ColorUtils blue];
+        return @[deleteAction,reportAction,muteAction];
     } else {
         return nil;
     }

@@ -10,11 +10,13 @@
 #import "VideoViewController.h"
 
 #import "ColorUtils.h"
+#import "ConstantUtils.h"
 
 @interface WelcomeViewController ()
 
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
+@property (weak, nonatomic) IBOutlet UILabel *termsLabel;
 
 @end
 
@@ -26,6 +28,12 @@
     [super viewDidLoad];
 
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    
+    self.termsLabel.numberOfLines = 0;
+    self.termsLabel.text = NSLocalizedString(@"terms_label", nil);
+    self.termsLabel.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOnLabel)];
+    [self.termsLabel addGestureRecognizer:tapGesture];
     
     //Login Button
     [self.loginButton setTitle:NSLocalizedString(@"login_button", nil) forState:UIControlStateNormal];
@@ -69,14 +77,20 @@
     if(i >= [colors count]) {
         i = 0;
     }
-    
-    [UIView animateWithDuration:1.5f animations:^{
+    [UIView animateWithDuration:1.5f
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
         self.colorView.backgroundColor = [colors objectAtIndex:i];
-    } completion:^(BOOL finished) {
+    }   completion:^(BOOL finished) {
         ++i;
         [self doBackgroundColorAnimation];
     }];
     
+}
+
+- (void)handleTapOnLabel {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kFlashTapeWebsiteTermsLink]];
 }
 
 

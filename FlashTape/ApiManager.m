@@ -675,4 +675,16 @@
     }];
 }
 
+
+// --------------------------------------------
+#pragma mark - Report
+// --------------------------------------------
++ (void)createReportWithUser:(User *)user
+{
+    PFObject *report = [PFObject objectWithClassName:@"Report"];
+    report[@"reported"] = user;
+    report[@"reporter"] = [User currentUser];
+    [report saveInBackground];
+}
+
 @end

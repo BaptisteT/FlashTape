@@ -1521,8 +1521,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1541,7 +1541,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
 			};
 			name = Debug;
 		};
@@ -1550,7 +1550,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1570,7 +1570,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
 			};
 			name = Release;
 		};

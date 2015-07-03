@@ -120,4 +120,9 @@
 
 + (void)incrementInviteSeenCount:(ABContact *)contact;
 
+// --------------------------------------------
+#pragma mark - Report
+// --------------------------------------------
++ (void)createReportWithUser:(User *)user;
+
 @end

@@ -13,6 +13,7 @@
 
 // Welcome
 "login_button" = "Let's flash!";
+"terms_label" = "By signing in you agree to the terms of service and privacy policy.";
 
 // Phone
 "phone_number_error_message" = "Invalid phone number.";
@@ -158,6 +159,7 @@
 "ok_button" = "Allow";
 "later_button" = "Later";
 
-
+"no_sms_error_message" = "Sorry, SMS are not available";
+"report_action" = "Report";
 
 

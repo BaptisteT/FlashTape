@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FlashTape/VideoViewController.m"
-            timestampString = "457629209.426676"
+            timestampString = "457633592.248494"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "425"
-            endingLineNumber = "425"
+            startingLineNumber = "426"
+            endingLineNumber = "426"
             landmarkName = "-handleLongPressGesture:"
             landmarkType = "5">
          </BreakpointContent>

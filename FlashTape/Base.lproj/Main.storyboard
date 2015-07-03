@@ -10,6 +10,7 @@
         <mutableArray key="NHaasGroteskDSPro-55Rg.ttf">
             <string>NHaasGroteskDSPro-55Rg</string>
             <string>NHaasGroteskDSPro-55Rg</string>
+            <string>NHaasGroteskDSPro-55Rg</string>
         </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
             <string>NHaasGroteskDSPro-65Md</string>
@@ -114,7 +115,38 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mbS-NP-txz" userLabel="ColorView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vIw-kP-5e3">
+                                        <rect key="frame" x="40" y="576" width="520" height="14"/>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-55Rg" family="Neue Haas Grotesk Display Pro" pointSize="12"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ca5-WV-ZY2">
+                                        <rect key="frame" x="8" y="510" width="584" height="56"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="56" id="GF1-9C-22x"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="19"/>
+                                        <state key="normal" title="login_button">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="8gV-2N-LTm" kind="show" id="3EH-g9-vsm"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="Ca5-WV-ZY2" secondAttribute="centerX" id="AiF-IX-NXR"/>
+                                    <constraint firstItem="Ca5-WV-ZY2" firstAttribute="leading" secondItem="mbS-NP-txz" secondAttribute="leading" constant="8" id="B6k-s5-ffD"/>
+                                    <constraint firstAttribute="bottom" secondItem="vIw-kP-5e3" secondAttribute="bottom" constant="10" id="H67-IN-0L0"/>
+                                    <constraint firstItem="vIw-kP-5e3" firstAttribute="top" secondItem="Ca5-WV-ZY2" secondAttribute="bottom" constant="10" id="Sdr-VQ-BRs"/>
+                                    <constraint firstAttribute="centerX" secondItem="vIw-kP-5e3" secondAttribute="centerX" id="ae1-Go-6vj"/>
+                                    <constraint firstItem="vIw-kP-5e3" firstAttribute="leading" secondItem="mbS-NP-txz" secondAttribute="leading" constant="40" id="bFu-7C-1fQ"/>
+                                </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Flashtape" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5P-zP-7gE">
                                 <rect key="frame" x="226" y="279" width="148" height="41"/>
@@ -122,45 +154,17 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ca5-WV-ZY2">
-                                <rect key="frame" x="10" y="534" width="580" height="56"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="GF1-9C-22x"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="19"/>
-                                <state key="normal" title="login_button">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="8gV-2N-LTm" kind="show" id="3EH-g9-vsm"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.56862745098039214" green="0.22352941176470587" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="Ca5-WV-ZY2" secondAttribute="centerY" constant="-21" id="2hT-Dx-q1d"/>
                             <constraint firstAttribute="centerY" secondItem="y5P-zP-7gE" secondAttribute="centerY" id="5kf-pe-EYn"/>
                             <constraint firstItem="mbS-NP-txz" firstAttribute="leading" secondItem="0wt-NZ-llf" secondAttribute="leading" id="BeP-Ec-Fay"/>
                             <constraint firstItem="L6a-f6-Mzh" firstAttribute="top" secondItem="mbS-NP-txz" secondAttribute="bottom" id="KcS-Nx-X7R"/>
                             <constraint firstAttribute="trailing" secondItem="mbS-NP-txz" secondAttribute="trailing" id="QBW-Eo-qZg"/>
-                            <constraint firstItem="Ca5-WV-ZY2" firstAttribute="leading" secondItem="0wt-NZ-llf" secondAttribute="leading" constant="10" id="XBl-Uq-fod"/>
                             <constraint firstAttribute="centerX" secondItem="y5P-zP-7gE" secondAttribute="centerX" id="XlC-Fx-EsU"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Ca5-WV-ZY2" secondAttribute="trailing" constant="-6" id="YC2-L7-liz"/>
                             <constraint firstItem="mbS-NP-txz" firstAttribute="top" secondItem="0wt-NZ-llf" secondAttribute="top" id="d2m-YY-Ht4"/>
-                            <constraint firstAttribute="centerX" secondItem="Ca5-WV-ZY2" secondAttribute="centerX" id="h9V-dh-H6O"/>
-                            <constraint firstItem="L6a-f6-Mzh" firstAttribute="top" secondItem="Ca5-WV-ZY2" secondAttribute="bottom" constant="10" id="iBT-kK-rfH"/>
-                            <constraint firstAttribute="centerX" secondItem="Ca5-WV-ZY2" secondAttribute="centerX" id="npa-tH-yEH"/>
                             <constraint firstAttribute="centerX" secondItem="mbS-NP-txz" secondAttribute="centerX" id="slH-gv-GHg"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="2hT-Dx-q1d"/>
-                                <exclude reference="YC2-L7-liz"/>
-                                <exclude reference="npa-tH-yEH"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="uZl-C5-P1a"/>
                     <nil key="simulatedStatusBarMetrics"/>
@@ -168,6 +172,7 @@
                     <connections>
                         <outlet property="colorView" destination="mbS-NP-txz" id="ywq-6v-fsw"/>
                         <outlet property="loginButton" destination="Ca5-WV-ZY2" id="i9e-kr-Bzw"/>
+                        <outlet property="termsLabel" destination="vIw-kP-5e3" id="LmO-DN-HN9"/>
                         <segue destination="ut7-PO-jUy" kind="custom" identifier="Video From Welcome" customClass="PushNoAnimationSegue" id="U6D-kt-n9L"/>
                     </connections>
                 </viewController>
@@ -2231,6 +2236,6 @@
         <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="1zA-QC-7sl"/>
+        <segue reference="U6D-kt-n9L"/>
     </inferredMetricsTieBreakers>
 </document>

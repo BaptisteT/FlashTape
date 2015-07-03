@@ -62,7 +62,7 @@
         ((ABFlashersViewController *) [segue destinationViewController]).flashersArray = (NSArray *)sender;
     } else if ([segueName isEqualToString: @"Video From ABAccess"]) {
         ((VideoViewController *) [segue destinationViewController]).isSignup = true;
-        ((VideoViewController *) [segue destinationViewController]).parseContact = false;
+        ((VideoViewController *) [segue destinationViewController]).avoidParsingContact = [sender boolValue];
     }
 }
 
@@ -82,14 +82,14 @@
                                                              if (flashersArray && flashersArray.count > 0) {
                                                                  [self navigateToABFlashersController:flashersArray];
                                                              } else {
-                                                                 [self navigateToVideoController];
+                                                                 [self navigateToVideoController:NO];
                                                              }
                                                          } failure:^(NSError *error) {
-                                                             [self navigateToVideoController];
+                                                             [self navigateToVideoController:NO];
                                                          }];
                 [AddressbookUtils saveContactDictionnary:contactDictionnary];
             } else {
-                [self navigateToVideoController];
+                [self navigateToVideoController:NO];
             }
             [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT properties:@{@"allow": [NSNumber numberWithBool:granted]}];
         });
@@ -99,13 +99,13 @@
 
 - (IBAction)laterButtonClicked:(id)sender {
     [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_SKIPPED properties:nil];
-    [self navigateToVideoController];
+    [self navigateToVideoController:YES];
 }
 
-- (void)navigateToVideoController {
+- (void)navigateToVideoController:(BOOL)avoidParsing {
     [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_CLICKED properties:nil];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    [self performSegueWithIdentifier:@"Video From ABAccess" sender:nil];
+    [self performSegueWithIdentifier:@"Video From ABAccess" sender:[NSNumber numberWithBool:avoidParsing]];
 }
 
 - (void)navigateToABFlashersController:(NSArray *)flashers {

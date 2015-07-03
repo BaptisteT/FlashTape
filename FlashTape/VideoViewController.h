@@ -18,6 +18,6 @@
 
 @property (nonatomic) BOOL navigateDirectlyToFriends;
 @property (nonatomic) BOOL isSignup;
-@property (nonatomic) BOOL parseContact;
+@property (nonatomic) BOOL avoidParsingContact;
 
 @end

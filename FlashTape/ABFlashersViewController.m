@@ -78,7 +78,6 @@
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"Video From ABFlashers"]) {
         ((VideoViewController *) [segue destinationViewController]).isSignup = true;
-        ((VideoViewController *) [segue destinationViewController]).parseContact = true;
     }
 }
 

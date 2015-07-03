@@ -282,8 +282,9 @@
     
     // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    if (self.parseContact)
+    if (!self.avoidParsingContact) {
         [self parseContactsAndFindFriends];
+    }
     
     // Retrieve unread messages
     [self retrieveUnreadMessages];
