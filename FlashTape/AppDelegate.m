@@ -9,7 +9,6 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "Flurry.h"
-#import "GAI.h"
 #import "Mixpanel.h"
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
@@ -68,10 +67,6 @@
         
         // Track statistics around application opens.
         [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-        
-        // Google Analytics
-        [[GAI sharedInstance].logger setLogLevel:kGAILogLevelVerbose];
-        [[GAI sharedInstance] trackerWithTrackingId:@"UA-64360547-1"];
     }
     
     // Clean video data

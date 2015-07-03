@@ -80,7 +80,6 @@
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
-            <string>NHaasGroteskDSPro-65Md</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -547,6 +546,19 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="first_flash_tuto" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="1" translatesAutoresizingMaskIntoConstraints="NO" id="6Sm-nf-oLe" customClass="UICustomLineLabel">
+                                        <rect key="frame" x="203.5" y="282" width="193.5" height="36"/>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="30"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="first_flash_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="8sn-g0-uAX">
+                                        <rect key="frame" x="275" y="479" width="50" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="25D-A1-2g9"/>
+                                            <constraint firstAttribute="height" constant="36" id="3vW-Xn-y9z"/>
+                                        </constraints>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOb-67-bYR">
                                         <rect key="frame" x="10" y="545" width="580" height="45"/>
                                         <constraints>
@@ -594,14 +606,19 @@
                                     <constraint firstItem="ZCy-IZ-pCQ" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" id="G9z-N0-cJy"/>
                                     <constraint firstItem="ZCy-IZ-pCQ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="GgM-m0-dK5"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="width" secondItem="8ee-DQ-Tyu" secondAttribute="width" id="L0p-h3-N0a"/>
+                                    <constraint firstItem="hOb-67-bYR" firstAttribute="top" secondItem="8sn-g0-uAX" secondAttribute="bottom" constant="30" id="N9K-bP-hoT"/>
                                     <constraint firstItem="dZH-8B-oA5" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="15" id="NQt-to-G8E"/>
                                     <constraint firstAttribute="bottom" secondItem="ZCy-IZ-pCQ" secondAttribute="bottom" id="Nlh-ej-M9J"/>
                                     <constraint firstAttribute="bottom" secondItem="hOb-67-bYR" secondAttribute="bottom" constant="10" id="Qh5-nj-O1F"/>
                                     <constraint firstItem="dZH-8B-oA5" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="15" id="S1j-Y6-JEE"/>
+                                    <constraint firstAttribute="centerY" secondItem="6Sm-nf-oLe" secondAttribute="centerY" id="WNj-Ld-5s5"/>
                                     <constraint firstItem="ePW-Ve-NCZ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="20" id="WoF-uS-5oy"/>
+                                    <constraint firstItem="8sn-g0-uAX" firstAttribute="top" secondItem="6Sm-nf-oLe" secondAttribute="bottom" constant="42" id="XI3-Wf-Erb"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="YI8-op-pzm"/>
                                     <constraint firstItem="hOb-67-bYR" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" constant="10" id="a3J-Ht-ZTL"/>
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="cAH-hE-KeG"/>
+                                    <constraint firstAttribute="centerX" secondItem="6Sm-nf-oLe" secondAttribute="centerX" id="cjq-M5-Erv"/>
+                                    <constraint firstAttribute="centerX" secondItem="8sn-g0-uAX" secondAttribute="centerX" id="iqO-Z5-mjS"/>
                                     <constraint firstAttribute="centerY" secondItem="ZrJ-X2-Mtw" secondAttribute="centerY" id="qil-IO-mQz"/>
                                     <constraint firstAttribute="bottom" secondItem="ePW-Ve-NCZ" secondAttribute="bottom" constant="5" id="uIs-um-DSv"/>
                                     <constraint firstAttribute="trailing" secondItem="jbZ-6p-eMN" secondAttribute="trailing" constant="10" id="wWN-I1-NG8"/>
@@ -612,6 +629,7 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="whw-31-fB7"/>
+                                        <exclude reference="XI3-Wf-Erb"/>
                                         <exclude reference="L0p-h3-N0a"/>
                                         <exclude reference="YI8-op-pzm"/>
                                         <exclude reference="1Wn-3m-QOB"/>
@@ -797,6 +815,8 @@
                         <outlet property="cancelConfirmView" destination="97c-R3-Rzb" id="Ole-H5-VH1"/>
                         <outlet property="cancelTutoLabel" destination="qiD-Qr-Yah" id="t7Y-lT-eFh"/>
                         <outlet property="captionButton" destination="AUk-ak-rpt" id="2nw-2q-IqH"/>
+                        <outlet property="firstFlashTutoArrow" destination="8sn-g0-uAX" id="SWM-Ds-FJg"/>
+                        <outlet property="firstFlashTutoLabel" destination="6Sm-nf-oLe" id="0yB-tT-RfJ"/>
                         <outlet property="friendListButton" destination="dZH-8B-oA5" id="NRc-MR-GTy"/>
                         <outlet property="friendVideoView" destination="zj4-3e-BD0" id="iyw-zj-3NG"/>
                         <outlet property="metadataView" destination="7AN-Sl-wRh" id="Ede-wF-OLm"/>
@@ -810,7 +830,6 @@
                         <outlet property="slideHereTutoLabel" destination="fPO-x4-l6d" id="gkr-Tw-FSu"/>
                         <outlet property="timeLabel" destination="gMp-L0-adU" id="M2N-71-MnR"/>
                         <segue destination="gUo-G0-jbW" kind="presentation" identifier="Friends From Video" modalPresentationStyle="overCurrentContext" animates="NO" id="0bv-ip-Mhx"/>
-                        <segue destination="Fmf-mq-cd1" kind="presentation" identifier="First Flash From Video" animates="NO" id="DR2-2J-Y4R"/>
                         <segue destination="jni-Tb-Tnl" kind="presentation" identifier="Invite From Video" animates="NO" id="8YA-2t-PyU"/>
                     </connections>
                 </viewController>
@@ -860,7 +879,7 @@
                                     <action selector="laterButtonClicked:" destination="H5w-5b-7y8" eventType="touchUpInside" id="5PG-Rr-7h2"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="adressbook_explanation_label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tnb-zp-TWb">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="adressbook_explanation_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tnb-zp-TWb">
                                 <rect key="frame" x="31" y="172" width="538" height="20"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1640,62 +1659,6 @@
             </objects>
             <point key="canvasLocation" x="6244" y="-1307"/>
         </scene>
-        <!--First Flash Tuto View Controller-->
-        <scene sceneID="PrL-Q0-bBz">
-            <objects>
-                <viewController id="Fmf-mq-cd1" customClass="FirstFlashTutoViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="vvC-UV-LOw"/>
-                        <viewControllerLayoutGuide type="bottom" id="yUo-Pt-ngH"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8tb-4M-JQY">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sub_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VWd-uD-du0">
-                                <rect key="frame" x="20" y="534" width="560" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="dlc-Bv-JGH"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdZ-qz-hYJ">
-                                <rect key="frame" x="20" y="50" width="560" height="449"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="kdZ-qz-hYJ" secondAttribute="height" multiplier="1:1" id="0oV-c5-ndR"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="40"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="0oV-c5-ndR"/>
-                                    </mask>
-                                </variation>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.20784313730000001" green="0.71764705880000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="kdZ-qz-hYJ" firstAttribute="top" secondItem="vvC-UV-LOw" secondAttribute="bottom" constant="50" id="26P-9M-VTK"/>
-                            <constraint firstAttribute="centerX" secondItem="kdZ-qz-hYJ" secondAttribute="centerX" id="5ub-8j-fvE"/>
-                            <constraint firstAttribute="centerX" secondItem="VWd-uD-du0" secondAttribute="centerX" id="9CI-Ny-uG8"/>
-                            <constraint firstItem="VWd-uD-du0" firstAttribute="top" secondItem="kdZ-qz-hYJ" secondAttribute="bottom" constant="35" id="CD3-EK-vWD"/>
-                            <constraint firstItem="yUo-Pt-ngH" firstAttribute="top" secondItem="VWd-uD-du0" secondAttribute="bottom" constant="45" id="V9G-BM-YIs"/>
-                            <constraint firstItem="VWd-uD-du0" firstAttribute="leading" secondItem="8tb-4M-JQY" secondAttribute="leading" constant="20" id="nUi-hb-HdQ"/>
-                            <constraint firstItem="kdZ-qz-hYJ" firstAttribute="leading" secondItem="8tb-4M-JQY" secondAttribute="leading" constant="20" id="wUC-w4-kYp"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="tapToNextLabel" destination="VWd-uD-du0" id="Wda-xj-gHl"/>
-                        <outlet property="tutoLabel" destination="kdZ-qz-hYJ" id="9Ph-kU-9W0"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YwV-uc-yO7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5444" y="747"/>
-        </scene>
         <!--Invite Contact View Controller-->
         <scene sceneID="vb8-5x-Fl1">
             <objects>
@@ -1815,7 +1778,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fVX-XF-IAZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5444" y="1413"/>
+            <point key="canvasLocation" x="5452" y="859"/>
         </scene>
         <!--Send Message View Controller-->
         <scene sceneID="UEH-EB-br7">
@@ -2255,6 +2218,7 @@
         <image name="camera_flip_button" width="32" height="32"/>
         <image name="caption_button" width="32" height="32"/>
         <image name="check_icon" width="26" height="26"/>
+        <image name="first_flash_arrow" width="105" height="73"/>
         <image name="friends_button" width="32" height="32"/>
         <image name="save_camera_roll" width="30" height="30"/>
         <image name="separator-black" width="1" height="1"/>

@@ -602,9 +602,9 @@
     }];
 }
 
-+ (void)createAdminMessagesLocallyWithContent:(NSArray *)messageContents
-                                      success:(void(^)())successBlock
-                                 failureBlock:(void(^)(NSError *error))failureBlock
++ (void)createAdminMessagesWithContent:(NSArray *)messageContents
+                               success:(void(^)())successBlock
+                          failureBlock:(void(^)(NSError *error))failureBlock
 {
     User *sender = [User objectWithoutDataWithObjectId:kAdminUserObjectId];
     NSMutableArray *array = [NSMutableArray new];

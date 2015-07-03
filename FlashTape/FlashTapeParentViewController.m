@@ -21,7 +21,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.screenName = NSStringFromClass([self class]);
 }
 
 @end

@@ -17,5 +17,7 @@
 @interface VideoViewController : FlashTapeParentViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, SCRecorderDelegate, UIGestureRecognizerDelegate, FriendsVCProtocol, UITextViewDelegate, CaptionTextViewProtocol, UIAlertViewDelegate>
 
 @property (nonatomic) BOOL navigateDirectlyToFriends;
+@property (nonatomic) BOOL isSignup;
+@property (nonatomic) BOOL parseContact;
 
 @end

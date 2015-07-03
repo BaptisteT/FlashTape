@@ -5,9 +5,6 @@
 //  Created by Baptiste Truchot on 5/10/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
-#import "GAI.h"
-#import "GAIFields.h"
-#import "GAIDictionaryBuilder.h"
 #import "Mixpanel.h"
 #import <Parse/parse.h>
 
@@ -23,8 +20,6 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel.people set:@{@"name": user.flashUsername ? user.flashUsername : @"", @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
     [mixpanel identify:user.objectId];
-    
-    [[[GAI sharedInstance] defaultTracker] set:@"&uid" value:user.objectId];
     
     if (flag) {
         [TrackingUtils trackEvent:EVENT_USER_SIGNUP properties:nil];
@@ -50,11 +45,6 @@
     if ([arrayWithMixpanelPeopleTracking indexOfObject:eventName] != NSNotFound) {
         [mixpanel.people increment:eventName by:[NSNumber numberWithInt:1]];
     }
-    
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:eventName
-                                                                                        action:eventName
-                                                                                         label:nil
-                                                                                         value:nil] build]];
 }
 
 

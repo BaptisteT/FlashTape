@@ -43,6 +43,7 @@
 @property (strong, nonatomic) NSMutableOrderedSet *followingRelations;
 
 // Playing
+@property (strong, nonatomic) NSArray *tutoVideoArray;
 @property (strong, nonatomic) NSMutableArray *allVideosArray;
 @property (strong, nonatomic) NSArray *videosToPlayArray;
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *friendVideoView;
@@ -101,6 +102,10 @@
 // Invite
 @property (nonatomic) NSMutableArray *potentialContactsToInvite;
 
+// Tuto
+@property (weak, nonatomic) IBOutlet UILabel *firstFlashTutoLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *firstFlashTutoArrow;
+
 @end
 
 @implementation VideoViewController {
@@ -131,6 +136,7 @@
     self.unreadVideoCount = 0;
     self.friendVideoView.hidden = YES;
     self.potentialContactsToInvite = nil;
+    self.allVideosArray = [NSMutableArray new];
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
@@ -276,10 +282,25 @@
     
     // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    [self parseContactsAndFindFriends];
+    if (self.parseContact)
+        [self parseContactsAndFindFriends];
     
     // Retrieve unread messages
     [self retrieveUnreadMessages];
+    
+    // tuto video
+    if (self.isSignup) {
+        [VideoPost createTutoVideoAndExecuteSuccess:^(NSArray *videoArray) {
+            self.tutoVideoArray = videoArray;
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, videoArray.count)];
+            [self.allVideosArray insertObjects:videoArray atIndexes:indexSet];
+            [self setReplayButtonUI];
+            _createTutoAdminMessages = YES;
+        } failureBlock:nil];
+    }
+    self.firstFlashTutoArrow.hidden = YES;
+    self.firstFlashTutoLabel.hidden = YES;
+    self.firstFlashTutoLabel.text = NSLocalizedString(@"first_flash_tuto_label", nil);
     
     // Callback
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -441,6 +462,7 @@
         [self sendFailedVideo];
     } else {
         self.replayButton.enabled = NO;
+        
         NSArray *unseenArray = [self unseenVideosArray];
         self.videosToPlayArray = unseenArray.count > 0 ? unseenArray : self.allVideosArray;
         [self createCompositionAndPlayVideos];
@@ -463,10 +485,8 @@
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
-//    self.captionTextView.text = @"Invite them\nand\nfollow their life\nseconds\nby seconds!";
-    //@"Enjoy\nFlashtaping with\nyour friends!";
-    //@"Invite them and follow their life seconds by seconds!";
-    //@"Your daily feed\ngather what you\nand your friends\nflashed in\nthe last 24 hours";
+    // todo BT
+    // bug big caption
     [self textViewDidChange:self.captionTextView];
     
     [TrackingUtils trackEvent:EVENT_CAPTION_CLICKED properties:nil];
@@ -526,7 +546,12 @@
 }
 
 - (void)setVideoArray:(NSArray *)videoPostArray {
-    self.allVideosArray = [NSMutableArray arrayWithArray:videoPostArray];
+    if (self.tutoVideoArray && self.tutoVideoArray.count > 0) {
+        self.allVideosArray = [NSMutableArray arrayWithArray:self.tutoVideoArray];
+    } else {
+        self.allVideosArray = [NSMutableArray new];
+    }
+    [self.allVideosArray addObjectsFromArray:videoPostArray];
     [self setReplayButtonUI];
 }
 
@@ -713,7 +738,7 @@
     
     // tuto admin messages
     if (_createTutoAdminMessages) {
-        [ApiManager createAdminMessagesLocallyWithContent:@[NSLocalizedString(@"welcome_admin_message_1", nil),NSLocalizedString(@"welcome_admin_message_2", nil),NSLocalizedString(@"welcome_admin_message_3", nil)] success:^{
+        [ApiManager createAdminMessagesWithContent:@[NSLocalizedString(@"welcome_admin_message_1", nil),NSLocalizedString(@"welcome_admin_message_2", nil),NSLocalizedString(@"welcome_admin_message_3", nil)] success:^{
             _createTutoAdminMessages = NO;
             [self retrieveUnreadMessages];
         } failureBlock:nil];
@@ -811,7 +836,6 @@
         NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
         post.videoProperties = properties;
         
-        // todo BT
         AVAsset *asset = recordSession.assetRepresentingSegments;
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];
         exporter.outputUrl = post.localUrl;
@@ -858,6 +882,7 @@
     
     [DatastoreUtils pinVideoAsUnsend:post];
     self.isSendingCount ++;
+    
     [ApiManager saveVideoPost:post
             andExecuteSuccess:^() {
                 [DatastoreUtils unpinVideoAsUnsend:post];
@@ -870,6 +895,11 @@
                     [self setReplayButtonUI];
                 // Track
                 [TrackingUtils trackEvent:EVENT_VIDEO_SENT properties:post.videoProperties];
+                
+                // 1st flash
+                if (userScore == kUserInitialScore) {
+                    [self startFirstFlashTutoAnim];
+                }
             } failure:^(NSError *error, BOOL addToFailArray) {
                 self.isSendingCount --;
                 if (addToFailArray) {
@@ -879,26 +909,14 @@
                 }
                 [self setReplayButtonUI];
             }];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         self.captionTextView.text = @"";
         self.captionTextView.hidden = YES;
         
         // 1st flash
         if (userScore == kUserInitialScore) {
-            // Tuto NUX
-            [self performSegueWithIdentifier:@"First Flash From Video" sender:nil];
-            
-            // Add tuto videos
-            [VideoPost createTutoVideoAndExecuteSuccess:^(NSArray *videoArray) {
-                [self.allVideosArray addObjectsFromArray:videoArray];
-                [self setReplayButtonUI];
-                _createTutoAdminMessages = YES;
-            } failureBlock:nil];
-            
-            // 3 invite for the first time
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:3]];
-            });
+            self.firstFlashTutoLabel.hidden = NO;
         }
     });
 }
@@ -988,6 +1006,7 @@
 {
     self.friendVideoView.hidden = !flag;
     if (flag) {
+        [self stopFirstFlashTutoAnim];
         [self.whiteNoisePlayer play];
         [self endPreviewMode];
     } else {
@@ -1009,6 +1028,7 @@
 }
 
 - (void)setRecordingMode {
+    [self stopFirstFlashTutoAnim];
     [self setPlayingMode:NO];
     [self endPreviewMode];
     
@@ -1045,12 +1065,32 @@
     self.cancelConfirmView.hidden = YES;
     self.cancelAreaView.hidden = NO;
     self.previewView.hidden = NO;
-    if (self.captionTextView.text != 0) {
+    if (self.captionTextView.text.length != 0) {
         self.releaseToSendTuto.hidden = YES;
         [self.previewView insertSubview:self.captionTextView belowSubview:self.cancelConfirmView];
     } else {
         self.releaseToSendTuto.hidden = NO;
     }
+}
+
+
+- (void)startFirstFlashTutoAnim {
+    self.firstFlashTutoArrow.hidden = NO;
+    self.firstFlashTutoLabel.hidden = NO;
+    CGRect initialFrame = self.firstFlashTutoArrow.frame;
+    [UIView animateWithDuration:0.5f
+                          delay:0.0f
+                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
+                     animations:^{
+                         [self.firstFlashTutoArrow setFrame:CGRectMake(initialFrame.origin.x, initialFrame.origin.y - 30, initialFrame.size.width, initialFrame.size.height)];
+                     }
+                     completion:nil];
+}
+
+- (void)stopFirstFlashTutoAnim {
+    [self.firstFlashTutoArrow.layer removeAllAnimations];
+    self.firstFlashTutoArrow.hidden = YES;
+    self.firstFlashTutoLabel.hidden = YES;
 }
 
 - (void)setReplayButtonUI {
@@ -1136,7 +1176,7 @@
         [self setReplayButtonUI];
         self.captionTextView.hidden = NO;
         self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
-        self.recordTutoLabel.hidden = self.captionTextView.text.length != 0 || [self.captionTextView isFirstResponder];
+        self.recordTutoLabel.hidden = self.captionTextView.text.length != 0 || [self.captionTextView isFirstResponder] || !self.firstFlashTutoLabel.hidden;
     }
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;

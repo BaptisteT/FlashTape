@@ -14,7 +14,7 @@
 @end
 
 // System
-static NSString * const kFlashTapeAppStoreLink = @"http://beta.flashtape.co";
+static NSString * const kFlashTapeInviteLink = @"http://get.flashtape.co";
 static NSString * const kFlashTapeWebsiteLink = @"http://flashtape.co/";
 
 //Flurry token
@@ -44,7 +44,7 @@ static const float kRecordSessionMaxDuration = 2.0;
 static const float kRecordMinDuration = 0.25;
 static const float kCaptionTapMaxDuration = 0.25;
 static const float kVideoEndCutDuration = 0.1;
-static const NSInteger kMaxScoreBeforeHidingImportantTutos = 20;
+static const NSInteger kMaxScoreBeforeHidingImportantTutos = 5;
 static const NSInteger kMaxScoreBeforeHidingOtherTutos = 3;
 
 // Playing

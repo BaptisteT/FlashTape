@@ -14,6 +14,7 @@
 
 #import "AddressbookUtils.h"
 #import "MBProgressHUD.h"
+#import "VideoViewController.h"
 
 @interface ABFlashersViewController ()
 
@@ -71,6 +72,14 @@
 
 - (void)navigateToVideoController {
     [self performSegueWithIdentifier:@"Video From ABFlashers" sender:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSString * segueName = segue.identifier;
+    if ([segueName isEqualToString: @"Video From ABFlashers"]) {
+        ((VideoViewController *) [segue destinationViewController]).isSignup = true;
+        ((VideoViewController *) [segue destinationViewController]).parseContact = true;
+    }
 }
 
 // ----------------------------------------------------------

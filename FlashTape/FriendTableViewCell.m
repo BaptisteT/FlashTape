@@ -11,6 +11,7 @@
 #import "FriendTableViewCell.h"
 
 #import "ColorUtils.h"
+#import "ConstantUtils.h"
 #import "ImageUtils.h"
 
 @interface FriendTableViewCell()
@@ -71,6 +72,8 @@
 {
     self.nameLabel.text = user.flashUsername;
     self.scoreLabel.text = [NSString stringWithFormat:@"%lu",(long)(user.score ? user.score : 0)];
+    self.scoreLabel.hidden = [user.objectId isEqualToString:kAdminUserObjectId];
+    
     self.nameLabel.translatesAutoresizingMaskIntoConstraints = YES;
     self.scoreLabel.translatesAutoresizingMaskIntoConstraints = YES;
     

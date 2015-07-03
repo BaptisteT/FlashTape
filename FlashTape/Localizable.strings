@@ -30,7 +30,7 @@
 "username_explanation" = "Pick your unique username and have a lot of fun!";
 "save_username_error_title" = "Sorry, we could not save your username";
 "save_username_error_message" = "Please, try again.";
-"already_taken_username_error_message" = "Please, pick another one";
+"already_taken_username_error_message" = "Please, pick another one.";
 "already_taken_username_error_title" = "Sorry, this username is already taken";
 "short_username_error_message" = "Minimum length is 3 characters";
 "short_username_error_title" = "Oops that username is too short";
@@ -46,9 +46,7 @@
 "add_friends_button" = "Add %lu friends ❯";
 
 // 1st flash
-"tap_to_next" = "Tap to next";
-"first_flash_message_1" = "You just posted your first flash, Congrats!";
-"first_flash_message_2" = "Only your friends can watch your flashes.";
+"first_flash_tuto_label" = "Congrats for your 1st flash!";
 
 // 1st messages
 "welcome_admin_message_1" = "Welcome to Flashtape!";
@@ -105,6 +103,7 @@
 // Add & delete
 "add_button" = "+";
 "delete_button" = "–";
+"delete_action" = "Delete";
 "delete_following_alert_title" = "Delete ?";
 "delete_following_alert_message" = "%@ won't appear in this list anymore. You won't see his / her flashes and you won't be able to send him messages.";
 "delete_and_stop_explaining_button" = "Delete and don't ask me again";

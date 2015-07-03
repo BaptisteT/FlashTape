@@ -11,6 +11,7 @@
 
 #import "ABAccessViewController.h"
 #import "ABFlashersViewController.h"
+#import "VideoViewController.h"
 
 #import "AddressbookUtils.h"
 #import "ColorUtils.h"
@@ -40,6 +41,7 @@
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     
     // Label
+    self.ABExplanationLabel.numberOfLines = 0;
     self.ABAccessContactLabel.lineHeight = 4.0f;
     self.ABAccessContactLabel.lineType = LineTypeDown;
     self.ABAccessContactLabel.text = NSLocalizedString(@"allow_contact_label", nil);
@@ -58,6 +60,9 @@
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"ABFlashers From ABAccess"]) {
         ((ABFlashersViewController *) [segue destinationViewController]).flashersArray = (NSArray *)sender;
+    } else if ([segueName isEqualToString: @"Video From ABAccess"]) {
+        ((VideoViewController *) [segue destinationViewController]).isSignup = true;
+        ((VideoViewController *) [segue destinationViewController]).parseContact = false;
     }
 }
 

@@ -87,6 +87,7 @@
 
     self.resultTableView.delegate = self;
     self.resultTableView.dataSource = self;
+    self.resultTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectZero];
     self.resultTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Reset new flasher / follower at 0
@@ -166,9 +167,9 @@
     if (section == 0) {
         return self.usernameSearchBar.text.length > 0 ? 1 : 0;
     } else if (section == 1) {
-        return self.autocompleteUnfollowedArray.count;
-    } else if (section == 2) {
         return self.autocompleteUnrelatedArray.count;
+    } else if (section == 2) {
+        return self.autocompleteUnfollowedArray.count;
     } else if (section == 3) {
         return self.autocompleteContactArray.count;
     } else {
@@ -195,11 +196,11 @@
         if (indexPath.section == 0) {
             [cell setSearchedUsernameTo:self.usernameSearchBar.text];
         } else if (indexPath.section == 1) {
-            if (indexPath.row < self.autocompleteUnfollowedArray.count)
-                [cell setCellUserTo:self.autocompleteUnfollowedArray[indexPath.row]];
-        } else if (indexPath.section == 2) {
             if (indexPath.row < self.autocompleteUnrelatedArray.count)
                 [cell setCellUserTo:self.autocompleteUnrelatedArray[indexPath.row]];
+        } else if (indexPath.section == 2) {
+            if (indexPath.row < self.autocompleteUnfollowedArray.count)
+                [cell setCellUserTo:self.autocompleteUnfollowedArray[indexPath.row]];
         }
         
         cell.separatorView.hidden = (1 + indexPath.row == [self numberOfRowsForSection:indexPath.section]);
@@ -216,7 +217,7 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 18)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 20)];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 2, tableView.frame.size.width - 32, 18)];
     [label setFont:[UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:14]];
     label.textColor = [UIColor colorWithRed:0./255 green:0./255 blue:0./255 alpha:0.2];
@@ -224,18 +225,41 @@
         NSString *string = NSLocalizedString(@"username_section_title", nil);
         [label setText:string];
     } else if (section == 1) {
-        NSString *string = NSLocalizedString(@"follower_section_title", nil);
-        [label setText:string];
-    } else if (section == 2) {
+        if (self.autocompleteUnrelatedArray.count == 0) {
+            return nil;
+        }
         NSString *string = NSLocalizedString(@"addressbook_section_title", nil);
         [label setText:string];
+    } else if (section == 2) {
+        if (self.autocompleteUnfollowedArray.count == 0) {
+            return nil;
+        }
+        NSString *string = NSLocalizedString(@"follower_section_title", nil);
+        [label setText:string];
     } else {
+        if (self.autocompleteContactArray.count == 0) {
+            return nil;
+        }
         NSString *string = NSLocalizedString(@"invite_section_title", nil);
         [label setText:string];
     }
     [view addSubview:label];
     [view setBackgroundColor:[UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1.0]];
     return view;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 0 && self.usernameSearchBar.text.length == 0) {
+        return 0;
+    }
+    if (section == 1 && self.autocompleteUnrelatedArray.count == 0) {
+        return 0;
+    }
+    if (section == 2 && self.autocompleteUnfollowedArray.count == 0) {
+        return 0;
+    }
+    return 20;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {

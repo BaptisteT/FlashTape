@@ -472,7 +472,7 @@
                 }
             }];
         UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive
-                                                                              title:NSLocalizedString(@"delete_button",nil)
+                                                                              title:NSLocalizedString(@"delete_action",nil)
             handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                 if ([GeneralUtils explainBeforeDelete]) {
                     self.selectedRelation = relation;
@@ -481,7 +481,7 @@
                                                 message:[NSString stringWithFormat:NSLocalizedString(@"delete_following_alert_message", nil), relation.to.flashUsername]
                                                delegate:self
                                       cancelButtonTitle:NSLocalizedString(@"cancel_button_title", nil)
-                                      otherButtonTitles:NSLocalizedString(@"delete_and_stop_explaining_button", nil),NSLocalizedString(@"delete_button", nil), nil] show];
+                                      otherButtonTitles:NSLocalizedString(@"delete_and_stop_explaining_button", nil),NSLocalizedString(@"delete_action", nil), nil] show];
                 } else {
                     // delete
                     [self deleteFollow:relation];
@@ -687,9 +687,10 @@
     }
     MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
     messageController.messageComposeDelegate = self;
-    [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeAppStoreLink]];
+    [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeInviteLink]];
     [self presentViewController:messageController animated:YES completion:nil];
 }
+
 // Dismiss message after finish
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
