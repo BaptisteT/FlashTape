@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *addOrDeleteFriendButton;
 @property (strong, nonatomic) User *user;
+@property (strong, nonatomic) NSString *lastTransformedUsername;
 
 @end
 
@@ -36,9 +37,10 @@
         [self setAddOrDeleteButtonState:0];
         
         NSString *transformedUsername = [GeneralUtils transformedUsernameFromOriginal:username];
+        self.lastTransformedUsername = transformedUsername;
         [ApiManager findUserByUsername:transformedUsername
                                success:^(User *user) {
-                                   if ([transformedUsername isEqualToString:user.transformedUsername]) { // avoid asynchro issue
+                                   if ([transformedUsername isEqualToString:self.lastTransformedUsername]) { // avoid asynchro issue
                                        if (!user) {
                                            self.addOrDeleteFriendButton.hidden = YES;
                                        } else {
@@ -108,7 +110,6 @@
         if (state == 1) {
             [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"add_button",nil) forState:UIControlStateNormal];
             [self.addOrDeleteFriendButton setBackgroundColor:[ColorUtils blue]];
-
         } else {
             [self.addOrDeleteFriendButton setTitle:NSLocalizedString(@"delete_button",nil) forState:UIControlStateNormal];
             [self.addOrDeleteFriendButton setBackgroundColor:[ColorUtils pink]];

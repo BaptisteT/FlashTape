@@ -35,7 +35,7 @@
     [super viewDidLoad];
     
     if (self.contactArray.count == 0) {
-        [self dismissViewControllerAnimated:NO completion:nil];
+        [self performSelector:@selector(nextOrDismiss) withObject:nil afterDelay:0.1];
         return;
     }
     

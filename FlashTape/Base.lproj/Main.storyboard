@@ -441,8 +441,8 @@
                                     <constraint firstAttribute="height" constant="64" id="djO-kB-ssP"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username_explanation_label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ua-kr-dYc">
-                                <rect key="frame" x="201" y="172" width="199" height="20"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username_explanation_label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="0ua-kr-dYc">
+                                <rect key="frame" x="20" y="172" width="560" height="20"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -451,6 +451,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="yfk-3T-DAj" firstAttribute="top" secondItem="1Rc-4d-Bmk" secondAttribute="top" constant="25" id="1EG-Dj-gcd"/>
+                            <constraint firstItem="0ua-kr-dYc" firstAttribute="leading" secondItem="lTT-2m-4e2" secondAttribute="leading" constant="20" id="6g2-sO-cM9"/>
                             <constraint firstItem="nrZ-vY-Chb" firstAttribute="top" secondItem="1Rc-4d-Bmk" secondAttribute="top" constant="96" id="7gb-Zi-cyb"/>
                             <constraint firstAttribute="centerX" secondItem="a4O-IV-yjS" secondAttribute="centerX" id="8SD-vU-uaj"/>
                             <constraint firstItem="0ua-kr-dYc" firstAttribute="top" secondItem="nrZ-vY-Chb" secondAttribute="bottom" constant="20" id="ALg-Qg-etD"/>
@@ -1183,12 +1184,18 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="uav-2k-Ck6" firstAttribute="leading" secondItem="SHt-Hd-s5V" secondAttribute="leading" constant="20" id="7tL-DY-ZOy"/>
+                                                <constraint firstAttribute="trailing" secondItem="mU8-Lc-iRw" secondAttribute="trailing" constant="15" id="INP-E7-moy"/>
                                                 <constraint firstAttribute="centerY" secondItem="mU8-Lc-iRw" secondAttribute="centerY" id="Iff-rP-Evg"/>
                                                 <constraint firstAttribute="centerY" secondItem="uav-2k-Ck6" secondAttribute="centerY" id="LM3-ZM-Djn"/>
                                                 <constraint firstAttribute="centerY" secondItem="JNV-PK-2Xd" secondAttribute="centerY" id="cQ6-2D-WXy"/>
                                                 <constraint firstItem="JNV-PK-2Xd" firstAttribute="leading" secondItem="SHt-Hd-s5V" secondAttribute="leadingMargin" constant="13" id="dwu-7Y-G2M"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="mU8-Lc-iRw" secondAttribute="trailing" constant="7" id="haL-39-S2m"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="haL-39-S2m"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
                                         <connections>
@@ -2224,6 +2231,6 @@
         <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YXT-I7-Opd"/>
+        <segue reference="1zA-QC-7sl"/>
     </inferredMetricsTieBreakers>
 </document>
