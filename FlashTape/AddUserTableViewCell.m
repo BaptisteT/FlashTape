@@ -21,7 +21,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *addOrDeleteFriendButton;
 @property (strong, nonatomic) User *user;
-@property (strong, nonatomic) IBOutlet UIButton *separatorView;
 
 @end
 

@@ -94,9 +94,6 @@
     [GeneralUtils setNewUnfollowedFollowerCount:0];
 }
 
-- (void)setImage:(UIImage *)iconImage forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state {
-}
-
 
 // --------------------------------------------
 #pragma mark - Actions
@@ -162,22 +159,26 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self numberOfRowsForSection:section];
+}
+
+- (NSInteger)numberOfRowsForSection:(NSInteger)section {
     if (section == 0) {
-        return 1;
+        return self.usernameSearchBar.text.length > 0 ? 1 : 0;
     } else if (section == 1) {
         return self.autocompleteUnfollowedArray.count;
     } else if (section == 2) {
         return self.autocompleteUnrelatedArray.count;
     } else if (section == 3) {
         return self.autocompleteContactArray.count;
+    } else {
+        return 0;
     }
-    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 3) {
         InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
-        
         NSString *number = self.autocompleteNumberArray[indexPath.row];
         NSString *name = self.autocompleteContactArray[indexPath.row];
         [cell initWithName:name number:number];
@@ -200,6 +201,8 @@
             if (indexPath.row < self.autocompleteUnrelatedArray.count)
                 [cell setCellUserTo:self.autocompleteUnrelatedArray[indexPath.row]];
         }
+        
+        cell.separatorView.hidden = (1 + indexPath.row == [self numberOfRowsForSection:indexPath.section]);
         return cell;
     }
     return nil;
@@ -210,22 +213,11 @@
     return 58;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return NSLocalizedString(@"username_section_title", nil);
-    } else if (section == 1) {
-        return NSLocalizedString(@"follower_section_title", nil);
-    } else if (section == 2) {
-        return NSLocalizedString(@"addressbook_section_title", nil);
-    } else {
-        return  NSLocalizedString(@"invite_section_title", nil);
-    }
-}
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(16, 0, tableView.frame.size.width-8, 18)];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 2, tableView.frame.size.width, 18)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 18)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 2, tableView.frame.size.width - 32, 18)];
     [label setFont:[UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:14]];
     label.textColor = [UIColor colorWithRed:0./255 green:0./255 blue:0./255 alpha:0.2];
     if (section == 0) {
@@ -250,13 +242,6 @@
     [self.usernameSearchBar resignFirstResponder];
 }
 
-// @BaptisteT: Delete the last separatorView for the last row of each section :)
-
-//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSInteger totalRow = [tableView numberOfRowsInSection:indexPath.section];
-//    if(indexPath.row == totalRow -1){
-//    }
-//}
 
 
 // --------------------------------------------

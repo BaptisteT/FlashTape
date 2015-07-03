@@ -53,6 +53,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *nameButton;
 @property (weak, nonatomic) IBOutlet UIView *metadataView;
+@property (weak, nonatomic) IBOutlet UILabel *slideHereTutoLabel;
 @property (strong, nonatomic) UIView *playingProgressView;
 @property (strong, nonatomic) UILongPressGestureRecognizer *playingProgressViewLongPressGesture;
 @property (strong, nonatomic) AVAudioPlayer *whiteNoisePlayer;
@@ -226,9 +227,11 @@
     [self.metadataView addGestureRecognizer:self.playingProgressViewLongPressGesture];
     [self.nameButton setTitle:@"" forState:UIControlStateNormal];
     self.timeLabel.text = @"";
+    self.slideHereTutoLabel.text = NSLocalizedString(@"slide_here_label", nil);
+    self.slideHereTutoLabel.hidden = YES;
     
      // Labels
-    if ([User currentUser].score >= kMaxScoreBeforeHidingTuto) {
+    if ([User currentUser].score >= kMaxScoreBeforeHidingImportantTutos) {
         [self.recordTutoLabel removeFromSuperview];
         [self.releaseToSendTuto removeFromSuperview];
     } else {
@@ -443,6 +446,8 @@
         [self createCompositionAndPlayVideos];
         if (unseenArray.count == 0) {
             [TrackingUtils trackEvent:EVENT_VIDEO_REPLAY properties:nil];
+            
+            self.slideHereTutoLabel.hidden = [User currentUser].score > kMaxScoreBeforeHidingOtherTutos;
         }
     }
 }
@@ -458,6 +463,12 @@
 }
 
 - (IBAction)captionButtonClicked:(id)sender {
+//    self.captionTextView.text = @"Invite them\nand\nfollow their life\nseconds\nby seconds!";
+    //@"Enjoy\nFlashtaping with\nyour friends!";
+    //@"Invite them and follow their life seconds by seconds!";
+    //@"Your daily feed\ngather what you\nand your friends\nflashed in\nthe last 24 hours";
+    [self textViewDidChange:self.captionTextView];
+    
     [TrackingUtils trackEvent:EVENT_CAPTION_CLICKED properties:nil];
     self.longPressGestureRecogniser.minimumPressDuration = 0.5;
     [self.captionTextView becomeFirstResponder];
@@ -778,7 +789,7 @@
             [self setCameraMode];
             
             // If record too short => open caption
-            if ([User currentUser].score > kMaxScoreBeforeHidingTuto && [[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
+            if ([User currentUser].score > kMaxScoreBeforeHidingImportantTutos && [[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
                 [self captionButtonClicked:nil];
             }
         }];
@@ -800,6 +811,7 @@
         NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
         post.videoProperties = properties;
         
+        // todo BT
         AVAsset *asset = recordSession.assetRepresentingSegments;
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];
         exporter.outputUrl = post.localUrl;
@@ -1005,6 +1017,12 @@
     // Show caption on camera
     self.captionTextView.hidden = (self.captionTextView.text.length == 0);
     
+    // 1st flash
+    if ([User currentUser].score < kMaxScoreBeforeHidingOtherTutos) {
+        self.recordTutoLabel.text = NSLocalizedString(@"keep_holding_label", nil);
+        self.recordTutoLabel.hidden = NO;
+    }
+    
     // Start UI + progress bar anim
     self.recordingProgressContainer.hidden = NO;
     self.recordingProgressBar.frame = CGRectMake(0,0, 0, self.recordingProgressContainer.frame.size.height);
@@ -1117,6 +1135,7 @@
         self.replayButton.alpha = 1;
         [self setReplayButtonUI];
         self.captionTextView.hidden = NO;
+        self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
         self.recordTutoLabel.hidden = self.captionTextView.text.length != 0 || [self.captionTextView isFirstResponder];
     }
     self.cameraSwitchButton.hidden = flag;

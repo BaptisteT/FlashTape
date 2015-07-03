@@ -139,8 +139,10 @@ static int downloadingCount = 0;
         if (!error) {
             VideoPost *post1 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_1" ofType:@"mp4"]]];
             VideoPost *post2 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_2" ofType:@"mp4"]]];
+            VideoPost *post3 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_3" ofType:@"mp4"]]];
+            VideoPost *post4 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_4" ofType:@"mp4"]]];
             if (successBlock) {
-                successBlock(@[post1,post2]);
+                successBlock(@[post1,post2, post3, post4]);
             }
         } else {
             if (failureBlock) failureBlock(error);

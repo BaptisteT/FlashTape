@@ -38,6 +38,10 @@
 #define EVENT_ME_VIDEO_CLICKED @"me.video.clicked"
 #define EVENT_PLAYING_SLIDE @"playing.slide"
 #define EVENT_PLAYING_TAP @"playing.tap"
+#define EVENT_ALLOW_CONTACT_CLICKED @"allow_contact.clicked"
+#define EVENT_ALLOW_CONTACT_SKIPPED @"allow_contact.skipped"
+#define EVENT_ALLOW_CONTACT @"contact.persmission"
+
 
 @interface TrackingUtils : NSObject
 

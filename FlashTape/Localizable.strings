@@ -55,6 +55,9 @@
 "welcome_admin_message_2" = "React to your friends by tapping on their name.";
 "welcome_admin_message_3" = "👌";
 
+//
+"slide_here_label" = "Slide here";
+
 // invite
 "tap_to_invite" = "Tap to invite";
 "not_now" = "Not now";
@@ -66,6 +69,7 @@
 
 // Record
 "hold_ro_record_label" = "Hold to record";
+"keep_holding_label" = "Keep holding to preview";
 "replay_label" = "Replay";
 "downloading_label" = "Downloading";
 "new_videos_label" = "new flashes";

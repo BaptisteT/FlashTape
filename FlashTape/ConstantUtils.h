@@ -44,7 +44,8 @@ static const float kRecordSessionMaxDuration = 2.0;
 static const float kRecordMinDuration = 0.25;
 static const float kCaptionTapMaxDuration = 0.25;
 static const float kVideoEndCutDuration = 0.1;
-static const NSInteger kMaxScoreBeforeHidingTuto = 20;
+static const NSInteger kMaxScoreBeforeHidingImportantTutos = 20;
+static const NSInteger kMaxScoreBeforeHidingOtherTutos = 3;
 
 // Playing
 static const NSInteger kPlayerQueueLength = 3;

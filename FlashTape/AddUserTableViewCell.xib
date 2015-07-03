@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14A386a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -65,7 +65,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="addOrDeleteFriendButton" destination="f1O-k8-QR3" id="Mf5-bg-7Lq"/>
-                <outlet property="separatorView" destination="f1O-k8-QR3" id="HBF-6s-Isw"/>
+                <outlet property="separatorView" destination="EQP-M3-3N6" id="Cni-Ys-CSC"/>
                 <outlet property="usernameLabel" destination="34R-3x-bIF" id="EIO-8h-VwU"/>
             </connections>
         </tableViewCell>

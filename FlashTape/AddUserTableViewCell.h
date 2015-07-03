@@ -15,6 +15,7 @@
 @interface AddUserTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) id<AddUserTVCDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIView *separatorView;
 
 - (void)setSearchedUsernameTo:(NSString *)username;
 - (void)setCellUserTo:(User *)user;

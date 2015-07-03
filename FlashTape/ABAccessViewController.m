@@ -17,6 +17,7 @@
 #import "ImageUtils.h"
 #import "UICustomLineLabel.h"
 #import "MBProgressHUD.h"
+#import "TrackingUtils.h"
 
 @interface ABAccessViewController ()
 
@@ -69,7 +70,7 @@
     // Ask access and parse contacts
     ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-                if (granted) {
+            if (granted) {
                 NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
                 [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
                                                          success:^(NSArray *flashersArray) {
@@ -85,16 +86,19 @@
             } else {
                 [self navigateToVideoController];
             }
+            [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT properties:@{@"allow": [NSNumber numberWithBool:granted]}];
         });
     });
     
 }
 
 - (IBAction)laterButtonClicked:(id)sender {
+    [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_SKIPPED properties:nil];
     [self navigateToVideoController];
 }
 
 - (void)navigateToVideoController {
+    [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_CLICKED properties:nil];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [self performSegueWithIdentifier:@"Video From ABAccess" sender:nil];
 }

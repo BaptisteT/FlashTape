@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14A386a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -12,6 +12,7 @@
             <string>NHaasGroteskDSPro-55Rg</string>
         </mutableArray>
         <mutableArray key="NHaasGroteskDSPro-65Md.ttf">
+            <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
             <string>NHaasGroteskDSPro-65Md</string>
@@ -637,7 +638,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y5X-sG-lcA">
-                                        <rect key="frame" x="256" y="521" width="89" height="22"/>
+                                        <rect key="frame" x="256" y="521.5" width="89" height="22"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
                                         <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
@@ -650,7 +651,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gMp-L0-adU">
-                                        <rect key="frame" x="282" y="545" width="36" height="21"/>
+                                        <rect key="frame" x="282.5" y="545.5" width="35.5" height="20.5"/>
                                         <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -659,9 +660,20 @@
                                     </label>
                                     <view contentMode="scaleToFill" restorationIdentifier="MetadataView" translatesAutoresizingMaskIntoConstraints="NO" id="7AN-Sl-wRh">
                                         <rect key="frame" x="0.0" y="570" width="600" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="slide_here" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPO-x4-l6d">
+                                                <rect key="frame" x="10" y="5.5" width="580" height="20.5"/>
+                                                <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="dNV-Ec-mJS"/>
+                                            <constraint firstAttribute="centerX" secondItem="fPO-x4-l6d" secondAttribute="centerX" id="eqa-cc-p1M"/>
+                                            <constraint firstAttribute="centerY" secondItem="fPO-x4-l6d" secondAttribute="centerY" id="lti-nE-zqV"/>
+                                            <constraint firstItem="fPO-x4-l6d" firstAttribute="leading" secondItem="7AN-Sl-wRh" secondAttribute="leading" constant="10" id="uC8-Rf-b0n"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -699,7 +711,7 @@
                                         <rect key="frame" x="0.0" y="550" width="600" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="move_here_to_cancel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="1" translatesAutoresizingMaskIntoConstraints="NO" id="qiD-Qr-Yah">
-                                                <rect key="frame" x="10" y="15" width="580" height="20"/>
+                                                <rect key="frame" x="10" y="15.5" width="580" height="19.5"/>
                                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -795,6 +807,7 @@
                         <outlet property="releaseToSendTuto" destination="mFv-lg-Y52" id="tfM-DO-5R5"/>
                         <outlet property="replayButton" destination="hOb-67-bYR" id="436-1J-73J"/>
                         <outlet property="sendingLoaderView" destination="ePW-Ve-NCZ" id="ynm-iY-Mx6"/>
+                        <outlet property="slideHereTutoLabel" destination="fPO-x4-l6d" id="gkr-Tw-FSu"/>
                         <outlet property="timeLabel" destination="gMp-L0-adU" id="M2N-71-MnR"/>
                         <segue destination="gUo-G0-jbW" kind="presentation" identifier="Friends From Video" modalPresentationStyle="overCurrentContext" animates="NO" id="0bv-ip-Mhx"/>
                         <segue destination="Fmf-mq-cd1" kind="presentation" identifier="First Flash From Video" animates="NO" id="DR2-2J-Y4R"/>
@@ -1586,14 +1599,15 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search username" translatesAutoresizingMaskIntoConstraints="NO" id="39C-VZ-6Rx">
-                                <rect key="frame" x="-10" y="64" width="618" height="44"/>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search_username" translatesAutoresizingMaskIntoConstraints="NO" id="39C-VZ-6Rx">
+                                <rect key="frame" x="-8" y="64" width="616" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="FG0-3Y-U7X" secondAttribute="trailing" id="45N-ml-w19"/>
+                            <constraint firstItem="39C-VZ-6Rx" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leading" constant="-8" id="61J-lh-P88"/>
                             <constraint firstAttribute="centerX" secondItem="39C-VZ-6Rx" secondAttribute="centerX" id="85n-is-NM4"/>
                             <constraint firstItem="J1C-rz-sDk" firstAttribute="centerY" secondItem="tdM-og-yc9" secondAttribute="centerY" id="9Iu-Cb-VOM"/>
                             <constraint firstItem="39C-VZ-6Rx" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leadingMargin" constant="-26" id="HPn-At-AEL"/>
@@ -1609,6 +1623,8 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="HPn-At-AEL"/>
+                                <exclude reference="hrA-OT-SfZ"/>
                                 <exclude reference="rhs-px-Tgc"/>
                             </mask>
                         </variation>
