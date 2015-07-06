@@ -60,7 +60,7 @@
 // invite
 "tap_to_invite" = "Tap to invite";
 "not_now" = "Not now";
-"mutual_friend_label" = "%@\n has %lu friends on Flashtape but has not joined yet.";
+"mutual_friend_label" = "%@\nhas %lu friends on Flashtape but has not joined yet.";
 
 // Auth
 "authentification_error_title" = "Authentification error";
@@ -88,7 +88,7 @@
 // Friends
 "friend_controller_title" = "Invite your friends";
 "friend_score_label" = "Flashtape is more fun with buddies!";
-"sharing_wording" = "Join me on FlashTape and watch my life second by second: %@";
+"sharing_wording" = "Join me on Flashtape and watch my life second by second: %@";
 "follow_or_block_alert_title" = "%@ does not belong to your friends";
 "follow_or_block_alert_message" = "You need to add him to read his message.";
 "follow_button" = "Add friend";

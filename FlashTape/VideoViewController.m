@@ -731,7 +731,7 @@
     // Update posts viewer Ids
     [ApiManager updateVideoPosts:self.videosToPlayArray];
     
-    if (self.potentialContactsToInvite != nil) {
+    if (self.potentialContactsToInvite != nil && self.potentialContactsToInvite.count > 0) {
         [self performSegueWithIdentifier:@"Invite From Video" sender:self.potentialContactsToInvite];
         self.potentialContactsToInvite = nil;
     }

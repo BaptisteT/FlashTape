@@ -1158,9 +1158,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3C5F97C91AEBB1F30098F70F /* FlashTape */ = {
+		3C5F97C91AEBB1F30098F70F /* Flashtape */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3C5F97F01AEBB1F30098F70F /* Build configuration list for PBXNativeTarget "FlashTape" */;
+			buildConfigurationList = 3C5F97F01AEBB1F30098F70F /* Build configuration list for PBXNativeTarget "Flashtape" */;
 			buildPhases = (
 				3C5F97C61AEBB1F30098F70F /* Sources */,
 				3C5F97C71AEBB1F30098F70F /* Frameworks */,
@@ -1171,7 +1171,7 @@
 			);
 			dependencies = (
 			);
-			name = FlashTape;
+			name = Flashtape;
 			productName = FlashTape;
 			productReference = 3C5F97CA1AEBB1F30098F70F /* FlashTape.app */;
 			productType = "com.apple.product-type.application";
@@ -1204,7 +1204,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3C5F97C91AEBB1F30098F70F /* FlashTape */,
+				3C5F97C91AEBB1F30098F70F /* Flashtape */,
 			);
 		};
 /* End PBXProject section */
@@ -1521,8 +1521,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1541,7 +1541,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
+				PROVISIONING_PROFILE = "cdfb2b97-1071-440e-a23e-a2d7e6fba673";
 			};
 			name = Debug;
 		};
@@ -1550,8 +1550,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ever";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1570,7 +1570,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
+				PROVISIONING_PROFILE = "cdfb2b97-1071-440e-a23e-a2d7e6fba673";
 			};
 			name = Release;
 		};
@@ -1586,7 +1586,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3C5F97F01AEBB1F30098F70F /* Build configuration list for PBXNativeTarget "FlashTape" */ = {
+		3C5F97F01AEBB1F30098F70F /* Build configuration list for PBXNativeTarget "Flashtape" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3C5F97F11AEBB1F30098F70F /* Debug */,

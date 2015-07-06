@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3C5F97C91AEBB1F30098F70F"
-               BuildableName = "FlashTape.app"
-               BlueprintName = "FlashTape"
+               BuildableName = "Flashtape.app"
+               BlueprintName = "Flashtape"
                ReferencedContainer = "container:FlashTape.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -57,8 +57,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3C5F97C91AEBB1F30098F70F"
-            BuildableName = "FlashTape.app"
-            BlueprintName = "FlashTape"
+            BuildableName = "Flashtape.app"
+            BlueprintName = "Flashtape"
             ReferencedContainer = "container:FlashTape.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -77,8 +77,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3C5F97C91AEBB1F30098F70F"
-            BuildableName = "FlashTape.app"
-            BlueprintName = "FlashTape"
+            BuildableName = "Flashtape.app"
+            BlueprintName = "Flashtape"
             ReferencedContainer = "container:FlashTape.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -96,8 +96,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3C5F97C91AEBB1F30098F70F"
-            BuildableName = "FlashTape.app"
-            BlueprintName = "FlashTape"
+            BuildableName = "Flashtape.app"
+            BlueprintName = "Flashtape"
             ReferencedContainer = "container:FlashTape.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

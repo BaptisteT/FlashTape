@@ -36,8 +36,8 @@
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 @property (strong, nonatomic) NSMutableArray *currentUserPosts;
-@property (weak, nonatomic) VideoPost *postToDelete;
-@property (weak, nonatomic) NSIndexPath *postToDetailIndexPath;
+@property (strong, nonatomic) VideoPost *postToDelete;
+@property (strong, nonatomic) NSIndexPath *postToDetailIndexPath;
 @property (strong, nonatomic) SendMessageViewController *sendMessageController;
 @property (strong, nonatomic) NSMutableDictionary *messagesReceivedDictionnary;
 @property (strong, nonatomic) NSMutableDictionary *messagesSentDictionnary;
@@ -345,7 +345,7 @@
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
         BOOL showViewers = NO;
         NSMutableArray *names = [NSMutableArray new];
-        showViewers = (indexPath == self.postToDetailIndexPath);
+        showViewers = [indexPath isEqual:self.postToDetailIndexPath];
         [cell initWithPost:post detailedState:showViewers viewerNames:names];
         cell.delegate = self;
         return cell;
@@ -361,7 +361,7 @@
         return 80;
     } else if ([self isCurrentUserPostCell:indexPath]) {
         VideoPost *post = (VideoPost *)self.currentUserPosts[self.currentUserPosts.count - indexPath.row];
-        return (indexPath == self.postToDetailIndexPath) ? kVideoCellHeight + [post viewerIdsArrayWithoutPoster].count * kVideoCellViewerAdditionalHeight : kVideoCellHeight;
+        return [indexPath isEqual:self.postToDetailIndexPath] ? kVideoCellHeight + [post viewerIdsArrayWithoutPoster].count * kVideoCellViewerAdditionalHeight : kVideoCellHeight;
     } else {
         // should not happen
         return 50;
@@ -382,7 +382,7 @@
         NSArray *pathArray;
         NSIndexPath *previousIndexPath = self.postToDetailIndexPath;
         if (previousIndexPath) {
-            if (indexPath == previousIndexPath) {
+            if ([indexPath isEqual:previousIndexPath]) {
                 self.postToDetailIndexPath = nil;
                 pathArray = @[indexPath];
             } else {
@@ -823,10 +823,11 @@
 #pragma mark - UI
 // --------------------------------------------
 // Background Color Cycle
-- (void) doBackgroundColorAnimation {
+- (void)doBackgroundColorAnimation {
     if (_stopAnimation) {
         return;
     }
+    
     static NSInteger i = 0;
     NSArray *colors = [NSArray arrayWithObjects:[ColorUtils pink],
                        [ColorUtils purple],
@@ -836,11 +837,12 @@
     if(i >= [colors count]) {
         i = 0;
     }
-    
+    NSLog(@"start %lu",(long)i);
     [UIView animateWithDuration:1.5f animations:^{
         self.colorView.backgroundColor = [colors objectAtIndex:i];
         [self.inviteButton setTitleColor:[colors objectAtIndex:i] forState:UIControlStateNormal];
     } completion:^(BOOL finished) {
+        NSLog(@"end %lu",(long)i);
         ++i;
         [self doBackgroundColorAnimation];
     }];

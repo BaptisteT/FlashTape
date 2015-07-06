@@ -12,6 +12,7 @@
 
 #import "AddressbookUtils.h"
 #import "ColorUtils.h"
+#import "GeneralUtils.h"
 #import "InviteUtils.h"
 #import "UICustomLineLabel.h"
 #import "TrackingUtils.h"
@@ -49,6 +50,10 @@
         
     // Name label
     [self setNameLabelWithContact:self.contactArray.firstObject];
+    
+    if ([GeneralUtils isiPhone4]) {
+        self.emojiLabel.font = [UIFont systemFontOfSize:180];
+    }
 }
 
 
@@ -82,7 +87,7 @@
     
     self.nameLabel.numberOfLines = 0;
     NSDictionary *contactDictionnary = [AddressbookUtils getContactDictionnary];
-    NSString *name = contactDictionnary[contact.number] ? contactDictionnary[contact.number] : @"" ;
+    NSString *name = contactDictionnary[contact.number] ? contactDictionnary[contact.number] : @"?" ;
     NSMutableAttributedString *nameAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"mutual_friend_label", nil),name,MAX(2, contact.users.count)]];
     NSRange whiteRange = [[nameAttributedString string] rangeOfString:name];
     [nameAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:whiteRange];
