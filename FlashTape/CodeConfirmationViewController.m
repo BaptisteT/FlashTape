@@ -19,10 +19,10 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *disclaimerLabel;
 @property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
-@property (strong, nonatomic) IBOutlet UITextField *codeTextField1;
-@property (strong, nonatomic) IBOutlet UITextField *codeTextField2;
-@property (strong, nonatomic) IBOutlet UITextField *codeTextField3;
-@property (strong, nonatomic) IBOutlet UITextField *codeTextField4;
+@property (strong, nonatomic) IBOutlet BackwardTextField *codeTextField1;
+@property (strong, nonatomic) IBOutlet BackwardTextField *codeTextField2;
+@property (strong, nonatomic) IBOutlet BackwardTextField *codeTextField3;
+@property (strong, nonatomic) IBOutlet BackwardTextField *codeTextField4;
 @property (strong, nonatomic) IBOutlet UIView *colorView1;
 @property (strong, nonatomic) IBOutlet UIView *colorView2;
 @property (strong, nonatomic) IBOutlet UIView *colorView3;
@@ -116,20 +116,28 @@
     
     if ( [finalString length] > 0 ) {
         textField.text = string;
-        
         if (self.codeTextField1.isFirstResponder) {
             [self.codeTextField2 becomeFirstResponder];
         } else if (self.codeTextField2.isFirstResponder) {
             [self.codeTextField3 becomeFirstResponder];
         } else if (self.codeTextField3.isFirstResponder) {
             [self.codeTextField4 becomeFirstResponder];
-        } else {
         }
         return NO;
     }
-    
     return YES;
 }
+
+- (void)backspaceOnEmptyStringDetected {
+    if (self.codeTextField2.isFirstResponder) {
+        [self.codeTextField1 becomeFirstResponder];
+    } else if (self.codeTextField3.isFirstResponder) {
+        [self.codeTextField2 becomeFirstResponder];
+    } else if (self.codeTextField4.isFirstResponder) {
+        [self.codeTextField3 becomeFirstResponder];
+    }
+}
+
 
 // --------------------------------------------
 #pragma mark - Background Color Cycle

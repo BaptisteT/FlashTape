@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BackwardTextField.h"
 #import "FlashTapeParentViewController.h"
 
-@interface CodeConfirmationViewController : FlashTapeParentViewController <UITextFieldDelegate>
+@interface CodeConfirmationViewController : FlashTapeParentViewController <BackwardTextFieldDelegate>
 
 @property (strong, nonatomic) NSString *phoneNumber;
 @property (strong, nonatomic) NSString *verificationCode;

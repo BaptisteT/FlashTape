@@ -194,6 +194,7 @@
 		3C70CAAE1B4690F0006E71D7 /* tuto_video_3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAAA1B4690F0006E71D7 /* tuto_video_3.mp4 */; };
 		3C70CAB31B46D1B7006E71D7 /* tuto_video_4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB21B46D1B7006E71D7 /* tuto_video_4.mp4 */; };
 		3C70CAB51B46D936006E71D7 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB41B46D936006E71D7 /* tuto_video_2.mp4 */; };
+		3C70CAB81B4C21BF006E71D7 /* BackwardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C70CAB71B4C21BF006E71D7 /* BackwardTextField.m */; };
 		3C7BF5261B15B84700E66537 /* VideoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */; };
 		3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5281B15D93700E66537 /* VideoUtils.m */; };
 		3CAC4D021B146F8B0064FA76 /* NotifUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CAC4D011B146F8B0064FA76 /* NotifUtils.m */; };
@@ -493,7 +494,7 @@
 		3C5BD82F1B419F8000B3FCB8 /* InviteContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteContactViewController.m; sourceTree = "<group>"; };
 		3C5BD8311B41B7DF00B3FCB8 /* InviteUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteUtils.h; sourceTree = "<group>"; };
 		3C5BD8321B41B7DF00B3FCB8 /* InviteUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteUtils.m; sourceTree = "<group>"; };
-		3C5F97CA1AEBB1F30098F70F /* FlashTape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlashTape.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C5F97CA1AEBB1F30098F70F /* Flashtape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flashtape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C5F97CE1AEBB1F30098F70F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C5F97CF1AEBB1F30098F70F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3C5F97D11AEBB1F30098F70F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -538,6 +539,8 @@
 		3C70CAAA1B4690F0006E71D7 /* tuto_video_3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_3.mp4; sourceTree = "<group>"; };
 		3C70CAB21B46D1B7006E71D7 /* tuto_video_4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_4.mp4; sourceTree = "<group>"; };
 		3C70CAB41B46D936006E71D7 /* tuto_video_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_2.mp4; sourceTree = "<group>"; };
+		3C70CAB61B4C21BF006E71D7 /* BackwardTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackwardTextField.h; sourceTree = "<group>"; };
+		3C70CAB71B4C21BF006E71D7 /* BackwardTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackwardTextField.m; sourceTree = "<group>"; };
 		3C7BF5241B15B84700E66537 /* VideoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTableViewCell.h; sourceTree = "<group>"; };
 		3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTableViewCell.m; sourceTree = "<group>"; };
 		3C7BF5271B15D93700E66537 /* VideoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoUtils.h; sourceTree = "<group>"; };
@@ -869,7 +872,7 @@
 		3C5F97CB1AEBB1F30098F70F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3C5F97CA1AEBB1F30098F70F /* FlashTape.app */,
+				3C5F97CA1AEBB1F30098F70F /* Flashtape.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1013,6 +1016,8 @@
 				3CBD0D451B40169A001DFE17 /* InternalNotifView.xib */,
 				3CBD0D4E1B404A30001DFE17 /* ABFlasherTableViewCell.h */,
 				3CBD0D4F1B404A30001DFE17 /* ABFlasherTableViewCell.m */,
+				3C70CAB61B4C21BF006E71D7 /* BackwardTextField.h */,
+				3C70CAB71B4C21BF006E71D7 /* BackwardTextField.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1173,7 +1178,7 @@
 			);
 			name = Flashtape;
 			productName = FlashTape;
-			productReference = 3C5F97CA1AEBB1F30098F70F /* FlashTape.app */;
+			productReference = 3C5F97CA1AEBB1F30098F70F /* Flashtape.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1353,6 +1358,7 @@
 				3C081CFD1B1B54C70036D6B2 /* SCRecordSession.m in Sources */,
 				3C2C4A491AFB5A8600E0E4BF /* MBProgressHUD.m in Sources */,
 				3C4ABD161B299B2500897DF9 /* MPAbstractABTestDesignerMessage.m in Sources */,
+				3C70CAB81B4C21BF006E71D7 /* BackwardTextField.m in Sources */,
 				3C2C4A411AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m in Sources */,
 				3C4ABD2B1B299B2500897DF9 /* MPClassDescription.m in Sources */,
 				3C4ABD151B299B2500897DF9 /* Mixpanel.m in Sources */,
@@ -1551,7 +1557,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ever";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mitch Buchannon (NMWVMQS5Z5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

@@ -106,6 +106,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *firstFlashTutoLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *firstFlashTutoArrow;
 
+// Black splash
+@property (strong, nonatomic) UIView *cameraBlackOverlay;
+
 @end
 
 @implementation VideoViewController {
@@ -136,7 +139,7 @@
     self.unreadVideoCount = 0;
     self.friendVideoView.hidden = YES;
     self.potentialContactsToInvite = nil;
-    self.allVideosArray = [NSMutableArray new];
+    self.allVideosArray = [NSMutableArray new]; 
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
@@ -309,6 +312,10 @@
                                                  name: UIApplicationWillEnterForegroundNotification
                                                object: nil];
     [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(didBecomeActiveCallback)
+                                                 name: UIApplicationDidBecomeActiveNotification
+                                               object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(willResignActive)
                                                  name: UIApplicationWillResignActiveNotification
                                                object: nil];
@@ -366,9 +373,22 @@
 - (void)willResignActive {
     [self setPlayingMode:NO];
     [self setCameraMode];
+    
+    // Hide camera view
+    if (!self.cameraBlackOverlay) {
+        self.cameraBlackOverlay = [[UIView alloc] initWithFrame:self.view.frame];
+        self.cameraBlackOverlay.backgroundColor = [UIColor blackColor];
+        [self.cameraView insertSubview:self.cameraBlackOverlay atIndex:0];
+    }
+    self.cameraBlackOverlay.hidden = NO;
+}
+
+- (void)didBecomeActiveCallback {
+    self.cameraBlackOverlay.hidden = YES;
 }
 
 - (void)willBecomeActiveCallback {
+    self.cameraBlackOverlay.hidden = YES;
     [self retrieveVideoRemotely];
     [self retrieveUnreadMessages];
     [ApiManager getRelationshipsRemotelyAndExecuteSuccess:nil failure:nil];

@@ -837,12 +837,10 @@
     if(i >= [colors count]) {
         i = 0;
     }
-    NSLog(@"start %lu",(long)i);
     [UIView animateWithDuration:1.5f animations:^{
         self.colorView.backgroundColor = [colors objectAtIndex:i];
         [self.inviteButton setTitleColor:[colors objectAtIndex:i] forState:UIControlStateNormal];
     } completion:^(BOOL finished) {
-        NSLog(@"end %lu",(long)i);
         ++i;
         [self doBackgroundColorAnimation];
     }];

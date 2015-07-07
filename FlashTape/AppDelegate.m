@@ -44,6 +44,7 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord
                                      withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionDefaultToSpeaker
                                            error:nil];
+    
     // -------------------------------
     // Parse
     // -------------------------------

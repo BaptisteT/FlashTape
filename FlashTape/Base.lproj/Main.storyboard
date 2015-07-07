@@ -270,7 +270,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0FZ-OY-1Vr">
                                         <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                         <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rSz-Rp-6vh">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rSz-Rp-6vh" customClass="BackwardTextField">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -287,7 +287,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h4e-7b-7Zz">
                                         <rect key="frame" x="72" y="0.0" width="64" height="64"/>
                                         <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="du3-IZ-Zyz">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="du3-IZ-Zyz" customClass="BackwardTextField">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -304,7 +304,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UEv-9k-pGr">
                                         <rect key="frame" x="144" y="0.0" width="64" height="64"/>
                                         <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Llv-Z5-9FP">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Llv-Z5-9FP" customClass="BackwardTextField">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -321,7 +321,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MwQ-N8-4b1">
                                         <rect key="frame" x="216" y="0.0" width="64" height="64"/>
                                         <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3cE-TJ-dti">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3cE-TJ-dti" customClass="BackwardTextField">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2079,7 +2079,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your phone number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exc-aI-9fM" customClass="UICustomLineLabel">
-                                <rect key="frame" x="172" y="96" width="256" height="36"/>
+                                <rect key="frame" x="172" y="96" width="255.5" height="36"/>
                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="30"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -2087,21 +2087,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqE-Wo-oLJ">
                                 <rect key="frame" x="26" y="288" width="548" height="64"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+234" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7gV-cD-zTY">
-                                        <rect key="frame" x="0.0" y="0.0" width="69" height="64"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="64" id="Qxb-Uz-I79"/>
-                                            <constraint firstAttribute="width" constant="69" id="bsI-9t-Gpl"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
-                                        <color key="textColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="Qxb-Uz-I79"/>
-                                            </mask>
-                                        </variation>
-                                    </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qyJ-2F-08X">
                                         <rect key="frame" x="69" y="0.0" width="479" height="64"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2109,18 +2094,32 @@
                                         <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
                                         <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
                                     </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Go-rl-KiI">
+                                        <rect key="frame" x="0.0" y="0.0" width="69" height="64"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="69" id="71X-Ci-pu2"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="22"/>
+                                        <state key="normal" title="+234">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="countryCodeButtonClicked:" destination="8gV-2N-LTm" eventType="touchUpInside" id="iTR-7T-zmG"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="7gV-cD-zTY" firstAttribute="top" secondItem="fqE-Wo-oLJ" secondAttribute="top" id="8hb-Id-7WY"/>
+                                    <constraint firstItem="qyJ-2F-08X" firstAttribute="leading" secondItem="2Go-rl-KiI" secondAttribute="trailing" id="AS5-3u-giQ"/>
                                     <constraint firstItem="qyJ-2F-08X" firstAttribute="top" secondItem="fqE-Wo-oLJ" secondAttribute="top" id="C6k-Qh-oro"/>
                                     <constraint firstAttribute="bottom" secondItem="qyJ-2F-08X" secondAttribute="bottom" id="H5C-ar-VHO"/>
-                                    <constraint firstItem="qyJ-2F-08X" firstAttribute="leading" secondItem="7gV-cD-zTY" secondAttribute="trailing" id="KJK-sK-q4h"/>
                                     <constraint firstAttribute="trailing" secondItem="qyJ-2F-08X" secondAttribute="trailing" id="KkA-dB-4ta"/>
                                     <constraint firstAttribute="height" constant="64" id="QOv-Ct-Abp"/>
                                     <constraint firstItem="qyJ-2F-08X" firstAttribute="top" secondItem="fqE-Wo-oLJ" secondAttribute="top" id="Sky-9O-cit"/>
-                                    <constraint firstAttribute="bottom" secondItem="7gV-cD-zTY" secondAttribute="bottom" id="X0x-q6-qkS"/>
-                                    <constraint firstItem="7gV-cD-zTY" firstAttribute="leading" secondItem="fqE-Wo-oLJ" secondAttribute="leading" id="f5Q-1j-oZP"/>
+                                    <constraint firstItem="2Go-rl-KiI" firstAttribute="top" secondItem="fqE-Wo-oLJ" secondAttribute="top" id="X3b-vw-nzS"/>
+                                    <constraint firstItem="2Go-rl-KiI" firstAttribute="leading" secondItem="fqE-Wo-oLJ" secondAttribute="leading" id="tIh-ra-TBx"/>
+                                    <constraint firstAttribute="bottom" secondItem="2Go-rl-KiI" secondAttribute="bottom" id="uVK-Nz-bZy"/>
                                     <constraint firstAttribute="centerX" secondItem="qyJ-2F-08X" secondAttribute="centerX" id="whu-Qf-2e5"/>
                                 </constraints>
                                 <variation key="default">
@@ -2209,7 +2208,7 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="colorView" destination="fqE-Wo-oLJ" id="gQW-r3-UxV"/>
-                        <outlet property="countryCodeLabel" destination="7gV-cD-zTY" id="yfU-oJ-uRA"/>
+                        <outlet property="countryCodeLabel" destination="2Go-rl-KiI" id="qBW-I0-ypQ"/>
                         <outlet property="countryNameButton" destination="slU-4K-Im5" id="njg-1f-unP"/>
                         <outlet property="disclaimerLabel" destination="Wcp-L2-Yk4" id="8XY-FF-EeE"/>
                         <outlet property="numberTextField" destination="qyJ-2F-08X" id="Ehl-2g-TkT"/>
@@ -2239,6 +2238,6 @@
         <image name="separator-black" width="1" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="U6D-kt-n9L"/>
+        <segue reference="1zA-QC-7sl"/>
     </inferredMetricsTieBreakers>
 </document>

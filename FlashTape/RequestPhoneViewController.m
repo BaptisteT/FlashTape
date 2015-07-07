@@ -26,8 +26,7 @@
 #define DEFAULT_COUNTRY_LETTER_CODE @"us"
 
 @interface RequestPhoneViewController ()
-
-@property (weak, nonatomic) IBOutlet UILabel *countryCodeLabel;
+@property (weak, nonatomic) IBOutlet UIButton *countryCodeLabel;
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UIButton *validationButton;
 @property (nonatomic, strong) NSString *decimalPhoneNumber;
@@ -135,7 +134,7 @@
 - (IBAction)validateButtonClicked:(id)sender {
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     NSError *aError = nil;
-    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.text substringFromIndex:1], self.decimalPhoneNumber];
+    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.titleLabel.text substringFromIndex:1], self.decimalPhoneNumber];
     NBPhoneNumber *myNumber = [phoneUtil parse:internationalPhoneNumber
                                  defaultRegion:nil error:&aError];
     
@@ -200,7 +199,7 @@
 {
     self.phoneFormat = [[RMPhoneFormat alloc] initWithDefaultCountry:letterCode];
     
-    self.countryCodeLabel.text = [NSString stringWithFormat:@"+%@", code];
+    [self.countryCodeLabel setTitle:[NSString stringWithFormat:@"+%@", code] forState:UIControlStateNormal];
     self.numberTextField.text = [self.phoneFormat format:self.decimalPhoneNumber];
     self.countryNameButton.titleLabel.text = [NSString stringWithFormat:@"%@ ❯",countryName];
     [self.countryNameButton setTitle:[NSString stringWithFormat:@"%@ ❯",countryName] forState:UIControlStateNormal];
@@ -232,7 +231,7 @@
     
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     NSError *aError = nil;
-    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.text substringFromIndex:1], self.decimalPhoneNumber];
+    NSString *internationalPhoneNumber = [NSString stringWithFormat:@"+%@%@", [self.countryCodeLabel.titleLabel.text substringFromIndex:1], self.decimalPhoneNumber];
     NBPhoneNumber *myNumber = [phoneUtil parse:internationalPhoneNumber
                                  defaultRegion:nil error:&aError];
     
