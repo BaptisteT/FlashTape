@@ -21,6 +21,8 @@
 #define LAST_ADDRESSBOOK_FLASHER_RETRIEVE_DATE @"Last Addressbook Flashers Retrieve Date"
 #define NEW_ADDRESSBOOK_FLASHER_COUNT @"New Addressbook Flashers Count"
 
+#define RATE_ALERT_ACCEPTED @"Rate Alert Accepted"
+
 
 @implementation GeneralUtils
 
@@ -206,6 +208,24 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithInteger:count] forKey:NEW_ADDRESSBOOK_FLASHER_COUNT];
     [prefs synchronize];
+}
+
++ (void)setRatingAlertAccepted
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithBool:YES] forKey:RATE_ALERT_ACCEPTED];
+    [prefs synchronize];
+}
+
++ (NSInteger)getRatingAlertAcceptedPref
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:RATE_ALERT_ACCEPTED] ? [[prefs objectForKey:RATE_ALERT_ACCEPTED] boolValue] : NO;
+}
+
++ (BOOL)shouldPresentRateAlert:(NSInteger)score
+{
+    return (score % 10 == 0 && ![GeneralUtils getRatingAlertAcceptedPref]);
 }
 
 @end

@@ -18,6 +18,7 @@
 @dynamic score;
 @dynamic flashUsername;
 @dynamic transformedUsername;
+@dynamic addressbookName;
 
 @synthesize lastMessageDate;
 

@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *tapToInviteLabel;
 @property (weak, nonatomic) IBOutlet UIButton *notNowButton;
 @property (weak, nonatomic) IBOutlet UILabel *emojiLabel;
+@property (strong, nonatomic) NSDictionary *contactDictionnary;
 
 @end
 
@@ -39,6 +40,8 @@
         [self performSelector:@selector(nextOrDismiss) withObject:nil afterDelay:0.1];
         return;
     }
+    
+    self.contactDictionnary = [AddressbookUtils getContactDictionnary];
     
     UITapGestureRecognizer *tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
     [self.view addGestureRecognizer:tapGestureRecogniser];
@@ -61,7 +64,15 @@
 #pragma mark - Actions
 // --------------------------------------------
 - (void)handleTap {
-    [ApiManager sendInviteTo:((ABContact *)self.contactArray.firstObject).number success:nil failure:nil];
+    NSString *number = ((ABContact *)self.contactArray.firstObject).number;
+    NSString *name = self.contactDictionnary[number];
+    if (name) {
+        name = [name componentsSeparatedByString:@" "].firstObject;
+    }
+    [ApiManager sendInviteTo:number
+                        name:name
+                     success:nil
+                     failure:nil];
     [self nextOrDismiss];
 }
 
@@ -86,8 +97,7 @@
     self.emojiLabel.text = INVITE_EMOJI_ARRAY[arc4random_uniform((int)INVITE_EMOJI_ARRAY.count)];
     
     self.nameLabel.numberOfLines = 0;
-    NSDictionary *contactDictionnary = [AddressbookUtils getContactDictionnary];
-    NSString *name = contactDictionnary[contact.number] ? contactDictionnary[contact.number] : @"?" ;
+    NSString *name = self.contactDictionnary[contact.number] ? self.contactDictionnary[contact.number] : @"?" ;
     NSMutableAttributedString *nameAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"mutual_friend_label", nil),name,MAX(2, contact.users.count)]];
     NSRange whiteRange = [[nameAttributedString string] rangeOfString:name];
     [nameAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:whiteRange];

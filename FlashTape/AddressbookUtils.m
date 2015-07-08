@@ -84,7 +84,7 @@
             if (aError == nil && [phoneUtil isValidNumber:nbPhoneNumber] && ([phoneUtil getNumberType:nbPhoneNumber] == NBEPhoneNumberTypeMOBILE || [phoneUtil getNumberType:nbPhoneNumber] == NBEPhoneNumberTypeFIXED_LINE_OR_MOBILE)) {
                 NSString *firstName =  (__bridge NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
                 NSString *lastName = (__bridge NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);
-                NSString *name = [NSString stringWithFormat:@"%@ %@",firstName ? firstName : @"",lastName ? lastName : @""];
+                NSString *name = [NSString stringWithFormat:@"%@%@",firstName ? firstName : @"",lastName ? [@" " stringByAppendingString:lastName] : @""];
                 if (!name || name.length == 0) {
                     name = @"?";
                 }

@@ -123,6 +123,13 @@
                            }];
 }
 
++ (void)saveAddressbookName:(NSString *)abName
+{
+    User *currentUser = [User currentUser];
+    currentUser.addressbookName = abName;
+    [currentUser saveInBackground];
+}
+
 
 // --------------------------------------------
 #pragma mark - Follow
@@ -645,11 +652,12 @@
 // --------------------------------------------
 
 + (void)sendInviteTo:(NSString *)phoneNumber
+                name:(NSString *)name
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock
 {
     [PFCloud callFunctionInBackground:@"sendInvite"
-                       withParameters:@{ @"phoneNumber" : phoneNumber }
+                       withParameters:@{ @"phoneNumber" : phoneNumber, @"name" : name }
                                 block:^(id object, NSError *error) {
                                     if (error != nil) {
                                         if (failureBlock)

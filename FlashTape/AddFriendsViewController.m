@@ -294,9 +294,9 @@
 
 - (void)inviteUser:(NSString *)name number:(NSString *)number {
     [ApiManager sendInviteTo:number
-                     success:^{
-                         // do nothing
-                     } failure:nil];
+                        name:[name componentsSeparatedByString:@" "].firstObject
+                     success:nil
+                     failure:nil];
     
     // Remove user
     [self.contactDictionnary removeObjectForKey:number];

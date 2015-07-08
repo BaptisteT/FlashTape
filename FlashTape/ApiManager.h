@@ -34,6 +34,8 @@
              success:(void(^)())successBlock
              failure:(void(^)(NSError *error))failureBlock;
 
++ (void)saveAddressbookName:(NSString *)abName;
+
 // --------------------------------------------
 #pragma mark - Follow
 // --------------------------------------------
@@ -115,6 +117,7 @@
 // --------------------------------------------
 
 + (void)sendInviteTo:(NSString *)phoneNumber
+                name:(NSString *)name
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock;
 

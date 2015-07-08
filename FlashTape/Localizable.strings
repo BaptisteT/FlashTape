@@ -162,4 +162,9 @@
 "no_sms_error_message" = "Sorry, SMS are not available";
 "report_action" = "Report";
 
+// Rating
+"rating_alert_title" = "yo";
+"rating_alert_message" = "Rate us plz";
+"rate_button_title" = "Rate";
+
 

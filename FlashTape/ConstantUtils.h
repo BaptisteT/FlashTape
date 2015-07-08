@@ -17,6 +17,7 @@
 static NSString * const kFlashTapeInviteLink = @"http://get.flashtape.co";
 static NSString * const kFlashTapeWebsiteLink = @"http://flashtape.co/";
 static NSString * const kFlashTapeWebsiteTermsLink = @"http://flashtape.co/#terms";
+static NSString * const kAppStoreLink = @"https://itunes.apple.com/us/app/flashtape-1-second-video-friends/id997449435?ls=1&mt=8";
 
 //Flurry token
 static NSString * const kProdFlurryToken = @"5PFZ5RNNFKH6J6D6V4ZY";

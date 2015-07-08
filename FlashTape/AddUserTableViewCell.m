@@ -56,7 +56,18 @@
 
 - (void)setCellUserTo:(User *)user {
     self.user = user;
-    self.usernameLabel.text = user.flashUsername;
+    if (user.addressbookName && user.addressbookName.length > 0) {
+        [self.usernameLabel setNumberOfLines:0];
+        NSString *string = [NSString stringWithFormat:@"%@\n%@",user.flashUsername,user.addressbookName];
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
+        NSRange abNameRange = [string rangeOfString:user.addressbookName];
+        
+        NSDictionary *attrs = @{NSForegroundColorAttributeName : [UIColor lightGrayColor], NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-55Rg" size:14]};
+        [attrString addAttributes:attrs range:abNameRange];
+        self.usernameLabel.attributedText = attrString;
+    } else {
+        self.usernameLabel.text = user.flashUsername;
+    }
     if (user == [User currentUser]) {
         self.addOrDeleteFriendButton.hidden = YES;
     } else if ([self followingRelationWithUser:user]) {

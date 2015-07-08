@@ -15,6 +15,7 @@
 @property (retain) NSString *flashUsername;
 @property (retain) NSString *transformedUsername;
 @property (retain) NSDate *lastMessageDate; // last message received or sent with current user
+@property (retain) NSString *addressbookName;
 
 + (User *)createUserWithNumber:(NSString *)phoneNumber;
 

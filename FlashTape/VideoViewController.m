@@ -381,6 +381,7 @@
         [self.cameraView insertSubview:self.cameraBlackOverlay atIndex:0];
     }
     self.cameraBlackOverlay.hidden = NO;
+    [self resignCaptionFirstResponderAndHideIfEmpty];
 }
 
 - (void)didBecomeActiveCallback {
@@ -414,17 +415,20 @@
         // To avoid pause when plug / unplug headset
         [self.friendVideoView.player play];
     }
-    if (!self.recorder.captureSession.isRunning) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            [self.recorder startRunning];
-        });
-    }
+    // todo bt
+//    if (!self.recorder.captureSession.isRunning) {
+//        NSLog(@"before startrunning");
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            [self.recorder startRunning];
+//            NSLog(@"after startrunning");
+//        });
+//    }
 }
 
 - (void)navigateToFriends {
     if ([self isPlayingMode])
         [self setCameraMode];
-    [self.captionTextView resignFirstResponder];
+    [self resignCaptionFirstResponderAndHideIfEmpty];
     [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
 }
 
@@ -442,7 +446,7 @@
             [self startRecording];
             _longPressStartDate = [NSDate date];
         }
-        [self.captionTextView resignFirstResponder];
+        [self resignCaptionFirstResponderAndHideIfEmpty];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         if ([self isPreviewMode]) {
             BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
@@ -645,6 +649,12 @@
                                                      success:nil
                                                      failure:nil];
             [AddressbookUtils saveContactDictionnary:contactDictionnary];
+            
+            // Current user real name
+            NSString *abName = contactDictionnary[[User currentUser].username];
+            if (abName && abName.length > 0) {
+                [ApiManager saveAddressbookName:contactDictionnary[[User currentUser].username]];
+            }
         } else if ([User currentUser].score != kUserInitialScore) {
             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
                                         message:NSLocalizedString(@"contact_access_error_message",nil)
@@ -905,10 +915,10 @@
 - (void)sendVideoPost:(VideoPost *)post
 {
     NSInteger userScore = [User currentUser].score;
-    
     [DatastoreUtils pinVideoAsUnsend:post];
     self.isSendingCount ++;
     
+    // Send video
     [ApiManager saveVideoPost:post
             andExecuteSuccess:^() {
                 [DatastoreUtils unpinVideoAsUnsend:post];
@@ -922,9 +932,16 @@
                 // Track
                 [TrackingUtils trackEvent:EVENT_VIDEO_SENT properties:post.videoProperties];
                 
-                // 1st flash
+                // Event based on score
                 if (userScore == kUserInitialScore) {
+                    // first tuto
                     [self startFirstFlashTutoAnim];
+                } else if ([GeneralUtils shouldPresentRateAlert:userScore]) {
+                    // Rating alert
+                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"rating_alert_title",nil)
+                                                message:NSLocalizedString(@"rating_alert_message",nil)
+                                               delegate:self cancelButtonTitle:NSLocalizedString(@"later_button",nil)
+                                      otherButtonTitles:NSLocalizedString(@"rate_button_title", nil), nil] show];
                 }
             } failure:^(NSError *error, BOOL addToFailArray) {
                 self.isSendingCount --;
@@ -942,6 +959,7 @@
         
         // 1st flash
         if (userScore == kUserInitialScore) {
+            self.recordTutoLabel.hidden = YES;
             self.firstFlashTutoLabel.hidden = NO;
         }
     });
@@ -1240,7 +1258,7 @@
 #pragma mark - Caption
 // --------------------------------------------
 - (void)handleTapToCloseCaption {
-    [self.captionTextView resignFirstResponder];
+    [self resignCaptionFirstResponderAndHideIfEmpty];
     self.longPressGestureRecogniser.minimumPressDuration = 0;
 }
 
@@ -1260,7 +1278,7 @@
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([text isEqualToString:@"\n"]) {
-        [self.captionTextView resignFirstResponder];
+        [self resignCaptionFirstResponderAndHideIfEmpty];
         return NO;
     }
     return YES;
@@ -1272,6 +1290,10 @@
     self.captionTextView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
 }
 
+- (void)resignCaptionFirstResponderAndHideIfEmpty {
+    [self.captionTextView resignFirstResponder];
+    self.captionTextView.hidden = self.captionTextView.text.length == 0;
+}
 
 // ----------------------------------------------------------
 #pragma mark Keyboard
@@ -1287,10 +1309,11 @@
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
     CGFloat width = self.view.frame.size.width;
-    self.captionTextView.transform = CGAffineTransformIdentity;
     CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(width, 1000)];
+    [self.captionTextView setTransform:CGAffineTransformIdentity];
     self.captionTextView.frame = CGRectMake(0, keyboardRect.origin.y - size.height, width, size.height);
 }
+
 
 // Caption transformed UI
 - (void)keyboardWillHide:(NSNotification *)notification {
@@ -1338,6 +1361,11 @@
     } else if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
             [GeneralUtils openSettings];
+        }
+    } else if ([alertView.title isEqualToString:NSLocalizedString(@"rating_alert_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"rate_button_title", nil)]) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAppStoreLink]];
+            [GeneralUtils setRatingAlertAccepted];
         }
     }
 }

@@ -74,11 +74,6 @@
             [self.activeRecognizers addObject:recognizer];
             break;
             
-        case UIGestureRecognizerStateEnded:
-            self.referenceTransform = [self applyRecognizer:recognizer toTransform:self.referenceTransform];
-            [self.activeRecognizers removeObject:recognizer];
-            break;
-            
         case UIGestureRecognizerStateChanged: {
             CGAffineTransform transform = self.referenceTransform;
             CGAffineTransform scaleTransform = self.referenceTransform;
@@ -91,11 +86,17 @@
             self.transform = transform;
             
             // http://d3signerd.com/old/image-anti-aliasing-in-objective-c/
-            self.layer.shouldRasterize = YES;
-            self.layer.rasterizationScale = sqrt(transform.b * transform.b + transform.d * transform.d);
-            self.layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
+//            self.layer.shouldRasterize = YES;
+//            self.layer.rasterizationScale = sqrt(transform.b * transform.b + transform.d * transform.d);
+//            self.layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
             break;
         }
+            
+            
+        case UIGestureRecognizerStateEnded:
+            self.referenceTransform = [self applyRecognizer:recognizer toTransform:self.referenceTransform];
+            [self.activeRecognizers removeObject:recognizer];
+            break;
             
         default:
             break;
