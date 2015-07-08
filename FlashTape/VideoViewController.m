@@ -409,10 +409,15 @@
     }
 }
 
--(void)routeChangeCallback:(NSNotification*)notification {
+- (void)routeChangeCallback:(NSNotification*)notification {
     if ([self isPlayingMode]) {
         // To avoid pause when plug / unplug headset
         [self.friendVideoView.player play];
+    }
+    if (!self.recorder.captureSession.isRunning) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self.recorder startRunning];
+        });
     }
 }
 

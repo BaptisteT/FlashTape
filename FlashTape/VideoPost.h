@@ -28,6 +28,9 @@
 
 + (NSString *)parseClassName;
 
+- (void)getDataInBackgroundAndExecuteSuccess:(void(^)())successBlock
+                                     failure:(void(^)(NSError *error))failureBlock;
+
 + (void)downloadVideoFromPosts:(NSArray *)fbPosts;
 
 - (void)migrateDataFromTemporaryToPermanentURL ;

@@ -65,30 +65,39 @@ static int downloadingCount = 0;
     } else {
         if (!self.isDownloading) {
             if (downloadingCount < kMaxConcurrentVideoDownloadingCount) {
-                downloadingCount ++;
-                NSLog(@"%d",downloadingCount);
-                self.isDownloading = YES;
-                [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                    self.isDownloading = NO;
-                    downloadingCount --;
-                    if (data) {
-                        [self saveDataToLocalURL:data];
-                    } else {
-                        if ([self.videoFile isDataAvailable]) {
-                            [self saveDataToLocalURL:[self.videoFile getData]];
-                        } else {
-                            NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
-                        }
-                    }
-                } progressBlock:^(int percentDone) {
-                    self.downloadProgress = percentDone;
-                }];
+                [self getDataInBackgroundAndExecuteSuccess:nil failure:nil];
             } else {
                 [NSTimer scheduledTimerWithTimeInterval:kDelayBeforeRetryDownload target:self selector:@selector(downloadVideoFile) userInfo:nil repeats:NO];
                 NSLog(@"blocked");
             }
         }
     }
+}
+
+- (void)getDataInBackgroundAndExecuteSuccess:(void(^)())successBlock
+                                     failure:(void(^)(NSError *error))failureBlock
+{
+    downloadingCount ++;
+    NSLog(@"%d",downloadingCount);
+    self.isDownloading = YES;
+    [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        self.isDownloading = NO;
+        downloadingCount --;
+        if (data) {
+            [self saveDataToLocalURL:data];
+            if (successBlock) successBlock();
+        } else {
+            if ([self.videoFile isDataAvailable]) {
+                [self saveDataToLocalURL:[self.videoFile getData]];
+                if (successBlock) successBlock();
+            } else {
+                NSLog(@"Get Data in Background Error: %@ %@", error, [error userInfo]);
+                if (failureBlock) failureBlock(error);
+            }
+        }
+    } progressBlock:^(int percentDone) {
+        self.downloadProgress = percentDone;
+    }];
 }
 
 - (void)migrateDataFromTemporaryToPermanentURL {

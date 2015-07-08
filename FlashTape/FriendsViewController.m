@@ -494,7 +494,7 @@
                                                                                   [self.friendsTableView reloadData];
                                                                               }];
         reportAction.backgroundColor = [ColorUtils blue];
-        return @[deleteAction,reportAction,muteAction];
+        return @[deleteAction,muteAction,reportAction];
     } else {
         return nil;
     }
@@ -557,6 +557,7 @@
                                         [self.followerRelations removeObject:follow];
                                          [self.followingRelations addObject:following];
                                         [self sortFriendsAndReload];
+                                        [self reloadFeedVideo];
                                     } failure:^(NSError *error) {
                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                         [GeneralUtils showAlertMessage:NSLocalizedString(@"please_try_again", nil) withTitle:NSLocalizedString(@"unexpected_error", nil)];

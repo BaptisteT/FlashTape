@@ -16,6 +16,7 @@
 
 #import "ApiManager.h"
 #import "User.h"
+#import "VideoPost.h"
 
 #import "AppDelegate.h"
 #import "InternalNotifView.h"
@@ -117,7 +118,7 @@
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     UIApplicationState state = [application applicationState];
     // New video
     if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_video"]) {
@@ -126,6 +127,24 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_video"
                                                                 object:nil
                                                               userInfo:nil];
+            completionHandler(UIBackgroundFetchResultNoData);
+        } else {
+            // download video in background
+            NSString *videoId = [userInfo valueForKey:@"video_id"];
+            if (videoId && videoId.length > 0) {
+                VideoPost *post = [VideoPost objectWithoutDataWithObjectId:videoId];
+                [post fetchInBackgroundWithBlock:^(PFObject *post, NSError *error) {
+                    if (error) {
+                        completionHandler(UIBackgroundFetchResultFailed);
+                    } else {
+                        [(VideoPost *)post getDataInBackgroundAndExecuteSuccess:^{
+                            completionHandler(UIBackgroundFetchResultNewData);
+                        } failure:^(NSError *error) {
+                            completionHandler(UIBackgroundFetchResultFailed);
+                        }];
+                    }
+                }];
+            }
         }
     } else if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_message"]) {
         if (state == UIApplicationStateActive) {
@@ -145,6 +164,7 @@
                                                                 object:nil
                                                               userInfo:nil];
         }
+        completionHandler(UIBackgroundFetchResultNoData);
     } else if ([[userInfo valueForKey:@"notif_type"] isEqualToString:@"new_follow"]) {
         if (state == UIApplicationStateActive) {
             // internal notif
@@ -153,8 +173,10 @@
             // Load relation ship
             [ApiManager getRelationshipsRemotelyAndExecuteSuccess:nil failure:nil];
         }
+        completionHandler(UIBackgroundFetchResultNoData);
     }
 }
+
 
 
 // --------------------------------------------

@@ -79,20 +79,6 @@
                      }];
 }
 
-+ (void)deleteStoredData
-{
-    NSString *tmpDirectory = NSTemporaryDirectory();
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSError *error;
-    NSArray *cacheFiles = [fileManager contentsOfDirectoryAtPath:tmpDirectory error:&error];
-    for (NSString *file in cacheFiles)
-    {
-        error = nil;
-        if (![fileManager removeItemAtPath:[tmpDirectory stringByAppendingPathComponent:file] error:&error]) {
-            NSLog(@"Error deleting: %@",error);
-        }
-    }
-}
 
 + (void)removeFile:(NSURL *)fileURL
 {

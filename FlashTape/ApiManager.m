@@ -407,8 +407,10 @@
         return;
     }
     // Upload data
-    NSData *videoData = [NSData dataWithContentsOfURL:url];
+    NSError *error;
+    NSData *videoData = [NSData dataWithContentsOfURL:url options:0 error:&error];
     if (!videoData) {
+        NSLog(@"%@",error);
         failureBlock(nil, NO);
         return;
     }
@@ -668,11 +670,7 @@
     } else {
         contact.inviteSeenCount = 1;
     }
-    [contact saveInBackgroundWithBlock:^(BOOL completed, NSError *error) {
-        if (error) {
-            
-        }
-    }];
+    [contact saveInBackground];
 }
 
 

@@ -259,6 +259,7 @@
     PFQuery *query = [PFQuery queryWithClassName:[VideoPost parseClassName]];
     [query fromLocalDatastore];
     [query setLimit:1000];
+    [query whereKeyExists:@"objectId"]; // to avoid unsent vids
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error == nil) {
             block(objects);
