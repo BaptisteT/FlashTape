@@ -415,12 +415,10 @@
         // To avoid pause when plug / unplug headset
         [self.friendVideoView.player play];
     }
-    // todo bt
+    // todo BT
 //    if (!self.recorder.captureSession.isRunning) {
-//        NSLog(@"before startrunning");
 //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 //            [self.recorder startRunning];
-//            NSLog(@"after startrunning");
 //        });
 //    }
 }
@@ -652,7 +650,7 @@
             
             // Current user real name
             NSString *abName = contactDictionnary[[User currentUser].username];
-            if (abName && abName.length > 0) {
+            if (abName && abName.length > 0 && ![[User currentUser].addressbookName isEqualToString:abName]) {
                 [ApiManager saveAddressbookName:contactDictionnary[[User currentUser].username]];
             }
         } else if ([User currentUser].score != kUserInitialScore) {
@@ -749,7 +747,6 @@
         // select user to invite
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:MIN(self.videosToPlayArray.count,kMinInviteCount + arc4random_uniform(kMaxInviteCount - kMinInviteCount + 1))]];
-            [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
         });
     }
     
@@ -941,7 +938,7 @@
                     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"rating_alert_title",nil)
                                                 message:NSLocalizedString(@"rating_alert_message",nil)
                                                delegate:self cancelButtonTitle:NSLocalizedString(@"later_button",nil)
-                                      otherButtonTitles:NSLocalizedString(@"rate_button_title", nil), nil] show];
+                                      otherButtonTitles:NSLocalizedString(@"no_thanks_button_title", nil),NSLocalizedString(@"rate_button_title", nil), nil] show];
                 }
             } failure:^(NSError *error, BOOL addToFailArray) {
                 self.isSendingCount --;
@@ -1365,6 +1362,8 @@
     } else if ([alertView.title isEqualToString:NSLocalizedString(@"rating_alert_title", nil)]) {
         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"rate_button_title", nil)]) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAppStoreLink]];
+            [GeneralUtils setRatingAlertAccepted];
+        } else if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"no_thanks_button_title", nil)]) {
             [GeneralUtils setRatingAlertAccepted];
         }
     }

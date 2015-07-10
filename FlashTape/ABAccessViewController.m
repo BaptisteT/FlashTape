@@ -70,6 +70,7 @@
 #pragma mark Actions
 // ----------------------------------------------------------
 - (IBAction)allowABAccessButtonClicked:(id)sender {
+    [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_CLICKED properties:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // Ask access and parse contacts
@@ -103,7 +104,6 @@
 }
 
 - (void)navigateToVideoController:(BOOL)avoidParsing {
-    [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_CLICKED properties:nil];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [self performSegueWithIdentifier:@"Video From ABAccess" sender:[NSNumber numberWithBool:avoidParsing]];
 }

@@ -163,8 +163,9 @@
 "report_action" = "Report";
 
 // Rating
-"rating_alert_title" = "yo";
-"rating_alert_message" = "Rate us plz";
+"rating_alert_title" = "Help us!";
+"rating_alert_message" = "If you enjoy using Flashtape, would you mind taking 1 second to rate it? Thanks for your support!";
 "rate_button_title" = "Rate";
+"no_thanks_button_title" = "No, Thanks";
 
 

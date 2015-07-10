@@ -36,6 +36,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Reset count
+    [InviteUtils resetVideoSeenSinceLastInvitePresentedCount];
+    
     if (self.contactArray.count == 0) {
         [self performSelector:@selector(nextOrDismiss) withObject:nil afterDelay:0.1];
         return;
