@@ -75,9 +75,6 @@
                                                  name:@"reload_friend_tableview"
                                                object:nil];
     
-    // Retrieve Messages Locally
-    [self retrieveUnreadMessagesLocally];
-    
     // Get local videos & refresh
     [DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]
                                      success:^(NSArray *videos) {
@@ -135,8 +132,11 @@
         }
     }
     
+    // Retrieve Messages Locally
+    [self retrieveUnreadMessagesLocally];
+    
+    //
     [self setVideoControllerMessageCount];
-    [self.friendsTableView reloadData];
     
     // background color animation
     _stopAnimation = NO;

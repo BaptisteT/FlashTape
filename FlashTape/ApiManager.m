@@ -594,8 +594,6 @@
                   failure:(void(^)(NSError *error))failureBlock
 {
     message.read = [NSNumber numberWithBool:YES];
-    // Unpin
-    [message unpinInBackgroundWithName:kParseMessagesName];
     // Save as read on parse
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         [TrackingUtils trackEvent:EVENT_MESSAGE_READ properties:nil];
