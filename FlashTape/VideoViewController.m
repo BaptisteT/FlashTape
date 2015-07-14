@@ -415,12 +415,6 @@
         // To avoid pause when plug / unplug headset
         [self.friendVideoView.player play];
     }
-    // todo BT
-//    if (!self.recorder.captureSession.isRunning) {
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            [self.recorder startRunning];
-//        });
-//    }
 }
 
 - (void)navigateToFriends {
@@ -793,6 +787,10 @@
 // --------------------------------------------
 
 - (void)startRecording {
+    if (!self.recorder.captureSession.isRunning) {
+        [self.recorder startRunning];
+    }
+
     _recordingRunning = YES;
     [self.recorder.session removeAllSegments];
     [self setRecordingMode];
