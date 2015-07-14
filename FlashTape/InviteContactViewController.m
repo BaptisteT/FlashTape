@@ -71,6 +71,8 @@
     NSString *name = self.contactDictionnary[number];
     if (name) {
         name = [name componentsSeparatedByString:@" "].firstObject;
+    } else {
+        name = @"";
     }
     [ApiManager sendInviteTo:number
                         name:name

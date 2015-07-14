@@ -654,6 +654,10 @@
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock
 {
+    if (!phoneNumber || phoneNumber.length == 0) {
+        return;
+    }
+    
     [PFCloud callFunctionInBackground:@"sendInvite"
                        withParameters:@{ @"phoneNumber" : phoneNumber, @"name" : name }
                                 block:^(id object, NSError *error) {

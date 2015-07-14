@@ -36,7 +36,7 @@
 }
 
 + (BOOL)shouldPresentInviteController {
-    return [InviteUtils getVideoSeenSinceLastInvitePresentedCount] > kMaxVideoSeenBetweenInvite * (1 + MAX(50,[User currentUser].score) / 10.);
+    return [InviteUtils getVideoSeenSinceLastInvitePresentedCount] > kMaxVideoSeenBetweenInvite * (1 + MIN(50,[User currentUser].score) / 10.);
 }
 
 + (NSInteger)getVideoSeenSinceLastInvitePresentedCount
