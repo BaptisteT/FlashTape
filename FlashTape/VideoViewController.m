@@ -931,7 +931,7 @@
                 if (userScore == kUserInitialScore) {
                     // first tuto
                     [self startFirstFlashTutoAnim];
-                } else if ([GeneralUtils shouldPresentRateAlert:userScore]) {
+                } else if ([GeneralUtils shouldPresentRateAlert:[User currentUser].score]) {
                     // Rating alert
                     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"rating_alert_title",nil)
                                                 message:NSLocalizedString(@"rating_alert_message",nil)
