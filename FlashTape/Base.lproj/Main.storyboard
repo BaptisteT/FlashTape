@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -1636,6 +1636,20 @@
                                 <rect key="frame" x="-8" y="64" width="616" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uPm-CR-STg">
+                                <rect key="frame" x="0.0" y="550" width="600" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="F3U-AK-fUX"/>
+                                </constraints>
+                                <state key="normal" title="allow_contact">
+                                    <color key="titleColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="allowContactButtonClicked:" destination="s5X-7E-zXT" eventType="touchUpInside" id="Y2m-8p-WkO"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1646,12 +1660,15 @@
                             <constraint firstItem="39C-VZ-6Rx" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leadingMargin" constant="-26" id="HPn-At-AEL"/>
                             <constraint firstItem="FG0-3Y-U7X" firstAttribute="top" secondItem="39C-VZ-6Rx" secondAttribute="bottom" constant="-3" id="QpN-FX-alY"/>
                             <constraint firstAttribute="centerX" secondItem="J1C-rz-sDk" secondAttribute="centerX" id="QvR-vG-Z3w"/>
+                            <constraint firstAttribute="trailing" secondItem="uPm-CR-STg" secondAttribute="trailing" id="S28-nY-Rbs"/>
                             <constraint firstItem="13A-JP-z0a" firstAttribute="top" secondItem="FG0-3Y-U7X" secondAttribute="bottom" id="YlK-YD-S1W"/>
                             <constraint firstItem="J1C-rz-sDk" firstAttribute="top" secondItem="XAs-cF-yRI" secondAttribute="bottom" constant="15" id="a2N-Qc-MJ6"/>
                             <constraint firstItem="39C-VZ-6Rx" firstAttribute="top" secondItem="J1C-rz-sDk" secondAttribute="bottom" constant="8" id="arv-Cf-7Y3"/>
+                            <constraint firstItem="13A-JP-z0a" firstAttribute="top" secondItem="uPm-CR-STg" secondAttribute="bottom" id="g3b-jB-rV7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="39C-VZ-6Rx" secondAttribute="trailing" constant="-24" id="hrA-OT-SfZ"/>
                             <constraint firstItem="FG0-3Y-U7X" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leading" id="n8h-ZI-GY9"/>
                             <constraint firstItem="J1C-rz-sDk" firstAttribute="top" secondItem="XAs-cF-yRI" secondAttribute="top" constant="20" id="rhs-px-Tgc"/>
+                            <constraint firstItem="uPm-CR-STg" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leading" id="s1B-Wg-Csa"/>
                             <constraint firstItem="tdM-og-yc9" firstAttribute="leading" secondItem="kU0-iV-fQc" secondAttribute="leading" constant="10" id="vTw-Gh-waT"/>
                         </constraints>
                         <variation key="default">
@@ -1663,6 +1680,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="allowContactButton" destination="uPm-CR-STg" id="Qpd-kj-DvF"/>
                         <outlet property="backButton" destination="tdM-og-yc9" id="5Td-9c-buh"/>
                         <outlet property="resultTableView" destination="FG0-3Y-U7X" id="kA5-kg-ivq"/>
                         <outlet property="titleLabel" destination="J1C-rz-sDk" id="H5b-GF-vae"/>

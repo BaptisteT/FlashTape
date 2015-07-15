@@ -32,6 +32,8 @@
 @property (strong, nonatomic) NSMutableArray *autocompleteUnfollowedArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteUnrelatedArray;
 
+@property (weak, nonatomic) IBOutlet UIButton *allowContactButton;
+
 @end
 
 @implementation AddFriendsViewController
@@ -49,27 +51,12 @@
     self.autocompleteUnfollowedArray = [NSMutableArray arrayWithArray:self.unfollowedArray];
     self.autocompleteUnrelatedArray = [NSMutableArray arrayWithArray:self.unrelatedArray];
     
+    // Allow contact button
+    [self.allowContactButton setTitle:NSLocalizedString(@"allow_contact_title", nil) forState:UIControlStateNormal];
+    self.allowContactButton.hidden = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized);
+    
     // Contact
-    self.contactDictionnary = [NSMutableDictionary dictionaryWithDictionary:[AddressbookUtils getContactDictionnary]];
-    self.autocompleteNumberArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
-    self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
-    
-    // Get unfollowed follower
-    [DatastoreUtils getUnfollowedFollowersLocallyAndExecuteSuccess:^(NSArray *followers) {
-        if (followers) {
-            self.unfollowedArray = [NSMutableArray arrayWithArray:followers];
-        }
-        [self reloadTableView];
-    } failure:nil];
-    
-    // Get unrelated contacts
-    [DatastoreUtils getUnrelatedUserInAddressBook:[self.contactDictionnary allKeys]
-                                          success:^(NSArray *unrelatedUser) {
-                                              if (unrelatedUser) {
-                                                  self.unrelatedArray = [NSMutableArray arrayWithArray:unrelatedUser];
-                                              }
-                                              [self reloadTableView];
-                                          } failure:nil];
+    [self getContactAndFollowers];
     
     self.titleLabel.text = NSLocalizedString(@"find_by_username_controller_title", nil);
     [self.backButton setTitle:NSLocalizedString(@"back_button", nil) forState:UIControlStateNormal];
@@ -95,12 +82,71 @@
     [GeneralUtils setNewUnfollowedFollowerCount:0];
 }
 
+- (void)getContactAndFollowers {
+    // Contact
+    self.contactDictionnary = [NSMutableDictionary dictionaryWithDictionary:[AddressbookUtils getContactDictionnary]];
+    self.autocompleteNumberArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
+    self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
+    
+    // Get unfollowed follower
+    [DatastoreUtils getUnfollowedFollowersLocallyAndExecuteSuccess:^(NSArray *followers) {
+        if (followers) {
+            self.unfollowedArray = [NSMutableArray arrayWithArray:followers];
+        }
+        [self reloadTableView];
+    } failure:nil];
+    
+    // Get unrelated contacts
+    [DatastoreUtils getUnrelatedUserInAddressBook:[self.contactDictionnary allKeys]
+                                          success:^(NSArray *unrelatedUser) {
+                                              if (unrelatedUser) {
+                                                  self.unrelatedArray = [NSMutableArray arrayWithArray:unrelatedUser];
+                                              }
+                                              [self reloadTableView];
+                                          } failure:nil];
+}
+
 
 // --------------------------------------------
 #pragma mark - Actions
 // --------------------------------------------
 - (IBAction)backButtonClicked:(id)sender {
     [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (IBAction)allowContactButtonClicked:(id)sender {
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:addressBook];
+                [AddressbookUtils saveContactDictionnary:contactDictionnary];
+                [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
+                                                         success:^(NSArray *userArray) {
+                                                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                                                             [self getContactAndFollowers];
+                                                         } failure:^(NSError *error) {
+                                                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                                                             [self getContactAndFollowers];
+                                                         }];
+                
+                // Current user real name
+                NSString *abName = contactDictionnary[[User currentUser].username];
+                if (abName && abName.length > 0 && ![[User currentUser].addressbookName isEqualToString:abName]) {
+                    [ApiManager saveAddressbookName:contactDictionnary[[User currentUser].username]];
+                }
+                
+                self.allowContactButton.hidden = YES;
+            }
+        });
+    } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
+                                    message:NSLocalizedString(@"contact_access_error_message",nil)
+                                   delegate:self
+                          cancelButtonTitle:NSLocalizedString(@"later_button",nil)
+                          otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
+    }
 }
 
 // --------------------------------------------
@@ -303,5 +349,16 @@
     
     // Reload addressbook section
     [self reloadTableView];
+}
+
+// ----------------------------------------------------------
+#pragma mark AlertView
+// ----------------------------------------------------------
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
+        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
+            [GeneralUtils openSettings];
+        }
+    }
 }
 @end

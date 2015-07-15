@@ -11,7 +11,7 @@
 #import "FlashTapeParentViewController.h"
 #import "InviteContactTableViewCell.h"
 
-@interface AddFriendsViewController : FlashTapeParentViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate, InviteContactTVCDelegate>
+@interface AddFriendsViewController : FlashTapeParentViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, AddUserTVCDelegate, InviteContactTVCDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSMutableOrderedSet *followingRelations;
 

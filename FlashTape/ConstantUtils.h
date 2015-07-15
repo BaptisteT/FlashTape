@@ -34,7 +34,7 @@ static NSString * const kParseABContacts = @"ABContacts";
 static NSString * const kParseFailedPostsName = @"FailedPosts";
 
 // Admin
-static NSString * const kAdminUserObjectId = @"dMKXpnzELi";
+static NSString * const kAdminUserObjectId = DEBUG ? @"r8jDJWlmmx" : @"dMKXpnzELi";
 
 // Download / feed
 static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;

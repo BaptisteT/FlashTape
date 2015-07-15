@@ -158,6 +158,7 @@
 "contact_access_error_message" = "Please allow contact access in your settings to find more friends.";
 "ok_button" = "Allow";
 "later_button" = "Later";
+"allow_contact_title" = "Find friends in your addressbook";
 
 "no_sms_error_message" = "Sorry, SMS are not available";
 "report_action" = "Report";
