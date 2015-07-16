@@ -71,8 +71,10 @@
                       clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
     } else {
         // Initialize Parse.
-        [Parse setApplicationId:@"3ohZiWJdynEdw17xhrQ9t9d3xYnKTVj6mxLqQb0n"
-                      clientKey:@"RyeSm5oeDK9A1UL2gM0EGDtoej3UjROFC3K0lW6t"];
+        [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
+                      clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
+//        [Parse setApplicationId:@"3ohZiWJdynEdw17xhrQ9t9d3xYnKTVj6mxLqQb0n"
+//                      clientKey:@"RyeSm5oeDK9A1UL2gM0EGDtoej3UjROFC3K0lW6t"];
     }
     
     // Clean video data

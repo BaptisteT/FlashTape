@@ -641,8 +641,10 @@
 
 + (void)updateBadge:(NSInteger)count {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    currentInstallation.badge = count;
-    [currentInstallation saveInBackground];
+    if (!currentInstallation.objectId || currentInstallation.badge != count) {
+        currentInstallation.badge = count;
+        [currentInstallation saveInBackground];
+    }
 }
 
 // --------------------------------------------
