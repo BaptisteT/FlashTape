@@ -200,6 +200,7 @@
     
     // reload this section
     [self.friendsTableView reloadData];
+    [self scrollToTop];
     
     [ApiManager sendMessage:message
                     success:^{
@@ -378,7 +379,6 @@
         [self reloadSection:indexPath.section];
     } else if ([self isCurrentUserPostCell:indexPath]) {
         [TrackingUtils trackEvent:EVENT_ME_VIDEO_CLICKED properties:nil];
-        
         NSArray *pathArray;
         NSIndexPath *previousIndexPath = self.postToDetailIndexPath;
         if (previousIndexPath) {
@@ -516,6 +516,10 @@
     NSRange range = NSMakeRange(section, 1);
     NSIndexSet *sectionToReload = [NSIndexSet indexSetWithIndexesInRange:range];
     [self.friendsTableView reloadSections:sectionToReload withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)scrollToTop {
+    [self.friendsTableView setContentOffset:CGPointZero animated:YES];
 }
 
 // --------------------------------------------

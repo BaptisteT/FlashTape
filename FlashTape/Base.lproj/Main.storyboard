@@ -675,7 +675,7 @@
                                         <rect key="frame" x="0.0" y="570" width="600" height="30"/>
                                         <subviews>
                                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y5X-sG-lcA">
-                                                <rect key="frame" x="255" y="4" width="89" height="22"/>
+                                                <rect key="frame" x="256" y="4" width="89" height="22"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="18"/>
                                                 <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
@@ -687,15 +687,16 @@
                                                     <action selector="usernameButtonClicked:" destination="ut7-PO-jUy" eventType="touchUpInside" id="eTn-9d-DgP"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="slide_here" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPO-x4-l6d">
-                                                <rect key="frame" x="10" y="5.5" width="580" height="20.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="slide_here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="fPO-x4-l6d">
+                                                <rect key="frame" x="10" y="5.5" width="76" height="20.5"/>
                                                 <fontDescription key="fontDescription" name="NHaasGroteskDSPro-65Md" family="Neue Haas Grotesk Display Pro" pointSize="17"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstItem="y5X-sG-lcA" firstAttribute="leading" secondItem="fPO-x4-l6d" secondAttribute="trailing" constant="5" id="5Yk-hk-eUw"/>
+                                            <constraint firstAttribute="centerY" secondItem="fPO-x4-l6d" secondAttribute="centerY" constant="-0.75" id="P1k-Nl-oBz"/>
                                             <constraint firstAttribute="height" constant="30" id="dNV-Ec-mJS"/>
                                             <constraint firstAttribute="centerX" secondItem="fPO-x4-l6d" secondAttribute="centerX" id="eqa-cc-p1M"/>
                                             <constraint firstAttribute="centerX" secondItem="y5X-sG-lcA" secondAttribute="centerX" id="gi6-B1-bIr"/>
@@ -703,6 +704,13 @@
                                             <constraint firstAttribute="centerY" secondItem="y5X-sG-lcA" secondAttribute="centerY" id="nEd-6t-fzO"/>
                                             <constraint firstItem="fPO-x4-l6d" firstAttribute="leading" secondItem="7AN-Sl-wRh" secondAttribute="leading" constant="10" id="uC8-Rf-b0n"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="eqa-cc-p1M"/>
+                                                <exclude reference="lti-nE-zqV"/>
+                                                <exclude reference="5Yk-hk-eUw"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
