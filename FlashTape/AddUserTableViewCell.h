@@ -18,7 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIView *separatorView;
 
 - (void)setSearchedUsernameTo:(NSString *)username;
-- (void)setCellUserTo:(User *)user;
+- (void)setCellUserTo:(User *)user realName:(NSString *)addressbookName;
 
 @end
 

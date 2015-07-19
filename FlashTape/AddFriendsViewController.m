@@ -210,13 +210,13 @@
 }
 
 - (NSInteger)numberOfRowsForSection:(NSInteger)section {
-    if (section == 0) {
+    if ([self isABContactSection:section]) {
         return self.usernameSearchBar.text.length > 0 ? 1 : 0;
-    } else if (section == 1) {
+    } else if ([self isABUserSection:section]) {
         return self.autocompleteUnrelatedArray.count;
-    } else if (section == 2) {
+    } else if ([self isFollowerSection:section]) {
         return self.autocompleteUnfollowedArray.count;
-    } else if (section == 3) {
+    } else if ([self isABContactSection:section]) {
         return self.autocompleteContactArray.count;
     } else {
         return 0;
@@ -224,7 +224,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 3) {
+    if ([self isABContactSection:indexPath.section]) {
         InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
         NSString *number = self.autocompleteNumberArray[indexPath.row];
         NSString *name = self.autocompleteContactArray[indexPath.row];
@@ -239,14 +239,18 @@
             cell.delegate = self;
         }
         
-        if (indexPath.section == 0) {
+        if ([self isUsernameSearchedSection:indexPath.section]) {
             [cell setSearchedUsernameTo:self.usernameSearchBar.text];
-        } else if (indexPath.section == 1) {
-            if (indexPath.row < self.autocompleteUnrelatedArray.count)
-                [cell setCellUserTo:self.autocompleteUnrelatedArray[indexPath.row]];
-        } else if (indexPath.section == 2) {
-            if (indexPath.row < self.autocompleteUnfollowedArray.count)
-                [cell setCellUserTo:self.autocompleteUnfollowedArray[indexPath.row]];
+        } else if ([self isABUserSection:indexPath.section]) {
+            if (indexPath.row < self.autocompleteUnrelatedArray.count) {
+                User *user = (User *)self.autocompleteUnrelatedArray[indexPath.row];
+                [cell setCellUserTo:user realName:self.contactDictionnary[user.username]];
+            }
+        } else if ([self isFollowerSection:indexPath.section]) {
+            if (indexPath.row < self.autocompleteUnfollowedArray.count) {
+                User *user = (User *)self.autocompleteUnfollowedArray[indexPath.row];
+                [cell setCellUserTo:user realName:user.addressbookName];
+            }
         }
         
         cell.separatorView.hidden = (1 + indexPath.row == [self numberOfRowsForSection:indexPath.section]);
@@ -267,16 +271,16 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 2, tableView.frame.size.width - 32, 18)];
     [label setFont:[UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:14]];
     label.textColor = [UIColor colorWithRed:0./255 green:0./255 blue:0./255 alpha:0.2];
-    if (section == 0) {
+    if ([self isUsernameSearchedSection:section]) {
         NSString *string = NSLocalizedString(@"username_section_title", nil);
         [label setText:string];
-    } else if (section == 1) {
+    } else if ([self isABUserSection:section]) {
         if (self.autocompleteUnrelatedArray.count == 0) {
             return nil;
         }
         NSString *string = NSLocalizedString(@"addressbook_section_title", nil);
         [label setText:string];
-    } else if (section == 2) {
+    } else if ([self isFollowerSection:section]) {
         if (self.autocompleteUnfollowedArray.count == 0) {
             return nil;
         }
@@ -296,13 +300,13 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (section == 0 && self.usernameSearchBar.text.length == 0) {
+    if ([self isUsernameSearchedSection:section] && self.usernameSearchBar.text.length == 0) {
         return 0;
     }
-    if (section == 1 && self.autocompleteUnrelatedArray.count == 0) {
+    if ([self isABUserSection:section] && self.autocompleteUnrelatedArray.count == 0) {
         return 0;
     }
-    if (section == 2 && self.autocompleteUnfollowedArray.count == 0) {
+    if ([self isFollowerSection:section] && self.autocompleteUnfollowedArray.count == 0) {
         return 0;
     }
     return 20;
@@ -312,7 +316,24 @@
     [self.usernameSearchBar resignFirstResponder];
 }
 
+// --------------------------------------------
+#pragma mark - Section utils
+// --------------------------------------------
+- (BOOL)isUsernameSearchedSection:(NSInteger)section {
+    return section == 0;
+}
 
+- (BOOL)isABUserSection:(NSInteger)section {
+    return section == 1;
+}
+
+- (BOOL)isFollowerSection:(NSInteger)section {
+    return section == 2;
+}
+
+- (BOOL)isABContactSection:(NSInteger)section {
+    return section == 3;
+}
 
 // --------------------------------------------
 #pragma mark - Add user Cell Delegate

@@ -600,6 +600,26 @@
                                             </mask>
                                         </variation>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="😀" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HNy-lz-rq1">
+                                        <rect key="frame" x="470" y="30" width="100" height="119.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="119.5" id="GVz-ZZ-fnM"/>
+                                            <constraint firstAttribute="width" constant="80" id="dqe-Wb-52J"/>
+                                            <constraint firstAttribute="height" constant="80" id="hTL-nM-Y52"/>
+                                            <constraint firstAttribute="width" constant="100" id="inz-1k-EAV"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="100"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="GVz-ZZ-fnM"/>
+                                                <exclude reference="dqe-Wb-52J"/>
+                                                <exclude reference="hTL-nM-Y52"/>
+                                                <exclude reference="inz-1k-EAV"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -608,6 +628,7 @@
                                     <constraint firstAttribute="centerX" secondItem="AUk-ak-rpt" secondAttribute="centerX" id="6WD-aI-qWG"/>
                                     <constraint firstAttribute="centerX" secondItem="hOb-67-bYR" secondAttribute="centerX" id="BHk-Gk-ofu"/>
                                     <constraint firstItem="jbZ-6p-eMN" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="10" id="BnX-DW-x71"/>
+                                    <constraint firstItem="HNy-lz-rq1" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" constant="30" id="DBn-Rp-rLA"/>
                                     <constraint firstAttribute="centerX" secondItem="ZrJ-X2-Mtw" secondAttribute="centerX" id="G6z-SD-eAZ"/>
                                     <constraint firstItem="ZCy-IZ-pCQ" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="top" id="G9z-N0-cJy"/>
                                     <constraint firstItem="ZCy-IZ-pCQ" firstAttribute="leading" secondItem="8ee-DQ-Tyu" secondAttribute="leading" id="GgM-m0-dK5"/>
@@ -626,6 +647,7 @@
                                     <constraint firstAttribute="centerX" secondItem="6Sm-nf-oLe" secondAttribute="centerX" id="cjq-M5-Erv"/>
                                     <constraint firstAttribute="centerX" secondItem="8sn-g0-uAX" secondAttribute="centerX" id="iqO-Z5-mjS"/>
                                     <constraint firstItem="8sn-g0-uAX" firstAttribute="top" secondItem="6Sm-nf-oLe" secondAttribute="bottom" constant="60" id="lU0-si-CG6"/>
+                                    <constraint firstAttribute="trailing" secondItem="HNy-lz-rq1" secondAttribute="trailing" constant="30" id="p3v-3w-MNQ"/>
                                     <constraint firstAttribute="centerY" secondItem="ZrJ-X2-Mtw" secondAttribute="centerY" id="qil-IO-mQz"/>
                                     <constraint firstAttribute="bottom" secondItem="ePW-Ve-NCZ" secondAttribute="bottom" constant="5" id="uIs-um-DSv"/>
                                     <constraint firstAttribute="trailing" secondItem="jbZ-6p-eMN" secondAttribute="trailing" constant="10" id="wWN-I1-NG8"/>
@@ -781,6 +803,26 @@
                                             </mask>
                                         </variation>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="😀" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cbf-Es-iBJ">
+                                        <rect key="frame" x="470" y="30" width="100" height="119.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="LBO-gp-tiq"/>
+                                            <constraint firstAttribute="width" constant="100" id="dRt-mg-Utr"/>
+                                            <constraint firstAttribute="width" constant="80" id="eJW-K8-8QO"/>
+                                            <constraint firstAttribute="height" constant="119.5" id="v3k-3L-P1J"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="100"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="v3k-3L-P1J"/>
+                                                <exclude reference="eJW-K8-8QO"/>
+                                                <exclude reference="LBO-gp-tiq"/>
+                                                <exclude reference="dRt-mg-Utr"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -789,10 +831,12 @@
                                     <constraint firstItem="97c-R3-Rzb" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="top" id="QxQ-ws-Pyi"/>
                                     <constraint firstAttribute="centerX" secondItem="mFv-lg-Y52" secondAttribute="centerX" id="SFv-85-Hie"/>
                                     <constraint firstAttribute="trailing" secondItem="lDu-56-nFj" secondAttribute="trailing" id="SvF-qG-YWP"/>
+                                    <constraint firstItem="Cbf-Es-iBJ" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="top" constant="30" id="Y4z-X9-3Em"/>
                                     <constraint firstAttribute="bottom" secondItem="97c-R3-Rzb" secondAttribute="bottom" id="ZEr-Zq-Q1B"/>
                                     <constraint firstAttribute="bottom" secondItem="lDu-56-nFj" secondAttribute="bottom" id="aVu-BO-7Dp"/>
                                     <constraint firstItem="97c-R3-Rzb" firstAttribute="leading" secondItem="PDc-f0-A0f" secondAttribute="leading" id="cJw-wz-EMC"/>
                                     <constraint firstAttribute="trailing" secondItem="97c-R3-Rzb" secondAttribute="trailing" id="eIh-BD-Mqh"/>
+                                    <constraint firstAttribute="trailing" secondItem="Cbf-Es-iBJ" secondAttribute="trailing" constant="30" id="ibJ-Ql-y4z"/>
                                     <constraint firstAttribute="centerY" secondItem="mFv-lg-Y52" secondAttribute="centerY" id="t1N-LR-DGc"/>
                                     <constraint firstItem="lDu-56-nFj" firstAttribute="leading" secondItem="PDc-f0-A0f" secondAttribute="leading" id="wWI-ZL-hY3"/>
                                     <constraint firstItem="mFv-lg-Y52" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="top" constant="24" id="xaO-z8-pke"/>
@@ -803,11 +847,16 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Pu-Xy-CtS">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="PDc-f0-A0f" secondAttribute="trailing" id="2qd-KK-9co"/>
                             <constraint firstItem="PDc-f0-A0f" firstAttribute="top" secondItem="dVb-fN-94v" secondAttribute="top" id="Bld-TI-M8c"/>
+                            <constraint firstItem="3Pu-Xy-CtS" firstAttribute="top" secondItem="dVb-fN-94v" secondAttribute="bottom" id="FJL-cO-vUf"/>
                             <constraint firstItem="8ee-DQ-Tyu" firstAttribute="top" secondItem="Z0k-TD-OKj" secondAttribute="top" id="J2m-63-a1B"/>
                             <constraint firstItem="kip-9Z-cQQ" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="bottom" id="QdI-YH-nPp"/>
                             <constraint firstItem="zj4-3e-BD0" firstAttribute="leading" secondItem="Z0k-TD-OKj" secondAttribute="leading" id="RNI-VB-vvJ"/>
@@ -815,9 +864,12 @@
                             <constraint firstItem="zj4-3e-BD0" firstAttribute="top" secondItem="dVb-fN-94v" secondAttribute="bottom" id="VSg-yM-liM"/>
                             <constraint firstAttribute="trailing" secondItem="8ee-DQ-Tyu" secondAttribute="trailing" id="Y54-q5-uAQ"/>
                             <constraint firstItem="kip-9Z-cQQ" firstAttribute="top" secondItem="8ee-DQ-Tyu" secondAttribute="bottom" id="b1f-ta-l97"/>
+                            <constraint firstItem="kip-9Z-cQQ" firstAttribute="top" secondItem="3Pu-Xy-CtS" secondAttribute="bottom" id="bzR-42-4e9"/>
                             <constraint firstItem="8ee-DQ-Tyu" firstAttribute="leading" secondItem="Z0k-TD-OKj" secondAttribute="leading" id="gWb-WQ-6QL"/>
+                            <constraint firstAttribute="trailing" secondItem="3Pu-Xy-CtS" secondAttribute="trailing" id="raJ-rj-Ryi"/>
                             <constraint firstItem="PDc-f0-A0f" firstAttribute="leading" secondItem="Z0k-TD-OKj" secondAttribute="leading" id="ruP-e5-SOQ"/>
                             <constraint firstAttribute="trailing" secondItem="zj4-3e-BD0" secondAttribute="trailing" id="swi-DC-f0M"/>
+                            <constraint firstItem="3Pu-Xy-CtS" firstAttribute="leading" secondItem="Z0k-TD-OKj" secondAttribute="leading" id="uXW-js-WLX"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="BuF-wu-TPv"/>
@@ -831,12 +883,15 @@
                         <outlet property="cancelConfirmView" destination="97c-R3-Rzb" id="Ole-H5-VH1"/>
                         <outlet property="cancelTutoLabel" destination="qiD-Qr-Yah" id="t7Y-lT-eFh"/>
                         <outlet property="captionButton" destination="AUk-ak-rpt" id="2nw-2q-IqH"/>
+                        <outlet property="emojiView" destination="3Pu-Xy-CtS" id="0Ca-gU-tT4"/>
                         <outlet property="firstFlashTutoArrow" destination="8sn-g0-uAX" id="SWM-Ds-FJg"/>
                         <outlet property="firstFlashTutoLabel" destination="6Sm-nf-oLe" id="0yB-tT-RfJ"/>
                         <outlet property="friendListButton" destination="dZH-8B-oA5" id="NRc-MR-GTy"/>
                         <outlet property="friendVideoView" destination="zj4-3e-BD0" id="iyw-zj-3NG"/>
                         <outlet property="metadataView" destination="7AN-Sl-wRh" id="Ede-wF-OLm"/>
+                        <outlet property="moodLabel" destination="HNy-lz-rq1" id="GRe-Ai-F4C"/>
                         <outlet property="nameButton" destination="y5X-sG-lcA" id="jh7-9Y-qRw"/>
+                        <outlet property="previewMoodLabel" destination="Cbf-Es-iBJ" id="Rld-gJ-3a2"/>
                         <outlet property="previewView" destination="PDc-f0-A0f" id="ksQ-iw-KOK"/>
                         <outlet property="recordTutoLabel" destination="ZrJ-X2-Mtw" id="WR4-HV-jYu"/>
                         <outlet property="recordingProgressContainer" destination="ZCy-IZ-pCQ" id="7RD-e5-iA7"/>

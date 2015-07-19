@@ -44,7 +44,7 @@
                                        if (!user) {
                                            self.addOrDeleteFriendButton.hidden = YES;
                                        } else {
-                                           [self setCellUserTo:user];
+                                           [self setCellUserTo:user realName:nil];
                                        }
                                    }
                                }
@@ -54,13 +54,15 @@
     }
 }
 
-- (void)setCellUserTo:(User *)user {
+- (void)setCellUserTo:(User *)user
+             realName:(NSString *)addressbookName
+{
     self.user = user;
-    if (user.addressbookName && user.addressbookName.length > 0) {
+    if (addressbookName && addressbookName.length > 0) {
         [self.usernameLabel setNumberOfLines:0];
-        NSString *string = [NSString stringWithFormat:@"%@\n%@",user.flashUsername,user.addressbookName];
+        NSString *string = [NSString stringWithFormat:@"%@\n%@",user.flashUsername,addressbookName];
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
-        NSRange abNameRange = [string rangeOfString:user.addressbookName];
+        NSRange abNameRange = [string rangeOfString:addressbookName];
         
         NSDictionary *attrs = @{NSForegroundColorAttributeName : [UIColor lightGrayColor], NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-55Rg" size:14]};
         [attrString addAttributes:attrs range:abNameRange];

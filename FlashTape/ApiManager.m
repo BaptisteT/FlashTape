@@ -620,6 +620,7 @@
         Message *message = [Message createMessageWithContent:messageContent sender:sender];
         message.sentAt = [NSDate dateWithTimeInterval:i sinceDate:message.sentAt];
         [array addObject:message];
+        [TrackingUtils trackEvent:EVENT_MESSAGE_SENT properties:@{@"type": @"tuto"}];
         i++;
     }
     [PFObject saveAllInBackground:array block:^(BOOL succeeded, NSError *error) {
@@ -677,12 +678,11 @@
 
 + (void)incrementInviteSeenCount:(ABContact *)contact
 {
-    if (contact.inviteSeenCount) {
-        [contact incrementKey:@"inviteSeenCount"];
-    } else {
-        contact.inviteSeenCount = 1;
-    }
-    [contact saveInBackground];
+
+    [contact incrementKey:@"inviteSeenCount" byAmount:[NSNumber numberWithInt:1]];
+    [contact saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        NSLog(@"%lu",[contact.inviteSeenCount integerValue]);
+    }];
 }
 
 

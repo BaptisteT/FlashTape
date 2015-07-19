@@ -29,14 +29,14 @@
     ABContact *contact = [ABContact new];
     contact.number = number;
     contact.inviteCount = 0;
-    contact.inviteSeenCount = 0;
+    contact.inviteSeenCount = [NSNumber numberWithInt:0];
     return contact;
 }
 
 - (CGFloat)contactScore {
     CGFloat inviteSendCount = self.inviteCount ? self.inviteCount : 0.;
-    CGFloat invitePresentedCount = self.inviteSeenCount ? self.inviteSeenCount : 0.;
-    return (CGFloat) self.users.count / ( 1 + 1.5 * inviteSendCount + invitePresentedCount / 2.);
+    CGFloat invitePresentedCount = self.inviteSeenCount ? [self.inviteSeenCount integerValue] : 0.;
+    return (CGFloat) self.users.count / ( 1 + 1.5 * inviteSendCount + 0.5 * invitePresentedCount);
 }
 
 @end

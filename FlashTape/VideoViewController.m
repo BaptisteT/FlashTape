@@ -80,6 +80,11 @@
 @property (nonatomic) CGPoint captionCenter;
 @property (strong, nonatomic) UITapGestureRecognizer *closeCaptionTapGestureRecogniser;
 
+// Mood
+@property (weak, nonatomic) IBOutlet UIView *emojiView;
+@property (weak, nonatomic) IBOutlet UILabel *moodLabel;
+@property (weak, nonatomic) IBOutlet UILabel *previewMoodLabel;
+
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *releaseToSendTuto;
@@ -119,6 +124,7 @@
     int _metadataColorIndex;
     NSDate *_longPressStartDate;
     BOOL _createTutoAdminMessages;
+    BOOL _emojiViewInitialized;
 }
 
 // --------------------------------------------
@@ -134,6 +140,7 @@
     _longPressRunning = NO;
     _recordingRunning = NO;
     _cancelRecording = NO;
+    _emojiViewInitialized = NO;
     _metadataColorIndex = 0;
     self.isSendingCount = 0;
     self.unreadVideoCount = 0;
@@ -175,7 +182,11 @@
     self.captionTransform = CGAffineTransformIdentity;
     self.closeCaptionTapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapToCloseCaption)];
     [self.cameraView addGestureRecognizer:self.closeCaptionTapGestureRecogniser];
-
+    
+    // Mood
+    self.moodLabel.hidden = YES;
+    self.emojiView.hidden = YES;
+    
     // Create the recorder
     self.recorder = [SCRecorder recorder];
     _recorder.delegate = self;
@@ -288,7 +299,7 @@
     if (!self.avoidParsingContact) {
         [self parseContactsAndFindFriends];
     }
-    
+
     // Retrieve unread messages
     [self retrieveUnreadMessages];
     
@@ -368,6 +379,9 @@
     [super viewDidLayoutSubviews];
     // Camera
     self.recorder.previewView = self.cameraView;
+    
+    // Emoji view
+    [self initEmojiView];
 }
 
 - (void)willResignActive {
@@ -506,16 +520,25 @@
     [TrackingUtils trackEvent:EVENT_FRIEND_BUTTON_CLICKED properties:nil];
 }
 
-- (IBAction)captionButtonClicked:(id)sender {
-    // todo BT
-    // bug big caption
-    [self textViewDidChange:self.captionTextView];
+- (IBAction)captionButtonClicked:(id)sender
+{
+    // todo bt
+    // show mood
+    // if mood hide it
+    if (!self.moodLabel.hidden) {
+        self.moodLabel.hidden = YES;
+    } else {
+        self.emojiView.hidden = NO;
+    }
+    
+    // text view
+//    [self textViewDidChange:self.captionTextView];
+//    self.longPressGestureRecogniser.minimumPressDuration = 0.5;
+//    [self.captionTextView becomeFirstResponder];
+//    self.captionTextView.hidden = NO;
+//    self.recordTutoLabel.hidden = YES;
     
     [TrackingUtils trackEvent:EVENT_CAPTION_CLICKED properties:nil];
-    self.longPressGestureRecogniser.minimumPressDuration = 0.5;
-    [self.captionTextView becomeFirstResponder];
-    self.captionTextView.hidden = NO;
-    self.recordTutoLabel.hidden = YES;
 }
 
 -(IBAction)backToCameraButtonClicked:(id)sender {
@@ -644,7 +667,7 @@
             
             // Current user real name
             NSString *abName = contactDictionnary[[User currentUser].username];
-            if (abName && abName.length > 0 && ![[User currentUser].addressbookName isEqualToString:abName]) {
+            if (abName && abName.length > 0 && (![User currentUser].addressbookName || [User currentUser].addressbookName.length == 0)) {
                 [ApiManager saveAddressbookName:contactDictionnary[[User currentUser].username]];
             }
         } else if ([User currentUser].score != kUserInitialScore) {
@@ -845,9 +868,10 @@
             [self setCameraMode];
             
             // If record too short => open caption
-            if ([User currentUser].score > kMaxScoreBeforeHidingImportantTutos && [[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
-                [self captionButtonClicked:nil];
-            }
+            // todo BT
+//            if ([User currentUser].score > kMaxScoreBeforeHidingImportantTutos && [[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
+//                [self captionButtonClicked:nil];
+//            }
         }];
     }];
 }
@@ -864,6 +888,7 @@
         // Create and pin post
         VideoPost *post = [VideoPost createCurrentUserPost];
         
+        // todo BT
         NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
         post.videoProperties = properties;
         
@@ -871,9 +896,16 @@
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];
         exporter.outputUrl = post.localUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
-        if (self.captionTextView.text.length > 0) {
+        
+        // todo BT
+//        if (self.captionTextView.text.length > 0) {
+//            AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+//            exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
+//            exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
+//        }
+        if (!self.moodLabel.hidden) {
             AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-            exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
+            exporter.videoConfiguration.watermarkImage = [self getImageFromMood];
             exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
         }
 
@@ -951,6 +983,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self.captionTextView.text = @"";
         self.captionTextView.hidden = YES;
+        self.moodLabel.hidden = YES;
         
         // 1st flash
         if (userScore == kUserInitialScore) {
@@ -1101,6 +1134,10 @@
 
 - (void)setPreviewMode {
     [self setPlayingMode:NO];
+    
+    self.previewMoodLabel.hidden = self.moodLabel.hidden;
+    self.previewMoodLabel.text = self.moodLabel.text;
+    
     self.cancelConfirmView.hidden = YES;
     self.cancelAreaView.hidden = NO;
     self.previewView.hidden = NO;
@@ -1252,6 +1289,52 @@
 // --------------------------------------------
 #pragma mark - Caption
 // --------------------------------------------
+- (void)initEmojiView {
+    if (_emojiViewInitialized) {
+        return;
+    }
+    _emojiViewInitialized = YES;
+    CGFloat width = self.emojiView.frame.size.width;
+    CGFloat height = self.emojiView.frame.size.height;
+    
+    // assumption : horizontal margin = 1/3 of side
+    NSInteger numberOfColumns = 4;
+    CGFloat buttonSize = 3. / (4. * numberOfColumns + 1.) * width;
+    CGFloat horizontalMargin = 1. / 3. * buttonSize;
+    
+    NSInteger numberOfRows = floor(height / (buttonSize * 4. / 3.));
+    CGFloat verticalMargin = (height - numberOfRows * buttonSize) / (numberOfRows + 1.);
+    
+    // Get gray image for background
+    UIGraphicsBeginImageContext(CGSizeMake(buttonSize, buttonSize));
+    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [UIColor lightGrayColor].CGColor);
+    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0,0,buttonSize,buttonSize));
+    UIImage *colorImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    for (int row = 0; row < numberOfRows; row ++) {
+        for (int column = 0; column < numberOfColumns; column ++) {
+            CGRect frame = CGRectMake(horizontalMargin + column * (buttonSize + horizontalMargin), verticalMargin + row * (verticalMargin + buttonSize), buttonSize, buttonSize);
+            UIButton *button = [[UIButton alloc] initWithFrame:frame];
+            [button setTitle:getEmojiAtIndex(row + column * numberOfRows) forState:UIControlStateNormal];
+            button.titleLabel.numberOfLines = 1;
+            button.titleLabel.font = [UIFont systemFontOfSize:100];
+            button.titleLabel.adjustsFontSizeToFitWidth = YES;
+            [button.titleLabel setTextAlignment: NSTextAlignmentCenter];
+            button.contentEdgeInsets = UIEdgeInsetsMake(-buttonSize/2.75, 0.0, 0.0, 0.0);
+            [button setBackgroundImage:colorImage forState:UIControlStateHighlighted];
+            [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.emojiView addSubview:button];
+        }
+    }
+}
+
+- (void)emojiClicked:(UIButton *)sender {
+    self.emojiView.hidden = YES;
+    self.moodLabel.text = sender.titleLabel.text;
+    self.moodLabel.hidden = NO;
+}
+
 - (void)handleTapToCloseCaption {
     [self resignCaptionFirstResponderAndHideIfEmpty];
     self.longPressGestureRecogniser.minimumPressDuration = 0;
@@ -1342,6 +1425,27 @@
     
     UIGraphicsEndImageContext();
     [superView insertSubview:self.captionTextView atIndex:index];
+    [containerView removeFromSuperview];
+    return img;
+}
+
+// Screenschot mood
+- (UIImage *)getImageFromMood
+{
+    UIView *containerView = [[UIView alloc] initWithFrame:self.view.frame];
+    containerView.backgroundColor = [UIColor clearColor];
+    UIView *superView = self.moodLabel.superview;
+    NSInteger index = [superView.subviews indexOfObject:self.moodLabel];
+    [superView insertSubview:containerView belowSubview:self.moodLabel];
+    [containerView addSubview:self.moodLabel];
+    
+    UIGraphicsBeginImageContextWithOptions(containerView.bounds.size, NO, 0.0);
+    [containerView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    [superView insertSubview:self.moodLabel atIndex:index];
     [containerView removeFromSuperview];
     return img;
 }

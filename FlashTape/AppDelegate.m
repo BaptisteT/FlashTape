@@ -55,6 +55,10 @@
     // Initialize Parse.
     [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
                   clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
+    // dev
+//        [Parse setApplicationId:@"3ohZiWJdynEdw17xhrQ9t9d3xYnKTVj6mxLqQb0n"
+//                      clientKey:@"RyeSm5oeDK9A1UL2gM0EGDtoej3UjROFC3K0lW6t"];
+
     
     if (!DEBUG) {
         // Flurry
@@ -113,11 +117,15 @@
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
     currentInstallation[@"user"] = [PFUser currentUser];
+    
+    currentInstallation[@"iosSettings"] = [NSNumber numberWithInteger:[NotifUtils getUserNotificationSettings]];
     [currentInstallation saveInBackground];
     
     // This sends the deviceToken to Mixpanel
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
 }
+
+
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     UIApplicationState state = [application applicationState];

@@ -18,4 +18,6 @@
 
 + (BOOL)isRegisteredForRemoteNotification;
 
++ (NSUInteger)getUserNotificationSettings;
+
 @end

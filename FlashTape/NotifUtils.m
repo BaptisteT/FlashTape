@@ -43,4 +43,18 @@
     }
 }
 
++ (NSUInteger)getUserNotificationSettings
+{
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        // iOS8+
+        if (![UIApplication sharedApplication].isRegisteredForRemoteNotifications) {
+            return 0;
+        } else {
+            return [UIApplication sharedApplication].currentUserNotificationSettings.types;
+        }
+    } else {
+        // iOS7 and below
+        return [UIApplication sharedApplication].enabledRemoteNotificationTypes;
+    }
+}
 @end
