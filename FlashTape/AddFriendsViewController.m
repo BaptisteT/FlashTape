@@ -5,6 +5,7 @@
 //  Created by Baptiste Truchot on 6/6/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "ABContact.h"
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
 #import "User.h"
@@ -23,12 +24,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITableView *resultTableView;
 
-@property (strong, nonatomic) NSMutableArray *unfollowedArray;
-@property (strong, nonatomic) NSMutableDictionary *contactDictionnary;
-@property (strong, nonatomic) NSMutableArray *unrelatedArray;
+@property (strong, nonatomic) NSMutableDictionary *addressBookDictionnary;
 
-@property (strong, nonatomic) NSMutableArray *autocompleteNumberArray;
-@property (strong, nonatomic) NSMutableArray *autocompleteContactArray;
+@property (strong, nonatomic) NSArray *abContactArray;
+@property (strong, nonatomic) NSArray *unfollowedArray;
+@property (strong, nonatomic) NSArray *unrelatedArray;
+
+@property (strong, nonatomic) NSMutableArray *autocompleteAbContactArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteUnfollowedArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteUnrelatedArray;
 
@@ -46,10 +48,7 @@
     [super viewDidLoad];
     
     // init
-    self.unfollowedArray = [NSMutableArray new];
-    self.unrelatedArray = [NSMutableArray new];
-    self.autocompleteUnfollowedArray = [NSMutableArray arrayWithArray:self.unfollowedArray];
-    self.autocompleteUnrelatedArray = [NSMutableArray arrayWithArray:self.unrelatedArray];
+    self.addressBookDictionnary = [NSMutableDictionary dictionaryWithDictionary:[AddressbookUtils getContactDictionnary]];
     
     // Allow contact button
     [self.allowContactButton setTitle:NSLocalizedString(@"allow_contact_title", nil) forState:UIControlStateNormal];
@@ -80,28 +79,31 @@
     // Reset new flasher / follower at 0
     [GeneralUtils setNewNewAddressbookFlasherCount:0];
     [GeneralUtils setNewUnfollowedFollowerCount:0];
+    
+    // Reload
+    [self reloadTableView];
 }
 
 - (void)getContactAndFollowers {
-    // Contact
-    self.contactDictionnary = [NSMutableDictionary dictionaryWithDictionary:[AddressbookUtils getContactDictionnary]];
-    self.autocompleteNumberArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
-    self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
-    
+    // AB Contacts
+    [DatastoreUtils getAllABContactsLocallySuccess:^(NSArray *contacts) {
+        self.abContactArray = [contacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
+            NSString *name1 = self.addressBookDictionnary[obj1.number] ? self.addressBookDictionnary[obj1.number] : @"?";
+            NSString *name2 = self.addressBookDictionnary[obj2.number] ? self.addressBookDictionnary[obj2.number] : @"?";
+            return [name1 caseInsensitiveCompare:name2];
+        }];
+    } failure:nil];
+
     // Get unfollowed follower
     [DatastoreUtils getUnfollowedFollowersLocallyAndExecuteSuccess:^(NSArray *followers) {
-        if (followers) {
-            self.unfollowedArray = [NSMutableArray arrayWithArray:followers];
-        }
+        self.unfollowedArray = followers;
         [self reloadTableView];
     } failure:nil];
     
     // Get unrelated contacts
-    [DatastoreUtils getUnrelatedUserInAddressBook:[self.contactDictionnary allKeys]
+    [DatastoreUtils getUnrelatedUserInAddressBook:[self.addressBookDictionnary allKeys]
                                           success:^(NSArray *unrelatedUser) {
-                                              if (unrelatedUser) {
-                                                  self.unrelatedArray = [NSMutableArray arrayWithArray:unrelatedUser];
-                                              }
+                                              self.unrelatedArray = unrelatedUser;
                                               [self reloadTableView];
                                           } failure:nil];
 }
@@ -166,13 +168,11 @@
     if (substring.length == 0) {
         self.autocompleteUnfollowedArray = [NSMutableArray arrayWithArray:self.unfollowedArray];
         self.autocompleteUnrelatedArray = [NSMutableArray arrayWithArray:self.unrelatedArray];
-        self.autocompleteNumberArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allKeys]];
-        self.autocompleteContactArray = [NSMutableArray arrayWithArray:[self.contactDictionnary allValues]];
+        self.autocompleteAbContactArray = [NSMutableArray arrayWithArray:self.abContactArray];
     } else {
         self.autocompleteUnfollowedArray = [NSMutableArray new];
         self.autocompleteUnrelatedArray = [NSMutableArray new];
-        self.autocompleteNumberArray = [NSMutableArray new];
-        self.autocompleteContactArray = [NSMutableArray new];
+        self.autocompleteAbContactArray = [NSMutableArray new];
         for(User *user in self.unfollowedArray) {
             NSRange substringRange = [user.transformedUsername rangeOfString:substring options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch];
             if (substringRange.location == 0) {
@@ -186,15 +186,12 @@
             }
         }
         
-        for(NSString *number in [self.contactDictionnary allKeys]) {
-            NSString *name = self.contactDictionnary[number];
+        for(ABContact *contact in self.abContactArray) {
+            NSString *name = self.addressBookDictionnary[contact.number];
             NSRange substringRange = [name rangeOfString:substring options:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch];
             if (substringRange.location == 0) {
-                [self.autocompleteContactArray addObject:name];
-                [self.autocompleteNumberArray addObject:number];
+                [self.autocompleteAbContactArray addObject:contact];
             }
-            // todo BT
-            // check it's not another user
         }
 
     }
@@ -210,14 +207,14 @@
 }
 
 - (NSInteger)numberOfRowsForSection:(NSInteger)section {
-    if ([self isABContactSection:section]) {
+    if ([self isUsernameSearchedSection:section]) {
         return self.usernameSearchBar.text.length > 0 ? 1 : 0;
     } else if ([self isABUserSection:section]) {
         return self.autocompleteUnrelatedArray.count;
     } else if ([self isFollowerSection:section]) {
         return self.autocompleteUnfollowedArray.count;
     } else if ([self isABContactSection:section]) {
-        return self.autocompleteContactArray.count;
+        return self.autocompleteAbContactArray.count;
     } else {
         return 0;
     }
@@ -226,9 +223,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self isABContactSection:indexPath.section]) {
         InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
-        NSString *number = self.autocompleteNumberArray[indexPath.row];
-        NSString *name = self.autocompleteContactArray[indexPath.row];
-        [cell initWithName:name number:number];
+        ABContact *contact = (ABContact *)self.autocompleteAbContactArray[indexPath.row];
+        [cell initWithName:self.addressBookDictionnary[contact.number] number:contact.number friendCount:contact.users.count];
         cell.delegate = self;
         return cell;
     } else {
@@ -244,7 +240,7 @@
         } else if ([self isABUserSection:indexPath.section]) {
             if (indexPath.row < self.autocompleteUnrelatedArray.count) {
                 User *user = (User *)self.autocompleteUnrelatedArray[indexPath.row];
-                [cell setCellUserTo:user realName:self.contactDictionnary[user.username]];
+                [cell setCellUserTo:user realName:self.addressBookDictionnary[user.username]];
             }
         } else if ([self isFollowerSection:indexPath.section]) {
             if (indexPath.row < self.autocompleteUnfollowedArray.count) {
@@ -287,7 +283,7 @@
         NSString *string = NSLocalizedString(@"follower_section_title", nil);
         [label setText:string];
     } else {
-        if (self.autocompleteContactArray.count == 0) {
+        if (self.autocompleteAbContactArray.count == 0) {
             return nil;
         }
         NSString *string = NSLocalizedString(@"invite_section_title", nil);
@@ -366,7 +362,7 @@
                      failure:nil];
     
     // Remove user
-    [self.contactDictionnary removeObjectForKey:number];
+    [self.addressBookDictionnary removeObjectForKey:number];
     
     // Reload addressbook section
     [self reloadTableView];

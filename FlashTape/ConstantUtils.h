@@ -17,13 +17,14 @@
 static NSString * const kFlashTapeInviteLink = @"http://get.flashtape.co";
 static NSString * const kFlashTapeWebsiteLink = @"http://flashtape.co/";
 static NSString * const kFlashTapeWebsiteTermsLink = @"http://flashtape.co/#terms";
-static NSString * const kAppStoreLink = @"https://itunes.apple.com/us/app/flashtape-1-second-video-friends/id997449435?ls=1&mt=8";
+static NSString * const kAppStoreLink = @"https://itunes.apple.com/app/id997449435";
 
 //Flurry token
 static NSString * const kProdFlurryToken = @"5PFZ5RNNFKH6J6D6V4ZY";
 
 //Mixpanel token
-static NSString * const kMixpanelToken = @"51d7f02e924b3babe98ea09ca2dd423b";
+static NSString * const kProdMixpanelToken = @"51d7f02e924b3babe98ea09ca2dd423b";
+static NSString * const kDevMixpanelToken =  @"63dfc77a4f9c9db92af63498197bb327";
 
 // Parse
 static NSString * const kParsePostsName = @"Posts";

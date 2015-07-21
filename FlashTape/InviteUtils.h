@@ -12,7 +12,9 @@
 
 @interface InviteUtils : NSObject
 
-+ (NSArray *)pickContactsToPresent:(NSInteger)count;
++ (void)pickContactsToPresent:(NSInteger)count
+                      success:(void(^)(NSArray *contacts))successBlock
+                      failure:(void(^)(NSError *error))failureBlock;
 
 + (BOOL)shouldPresentInviteController;
 

@@ -46,7 +46,8 @@
 // --------------------------------------------
 #pragma mark - ABContacts
 // --------------------------------------------
-+ (NSArray *)getAllABContactsLocally;
++ (void)getAllABContactsLocallySuccess:(void(^)(NSArray *contacts))successBlock
+                               failure:(void(^)(NSError *error))failureBlock;
 
 // --------------------------------------------
 #pragma mark - Video

@@ -358,6 +358,14 @@
                                              selector:@selector(resetNotifCount)
                                                  name:@"reset_notif_count"
                                                object:nil];
+    
+    // Tracking
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_MICRO: [NSNumber numberWithBool:granted]}];
+    }];
+    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+        [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_CAMERA: [NSNumber numberWithBool:granted]}];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -528,6 +536,7 @@
     if (!self.moodLabel.hidden) {
         self.moodLabel.hidden = YES;
     } else {
+        [self hideUIElementOnCamera:YES];
         self.emojiView.hidden = NO;
     }
     
@@ -616,6 +625,9 @@
 - (void)retrieveFollowingLocallyAndVideosRemotely {
     [DatastoreUtils getFollowingRelationsLocallyAndExecuteSuccess:^(NSArray *followingRelations) {
         [self setObjectsFromFollowingRelationsArray:followingRelations];
+        
+        // todo BT v1.2 add to device
+        [TrackingUtils setPeopleProperties:@{PROPERTY_FRIENDS_COUNT: [NSNumber numberWithInteger:followingRelations.count]}];
     } failure:nil];
 }
 
@@ -677,6 +689,9 @@
                               cancelButtonTitle:NSLocalizedString(@"later_button",nil)
                               otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
         }
+        
+        // todo BT v1.2 add to user
+        [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_CONTACT: [NSNumber numberWithBool:granted]}];
     });
 }
 
@@ -761,10 +776,10 @@
         [InviteUtils incrementVideoSeenSinceLastInvitePresentedCount];
     }
     if (self.potentialContactsToInvite == nil && [InviteUtils shouldPresentInviteController]) {
-        // select user to invite
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.potentialContactsToInvite = [NSMutableArray arrayWithArray:[InviteUtils pickContactsToPresent:MIN(self.videosToPlayArray.count,kMinInviteCount + arc4random_uniform(kMaxInviteCount - kMinInviteCount + 1))]];
-        });
+        [InviteUtils pickContactsToPresent:MIN(self.videosToPlayArray.count,kMinInviteCount + arc4random_uniform(kMaxInviteCount - kMinInviteCount + 1))
+                                   success:^(NSArray *contacts) {
+                                       self.potentialContactsToInvite = [NSMutableArray arrayWithArray:contacts];
+                                   } failure:nil];
     }
     
     // Track
@@ -1330,6 +1345,7 @@
 }
 
 - (void)emojiClicked:(UIButton *)sender {
+    [self hideUIElementOnCamera:NO];
     self.emojiView.hidden = YES;
     self.moodLabel.text = sender.titleLabel.text;
     self.moodLabel.hidden = NO;

@@ -14,7 +14,9 @@
 
 @property (weak, nonatomic) id<InviteContactTVCDelegate> delegate;
 
-- (void)initWithName:(NSString *)name number:(NSString *)number;
+- (void)initWithName:(NSString *)name
+              number:(NSString *)number
+         friendCount:(NSInteger)friendCount;
 @end
 
 @protocol InviteContactTVCDelegate

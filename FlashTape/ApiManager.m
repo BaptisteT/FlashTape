@@ -24,6 +24,29 @@
 @implementation ApiManager
 
 // --------------------------------------------
+#pragma mark - Api
+// --------------------------------------------
+
+// Check API version (retrieve potential message and redirection)
++ (void)checkAppVersionAndExecuteSucess:(void(^)(NSDictionary *))successBlock
+{
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    
+    [PFCloud callFunctionInBackground:@"checkAppVersion"
+                       withParameters:@{ @"version" : version, @"build" : build }
+                                block:^(id object, NSError *error) {
+                                    if (error != nil) {
+                                        NSLog(@"checkBuildVersion: We should not pass in this block!!!!");
+                                    } else {
+                                        if (successBlock) {
+                                            successBlock((NSDictionary *)object);
+                                        }
+                                    }
+                                }];
+}
+
+// --------------------------------------------
 #pragma mark - Sign up
 // --------------------------------------------
 
@@ -680,9 +703,7 @@
 {
 
     [contact incrementKey:@"inviteSeenCount" byAmount:[NSNumber numberWithInt:1]];
-    [contact saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        NSLog(@"%lu",[contact.inviteSeenCount integerValue]);
-    }];
+    [contact saveInBackground];
 }
 
 

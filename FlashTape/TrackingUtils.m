@@ -15,21 +15,18 @@
 
 + (void)identifyUser:(User *)user signup:(BOOL)flag
 {
-    if (DEBUG)return;
-    
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel.people set:@{@"name": user.flashUsername ? user.flashUsername : @"", @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
+    [self setPeopleProperties:@{@"name": user.flashUsername ? user.flashUsername : @"", @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
     [mixpanel identify:user.objectId];
     
     if (flag) {
         [TrackingUtils trackEvent:EVENT_USER_SIGNUP properties:nil];
+        [TrackingUtils setPeopleProperties:@{@"signup.date": [NSDate date]}];
     }
 }
 
 + (void)trackEvent:(NSString *)eventName properties:(NSDictionary *)properties
 {
-    if (DEBUG)return;
-    
     // Parse
     [PFAnalytics trackEventInBackground:eventName block:nil];
     
@@ -41,10 +38,16 @@
         [mixpanel track:eventName properties:properties];
     }
     
-    NSArray *arrayWithMixpanelPeopleTracking = @[EVENT_SESSION, EVENT_VIDEO_SENT, EVENT_VIDEO_SEEN, EVENT_MESSAGE_SENT, EVENT_FRIEND_ADD];
+    NSArray *arrayWithMixpanelPeopleTracking = @[EVENT_SESSION, EVENT_VIDEO_SENT, EVENT_VIDEO_SEEN, EVENT_MESSAGE_SENT];
     if ([arrayWithMixpanelPeopleTracking indexOfObject:eventName] != NSNotFound) {
         [mixpanel.people increment:eventName by:[NSNumber numberWithInt:1]];
     }
+}
+
++ (void)setPeopleProperties:(NSDictionary *)properties
+{
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel.people set:properties];
 }
 
 

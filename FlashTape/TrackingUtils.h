@@ -42,6 +42,12 @@
 #define EVENT_ALLOW_CONTACT_SKIPPED @"allow_contact.skipped"
 #define EVENT_ALLOW_CONTACT @"contact.persmission"
 
+#define PROPERTY_ALLOW_CONTACT @"contact.allowed"
+#define PROPERTY_ALLOW_NOTIF @"notif.allowed"
+#define PROPERTY_ALLOW_MICRO @"micro.allowed"
+#define PROPERTY_ALLOW_CAMERA @"camera.allowed"
+#define PROPERTY_FRIENDS_COUNT @"friends.count"
+
 
 @interface TrackingUtils : NSObject
 
@@ -49,5 +55,7 @@
 + (void)identifyUser:(User *)user signup:(BOOL)flag;
 
 + (void)trackEvent:(NSString *)eventName properties:(NSDictionary *)properties;
+
++ (void)setPeopleProperties:(NSDictionary *)properties;
 
 @end

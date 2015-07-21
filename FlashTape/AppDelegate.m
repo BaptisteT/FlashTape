@@ -34,6 +34,11 @@
 
 @property (strong, nonatomic) NSDate *sessionStartDate;
 
+@property (nonatomic, strong) NSURL *redirectURL;
+@property (nonatomic, strong) NSString *alertTitle;
+@property (nonatomic, strong) NSString *alertMessage;
+@property (nonatomic) BOOL repeat;
+
 @end
 
 @implementation AppDelegate
@@ -53,12 +58,13 @@
     [Parse enableLocalDatastore];
     
     // Initialize Parse.
-    [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
-                  clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
-    // dev
-//        [Parse setApplicationId:@"3ohZiWJdynEdw17xhrQ9t9d3xYnKTVj6mxLqQb0n"
-//                      clientKey:@"RyeSm5oeDK9A1UL2gM0EGDtoej3UjROFC3K0lW6t"];
-
+    if (!DEBUG) {
+        [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
+                      clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
+    } else {
+        [Parse setApplicationId:@"3ohZiWJdynEdw17xhrQ9t9d3xYnKTVj6mxLqQb0n"
+                      clientKey:@"RyeSm5oeDK9A1UL2gM0EGDtoej3UjROFC3K0lW6t"];
+    }
     
     if (!DEBUG) {
         // Flurry
@@ -69,12 +75,26 @@
         [Fabric with:@[CrashlyticsKit]];
         
         // Mixpanel
-        [Mixpanel sharedInstanceWithToken:kMixpanelToken launchOptions:launchOptions];
+        [Mixpanel sharedInstanceWithToken:kProdMixpanelToken launchOptions:launchOptions];
         
         // Track statistics around application opens.
         [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    } else {
+        [Mixpanel sharedInstanceWithToken:kDevMixpanelToken launchOptions:launchOptions];
     }
-
+    
+    // Obsolete API
+    [ApiManager checkAppVersionAndExecuteSucess:^(NSDictionary * resultDictionnary) {
+        if (resultDictionnary && [resultDictionnary valueForKey:@"title"]) {
+            self.alertTitle = [resultDictionnary valueForKey:@"title"];
+            self.alertMessage = [resultDictionnary valueForKey:@"message"];
+            self.repeat = [[resultDictionnary valueForKey:@"blocking"] boolValue];
+            if ([resultDictionnary valueForKey:@"redirect_url"]) {
+                self.redirectURL = [NSURL URLWithString:[resultDictionnary valueForKey:@"redirect_url"]];
+            }
+            [self createObsoleteAPIAlertView];
+        }
+    }];
     
     // Clean video data
     [DatastoreUtils deleteExpiredPosts];
@@ -120,6 +140,7 @@
     
     currentInstallation[@"iosSettings"] = [NSNumber numberWithInteger:[NotifUtils getUserNotificationSettings]];
     [currentInstallation saveInBackground];
+    [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_NOTIF: currentInstallation[@"iosSettings"]}];
     
     // This sends the deviceToken to Mixpanel
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
@@ -200,6 +221,31 @@
                      animations:^(){
                          internalNotif.frame = CGRectMake(0, 0, superView.frame.size.width, kInternalNotifHeight);
                      } completion:nil];
+}
+
+// --------------------------------------------
+#pragma mark - Alert view
+// --------------------------------------------
+- (void)createObsoleteAPIAlertView
+{
+    if (self.alertTitle && self.alertMessage) {
+        [[[UIAlertView alloc] initWithTitle:self.alertTitle
+                                    message:self.alertMessage
+                                   delegate:self
+                          cancelButtonTitle:nil
+                          otherButtonTitles:@"Ok",nil] show];
+    }
+}
+
+// API related alert
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (self.redirectURL) {
+        [[UIApplication sharedApplication] openURL:self.redirectURL];
+        if (self.repeat) {
+            [self createObsoleteAPIAlertView];
+        }
+    }
 }
 
 @end

@@ -16,23 +16,30 @@
 
 @implementation InviteUtils
 
-+ (NSArray *)pickContactsToPresent:(NSInteger)count
++ (void)pickContactsToPresent:(NSInteger)count
+                      success:(void(^)(NSArray *contacts))successBlock
+                      failure:(void(^)(NSError *error))failureBlock
 {
-    // get all contacts
-    NSArray *aBContacts = [DatastoreUtils getAllABContactsLocally];
-    
-    if (aBContacts.count <= count) {
-        return aBContacts;
-    }
-    
-    NSArray *sortedContacts = [aBContacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
-        if ([obj1 contactScore] >= [obj2 contactScore]) {
-            return NSOrderedAscending;
-        } else {
-            return NSOrderedDescending;
-        }
-    }];
-    return [sortedContacts subarrayWithRange:NSMakeRange(0, count)];
+   [DatastoreUtils getAllABContactsLocallySuccess:^(NSArray *aBContacts) {
+       if (aBContacts.count <= count) {
+           successBlock(aBContacts);
+       }
+       
+       NSArray *sortedContacts = [aBContacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
+           if ([obj1 contactScore] >= [obj2 contactScore]) {
+               return NSOrderedAscending;
+           } else {
+               return NSOrderedDescending;
+           }
+       }];
+       if (successBlock) {
+           successBlock([sortedContacts subarrayWithRange:NSMakeRange(0, count)]);
+       }
+   } failure:^(NSError *error) {
+       if (failureBlock) {
+           failureBlock(error);
+       }
+   }];
 }
 
 + (BOOL)shouldPresentInviteController {

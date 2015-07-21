@@ -17,6 +17,8 @@
 
 @interface ApiManager : NSObject
 
++ (void)checkAppVersionAndExecuteSucess:(void(^)(NSDictionary *))successBlock;
+
 // --------------------------------------------
 #pragma mark - User
 // --------------------------------------------

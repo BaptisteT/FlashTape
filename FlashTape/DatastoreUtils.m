@@ -196,14 +196,24 @@
 // --------------------------------------------
 #pragma mark - ABContacts
 // --------------------------------------------
-+ (NSArray *)getAllABContactsLocally
++ (void)getAllABContactsLocallySuccess:(void(^)(NSArray *contacts))successBlock
+                                failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
     [query fromPinWithName:kParseABContacts];
     [query setLimit:1000];
     [query fromLocalDatastore];
     [query whereKey:@"isFlasher" notEqualTo:[NSNumber numberWithBool:true]];
-    return [query findObjects];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (successBlock) {
+                successBlock(objects);
+            }
+        } else {
+            if (failureBlock)
+                failureBlock(error);
+        }
+    }];
 }
 
 // --------------------------------------------
