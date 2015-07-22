@@ -10,7 +10,7 @@
 #import "ApiManager.h"
 
 #import "ABAccessViewController.h"
-#import "ABFlashersViewController.h"
+#import "FirstTimeAddFriendsViewController.h"
 #import "VideoViewController.h"
 
 #import "AddressbookUtils.h"
@@ -60,7 +60,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"ABFlashers From ABAccess"]) {
-        ((ABFlashersViewController *) [segue destinationViewController]).flashersArray = (NSArray *)sender;
+        ((FirstTimeAddFriendsViewController *) [segue destinationViewController]).flashersArray = (NSArray *)sender;
     } else if ([segueName isEqualToString: @"Video From ABAccess"]) {
         ((VideoViewController *) [segue destinationViewController]).isSignup = true;
     }
@@ -84,15 +84,15 @@
                     [TrackingUtils trackEvent:EVENT_CONTACT_ALLOWED properties:nil];
                     NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
                     [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
-                                                             success:^(NSArray *flashersArray) {
-                                                                 if (flashersArray && flashersArray.count > 0) {
-                                                                     [self navigateToABFlashersController:flashersArray];
-                                                                 } else {
-                                                                     [self navigateToVideoController];
-                                                                 }
-                                                             } failure:^(NSError *error) {
-                                                                 [self navigateToVideoController];
-                                                             }];
+                     success:^(NSArray *flashersArray) {
+                         [ApiManager fillContactTableWithContacts:[contactDictionnary allKeys] aBFlasher:flashersArray success:^(NSArray *abContacts) {
+                             [self navigateToABFlashersController:flashersArray];
+                         } failure:^(NSError *error) {
+                             [self navigateToABFlashersController:flashersArray];
+                         }];
+                     } failure:^(NSError *error) {
+                         [self navigateToVideoController];
+                     }];
                     [AddressbookUtils saveContactDictionnary:contactDictionnary];
                 } else {
                     [TrackingUtils trackEvent:EVENT_CONTACT_DENIED properties:nil];
@@ -123,7 +123,7 @@
     if (self.initialViewController) {
         // present modally
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-        ABFlashersViewController *abFlashersVC = [storyboard instantiateViewControllerWithIdentifier:@"ABFlashersVC"];
+        FirstTimeAddFriendsViewController *abFlashersVC = [storyboard instantiateViewControllerWithIdentifier:@"ABFlashersVC"];
         abFlashersVC.initialViewController = self.initialViewController;
         abFlashersVC.flashersArray = flashers;
         [self presentViewController:abFlashersVC animated:NO completion:nil];

@@ -17,7 +17,8 @@
 @property (weak, nonatomic) id<InviteContactTVCDelegate> delegate;
 
 - (void)initWithName:(NSString *)name
-             contact:(ABContact *)contact;
+             contact:(ABContact *)contact
+            firstRow:(BOOL)firstRow;
 @end
 
 @protocol InviteContactTVCDelegate

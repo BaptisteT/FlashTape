@@ -244,7 +244,9 @@
                                      failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [User query];
-    [query whereKey:@"username" containedIn:phoneNumbers];
+    NSMutableArray *numbersArray = [NSMutableArray arrayWithArray:phoneNumbers];
+    [numbersArray removeObject:[User currentUser].username];
+    [query whereKey:@"username" containedIn:numbersArray];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // Pin and return
@@ -257,7 +259,7 @@
             }];
             
             // Check if new user in our addressbok
-            [DatastoreUtils getUnrelatedUserInAddressBook:phoneNumbers success:^(NSArray *unrelatedUser) {
+            [DatastoreUtils getUnrelatedUserInAddressBook:numbersArray success:^(NSArray *unrelatedUser) {
                 NSDate *previousDate = [GeneralUtils getLastAddressBookFlasherRetrieveDate];
                 int count = 0;
                 for (PFObject *object in unrelatedUser) {
@@ -271,9 +273,6 @@
                                                                     object:nil
                                                                   userInfo:nil];
             } failure:nil];
-            
-            // Fill Contacts
-            [ApiManager fillContactTableWithContacts:phoneNumbers aBFlasher:objects success:nil failure:nil];
         } else {
             if (failureBlock) {
                 failureBlock(error);
@@ -285,7 +284,7 @@
 // Fill contacts table
 + (void)fillContactTableWithContacts:(NSArray *)contacts
                            aBFlasher:(NSArray *)aBFlashers
-                             success:(void(^)())successBlock
+                             success:(void(^)(NSArray *abContacts))successBlock
                              failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
@@ -314,7 +313,7 @@
                     [PFObject unpinAllObjectsInBackgroundWithName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
                         [PFObject pinAllInBackground:contactObjectArray withName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
                             if (successBlock) {
-                                successBlock(successBlock);
+                                successBlock(contactObjectArray);
                             }
                         }];
                     }];

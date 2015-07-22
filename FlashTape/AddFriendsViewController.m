@@ -183,7 +183,7 @@
     if ([self isABContactSection:indexPath.section]) {
         InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
         ABContact *contact = (ABContact *)self.autocompleteAbContactArray[indexPath.row];
-        [cell initWithName:self.addressBookDictionnary[contact.number] contact:contact];
+        [cell initWithName:self.addressBookDictionnary[contact.number] contact:contact firstRow:(indexPath.row == 0)];
         cell.delegate = self;
         return cell;
     } else {

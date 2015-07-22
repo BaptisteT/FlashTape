@@ -672,7 +672,10 @@
         if (granted) {
             NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
             [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
-                                                     success:nil
+                                                     success:^(NSArray *flashers) {
+                                                         // Fill Contacts
+                                                         [ApiManager fillContactTableWithContacts:[contactDictionnary allKeys] aBFlasher:flashers success:nil failure:nil];
+                                                     }
                                                      failure:nil];
             [AddressbookUtils saveContactDictionnary:contactDictionnary];
             

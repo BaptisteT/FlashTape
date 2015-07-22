@@ -207,7 +207,7 @@
 		3CBD0D441B401687001DFE17 /* InternalNotifView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D431B401687001DFE17 /* InternalNotifView.m */; };
 		3CBD0D461B40169A001DFE17 /* InternalNotifView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CBD0D451B40169A001DFE17 /* InternalNotifView.xib */; };
 		3CBD0D4A1B402F0D001DFE17 /* ABAccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D491B402F0D001DFE17 /* ABAccessViewController.m */; };
-		3CBD0D4D1B40307D001DFE17 /* ABFlashersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D4C1B40307D001DFE17 /* ABFlashersViewController.m */; };
+		3CBD0D4D1B40307D001DFE17 /* FirstTimeAddFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D4C1B40307D001DFE17 /* FirstTimeAddFriendsViewController.m */; };
 		3CBD0D501B404A30001DFE17 /* ABFlasherTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D4F1B404A30001DFE17 /* ABFlasherTableViewCell.m */; };
 		3CBD0D5A1B415F04001DFE17 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D591B415F04001DFE17 /* ABContact.m */; };
 		3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0F81B1CA00000E923D2 /* Message.m */; };
@@ -563,8 +563,8 @@
 		3CBD0D451B40169A001DFE17 /* InternalNotifView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternalNotifView.xib; sourceTree = "<group>"; };
 		3CBD0D481B402F0D001DFE17 /* ABAccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABAccessViewController.h; sourceTree = "<group>"; };
 		3CBD0D491B402F0D001DFE17 /* ABAccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABAccessViewController.m; sourceTree = "<group>"; };
-		3CBD0D4B1B40307D001DFE17 /* ABFlashersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABFlashersViewController.h; sourceTree = "<group>"; };
-		3CBD0D4C1B40307D001DFE17 /* ABFlashersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABFlashersViewController.m; sourceTree = "<group>"; };
+		3CBD0D4B1B40307D001DFE17 /* FirstTimeAddFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstTimeAddFriendsViewController.h; sourceTree = "<group>"; };
+		3CBD0D4C1B40307D001DFE17 /* FirstTimeAddFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstTimeAddFriendsViewController.m; sourceTree = "<group>"; };
 		3CBD0D4E1B404A30001DFE17 /* ABFlasherTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABFlasherTableViewCell.h; sourceTree = "<group>"; };
 		3CBD0D4F1B404A30001DFE17 /* ABFlasherTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABFlasherTableViewCell.m; sourceTree = "<group>"; };
 		3CBD0D581B415F04001DFE17 /* ABContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABContact.h; sourceTree = "<group>"; };
@@ -1144,8 +1144,8 @@
 				3C0AC1781B1E0FE80056C59C /* UsernameViewController.m */,
 				3CBD0D481B402F0D001DFE17 /* ABAccessViewController.h */,
 				3CBD0D491B402F0D001DFE17 /* ABAccessViewController.m */,
-				3CBD0D4B1B40307D001DFE17 /* ABFlashersViewController.h */,
-				3CBD0D4C1B40307D001DFE17 /* ABFlashersViewController.m */,
+				3CBD0D4B1B40307D001DFE17 /* FirstTimeAddFriendsViewController.h */,
+				3CBD0D4C1B40307D001DFE17 /* FirstTimeAddFriendsViewController.m */,
 			);
 			name = "Signup / Onboarding";
 			sourceTree = "<group>";
@@ -1334,7 +1334,7 @@
 				3C5F98031AEBBC560098F70F /* VideoPost.m in Sources */,
 				3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */,
 				3C2C4A271AFB583B00E0E4BF /* AddressbookUtils.m in Sources */,
-				3CBD0D4D1B40307D001DFE17 /* ABFlashersViewController.m in Sources */,
+				3CBD0D4D1B40307D001DFE17 /* FirstTimeAddFriendsViewController.m in Sources */,
 				3C081D031B1B54C70036D6B2 /* SCWeakSelectorTarget.m in Sources */,
 				3C4ABD1C1B299B2500897DF9 /* MPABTestDesignerDeviceInfoRequestMessage.m in Sources */,
 				3C4ABD421B299B2500897DF9 /* MPSurveyNavigationController.m in Sources */,

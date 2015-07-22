@@ -53,6 +53,11 @@
                                     success:(void(^)(NSArray *userArray))successBlock
                                     failure:(void(^)(NSError *error))failureBlock;
 
++ (void)fillContactTableWithContacts:(NSArray *)contacts
+                           aBFlasher:(NSArray *)aBFlashers
+                             success:(void(^)(NSArray *abContacts))successBlock
+                             failure:(void(^)(NSError *error))failureBlock;
+
 + (void)saveRelation:(Follow *)follow
              success:(void(^)())successBlock
              failure:(void(^)(NSError *error))failureBlock;

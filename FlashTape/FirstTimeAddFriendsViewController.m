@@ -5,18 +5,19 @@
 //  Created by Baptiste Truchot on 6/28/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "ABContact.h"
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
 #import "User.h"
 #import "ColorUtils.h"
 
-#import "ABFlashersViewController.h"
+#import "FirstTimeAddFriendsViewController.h"
 
 #import "AddressbookUtils.h"
 #import "MBProgressHUD.h"
 #import "VideoViewController.h"
 
-@interface ABFlashersViewController ()
+@interface FirstTimeAddFriendsViewController ()
 
 @property (strong, nonatomic) NSDictionary *contactDictionnary;
 @property (weak, nonatomic) IBOutlet UIButton *addFriendsButton;
@@ -25,9 +26,12 @@
 @property (strong, nonatomic) NSMutableArray *flashersToAddArray;
 @property (strong, nonatomic) IBOutlet UIView *colorTopView;
 
+@property (strong, nonatomic) NSMutableArray *abContactArray;
+
+
 @end
 
-@implementation ABFlashersViewController
+@implementation FirstTimeAddFriendsViewController
 
 // ----------------------------------------------------------
 #pragma mark Life cycle
@@ -37,14 +41,29 @@
     [super viewDidLoad];
     
     // Array
-    if (!self.flashersArray || self.flashersArray.count == 0) {
-        [self navigateToVideoController];
-        return;
+    if (!self.flashersArray) {
+        self.flashersArray = [NSArray new];
     }
     self.flashersToAddArray = [NSMutableArray arrayWithArray:self.flashersArray];
     
     // Get addressbook contacts
     self.contactDictionnary = [AddressbookUtils getContactDictionnary];
+    
+    // Fill Contacts
+    [DatastoreUtils  getAllABContactsLocallySuccess:^(NSArray *contacts) {
+        self.abContactArray = [NSMutableArray arrayWithArray:[contacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
+            if (obj1.users.count > obj2.users.count) {
+                return NSOrderedAscending;
+            } else if (obj2.users.count > obj1.users.count) {
+                return NSOrderedDescending;
+            } else {
+                NSString *name1 = self.contactDictionnary[obj1.number] ? self.contactDictionnary[obj1.number] : @"?";
+                NSString *name2 = self.contactDictionnary[obj2.number] ? self.contactDictionnary[obj2.number] : @"?";
+                return [name1 caseInsensitiveCompare:name2];
+            }
+        }]];
+        [self.flashersTableView reloadData];
+    } failure:nil];
     
     // Tableview
     self.flashersTableView.dataSource = self;
@@ -53,10 +72,10 @@
     
     // Title
     self.titleLabel.numberOfLines = 0;
-    self.titleLabel.text = [NSString stringWithFormat:NSLocalizedString(@"flashers_found_label", nil),self.flashersArray.count];
+    self.titleLabel.text = self.flashersArray.count > 0 ? [NSString stringWithFormat:NSLocalizedString(@"flashers_found_label", nil),self.flashersArray.count] : NSLocalizedString(@"no_flashers_found_label", nil);
     
     // Button
-    [self setAddFriendsButtonTitle];
+    [self.addFriendsButton setTitle:NSLocalizedString(@"add_friends_button",nil) forState:UIControlStateNormal];
     
     //Status Bar
     [self setNeedsStatusBarAppearanceUpdate];
@@ -108,8 +127,12 @@
 // ----------------------------------------------------------
 #pragma mark Tableview
 // ----------------------------------------------------------
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1 + (self.abContactArray.count > 0 ? 1 : 0);
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.flashersArray.count;
+    return section == 0 ? self.flashersArray.count : self.abContactArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -117,11 +140,46 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
-    ABFlasherTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ABFlasherTableViewCell"];
-    User *user = (User *)[self.flashersArray objectAtIndex:indexPath.row];
-    [cell initWithUser:user name:self.contactDictionnary[user.username] state:[self.flashersToAddArray containsObject:user]];
-    cell.delegate = self;
-    return cell;
+    if (indexPath.section == 0) {
+        ABFlasherTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ABFlasherTableViewCell"];
+        User *user = (User *)[self.flashersArray objectAtIndex:indexPath.row];
+        [cell initWithUser:user name:self.contactDictionnary[user.username] state:[self.flashersToAddArray containsObject:user]];
+        cell.delegate = self;
+        return cell;
+    } else {
+        InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
+        ABContact *contact = (ABContact *)self.abContactArray[indexPath.row];
+        [cell initWithName:self.contactDictionnary[contact.number] contact:contact firstRow:(indexPath.row == 0)];
+        cell.delegate = self;
+        return cell;
+    }
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return nil;
+    } else {
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 80)];
+        view.backgroundColor = [UIColor whiteColor];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, tableView.frame.size.width, 40)];
+        [label setFont:[UIFont fontWithName:@"NHaasGroteskDSPro-55Md" size:20]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.backgroundColor = [UIColor lightGrayColor];
+        label.textColor = [UIColor whiteColor];
+        label.text = self.flashersArray.count > 0 ? NSLocalizedString(@"flashers_invite_section_title", nil) : NSLocalizedString(@"no_flasher_invite_section_title", nil);
+        [view addSubview:label];
+        return view;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return 0;
+    } else {
+        return 80;
+    }
 }
 
 // ----------------------------------------------------------
@@ -131,20 +189,30 @@
     if (![self.flashersToAddArray containsObject:user]) {
         [self.flashersToAddArray addObject:user];
     }
-    [self setAddFriendsButtonTitle];
 }
 
 - (void)removeUserFromFlasherToAdd:(User *)user {
     [self.flashersToAddArray removeObject:user];
-    [self setAddFriendsButtonTitle];
 }
 
 // ----------------------------------------------------------
-#pragma mark UI
+#pragma mark InviteContactTVC delegate
 // ----------------------------------------------------------
-- (void)setAddFriendsButtonTitle {
-    [self.addFriendsButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"add_friends_button",nil),self.flashersToAddArray.count] forState:UIControlStateNormal];
+- (void)inviteUser:(ABContact *)contact
+{
+    NSString *name = self.contactDictionnary[contact.number];
+    [ApiManager sendInviteTo:contact.number
+                        name:name ? [name componentsSeparatedByString:@" "].firstObject : @""
+                     success:nil
+                     failure:nil];
+    
+    // Remove user
+    [self.abContactArray removeObject:contact];
+    
+    // Reload addressbook section
+    [self.flashersTableView reloadData];
 }
+
 
 // --------------------------------------------
 #pragma mark - Background Color Cycle
