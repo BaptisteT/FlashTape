@@ -71,7 +71,12 @@
 }
 
 - (void)navigateToVideoController {
-    [self performSegueWithIdentifier:@"Video From ABFlashers" sender:nil];
+    if (self.initialViewController) {
+        // dismiss modally
+        [self.initialViewController dismissViewControllerAnimated:NO completion:nil];
+    } else {
+        [self performSegueWithIdentifier:@"Video From ABFlashers" sender:nil];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

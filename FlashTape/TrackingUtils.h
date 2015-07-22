@@ -40,7 +40,8 @@
 #define EVENT_PLAYING_TAP @"playing.tap"
 #define EVENT_ALLOW_CONTACT_CLICKED @"allow_contact.clicked"
 #define EVENT_ALLOW_CONTACT_SKIPPED @"allow_contact.skipped"
-#define EVENT_ALLOW_CONTACT @"contact.persmission"
+#define EVENT_CONTACT_ALLOWED @"contact.allowed"
+#define EVENT_CONTACT_DENIED @"contact.denied"
 
 #define PROPERTY_ALLOW_CONTACT @"contact.allowed"
 #define PROPERTY_ALLOW_NOTIF @"notif.allowed"

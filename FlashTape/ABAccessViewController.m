@@ -15,6 +15,7 @@
 
 #import "AddressbookUtils.h"
 #import "ColorUtils.h"
+#import "GeneralUtils.h"
 #import "ImageUtils.h"
 #import "UICustomLineLabel.h"
 #import "MBProgressHUD.h"
@@ -49,7 +50,7 @@
     
     // Button
     [self.allowButton setTitle:NSLocalizedString(@"allow_contact_button", nil) forState:UIControlStateNormal];
-    [self.skipButton setTitle:NSLocalizedString(@"later_button", nil) forState:UIControlStateNormal];
+    [self.skipButton setTitle:NSLocalizedString(@"skip_button", nil) forState:UIControlStateNormal];
     
     // Contact button
     [self doBackgroundColorAnimation];
@@ -62,7 +63,6 @@
         ((ABFlashersViewController *) [segue destinationViewController]).flashersArray = (NSArray *)sender;
     } else if ([segueName isEqualToString: @"Video From ABAccess"]) {
         ((VideoViewController *) [segue destinationViewController]).isSignup = true;
-        ((VideoViewController *) [segue destinationViewController]).avoidParsingContact = [sender boolValue];
     }
 }
 
@@ -70,47 +70,65 @@
 #pragma mark Actions
 // ----------------------------------------------------------
 - (IBAction)allowABAccessButtonClicked:(id)sender {
-    [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_CLICKED properties:nil];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    // Ask access and parse contacts
-    ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (granted) {
-                NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
-                [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
-                                                         success:^(NSArray *flashersArray) {
-                                                             if (flashersArray && flashersArray.count > 0) {
-                                                                 [self navigateToABFlashersController:flashersArray];
-                                                             } else {
-                                                                 [self navigateToVideoController:NO];
-                                                             }
-                                                         } failure:^(NSError *error) {
-                                                             [self navigateToVideoController:NO];
-                                                         }];
-                [AddressbookUtils saveContactDictionnary:contactDictionnary];
-            } else {
-                [self navigateToVideoController:NO];
-            }
-            [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT properties:@{@"allow": [NSNumber numberWithBool:granted]}];
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
+        // redirect to settings
+        [GeneralUtils openSettings];
+    } else {
+        // Ask access and parse contacts
+        [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_CLICKED properties:nil];
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (granted) {
+                    [TrackingUtils trackEvent:EVENT_CONTACT_ALLOWED properties:nil];
+                    NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                    [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
+                                                             success:^(NSArray *flashersArray) {
+                                                                 if (flashersArray && flashersArray.count > 0) {
+                                                                     [self navigateToABFlashersController:flashersArray];
+                                                                 } else {
+                                                                     [self navigateToVideoController];
+                                                                 }
+                                                             } failure:^(NSError *error) {
+                                                                 [self navigateToVideoController];
+                                                             }];
+                    [AddressbookUtils saveContactDictionnary:contactDictionnary];
+                } else {
+                    [TrackingUtils trackEvent:EVENT_CONTACT_DENIED properties:nil];
+                    [self navigateToVideoController];
+                }
+            });
         });
-    });
-    
+    }
 }
 
 - (IBAction)laterButtonClicked:(id)sender {
     [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_SKIPPED properties:nil];
-    [self navigateToVideoController:YES];
+    [self navigateToVideoController];
 }
 
-- (void)navigateToVideoController:(BOOL)avoidParsing {
+- (void)navigateToVideoController {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    [self performSegueWithIdentifier:@"Video From ABAccess" sender:[NSNumber numberWithBool:avoidParsing]];
+    if (self.initialViewController) {
+        // dismiss modally
+        [self.initialViewController dismissViewControllerAnimated:NO completion:nil];
+    } else {
+        [self performSegueWithIdentifier:@"Video From ABAccess" sender:nil];
+    }
 }
 
 - (void)navigateToABFlashersController:(NSArray *)flashers {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    [self performSegueWithIdentifier:@"ABFlashers From ABAccess" sender:flashers];
+    if (self.initialViewController) {
+        // present modally
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+        ABFlashersViewController *abFlashersVC = [storyboard instantiateViewControllerWithIdentifier:@"ABFlashersVC"];
+        abFlashersVC.initialViewController = self.initialViewController;
+        [self presentViewController:abFlashersVC animated:NO completion:nil];
+    } else {
+        [self performSegueWithIdentifier:@"ABFlashers From ABAccess" sender:flashers];
+    }
 }
 
 // --------------------------------------------

@@ -6,29 +6,31 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 
+#import "ABContact.h"
+
 #import "InviteContactTableViewCell.h"
 
 @interface InviteContactTableViewCell()
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *inviteButton;
-@property (strong,nonatomic) NSString *number;
+@property (strong,nonatomic) ABContact *contact;
 @property (weak, nonatomic) IBOutlet UILabel *friendCountLabel;
 @end
 
 @implementation InviteContactTableViewCell
 
 - (void)initWithName:(NSString *)name
-              number:(NSString *)number
-         friendCount:(NSInteger)friendCount
+             contact:(ABContact *)contact
 {
     self.nameLabel.text = name ? name : @"?";
-    self.number = number;
-    self.friendCountLabel.hidden = friendCount <= 1;
-    self.friendCountLabel.text = [NSString stringWithFormat:@"(%lu friends)",friendCount];
+    self.contact = contact;
+    self.friendCountLabel.hidden = contact.users.count <= 1;
+    self.friendCountLabel.text = [NSString stringWithFormat:@"(%lu friends)",(unsigned long)contact.users.count];
 }
 
 - (IBAction)inviteButtonClicked:(id)sender {
-    [self.delegate inviteUser:self.nameLabel.text number:self.number];
+    self.inviteButton.enabled = NO;
+    [self.delegate inviteUser:self.contact];
 }
 
 @end

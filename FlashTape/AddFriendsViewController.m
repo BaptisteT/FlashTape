@@ -24,17 +24,15 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITableView *resultTableView;
 
-@property (strong, nonatomic) NSMutableDictionary *addressBookDictionnary;
+@property (strong, nonatomic) NSDictionary *addressBookDictionnary;
 
-@property (strong, nonatomic) NSArray *abContactArray;
+@property (strong, nonatomic) NSMutableArray *abContactArray;
 @property (strong, nonatomic) NSArray *unfollowedArray;
 @property (strong, nonatomic) NSArray *unrelatedArray;
 
 @property (strong, nonatomic) NSMutableArray *autocompleteAbContactArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteUnfollowedArray;
 @property (strong, nonatomic) NSMutableArray *autocompleteUnrelatedArray;
-
-@property (weak, nonatomic) IBOutlet UIButton *allowContactButton;
 
 @end
 
@@ -48,11 +46,7 @@
     [super viewDidLoad];
     
     // init
-    self.addressBookDictionnary = [NSMutableDictionary dictionaryWithDictionary:[AddressbookUtils getContactDictionnary]];
-    
-    // Allow contact button
-    [self.allowContactButton setTitle:NSLocalizedString(@"allow_contact_title", nil) forState:UIControlStateNormal];
-    self.allowContactButton.hidden = (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized);
+    self.addressBookDictionnary = [AddressbookUtils getContactDictionnary];
     
     // Contact
     [self getContactAndFollowers];
@@ -87,11 +81,11 @@
 - (void)getContactAndFollowers {
     // AB Contacts
     [DatastoreUtils getAllABContactsLocallySuccess:^(NSArray *contacts) {
-        self.abContactArray = [contacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
+        self.abContactArray = [NSMutableArray arrayWithArray:[contacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
             NSString *name1 = self.addressBookDictionnary[obj1.number] ? self.addressBookDictionnary[obj1.number] : @"?";
             NSString *name2 = self.addressBookDictionnary[obj2.number] ? self.addressBookDictionnary[obj2.number] : @"?";
             return [name1 caseInsensitiveCompare:name2];
-        }];
+        }]];
     } failure:nil];
 
     // Get unfollowed follower
@@ -116,40 +110,6 @@
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (IBAction)allowContactButtonClicked:(id)sender {
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:addressBook];
-                [AddressbookUtils saveContactDictionnary:contactDictionnary];
-                [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
-                                                         success:^(NSArray *userArray) {
-                                                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                                                             [self getContactAndFollowers];
-                                                         } failure:^(NSError *error) {
-                                                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                                                             [self getContactAndFollowers];
-                                                         }];
-                
-                // Current user real name
-                NSString *abName = contactDictionnary[[User currentUser].username];
-                if (abName && abName.length > 0 && ![[User currentUser].addressbookName isEqualToString:abName]) {
-                    [ApiManager saveAddressbookName:contactDictionnary[[User currentUser].username]];
-                }
-                
-                self.allowContactButton.hidden = YES;
-            }
-        });
-    } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
-                                    message:NSLocalizedString(@"contact_access_error_message",nil)
-                                   delegate:self
-                          cancelButtonTitle:NSLocalizedString(@"later_button",nil)
-                          otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
-    }
-}
 
 // --------------------------------------------
 #pragma mark - Textfield delegate
@@ -157,7 +117,6 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     [self reloadTableView];
 }
-
 
 // --------------------------------------------
 #pragma mark - Tableview
@@ -224,7 +183,7 @@
     if ([self isABContactSection:indexPath.section]) {
         InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
         ABContact *contact = (ABContact *)self.autocompleteAbContactArray[indexPath.row];
-        [cell initWithName:self.addressBookDictionnary[contact.number] number:contact.number friendCount:contact.users.count];
+        [cell initWithName:self.addressBookDictionnary[contact.number] contact:contact];
         cell.delegate = self;
         return cell;
     } else {
@@ -355,27 +314,19 @@
 #pragma mark - Invite user Cell Delegate
 // --------------------------------------------
 
-- (void)inviteUser:(NSString *)name number:(NSString *)number {
-    [ApiManager sendInviteTo:number
-                        name:[name componentsSeparatedByString:@" "].firstObject
+- (void)inviteUser:(ABContact *)contact {
+    NSString *name = self.addressBookDictionnary[contact.number];
+    [ApiManager sendInviteTo:contact.number
+                        name:name ? [name componentsSeparatedByString:@" "].firstObject : @""
                      success:nil
                      failure:nil];
     
     // Remove user
-    [self.addressBookDictionnary removeObjectForKey:number];
+    [self.abContactArray removeObject:contact];
     
     // Reload addressbook section
     [self reloadTableView];
 }
 
-// ----------------------------------------------------------
-#pragma mark AlertView
-// ----------------------------------------------------------
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
-        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
-            [GeneralUtils openSettings];
-        }
-    }
-}
+
 @end

@@ -11,8 +11,10 @@
 #import "ABFlasherTableViewCell.h"
 #import "FlashTapeParentViewController.h"
 
+
 @interface ABFlashersViewController : FlashTapeParentViewController <UITableViewDataSource, UITableViewDelegate, ABFlasherTVCDelegate>
 
 @property (nonatomic, strong) NSArray *flashersArray;
+@property (nonatomic) UIViewController *initialViewController;
 
 @end

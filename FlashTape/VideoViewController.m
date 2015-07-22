@@ -19,6 +19,7 @@
 #import "Follow.h"
 #import "VideoPost.h"
 
+#import "ABAccessViewController.h"
 #import "CaptionTextView.h"
 #import "FriendsViewController.h"
 #import "InviteContactViewController.h"
@@ -296,8 +297,14 @@
     
     // Load address book, friends & video (if the result is different from cashing)
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    if (!self.avoidParsingContact) {
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
         [self parseContactsAndFindFriends];
+    } else if (!self.isSignup) {
+        // show screen permission
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+        ABAccessViewController *abAccessVC = [storyboard instantiateViewControllerWithIdentifier:@"ABAccessVC"];
+        abAccessVC.initialViewController = self;
+        [self presentViewController:abAccessVC animated:NO completion:nil];
     }
 
     // Retrieve unread messages
@@ -358,14 +365,6 @@
                                              selector:@selector(resetNotifCount)
                                                  name:@"reset_notif_count"
                                                object:nil];
-    
-    // Tracking
-    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-        [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_MICRO: [NSNumber numberWithBool:granted]}];
-    }];
-    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-        [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_CAMERA: [NSNumber numberWithBool:granted]}];
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -682,12 +681,6 @@
             if (abName && abName.length > 0 && (![User currentUser].addressbookName || [User currentUser].addressbookName.length == 0)) {
                 [ApiManager saveAddressbookName:contactDictionnary[[User currentUser].username]];
             }
-        } else if ([User currentUser].score != kUserInitialScore) {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title",nil)
-                                        message:NSLocalizedString(@"contact_access_error_message",nil)
-                                       delegate:self
-                              cancelButtonTitle:NSLocalizedString(@"later_button",nil)
-                              otherButtonTitles:NSLocalizedString(@"ok_button",nil), nil] show];
         }
         
         // todo BT v1.2 add to user
@@ -938,8 +931,14 @@
 }
 
 - (BOOL)cameraOrMicroAccessDenied {
-    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    if(authStatus == AVAuthorizationStatusDenied) {
+    AVAuthorizationStatus videoAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    AVAuthorizationStatus audioAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+    
+    // Tracking
+    [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_CAMERA: [NSNumber numberWithBool:(videoAuthStatus == AVAuthorizationStatusAuthorized)], PROPERTY_ALLOW_MICRO: [NSNumber numberWithBool:(audioAuthStatus == AVAuthorizationStatusAuthorized)]}];
+    
+    // If denial, send back to settings
+    if(videoAuthStatus == AVAuthorizationStatusDenied || audioAuthStatus == AVAuthorizationStatusDenied) {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"camera_access_error_title", nil)
                                     message:NSLocalizedString(@"camera_access_error_message", nil)
                                    delegate:self
@@ -947,6 +946,7 @@
                           otherButtonTitles:nil] show];
         return YES;
     }
+    
     return NO;
 }
 
@@ -1471,12 +1471,8 @@
 #pragma mark AlertView
 // ----------------------------------------------------------
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if ([alertView.message isEqualToString:NSLocalizedString(@"camera_access_error_message", nil)]) {
+    if ([alertView.title isEqualToString:NSLocalizedString(@"camera_access_error_title", nil)]) {
         [GeneralUtils openSettings];
-    } else if ([alertView.title isEqualToString:NSLocalizedString(@"contact_access_error_title", nil)]) {
-        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"ok_button", nil)]) {
-            [GeneralUtils openSettings];
-        }
     } else if ([alertView.title isEqualToString:NSLocalizedString(@"rating_alert_title", nil)]) {
         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"rate_button_title", nil)]) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kAppStoreLink]];

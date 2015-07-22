@@ -294,24 +294,20 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
         if (!error) {
             NSMutableArray *contactObjectArray = [NSMutableArray new];
-            if (contacts.count == results.count) {
-                [contactObjectArray addObjectsFromArray:results];
-            } else {
-                for (NSString *contact in contacts) {
-                    ABContact *contactObject = nil;
-                    for (ABContact *resultContactObject in results) {
-                        if ([resultContactObject.number isEqualToString:contact]) {
-                            contactObject = resultContactObject;
-                            break;
-                        }
+            for (NSString *contact in contacts) {
+                ABContact *contactObject = nil;
+                for (ABContact *resultContactObject in results) {
+                    if ([resultContactObject.number isEqualToString:contact]) {
+                        contactObject = resultContactObject;
+                        break;
                     }
-                    if (!contactObject) {
-                        contactObject = [ABContact createRelationWithNumber:contact];
-                    }
-                    contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers];
-                    [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
-                    [contactObjectArray addObject:contactObject];
                 }
+                if (!contactObject) {
+                    contactObject = [ABContact createRelationWithNumber:contact];
+                }
+                contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers];
+                [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
+                [contactObjectArray addObject:contactObject];
             }
             [PFObject saveAllInBackground:contactObjectArray block:^(BOOL completed, NSError *error) {
                 if (completed) {

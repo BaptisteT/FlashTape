@@ -95,6 +95,7 @@
         countryFrame.origin.y -= 70;
         self.countryNameButton.frame = countryFrame;
     }
+    self.separatorImage.translatesAutoresizingMaskIntoConstraints = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -12,4 +12,6 @@
 
 @interface ABAccessViewController : FlashTapeParentViewController
 
+@property (nonatomic) UIViewController *initialViewController;
+
 @end

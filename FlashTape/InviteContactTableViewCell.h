@@ -10,17 +10,18 @@
 
 @protocol InviteContactTVCDelegate;
 
+@class ABContact;
+
 @interface InviteContactTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) id<InviteContactTVCDelegate> delegate;
 
 - (void)initWithName:(NSString *)name
-              number:(NSString *)number
-         friendCount:(NSInteger)friendCount;
+             contact:(ABContact *)contact;
 @end
 
 @protocol InviteContactTVCDelegate
 
-- (void)inviteUser:(NSString *)name number:(NSString *)number;
+- (void)inviteUser:(ABContact *)contact;
 
 @end
