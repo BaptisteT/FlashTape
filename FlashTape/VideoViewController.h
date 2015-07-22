@@ -20,4 +20,6 @@
 @property (nonatomic) BOOL navigateDirectlyToFriends;
 @property (nonatomic) BOOL isSignup;
 
+- (void)retrieveFollowingLocallyAndVideosRemotely;
+
 @end

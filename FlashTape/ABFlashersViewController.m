@@ -72,6 +72,9 @@
 
 - (void)navigateToVideoController {
     if (self.initialViewController) {
+        if ([self.initialViewController isKindOfClass:[VideoViewController class]]) {
+            [(VideoViewController *)self.initialViewController retrieveFollowingLocallyAndVideosRemotely];
+        }
         // dismiss modally
         [self.initialViewController dismissViewControllerAnimated:NO completion:nil];
     } else {

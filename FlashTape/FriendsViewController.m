@@ -15,6 +15,7 @@
 #import "User.h"
 #import "VideoPost.h"
 
+#import "ABAccessViewController.h"
 #import "AddFriendTableViewCell.h"
 #import "FriendsViewController.h"
 #import "FriendTableViewCell.h"
@@ -51,12 +52,14 @@
     BOOL _expandMyStory;
     BOOL _stopAnimation;
     BOOL _isSavingStory;
+    BOOL _firstViewDidAppear;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     // Some init
+    _firstViewDidAppear = YES;
     self.modalPresentationCapturesStatusBarAppearance = YES;
     _expandMyStory = NO;
     _isSavingStory = NO;
@@ -155,7 +158,24 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (_firstViewDidAppear) {
+        _firstViewDidAppear = NO;
+    
+        // if contact not auth, show ab access vc
+        if (ABAddressBookGetAuthorizationStatus() != kABAuthorizationStatusAuthorized) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+            ABAccessViewController *abAccessVC = [storyboard instantiateViewControllerWithIdentifier:@"ABAccessVC"];
+            abAccessVC.initialViewController = self;
+            [self presentViewController:abAccessVC animated:NO completion:nil];
+        }
+    }
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillAppear:animated];
     _stopAnimation = YES;
 }
 

@@ -125,6 +125,7 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
         ABFlashersViewController *abFlashersVC = [storyboard instantiateViewControllerWithIdentifier:@"ABFlashersVC"];
         abFlashersVC.initialViewController = self.initialViewController;
+        abFlashersVC.flashersArray = flashers;
         [self presentViewController:abFlashersVC animated:NO completion:nil];
     } else {
         [self performSegueWithIdentifier:@"ABFlashers From ABAccess" sender:flashers];

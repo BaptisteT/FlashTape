@@ -39,7 +39,7 @@
 // AB Access
 "allow_contact_button" = "Allow Access";
 "allow_contact_label" = "Find your friends!";
-"adressbook_explanation" = "Flashtape lets you share 1 second videos of your life with your friends.\n\nWe need to access your addressbook to help you find them!";
+"adressbook_explanation" = "Flashtape lets you share 1 second videos of your life with your friends.\n\n\nWe need to access your addressbook to help you find them!";
 "skip_button" = "skip ❯";
 
 

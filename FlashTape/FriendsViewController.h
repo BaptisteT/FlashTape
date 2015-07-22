@@ -26,6 +26,7 @@
 // On click on feed friend name
 @property (strong, nonatomic) NSString *friendUsername;
 
+
 @end
 
 @protocol FriendsVCProtocol
