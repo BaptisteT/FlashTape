@@ -29,7 +29,9 @@
 #import "ConstantUtils.h"
 #import "ColorUtils.h"
 #import "GeneralUtils.h"
+#import "KeyboardUtils.h"
 #import "InviteUtils.h"
+#import "NotifUtils.h"
 #import "NSDate+DateTools.h"
 #import "TrackingUtils.h"
 #import "VideoUtils.h"
@@ -74,17 +76,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *friendListButton;
 @property (strong, nonatomic) SCFilter *filter;
 
-// Caption
-@property (weak, nonatomic) IBOutlet UIButton *captionButton;
-@property (strong, nonatomic) CaptionTextView *captionTextView;
-@property (nonatomic) CGAffineTransform captionTransform;
-@property (nonatomic) CGPoint captionCenter;
-@property (strong, nonatomic) UITapGestureRecognizer *closeCaptionTapGestureRecogniser;
-
 // Mood
+@property (weak, nonatomic) IBOutlet UIButton *moodButton;
+@property (strong, nonatomic) CaptionTextView *moodTextView;
 @property (weak, nonatomic) IBOutlet UIView *emojiView;
-@property (weak, nonatomic) IBOutlet UILabel *moodLabel;
-@property (weak, nonatomic) IBOutlet UILabel *previewMoodLabel;
+@property (weak, nonatomic) IBOutlet UIView *moodContainerView;
+@property (weak, nonatomic) IBOutlet UIView *moodButtonContainerView;
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
@@ -109,8 +106,8 @@
 @property (nonatomic) NSMutableArray *potentialContactsToInvite;
 
 // Tuto
-@property (weak, nonatomic) IBOutlet UILabel *firstFlashTutoLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *firstFlashTutoArrow;
+@property (weak, nonatomic) IBOutlet UILabel *replayTutoLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *replayTutoArrow;
 
 // Black splash
 @property (strong, nonatomic) UIView *cameraBlackOverlay;
@@ -151,6 +148,11 @@
     
     self.metadataColorArray = [NSArray arrayWithObjects:[ColorUtils pink], [ColorUtils purple], [ColorUtils blue], [ColorUtils green], [ColorUtils orange], nil];
     
+    // Tuto
+    self.replayTutoLabel.numberOfLines = 0;
+    self.replayTutoArrow.hidden = YES;
+    self.replayTutoLabel.hidden = YES;
+    
     // Audio session
     AVAudioSession* audioSession = [AVAudioSession sharedInstance];
     BOOL success; NSError* error;
@@ -173,20 +175,16 @@
     self.longPressGestureRecogniser.minimumPressDuration = 0;
     [self.cameraView addGestureRecognizer:self.longPressGestureRecogniser];
     
-    // Caption
-    self.captionTextView = [[CaptionTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
-    [self.cameraView insertSubview:self.captionTextView belowSubview:self.replayButton];
-    self.captionTextView.hidden = YES;
-    self.captionTextView.text = @"";
-    self.captionTextView.delegate = self;
-    self.captionTextView.captionDelegate = self;
-    self.captionTransform = CGAffineTransformIdentity;
-    self.closeCaptionTapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapToCloseCaption)];
-    [self.cameraView addGestureRecognizer:self.closeCaptionTapGestureRecogniser];
-    
     // Mood
-    self.moodLabel.hidden = YES;
-    self.emojiView.hidden = YES;
+    self.moodContainerView.hidden = YES;
+    self.moodTextView = [[CaptionTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
+    [self.cameraView insertSubview:self.moodTextView belowSubview:self.replayButton];
+    self.moodTextView.text = @"";
+    self.moodTextView.delegate = self;
+    UITapGestureRecognizer *moodTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMoodView)];
+    [self.moodContainerView addGestureRecognizer:moodTap];
+    UITapGestureRecognizer *textViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMoodView)];
+    [self.moodTextView addGestureRecognizer:textViewTap];
     
     // Create the recorder
     self.recorder = [SCRecorder recorder];
@@ -318,11 +316,12 @@
             [self.allVideosArray insertObjects:videoArray atIndexes:indexSet];
             [self setReplayButtonUI];
             _createTutoAdminMessages = YES;
+            
+            // show replay tuto
+            self.replayTutoLabel.text = NSLocalizedString(@"new_flashes_tuto_label", nil);
+            [self performSelector:@selector(startReplayTutoAnim) withObject:nil afterDelay:1];
         } failureBlock:nil];
     }
-    self.firstFlashTutoArrow.hidden = YES;
-    self.firstFlashTutoLabel.hidden = YES;
-    self.firstFlashTutoLabel.text = NSLocalizedString(@"first_flash_tuto_label", nil);
     
     // Callback
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -386,9 +385,6 @@
     [super viewDidLayoutSubviews];
     // Camera
     self.recorder.previewView = self.cameraView;
-    
-    // Emoji view
-    [self initEmojiView];
 }
 
 - (void)willResignActive {
@@ -402,7 +398,7 @@
         [self.cameraView insertSubview:self.cameraBlackOverlay atIndex:0];
     }
     self.cameraBlackOverlay.hidden = NO;
-    [self resignCaptionFirstResponderAndHideIfEmpty];
+    [self hideMoodView];
 }
 
 - (void)didBecomeActiveCallback {
@@ -441,7 +437,6 @@
 - (void)navigateToFriends {
     if ([self isPlayingMode])
         [self setCameraMode];
-    [self resignCaptionFirstResponderAndHideIfEmpty];
     [self performSegueWithIdentifier:@"Friends From Video" sender:nil];
 }
 
@@ -459,13 +454,12 @@
             [self startRecording];
             _longPressStartDate = [NSDate date];
         }
-        [self resignCaptionFirstResponderAndHideIfEmpty];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         if ([self isPreviewMode]) {
             BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
             self.cancelAreaView.hidden = cancelMode;
-            self.releaseToSendTuto.hidden = cancelMode || self.captionTextView.text.length != 0;
-            self.captionTextView.hidden = cancelMode || self.captionTextView.text.length == 0;
+            self.releaseToSendTuto.hidden = cancelMode || self.moodTextView.text.length != 0;
+            self.moodTextView.hidden = cancelMode || self.moodTextView.text.length == 0;
             self.cancelConfirmView.hidden = !cancelMode;
         }
     } else {
@@ -527,26 +521,16 @@
     [TrackingUtils trackEvent:EVENT_FRIEND_BUTTON_CLICKED properties:nil];
 }
 
-- (IBAction)captionButtonClicked:(id)sender
+- (IBAction)moodButtonClicked:(id)sender
 {
-    // todo bt
-    // show mood
-    // if mood hide it
-    if (!self.moodLabel.hidden) {
-        self.moodLabel.hidden = YES;
-    } else {
-        [self hideUIElementOnCamera:YES];
-        self.emojiView.hidden = NO;
-    }
-    
-    // text view
-//    [self textViewDidChange:self.captionTextView];
-//    self.longPressGestureRecogniser.minimumPressDuration = 0.5;
-//    [self.captionTextView becomeFirstResponder];
-//    self.captionTextView.hidden = NO;
-//    self.recordTutoLabel.hidden = YES;
-    
-    [TrackingUtils trackEvent:EVENT_CAPTION_CLICKED properties:nil];
+    if (!_emojiViewInitialized)
+        [self initMoodView];
+
+    // show
+    [self showMoodView];
+
+    // Tracking
+    [TrackingUtils trackEvent:EVENT_MOOD_CLICKED properties:nil];
 }
 
 -(IBAction)backToCameraButtonClicked:(id)sender {
@@ -790,7 +774,8 @@
 - (void)returnToCameraMode {
     // Update posts viewer Ids
     [ApiManager updateVideoPosts:self.videosToPlayArray];
-    
+        
+    // Invite
     if (self.potentialContactsToInvite != nil && self.potentialContactsToInvite.count > 0) {
         [self performSegueWithIdentifier:@"Invite From Video" sender:self.potentialContactsToInvite];
         self.potentialContactsToInvite = nil;
@@ -803,6 +788,9 @@
             _createTutoAdminMessages = NO;
             [self retrieveUnreadMessages];
         } failureBlock:nil];
+    // 2nd replay : ask for notif
+    } else if (![NotifUtils isRegisteredForRemoteNotification]) {
+        [NotifUtils registerForRemoteNotif];
     }
 }
 
@@ -877,12 +865,6 @@
         } failure:^{
             _isExporting = NO;
             [self setCameraMode];
-            
-            // If record too short => open caption
-            // todo BT
-//            if ([User currentUser].score > kMaxScoreBeforeHidingImportantTutos && [[NSDate date] timeIntervalSinceDate:_longPressStartDate] < kCaptionTapMaxDuration) {
-//                [self captionButtonClicked:nil];
-//            }
         }];
     }];
 }
@@ -900,7 +882,9 @@
         VideoPost *post = [VideoPost createCurrentUserPost];
         
         // todo BT
-        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:(self.captionTextView.text.length > 0)]};
+        BOOL isEmoji = belongsToEmojiArray(self.moodTextView.text);
+        BOOL isCaption = self.moodTextView.text.length > 0 && !isEmoji;
+        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:isCaption], @"emoji": [NSNumber numberWithBool:isEmoji]};
         post.videoProperties = properties;
         
         AVAsset *asset = recordSession.assetRepresentingSegments;
@@ -908,13 +892,8 @@
         exporter.outputUrl = post.localUrl;
         exporter.outputFileType = AVFileTypeMPEG4;
         
-        // todo BT
-//        if (self.captionTextView.text.length > 0) {
-//            AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-//            exporter.videoConfiguration.watermarkImage = [self getImageFromCaption];
-//            exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
-//        }
-        if (!self.moodLabel.hidden) {
+        // Add mood
+        if (self.moodTextView.text.length > 0) {
             AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
             exporter.videoConfiguration.watermarkImage = [self getImageFromMood];
             exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
@@ -980,7 +959,7 @@
                 // Event based on score
                 if (userScore == kUserInitialScore) {
                     // first tuto
-                    [self startFirstFlashTutoAnim];
+                    [self startReplayTutoAnim];
                 } else if ([GeneralUtils shouldPresentRateAlert:[User currentUser].score]) {
                     // Rating alert
                     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"rating_alert_title",nil)
@@ -999,14 +978,15 @@
             }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.captionTextView.text = @"";
-        self.captionTextView.hidden = YES;
-        self.moodLabel.hidden = YES;
+        // Hide textview
+        self.moodTextView.text = @"";
+        self.moodTextView.hidden = YES;
         
         // 1st flash
         if (userScore == kUserInitialScore) {
             self.recordTutoLabel.hidden = YES;
-            self.firstFlashTutoLabel.hidden = NO;
+            self.replayTutoLabel.text = NSLocalizedString(@"first_flash_tuto_label", nil);
+            self.replayTutoLabel.hidden = NO;
         }
     });
 }
@@ -1096,7 +1076,7 @@
 {
     self.friendVideoView.hidden = !flag;
     if (flag) {
-        [self stopFirstFlashTutoAnim];
+        [self stopReplayFlashTutoAnim];
         [self.whiteNoisePlayer play];
         [self endPreviewMode];
     } else {
@@ -1118,14 +1098,14 @@
 }
 
 - (void)setRecordingMode {
-    [self stopFirstFlashTutoAnim];
+    [self stopReplayFlashTutoAnim];
     [self setPlayingMode:NO];
     [self endPreviewMode];
     
     [self hideUIElementOnCamera:YES];
     
     // Show caption on camera
-    self.captionTextView.hidden = (self.captionTextView.text.length == 0);
+    self.moodTextView.hidden = (self.moodTextView.text.length == 0);
     
     // 1st flash
     if ([User currentUser].score < kMaxScoreBeforeHidingOtherTutos) {
@@ -1145,7 +1125,7 @@
 }
 
 - (void)endPreviewMode {
-    [self.cameraView insertSubview:self.captionTextView belowSubview:self.replayButton];
+    [self.cameraView insertSubview:self.moodTextView belowSubview:self.replayButton];
     self.previewView.hidden = YES;
     [self.previewView.player pause];
 }
@@ -1153,38 +1133,38 @@
 - (void)setPreviewMode {
     [self setPlayingMode:NO];
     
-    self.previewMoodLabel.hidden = self.moodLabel.hidden;
-    self.previewMoodLabel.text = self.moodLabel.text;
-    
     self.cancelConfirmView.hidden = YES;
     self.cancelAreaView.hidden = NO;
     self.previewView.hidden = NO;
-    if (self.captionTextView.text.length != 0) {
+    if (self.moodTextView.text.length != 0) {
         self.releaseToSendTuto.hidden = YES;
-        [self.previewView insertSubview:self.captionTextView belowSubview:self.cancelConfirmView];
+        [self.previewView insertSubview:self.moodTextView belowSubview:self.cancelConfirmView];
     } else {
         self.releaseToSendTuto.hidden = NO;
     }
 }
 
 
-- (void)startFirstFlashTutoAnim {
-    self.firstFlashTutoArrow.hidden = NO;
-    self.firstFlashTutoLabel.hidden = NO;
-    CGRect initialFrame = self.firstFlashTutoArrow.frame;
+- (void)startReplayTutoAnim {
+    self.recordTutoLabel.hidden = YES;
+    self.replayTutoArrow.hidden = NO;
+    self.replayTutoLabel.hidden = NO;
+    CGRect initialFrame = self.replayTutoArrow.frame;
+    initialFrame.origin.x = self.replayButton.frame.origin.x - 10;
+    self.replayTutoArrow.frame = initialFrame;
     [UIView animateWithDuration:0.5f
                           delay:0.0f
                         options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
                      animations:^{
-                         [self.firstFlashTutoArrow setFrame:CGRectMake(initialFrame.origin.x, initialFrame.origin.y - 30, initialFrame.size.width, initialFrame.size.height)];
+                         [self.replayTutoArrow setFrame:CGRectMake(initialFrame.origin.x, initialFrame.origin.y - 30, initialFrame.size.width, initialFrame.size.height)];
                      }
                      completion:nil];
 }
 
-- (void)stopFirstFlashTutoAnim {
-    [self.firstFlashTutoArrow.layer removeAllAnimations];
-    self.firstFlashTutoArrow.hidden = YES;
-    self.firstFlashTutoLabel.hidden = YES;
+- (void)stopReplayFlashTutoAnim {
+    [self.replayTutoArrow.layer removeAllAnimations];
+    self.replayTutoArrow.hidden = YES;
+    self.replayTutoLabel.hidden = YES;
 }
 
 - (void)setReplayButtonUI {
@@ -1264,17 +1244,17 @@
         self.replayButton.alpha = 0;
         self.replayButton.hidden = YES;
         self.recordTutoLabel.hidden = YES;
-        self.captionTextView.hidden = YES;
+        self.moodTextView.hidden = YES;
     } else {
         self.replayButton.alpha = 1;
         [self setReplayButtonUI];
-        self.captionTextView.hidden = NO;
+        self.moodTextView.hidden = (self.moodTextView.text.length == 0);
         self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
-        self.recordTutoLabel.hidden = self.captionTextView.text.length != 0 || [self.captionTextView isFirstResponder] || !self.firstFlashTutoLabel.hidden;
+        self.recordTutoLabel.hidden = !self.moodTextView.hidden || [self.moodTextView isFirstResponder] || !self.replayTutoLabel.hidden;
     }
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;
-    self.captionButton.hidden = flag;
+    self.moodButton.hidden = flag;
 }
 
 - (void)playOneFriendVideos:(NSArray *)videoArray {
@@ -1298,20 +1278,22 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     // Disallow recognition of tap gestures in the segmented control.
-    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.captionButton || touch.view == self.captionTextView) {
+    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.moodButton || touch.view == self.moodTextView) {
         return NO;
     }
     return YES;
 }
 
 // --------------------------------------------
-#pragma mark - Caption
+#pragma mark - Mood
 // --------------------------------------------
-- (void)initEmojiView {
+- (void)initMoodView {
     if (_emojiViewInitialized) {
         return;
     }
     _emojiViewInitialized = YES;
+    
+    // Add emojis
     CGFloat width = self.emojiView.frame.size.width;
     CGFloat height = self.emojiView.frame.size.height;
     
@@ -1323,13 +1305,6 @@
     NSInteger numberOfRows = floor(height / (buttonSize * 4. / 3.));
     CGFloat verticalMargin = (height - numberOfRows * buttonSize) / (numberOfRows + 1.);
     
-    // Get gray image for background
-    UIGraphicsBeginImageContext(CGSizeMake(buttonSize, buttonSize));
-    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [UIColor lightGrayColor].CGColor);
-    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0,0,buttonSize,buttonSize));
-    UIImage *colorImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
     for (int row = 0; row < numberOfRows; row ++) {
         for (int column = 0; column < numberOfColumns; column ++) {
             CGRect frame = CGRectMake(horizontalMargin + column * (buttonSize + horizontalMargin), verticalMargin + row * (verticalMargin + buttonSize), buttonSize, buttonSize);
@@ -1339,8 +1314,6 @@
             button.titleLabel.font = [UIFont systemFontOfSize:100];
             button.titleLabel.adjustsFontSizeToFitWidth = YES;
             [button.titleLabel setTextAlignment: NSTextAlignmentCenter];
-            button.contentEdgeInsets = UIEdgeInsetsMake(-buttonSize/2.75, 0.0, 0.0, 0.0);
-            [button setBackgroundImage:colorImage forState:UIControlStateHighlighted];
             [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
             [self.emojiView addSubview:button];
         }
@@ -1348,115 +1321,102 @@
 }
 
 - (void)emojiClicked:(UIButton *)sender {
-    [self hideUIElementOnCamera:NO];
-    self.emojiView.hidden = YES;
-    self.moodLabel.text = sender.titleLabel.text;
-    self.moodLabel.hidden = NO;
+    self.moodTextView.transform = CGAffineTransformIdentity;
+    self.moodTextView.text = sender.titleLabel.text;
+    self.moodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:250.0];
+    [self textViewDidChange:self.moodTextView];
+    self.moodTextView.center = self.view.center;
+    [self hideMoodView];
 }
 
-- (void)handleTapToCloseCaption {
-    [self resignCaptionFirstResponderAndHideIfEmpty];
-    self.longPressGestureRecogniser.minimumPressDuration = 0;
-}
-
-- (void)textViewDidBeginEditing:(UITextView *)textView
+// Show mood
+- (void)showMoodView
 {
-    self.recordTutoLabel.hidden = YES;
-    self.captionTextView.hidden = NO;
-}
-
-- (void)textViewDidEndEditing:(UITextView *)textView {
-    if (self.captionTextView.text.length == 0) {
-        self.captionTextView.hidden = YES;
-        self.recordTutoLabel.hidden = NO;
-        self.captionTextView.transform = CGAffineTransformIdentity;
-        self.captionTextView.center = self.view.center;
+    [self hideUIElementOnCamera:YES];
+    self.moodContainerView.hidden = NO;
+    if (self.emojiView.hidden) {
+        // caption mode => keyboard
+        [self.moodTextView becomeFirstResponder];
+    } else {
+        self.moodTextView.transform = CGAffineTransformIdentity;
+        self.moodTextView.center = self.view.center;
+        self.moodTextView.text = @"";
     }
 }
+
+// hide mood
+- (void)hideMoodView {
+    [self.moodTextView resignFirstResponder];
+    [self hideUIElementOnCamera:NO];
+    self.moodContainerView.hidden = YES;
+}
+
+// Emoji button
+- (IBAction)emojiButtonClicked:(id)sender {
+    [self.moodTextView resignFirstResponder];
+    self.emojiView.hidden = NO;
+    self.moodTextView.hidden = YES;
+}
+
+// Caption button
+- (IBAction)captionButtonClicked:(id)sender {
+    self.moodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:50.0];
+    [self.moodTextView becomeFirstResponder];
+    self.emojiView.hidden = YES;
+}
+
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([text isEqualToString:@"\n"]) {
-        [self resignCaptionFirstResponderAndHideIfEmpty];
+        [self hideMoodView];
         return NO;
     }
     return YES;
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-    CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(self.view.frame.size.width, 1000)];
-    CGRect previousFrame = self.captionTextView.frame;
-    self.captionTextView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
+    CGSize size = [self.moodTextView sizeThatFits:CGSizeMake(self.view.frame.size.width, 1000)];
+    CGRect previousFrame = self.moodTextView.frame;
+    self.moodTextView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
 }
 
-- (void)resignCaptionFirstResponderAndHideIfEmpty {
-    [self.captionTextView resignFirstResponder];
-    self.captionTextView.hidden = self.captionTextView.text.length == 0;
-}
+
 
 // ----------------------------------------------------------
 #pragma mark Keyboard
 // ----------------------------------------------------------
 // Caption editing UI
 - (void)keyboardWillShow:(NSNotification *)notification {
-    // Save current frame
-    self.captionTransform = self.captionTextView.transform;
-    self.captionCenter = self.captionTextView.center;
+    self.moodTextView.hidden = NO;
+    
+    // Move button
+    [KeyboardUtils pushUpTopView:self.moodButtonContainerView whenKeyboardWillShowNotification:notification];
     
     // Editing UI
+    [self.moodTextView setTransform:CGAffineTransformIdentity];
     NSDictionary *userInfo = [notification userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
     CGFloat width = self.view.frame.size.width;
-    CGSize size = [self.captionTextView sizeThatFits:CGSizeMake(width, 1000)];
-    [self.captionTextView setTransform:CGAffineTransformIdentity];
-    self.captionTextView.frame = CGRectMake(0, keyboardRect.origin.y - size.height, width, size.height);
+    CGSize size = [self.moodTextView sizeThatFits:CGSizeMake(width, 1000)];
+    self.moodTextView.frame = CGRectMake(0, keyboardRect.origin.y - self.moodButtonContainerView.frame.size.height - size.height, width, size.height);
 }
 
 
 // Caption transformed UI
 - (void)keyboardWillHide:(NSNotification *)notification {
-    self.captionTextView.transform = self.captionTransform;
-    self.captionTextView.center = self.captionCenter;
-}
-
-// Close keyboard when caption moved
-- (void)gestureOnCaptionDetected {
-    if ([self.captionTextView isFirstResponder]) {
-        self.captionTransform = self.captionTextView.transform;
-        self.captionCenter = self.captionTextView.center;
-        [self.captionTextView resignFirstResponder];
-    }
+    // Move button
+    [KeyboardUtils pushUpTopView:self.moodButtonContainerView whenKeyboardWillShowNotification:notification];
 }
 
 // Screenschot caption
-- (UIImage *)getImageFromCaption
-{
-    UIView *containerView = [[UIView alloc] initWithFrame:self.view.frame];
-    containerView.backgroundColor = [UIColor clearColor];
-    UIView *superView = self.captionTextView.superview;
-    NSInteger index = [superView.subviews indexOfObject:self.captionTextView];
-    [superView insertSubview:containerView belowSubview:self.captionTextView];
-    [containerView addSubview:self.captionTextView];
-    
-    UIGraphicsBeginImageContextWithOptions(containerView.bounds.size, NO, 0.0);
-    [containerView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    
-    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    [superView insertSubview:self.captionTextView atIndex:index];
-    [containerView removeFromSuperview];
-    return img;
-}
-
-// Screenschot mood
 - (UIImage *)getImageFromMood
 {
     UIView *containerView = [[UIView alloc] initWithFrame:self.view.frame];
     containerView.backgroundColor = [UIColor clearColor];
-    UIView *superView = self.moodLabel.superview;
-    NSInteger index = [superView.subviews indexOfObject:self.moodLabel];
-    [superView insertSubview:containerView belowSubview:self.moodLabel];
-    [containerView addSubview:self.moodLabel];
+    UIView *superView = self.moodTextView.superview;
+    NSInteger index = [superView.subviews indexOfObject:self.moodTextView];
+    [superView insertSubview:containerView belowSubview:self.moodTextView];
+    [containerView addSubview:self.moodTextView];
     
     UIGraphicsBeginImageContextWithOptions(containerView.bounds.size, NO, 0.0);
     [containerView.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -1464,10 +1424,11 @@
     UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
-    [superView insertSubview:self.moodLabel atIndex:index];
+    [superView insertSubview:self.moodTextView atIndex:index];
     [containerView removeFromSuperview];
     return img;
 }
+
 
 
 // ----------------------------------------------------------

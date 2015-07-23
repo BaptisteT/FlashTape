@@ -51,7 +51,8 @@
          // UI
          self.scrollEnabled = NO;
          self.bounces = NO;
-         self.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:36.0];
+         self.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:50.0];
+         self.tintColor = [UIColor whiteColor];
          self.textColor = [UIColor whiteColor];
          self.textAlignment = NSTextAlignmentCenter;
          self.backgroundColor = [UIColor clearColor];
@@ -68,7 +69,6 @@
 {
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            [self.captionDelegate gestureOnCaptionDetected];
             if (self.activeRecognizers.count == 0)
                 self.referenceTransform = self.transform;
             [self.activeRecognizers addObject:recognizer];
@@ -108,7 +108,6 @@
     static CGPoint initialCenter;
     if (recognizer.state == UIGestureRecognizerStateBegan)
     {
-        [self.captionDelegate gestureOnCaptionDetected];
         initialCenter = recognizer.view.center;
     }
     CGPoint translation = [recognizer translationInView:recognizer.view.superview];

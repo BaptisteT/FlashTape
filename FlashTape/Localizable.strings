@@ -44,15 +44,16 @@
 
 
 // AB Flashers
-"flashers_found_label" = "%lu friends already on Flashtape 😀";
-"no_flashers_found_label" = "No friends on Flashtape 😧";
+"flashers_found_label" = "😀 %lu friends already on Flashtape 😀";
+"no_flashers_found_label" = "😧 No friends on Flashtape 😧";
 "flashers_invite_section_title" = "Invite more friends!";
-"no_flasher_invite_section_title" = "Invite them 😀";
+"no_flasher_invite_section_title" = "😀 Invite them 😀";
 "add_friends_button" = "Next ❯";
 "friends_count_long_description" = "(%lu friends on Flash)";
 "friends_count_short_description" = "(%lu friends)";
 
-// 1st flash
+// Tuto
+"new_flashes_tuto_label" = "Watch the new videos of your friends";
 "first_flash_tuto_label" = "Congrats for your 1st flash!";
 
 // 1st messages

@@ -18,7 +18,7 @@ NSString * getEmojiAtIndex(NSInteger index)
     return emojiArray[MIN(index,emojiArray.count-1)];
 }
 
-BOOL belonsToEmojiArray(NSString *emoji) {
+BOOL belongsToEmojiArray(NSString *emoji) {
     return [EMOJI_ARRAY containsObject:emoji];
 }
 

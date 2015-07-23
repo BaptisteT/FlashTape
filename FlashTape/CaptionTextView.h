@@ -9,18 +9,12 @@
 @import Foundation;
 @import UIKit;
 
-@protocol CaptionTextViewProtocol;
 
 @interface CaptionTextView : UITextView <UIGestureRecognizerDelegate>
 
-@property (weak, nonatomic) id<CaptionTextViewProtocol> captionDelegate;
 
 @end
 
-@protocol CaptionTextViewProtocol <NSObject>
 
-- (void)gestureOnCaptionDetected;
-
-@end
 
 

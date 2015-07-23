@@ -33,7 +33,7 @@
     // Mixpanel
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
-    NSArray *arrayWithoutMixpanelEventTracking = @[EVENT_VIDEO_SEEN, EVENT_MESSAGE_READ, EVENT_CAMERA_FLIP_CLICKED, EVENT_CAPTION_CLICKED, EVENT_FRIEND_BUTTON_CLICKED, EVENT_PLAYING_TAP];
+    NSArray *arrayWithoutMixpanelEventTracking = @[EVENT_VIDEO_SEEN, EVENT_MESSAGE_READ, EVENT_CAMERA_FLIP_CLICKED, EVENT_MOOD_CLICKED, EVENT_FRIEND_BUTTON_CLICKED, EVENT_PLAYING_TAP];
     if ([arrayWithoutMixpanelEventTracking indexOfObject:eventName] == NSNotFound) {
         [mixpanel track:eventName properties:properties];
     }

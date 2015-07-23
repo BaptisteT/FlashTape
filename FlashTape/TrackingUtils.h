@@ -31,7 +31,7 @@
 #define EVENT_FRIEND_UNBLOCK @"friend.unblock"
 #define EVENT_VIDEO_SAVED @"video.saved"
 #define EVENT_VIDEO_SAVING_FAILURE @"video.saving_failure"
-#define EVENT_CAPTION_CLICKED @"caption.clicked"
+#define EVENT_MOOD_CLICKED @"caption.clicked"
 #define EVENT_CAMERA_FLIP_CLICKED @"camera_flip.clicked"
 #define EVENT_FRIEND_BUTTON_CLICKED @"friend_button.clicked"
 #define EVENT_ME_STORY_CLICKED @"me.story.clicked"

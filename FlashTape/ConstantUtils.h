@@ -35,7 +35,7 @@ static NSString * const kParseABContacts = @"ABContacts";
 static NSString * const kParseFailedPostsName = @"FailedPosts";
 
 // Admin
-static NSString * const kAdminUserObjectId = DEBUG ? @"r8jDJWlmmx" : @"dMKXpnzELi";
+static NSString * const kAdminUserObjectId = DEBUG ? @"TTE1CdCKaK" : @"dMKXpnzELi";
 
 // Download / feed
 static NSInteger const kMaxConcurrentVideoDownloadingCount = 20;
@@ -78,7 +78,7 @@ static NSInteger const kInternalNotifHeight = 60;
 static float const kNotifAnimationDuration = 0.5;
 
 NSString * getEmojiAtIndex(NSInteger index);
-BOOL belonsToEmojiArray(NSString *emoji) ;
+BOOL belongsToEmojiArray(NSString *emoji) ;
 
 // Invite
 static NSInteger const kMaxVideoSeenBetweenInvite = 10;
