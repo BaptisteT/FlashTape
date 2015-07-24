@@ -250,14 +250,11 @@
 {
     
     // Get the size of the keyboard.
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
-    //Given size may not account for screen rotation
-    int height = MIN(keyboardSize.height,keyboardSize.width);
+    CGRect keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
     //Show the separator
     CGRect frame = self.separatorImage.frame;
-    frame.origin.y -= height;
+    frame.origin.y = keyboardFrame.origin.y - frame.size.height;
     self.separatorImage.frame = frame;
 }
 

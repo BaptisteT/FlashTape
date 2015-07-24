@@ -47,9 +47,14 @@
         } else if ([obj1 contactScore] < [obj2 contactScore]) {
             return NSOrderedDescending;
         } else {
-            NSString *name1 = contactDictionnary[obj1.number] ? contactDictionnary[obj1.number] : @"?";
-            NSString *name2 = contactDictionnary[obj2.number] ? contactDictionnary[obj2.number] : @"?";
-            return [name1 caseInsensitiveCompare:name2];
+            NSString *name1 = contactDictionnary[obj1.number];
+            NSString *name2 = contactDictionnary[obj2.number];
+            if (!name1) {
+               return NSOrderedDescending;
+            } else if (!name2) {
+                return NSOrderedAscending;
+            } else
+                return [name1 caseInsensitiveCompare:name2];
         }
     }];
 }

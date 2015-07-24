@@ -278,7 +278,6 @@
     [self retrieveFollowingLocallyAndVideosRemotely];
     [ApiManager getRelationshipsRemotelyAndExecuteSuccess:^{
         [self retrieveFollowingLocallyAndVideosRemotely];
-        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_message_locally"
                                                             object:nil
                                                           userInfo:nil];
@@ -347,6 +346,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(retrieveFollowingLocallyAndVideosRemotely)
+                                                 name:@"retrieve_following"
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(retrieveVideoRemotely)
