@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>FlashTape-dev-30</string>
+	<string>FlashTape-dev-24</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -18,8 +18,23 @@
 	<string>1.03</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string>AppIcon</string>
+			<key>CFBundleURLName</key>
+			<string>co.flashtape</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>flashtape</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>64</string>
+	<string>65</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -72,5 +87,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>branch_key</key>
+	<string>key_live_gilIcB4I9FSTxdyMP5QoRaemFskvGL5C</string>
 </dict>
 </plist>

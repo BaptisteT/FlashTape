@@ -5,6 +5,8 @@
 //  Created by Baptiste Truchot on 6/28/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "Branch.h"
+
 #import "ABContact.h"
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
@@ -51,17 +53,7 @@
     
     // Fill Contacts
     [DatastoreUtils  getAllABContactsLocallySuccess:^(NSArray *contacts) {
-        self.abContactArray = [NSMutableArray arrayWithArray:[contacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
-            if (obj1.users.count > obj2.users.count) {
-                return NSOrderedAscending;
-            } else if (obj2.users.count > obj1.users.count) {
-                return NSOrderedDescending;
-            } else {
-                NSString *name1 = self.contactDictionnary[obj1.number] ? self.contactDictionnary[obj1.number] : @"?";
-                NSString *name2 = self.contactDictionnary[obj2.number] ? self.contactDictionnary[obj2.number] : @"?";
-                return [name1 caseInsensitiveCompare:name2];
-            }
-        }]];
+        self.abContactArray = [NSMutableArray arrayWithArray:[ABContact sortABContacts:contacts contactDictionnary:self.contactDictionnary]];
         [self.flashersTableView reloadData];
     } failure:nil];
     
@@ -147,10 +139,14 @@
         cell.delegate = self;
         return cell;
     } else {
-        InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
+        InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteContactTableViewCell"];
+        if (!cell) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"InviteContactTableViewCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+            cell.delegate = self;
+        }
         ABContact *contact = (ABContact *)self.abContactArray[indexPath.row];
-        [cell initWithName:self.contactDictionnary[contact.number] contact:contact firstRow:(indexPath.row == 0)];
-        cell.delegate = self;
+        [cell initWithName:self.contactDictionnary[contact.number] contact:contact indexPath:indexPath];
         return cell;
     }
 }
@@ -201,16 +197,27 @@
 - (void)inviteUser:(ABContact *)contact
 {
     NSString *name = self.contactDictionnary[contact.number];
-    [ApiManager sendInviteTo:contact.number
-                        name:name ? [name componentsSeparatedByString:@" "].firstObject : @""
-                     success:nil
-                     failure:nil];
+    NSString *number = contact.number;
     
-    // Remove user
-    [self.abContactArray removeObject:contact];
+    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"sms" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+        
+        [ApiManager sendInviteTo:number
+                            name:name ? [name componentsSeparatedByString:@" "].firstObject : @""
+                       inviteURL:url
+                         success:nil
+                         failure:nil];
+    }];
     
-    // Reload addressbook section
-    [self.flashersTableView reloadData];
+    NSInteger row = [self.abContactArray indexOfObject:contact];
+    
+    if (row != NSNotFound) {
+        [self.abContactArray removeObject:contact];
+        
+        NSIndexPath *index = [NSIndexPath indexPathForRow:row inSection:1];
+        [self.flashersTableView beginUpdates];
+        [self.flashersTableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+        [self.flashersTableView endUpdates];
+    }
 }
 
 

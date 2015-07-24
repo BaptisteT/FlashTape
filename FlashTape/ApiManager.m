@@ -244,9 +244,8 @@
                                      failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [User query];
-    NSMutableArray *numbersArray = [NSMutableArray arrayWithArray:phoneNumbers];
-    [numbersArray removeObject:[User currentUser].username];
-    [query whereKey:@"username" containedIn:numbersArray];
+    [query whereKey:@"username" notEqualTo:[User currentUser].username];
+    [query whereKey:@"username" containedIn:phoneNumbers];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // Pin and return
@@ -259,7 +258,7 @@
             }];
             
             // Check if new user in our addressbok
-            [DatastoreUtils getUnrelatedUserInAddressBook:numbersArray success:^(NSArray *unrelatedUser) {
+            [DatastoreUtils getUnrelatedUserInAddressBook:phoneNumbers success:^(NSArray *unrelatedUser) {
                 NSDate *previousDate = [GeneralUtils getLastAddressBookFlasherRetrieveDate];
                 int count = 0;
                 for (PFObject *object in unrelatedUser) {
@@ -304,7 +303,7 @@
                 if (!contactObject) {
                     contactObject = [ABContact createRelationWithNumber:contact];
                 }
-                contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers];
+                contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers] || [contactObject.number isEqualToString:[User currentUser].username];
                 [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
                 [contactObjectArray addObject:contactObject];
             }
@@ -672,6 +671,7 @@
 
 + (void)sendInviteTo:(NSString *)phoneNumber
                 name:(NSString *)name
+           inviteURL:(NSString *)inviteURL
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock
 {
@@ -679,8 +679,12 @@
         return;
     }
     
+    NSMutableDictionary *parameters =[NSMutableDictionary dictionaryWithDictionary: @{ @"phoneNumber" : phoneNumber, @"name" : name}];
+    if (inviteURL) {
+        [parameters setObject:inviteURL forKey:@"inviteURL"];
+    }
     [PFCloud callFunctionInBackground:@"sendInvite"
-                       withParameters:@{ @"phoneNumber" : phoneNumber, @"name" : name }
+                       withParameters:parameters
                                 block:^(id object, NSError *error) {
                                     if (error != nil) {
                                         if (failureBlock)

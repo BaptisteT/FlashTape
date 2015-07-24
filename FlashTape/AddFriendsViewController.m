@@ -5,6 +5,8 @@
 //  Created by Baptiste Truchot on 6/6/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "Branch.h"
+
 #import "ABContact.h"
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
@@ -64,7 +66,6 @@
     [self.usernameSearchBar setImage:[UIImage imageNamed:@"searchbar_icon"] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
     self.usernameSearchBar.searchTextPositionAdjustment = UIOffsetMake(5.0f, 0.0f);
 
-
     self.resultTableView.delegate = self;
     self.resultTableView.dataSource = self;
     self.resultTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -81,11 +82,8 @@
 - (void)getContactAndFollowers {
     // AB Contacts
     [DatastoreUtils getAllABContactsLocallySuccess:^(NSArray *contacts) {
-        self.abContactArray = [NSMutableArray arrayWithArray:[contacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
-            NSString *name1 = self.addressBookDictionnary[obj1.number] ? self.addressBookDictionnary[obj1.number] : @"?";
-            NSString *name2 = self.addressBookDictionnary[obj2.number] ? self.addressBookDictionnary[obj2.number] : @"?";
-            return [name1 caseInsensitiveCompare:name2];
-        }]];
+        self.abContactArray = [NSMutableArray arrayWithArray:[ABContact sortABContacts:contacts contactDictionnary:self.addressBookDictionnary]];
+        [self reloadTableView];
     } failure:nil];
 
     // Get unfollowed follower
@@ -181,13 +179,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self isABContactSection:indexPath.section]) {
-        InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteUserCell"];
+        InviteContactTableViewCell *cell = (InviteContactTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"InviteContactTableViewCell"];
+        if (!cell) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"InviteContactTableViewCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+            cell.delegate = self;
+        }
         ABContact *contact = (ABContact *)self.autocompleteAbContactArray[indexPath.row];
-        [cell initWithName:self.addressBookDictionnary[contact.number] contact:contact firstRow:(indexPath.row == 0)];
-        cell.delegate = self;
+        [cell initWithName:self.addressBookDictionnary[contact.number] contact:contact indexPath:indexPath];
         return cell;
     } else {
-        AddUserTableViewCell *cell = (AddUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"AddUserCell"];
+        AddUserTableViewCell *cell = (AddUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"AddUserTableViewCell"];
         if (!cell) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"AddUserTableViewCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
@@ -287,7 +289,11 @@
 }
 
 - (BOOL)isABContactSection:(NSInteger)section {
-    return section == 3;
+    return section == [self abContactSection];
+}
+
+- (NSInteger)abContactSection {
+    return 3;
 }
 
 // --------------------------------------------
@@ -316,16 +322,29 @@
 
 - (void)inviteUser:(ABContact *)contact {
     NSString *name = self.addressBookDictionnary[contact.number];
-    [ApiManager sendInviteTo:contact.number
-                        name:name ? [name componentsSeparatedByString:@" "].firstObject : @""
-                     success:nil
-                     failure:nil];
+    NSString *number = contact.number;
+    
+    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"sms" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+        
+        [ApiManager sendInviteTo:number
+                            name:name ? [name componentsSeparatedByString:@" "].firstObject : @""
+                       inviteURL:url
+                         success:nil
+                         failure:nil];
+    }];
     
     // Remove user
-    [self.abContactArray removeObject:contact];
+    NSInteger row = [self.autocompleteAbContactArray indexOfObject:contact];
     
-    // Reload addressbook section
-    [self reloadTableView];
+    if (row != NSNotFound) {
+        [self.abContactArray removeObject:contact];
+        [self.autocompleteAbContactArray removeObject:contact];
+        
+        NSIndexPath *index = [NSIndexPath indexPathForRow:row inSection:[self abContactSection]];
+        [self.resultTableView beginUpdates];
+        [self.resultTableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+        [self.resultTableView endUpdates];
+    }
 }
 
 

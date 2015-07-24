@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import <AudioToolbox/AudioToolbox.h>
+#import "Branch.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "Flurry.h"
@@ -65,6 +66,16 @@
         [Parse setApplicationId:@"3ohZiWJdynEdw17xhrQ9t9d3xYnKTVj6mxLqQb0n"
                       clientKey:@"RyeSm5oeDK9A1UL2gM0EGDtoej3UjROFC3K0lW6t"];
     }
+    
+    // Branch
+    [[Branch getInstance] initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {
+        // todo BT
+        // personalize launch ?
+//        NSString *referredName = [params objectForKey:@"referredName"];
+//        if (referredName) {
+//            [[[UIAlertView alloc] initWithTitle:referredName message:@"" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil] show];
+//        }
+    }];
     
     if (!DEBUG) {
         // Flurry
@@ -207,7 +218,11 @@
     }
 }
 
-
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    [[Branch getInstance] handleDeepLink:url];
+    return YES;
+}
 
 // --------------------------------------------
 #pragma mark - Internal notif
@@ -222,6 +237,7 @@
                          internalNotif.frame = CGRectMake(0, 0, superView.frame.size.width, kInternalNotifHeight);
                      } completion:nil];
 }
+
 
 // --------------------------------------------
 #pragma mark - Alert view

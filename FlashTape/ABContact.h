@@ -23,4 +23,6 @@
 
 - (CGFloat)contactScore;
 
++ (NSArray *)sortABContacts:(NSArray *)contacts contactDictionnary:(NSDictionary *)contactDictionnary;
+
 @end

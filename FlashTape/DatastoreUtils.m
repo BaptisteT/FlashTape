@@ -129,8 +129,8 @@
     PFQuery *userQuery = [User query];
     [userQuery setLimit:1000];
     [userQuery fromLocalDatastore];
+    [userQuery whereKey:@"username" notEqualTo:[User currentUser].username];
     [userQuery whereKey:@"username" containedIn:number];
-    
     [userQuery whereKey:@"this" doesNotMatchKey:@"to" inQuery:followingQuery];
     [userQuery whereKey:@"this" doesNotMatchQuery:followerQuery];
     

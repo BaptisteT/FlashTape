@@ -39,4 +39,21 @@
     return (CGFloat) self.users.count / ( 1 + 1.5 * inviteSendCount + 0.5 * invitePresentedCount);
 }
 
++ (NSArray *)sortABContacts:(NSArray *)contacts contactDictionnary:(NSDictionary *)contactDictionnary
+{
+    return [contacts sortedArrayUsingComparator:^NSComparisonResult(ABContact *obj1, ABContact *obj2) {
+        if ([obj1 contactScore] > [obj2 contactScore]) {
+            return NSOrderedAscending;
+        } else if ([obj1 contactScore] < [obj2 contactScore]) {
+            return NSOrderedDescending;
+        } else {
+            NSString *name1 = contactDictionnary[obj1.number] ? contactDictionnary[obj1.number] : @"?";
+            NSString *name2 = contactDictionnary[obj2.number] ? contactDictionnary[obj2.number] : @"?";
+            return [name1 caseInsensitiveCompare:name2];
+        }
+    }];
+}
+
+
+
 @end

@@ -881,7 +881,7 @@
         // Create and pin post
         VideoPost *post = [VideoPost createCurrentUserPost];
         
-        // todo BT
+        // Tracking
         BOOL isEmoji = belongsToEmojiArray(self.moodTextView.text);
         BOOL isCaption = self.moodTextView.text.length > 0 && !isEmoji;
         NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:isCaption], @"emoji": [NSNumber numberWithBool:isEmoji]};
@@ -1110,7 +1110,7 @@
     // 1st flash
     if ([User currentUser].score < kMaxScoreBeforeHidingOtherTutos) {
         self.recordTutoLabel.text = NSLocalizedString(@"keep_holding_label", nil);
-        self.recordTutoLabel.hidden = NO;
+        self.recordTutoLabel.hidden = !self.moodTextView.hidden;
     }
     
     // Start UI + progress bar anim
@@ -1150,7 +1150,7 @@
     self.replayTutoArrow.hidden = NO;
     self.replayTutoLabel.hidden = NO;
     CGRect initialFrame = self.replayTutoArrow.frame;
-    initialFrame.origin.x = self.replayButton.frame.origin.x - 10;
+    initialFrame.origin.y = self.replayButton.frame.origin.y - 10 - initialFrame.size.height;
     self.replayTutoArrow.frame = initialFrame;
     [UIView animateWithDuration:0.5f
                           delay:0.0f

@@ -5,6 +5,8 @@
 //  Created by Baptiste Truchot on 6/29/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "Branch.h"
+
 #import "ABContact.h"
 #import "ApiManager.h"
 
@@ -74,10 +76,16 @@
     } else {
         name = @"";
     }
-    [ApiManager sendInviteTo:number
-                        name:name
-                     success:nil
-                     failure:nil];
+    
+    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"sms" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+        
+        [ApiManager sendInviteTo:number
+                            name:name
+                       inviteURL:url
+                         success:nil
+                         failure:nil];
+    }];
+    
     [self nextOrDismiss];
 }
 

@@ -18,7 +18,8 @@
 
 - (void)initWithName:(NSString *)name
              contact:(ABContact *)contact
-            firstRow:(BOOL)firstRow;
+           indexPath:(NSIndexPath *)indexPath;
+
 @end
 
 @protocol InviteContactTVCDelegate

@@ -21,12 +21,13 @@
 
 - (void)initWithName:(NSString *)name
              contact:(ABContact *)contact
-            firstRow:(BOOL)firstRow
+            indexPath:(NSIndexPath *)indexPath
 {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.nameLabel.text = name ? name : @"?";
     self.contact = contact;
     self.friendCountLabel.hidden = contact.users.count <= 1;
-    self.friendCountLabel.text = [NSString stringWithFormat:firstRow ? NSLocalizedString(@"friends_count_long_description", nil) :  NSLocalizedString(@"friends_count_short_description", nil),(unsigned long)contact.users.count];
+    self.friendCountLabel.text = [NSString stringWithFormat:(indexPath.row == 0) ? NSLocalizedString(@"friends_count_long_description", nil) :  NSLocalizedString(@"friends_count_short_description", nil),(unsigned long)contact.users.count];
 }
 
 - (IBAction)inviteButtonClicked:(id)sender {

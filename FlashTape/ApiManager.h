@@ -125,6 +125,7 @@
 
 + (void)sendInviteTo:(NSString *)phoneNumber
                 name:(NSString *)name
+           inviteURL:(NSString *)inviteURL
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock;
 
