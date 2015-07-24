@@ -82,5 +82,5 @@ BOOL belongsToEmojiArray(NSString *emoji) ;
 
 // Invite
 static NSInteger const kMaxVideoSeenBetweenInvite = 10;
-static NSInteger const kMinInviteCount = 2;
-static NSInteger const kMaxInviteCount = 4;
+static NSInteger const kMinInviteCount = 4;
+static NSInteger const kMaxInviteCount = 5;

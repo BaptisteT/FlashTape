@@ -212,7 +212,6 @@
 		3CBD0D5A1B415F04001DFE17 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBD0D591B415F04001DFE17 /* ABContact.m */; };
 		3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0F81B1CA00000E923D2 /* Message.m */; };
 		3CD6D0FC1B1CA91F00E923D2 /* KeyboardUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */; };
-		3CD6EE111B615E4B008FACC4 /* InviteContactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CD6EE101B615E4B008FACC4 /* InviteContactTableViewCell.xib */; };
 		3CD6EE531B623943008FACC4 /* BNCEncodingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6EE161B623943008FACC4 /* BNCEncodingUtils.m */; };
 		3CD6EE541B623943008FACC4 /* BNCError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6EE181B623943008FACC4 /* BNCError.m */; };
 		3CD6EE551B623943008FACC4 /* BNCLinkCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6EE1A1B623943008FACC4 /* BNCLinkCache.m */; };
@@ -243,6 +242,7 @@
 		3CD6EE6E1B623943008FACC4 /* BranchShortUrlSyncRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6EE4E1B623943008FACC4 /* BranchShortUrlSyncRequest.m */; };
 		3CD6EE6F1B623943008FACC4 /* BranchUserCompletedActionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6EE501B623943008FACC4 /* BranchUserCompletedActionRequest.m */; };
 		3CD6EE701B623943008FACC4 /* BranchValidatePromoCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD6EE521B623943008FACC4 /* BranchValidatePromoCodeRequest.m */; };
+		3CD6EE751B6290EB008FACC4 /* InviteContactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CD6EE731B6290EB008FACC4 /* InviteContactTableViewCell.xib */; };
 		A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */; };
 		A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4A087EF1B0E4F5700292202 /* Images.xcassets */; };
 		A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */; };
@@ -604,7 +604,6 @@
 		3CD6D0F81B1CA00000E923D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		3CD6D0FA1B1CA91F00E923D2 /* KeyboardUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardUtils.h; sourceTree = "<group>"; };
 		3CD6D0FB1B1CA91F00E923D2 /* KeyboardUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardUtils.m; sourceTree = "<group>"; };
-		3CD6EE101B615E4B008FACC4 /* InviteContactTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InviteContactTableViewCell.xib; sourceTree = "<group>"; };
 		3CD6EE141B623943008FACC4 /* BNCConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNCConfig.h; sourceTree = "<group>"; };
 		3CD6EE151B623943008FACC4 /* BNCEncodingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNCEncodingUtils.h; sourceTree = "<group>"; };
 		3CD6EE161B623943008FACC4 /* BNCEncodingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNCEncodingUtils.m; sourceTree = "<group>"; };
@@ -668,6 +667,7 @@
 		3CD6EE501B623943008FACC4 /* BranchUserCompletedActionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BranchUserCompletedActionRequest.m; sourceTree = "<group>"; };
 		3CD6EE511B623943008FACC4 /* BranchValidatePromoCodeRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BranchValidatePromoCodeRequest.h; sourceTree = "<group>"; };
 		3CD6EE521B623943008FACC4 /* BranchValidatePromoCodeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BranchValidatePromoCodeRequest.m; sourceTree = "<group>"; };
+		3CD6EE731B6290EB008FACC4 /* InviteContactTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InviteContactTableViewCell.xib; sourceTree = "<group>"; };
 		A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		A4A087EF1B0E4F5700292202 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A4CE87551B09133200DC20DC /* NHaasGroteskDSPro-55Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NHaasGroteskDSPro-55Rg.ttf"; sourceTree = "<group>"; };
@@ -1104,7 +1104,7 @@
 				3C0AC2941B244F700056C59C /* AddUserTableViewCell.xib */,
 				3CBD0D3C1B39D140001DFE17 /* InviteContactTableViewCell.h */,
 				3CBD0D3D1B39D140001DFE17 /* InviteContactTableViewCell.m */,
-				3CD6EE101B615E4B008FACC4 /* InviteContactTableViewCell.xib */,
+				3CD6EE731B6290EB008FACC4 /* InviteContactTableViewCell.xib */,
 				3CBD0D3F1B3AE932001DFE17 /* AddFriendTableViewCell.h */,
 				3CBD0D401B3AE932001DFE17 /* AddFriendTableViewCell.m */,
 				3CBD0D421B401687001DFE17 /* InternalNotifView.h */,
@@ -1407,7 +1407,6 @@
 				3C42DF761B308ED200C956A0 /* green.png in Resources */,
 				3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */,
 				3C4ABD541B299B2500897DF9 /* snapshot_config.json in Resources */,
-				3CD6EE111B615E4B008FACC4 /* InviteContactTableViewCell.xib in Resources */,
 				3C4ABD141B299B2500897DF9 /* Media.xcassets in Resources */,
 				3C70CAAC1B4690F0006E71D7 /* tuto_video_1.mp4 in Resources */,
 				3C4ABC871B28777500897DF9 /* InfoPlist.strings in Resources */,
@@ -1415,6 +1414,7 @@
 				A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */,
 				3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */,
 				3C70CAAE1B4690F0006E71D7 /* tuto_video_3.mp4 in Resources */,
+				3CD6EE751B6290EB008FACC4 /* InviteContactTableViewCell.xib in Resources */,
 				3C4ABD2C1B299B2500897DF9 /* MPCloseBtn.png in Resources */,
 				A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */,
 				3C4ABD551B299B2500897DF9 /* test_variant.json in Resources */,

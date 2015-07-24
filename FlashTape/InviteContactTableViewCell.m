@@ -17,12 +17,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *friendCountLabel;
 @end
 
-@implementation InviteContactTableViewCell
+@implementation InviteContactTableViewCell {
+    BOOL _idented;
+}
 
 - (void)initWithName:(NSString *)name
              contact:(ABContact *)contact
             indexPath:(NSIndexPath *)indexPath
 {
+    _idented = NO;
+    self.inviteButton.userInteractionEnabled = YES;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.nameLabel.text = name ? name : @"?";
     self.contact = contact;

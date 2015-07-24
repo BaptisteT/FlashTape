@@ -1371,7 +1371,6 @@
         [self.captionButton setTitle:@"Aa" forState:UIControlStateNormal];
         
         self.emojiButton.backgroundColor = [UIColor whiteColor];
-        [self.emojiButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
         [self.emojiButton setTitle:NSLocalizedString(@"close_button", nil) forState:UIControlStateNormal];
         self.captionButton.titleLabel.textColor = [UIColor lightGrayColor];
     }

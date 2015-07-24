@@ -116,7 +116,9 @@
     self.sendMessageController.delegate = self;
     
     // Labels
-    self.inviteButton.titleLabel.minimumScaleFactor = 0.1;
+    self.inviteButton.titleLabel.numberOfLines = 1;
+    self.inviteButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.inviteButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
     [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
     self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
 }

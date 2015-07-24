@@ -58,9 +58,9 @@
     if (self.savingCircleShape) {
         [self.savingCircleShape removeAllAnimations];
         [self.savingCircleShape removeFromSuperlayer];
-        if (isSaving) {
-            [self startSavingAnimation];
-        }
+    }
+    if (isSaving) {
+        [self startSavingAnimation];
     }
 }
 
@@ -140,13 +140,6 @@
     }
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    if (!self.savingCircleShape) {
-        [self initLoadingCircleShape];
-    }
-}
-
 - (void)sentAnimation {
     self.messageSentLabel.alpha = 0;
     self.messageSentLabel.text = NSLocalizedString(@"messages_sent", nil);
@@ -173,6 +166,9 @@
     self.saveButton.enabled = NO;
     
     // Add to parent layer
+    if (!self.savingCircleShape) {
+        [self initLoadingCircleShape];
+    }
     [self.saveButton.layer addSublayer:self.savingCircleShape];
     CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.fromValue = [NSNumber numberWithFloat:0.0f];

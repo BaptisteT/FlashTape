@@ -115,6 +115,9 @@
     NSRange whiteRange = [[nameAttributedString string] rangeOfString:name];
     [nameAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:whiteRange];
     self.nameLabel.attributedText = nameAttributedString;
+    self.nameLabel.minimumScaleFactor = 0.1;
+    self.nameLabel.adjustsFontSizeToFitWidth = YES;
+    self.nameLabel.lineBreakMode = NSLineBreakByClipping;
     
     // Tracking invite presented
     [TrackingUtils trackEvent:EVENT_INVITE_PRESENTED properties:nil];
