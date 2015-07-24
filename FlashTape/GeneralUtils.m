@@ -23,6 +23,8 @@
 
 #define RATE_ALERT_ACCEPTED @"Rate Alert Accepted"
 
+#define HIDE_SKIP_CONTACT @"Hide Skip Contact Pref"
+
 
 @implementation GeneralUtils
 
@@ -226,6 +228,19 @@
 + (BOOL)shouldPresentRateAlert:(NSInteger)score
 {
     return (score % 10 == 0 && ![GeneralUtils getRatingAlertAcceptedPref]);
+}
+
++ (void)setSkipContactPref
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithBool:true] forKey:HIDE_SKIP_CONTACT];
+    [prefs synchronize];
+}
+
++ (BOOL)getSkipContactPref
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [[prefs objectForKey:HIDE_SKIP_CONTACT] boolValue];
 }
 
 @end

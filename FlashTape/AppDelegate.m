@@ -69,7 +69,6 @@
     
     // Branch
     [[Branch getInstance] initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {
-        // todo BT
         // personalize launch ?
 //        NSString *referredName = [params objectForKey:@"referredName"];
 //        if (referredName) {
@@ -104,6 +103,9 @@
                 self.redirectURL = [NSURL URLWithString:[resultDictionnary valueForKey:@"redirect_url"]];
             }
             [self createObsoleteAPIAlertView];
+        }
+        else if (resultDictionnary && [resultDictionnary valueForKey:@"hide_skip_signup"]) {
+            [GeneralUtils setSkipContactPref];
         }
     }];
     

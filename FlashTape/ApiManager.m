@@ -92,16 +92,16 @@
             } else {
                 // sign in
                 [User logInWithUsernameInBackground:phoneNumber
-                                             password:@""
-                                                block:^(PFUser *user, NSError *error) {
-                                                    if (user) {
-                                                        if (successBlock)
-                                                            successBlock();
-                                                    } else { 
-                                                        if (failureBlock)
-                                                            failureBlock();
-                                                    }
-                                                }];
+                                           password:@""
+                                              block:^(PFUser *user, NSError *error) {
+                                                  if (user) {
+                                                      if (successBlock)
+                                                          successBlock();
+                                                  } else {
+                                                      if (failureBlock)
+                                                          failureBlock();
+                                                  }
+                                              }];
             }
         } else {
             if (failureBlock)

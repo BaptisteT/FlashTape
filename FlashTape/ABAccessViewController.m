@@ -41,6 +41,11 @@
     
     self.addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     
+    // Hide skip button if pref
+    if (!self.initialViewController && [GeneralUtils getSkipContactPref]) {
+        self.skipButton.hidden = YES;
+    }
+    
     // Label
     self.ABExplanationLabel.numberOfLines = 0;
     self.ABAccessContactLabel.lineHeight = 4.0f;
@@ -72,7 +77,15 @@
 - (IBAction)allowABAccessButtonClicked:(id)sender {
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
         // redirect to settings
-        [GeneralUtils openSettings];
+        if (&UIApplicationOpenSettingsURLString != NULL) {
+            [GeneralUtils openSettings];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"contact_access_error_title", nil)
+                                       message:NSLocalizedString(@"contact_access_error_message", nil)
+                                      delegate:nil
+                             cancelButtonTitle:@"Ok"
+                             otherButtonTitles:nil] show];
+        }
     } else {
         // Ask access and parse contacts
         [TrackingUtils trackEvent:EVENT_ALLOW_CONTACT_CLICKED properties:nil];

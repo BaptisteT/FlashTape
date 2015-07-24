@@ -61,4 +61,8 @@
 
 + (BOOL)shouldPresentRateAlert:(NSInteger)score;
 
++ (void)setSkipContactPref;
+
++ (BOOL)getSkipContactPref;
+
 @end
