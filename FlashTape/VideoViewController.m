@@ -82,6 +82,8 @@
 @property (weak, nonatomic) IBOutlet UIView *emojiView;
 @property (weak, nonatomic) IBOutlet UIView *moodContainerView;
 @property (weak, nonatomic) IBOutlet UIView *moodButtonContainerView;
+@property (weak, nonatomic) IBOutlet UIButton *emojiButton;
+@property (weak, nonatomic) IBOutlet UIButton *captionButton;
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
@@ -185,6 +187,7 @@
     [self.moodContainerView addGestureRecognizer:moodTap];
     UITapGestureRecognizer *textViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMoodView)];
     [self.moodTextView addGestureRecognizer:textViewTap];
+    [self.emojiButton setTitle:NSLocalizedString(@"close_button", nil) forState:UIControlStateNormal];
     
     // Create the recorder
     self.recorder = [SCRecorder recorder];
@@ -1356,16 +1359,40 @@
 
 // Emoji button
 - (IBAction)emojiButtonClicked:(id)sender {
-    [self.moodTextView resignFirstResponder];
-    self.emojiView.hidden = NO;
-    self.moodTextView.hidden = YES;
+    if (!self.emojiView.hidden) {
+        [self hideMoodView];
+    } else {
+        [self.moodTextView resignFirstResponder];
+        self.emojiView.hidden = NO;
+        self.moodTextView.hidden = YES;
+        
+        self.captionButton.backgroundColor = [UIColor lightGrayColor];
+        [self.captionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.captionButton setTitle:@"Aa" forState:UIControlStateNormal];
+        
+        self.emojiButton.backgroundColor = [UIColor whiteColor];
+        [self.emojiButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+        [self.emojiButton setTitle:NSLocalizedString(@"close_button", nil) forState:UIControlStateNormal];
+        self.captionButton.titleLabel.textColor = [UIColor lightGrayColor];
+    }
 }
 
 // Caption button
 - (IBAction)captionButtonClicked:(id)sender {
-    self.moodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:50.0];
-    [self.moodTextView becomeFirstResponder];
-    self.emojiView.hidden = YES;
+    if (self.emojiView.hidden) {
+        [self hideMoodView];
+    } else {
+        self.moodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:50.0];
+        [self.moodTextView becomeFirstResponder];
+        self.emojiView.hidden = YES;
+        
+        self.captionButton.backgroundColor = [UIColor whiteColor];
+        [self.captionButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [self.captionButton setTitle:NSLocalizedString(@"close_button", nil) forState:UIControlStateNormal];
+        
+        self.emojiButton.backgroundColor = [UIColor clearColor];
+        [self.emojiButton setTitle:@"😀" forState:UIControlStateNormal];
+    }
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -1382,6 +1409,9 @@
     self.moodTextView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
 }
 
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    return !self.moodContainerView.hidden;
+}
 
 
 // ----------------------------------------------------------

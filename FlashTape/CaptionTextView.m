@@ -84,11 +84,6 @@
                 }
             }
             self.transform = transform;
-            
-            // http://d3signerd.com/old/image-anti-aliasing-in-objective-c/
-//            self.layer.shouldRasterize = YES;
-//            self.layer.rasterizationScale = sqrt(transform.b * transform.b + transform.d * transform.d);
-//            self.layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
             break;
         }
             
@@ -141,5 +136,6 @@
         return NO;
     return YES;
 }
+
 
 @end
