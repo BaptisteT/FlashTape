@@ -159,9 +159,9 @@
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 80)];
         view.backgroundColor = [UIColor whiteColor];
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, tableView.frame.size.width, 40)];
-        [label setFont:[UIFont fontWithName:@"NHaasGroteskDSPro-55Md" size:20]];
+        [label setFont:[UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:20]];
         label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = [UIColor lightGrayColor];
+        label.backgroundColor = [UIColor colorWithRed:204./255. green:204./255. blue:204./255. alpha:1];//To test!
         label.textColor = [UIColor whiteColor];
         label.text = self.flashersArray.count > 0 ? NSLocalizedString(@"flashers_invite_section_title", nil) : NSLocalizedString(@"no_flasher_invite_section_title", nil);
         [view addSubview:label];
