@@ -200,9 +200,9 @@
                                 failure:(void(^)(NSError *error))failureBlock
 {
     PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
+    [query fromLocalDatastore];
     [query fromPinWithName:kParseABContacts];
     [query setLimit:1000];
-    [query fromLocalDatastore];
     [query whereKey:@"isFlasher" notEqualTo:[NSNumber numberWithBool:true]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {

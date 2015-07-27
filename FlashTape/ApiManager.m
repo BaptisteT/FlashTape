@@ -700,7 +700,6 @@
 
 + (void)incrementInviteSeenCount:(ABContact *)contact
 {
-
     [contact incrementKey:@"inviteSeenCount" byAmount:[NSNumber numberWithInt:1]];
     [contact saveInBackground];
 }

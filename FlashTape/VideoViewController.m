@@ -634,7 +634,7 @@
                                      } failure:nil];
     
     // Retrieve video if different number of relations
-    if (previousCount != self.followingRelations.count) {
+    if (previousCount != self.followingRelations.count || previousCount == 0) {
         [self retrieveVideoRemotely];
     }
     // If friend controller, reload tableview

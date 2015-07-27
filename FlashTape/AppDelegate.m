@@ -12,7 +12,6 @@
 #import "Flurry.h"
 #import "Mixpanel.h"
 #import <Parse/Parse.h>
-#import <ParseCrashReporting/ParseCrashReporting.h>
 #import <AVFoundation/AVFoundation.h>
 
 #import "ApiManager.h"
