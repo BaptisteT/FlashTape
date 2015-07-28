@@ -53,7 +53,7 @@
     self.titleLabel.lineType = LineTypeDown;
     self.titleLabel.lineHeight = 4.0f;
     self.disclaimerLabel.numberOfLines = 0;
-    self.disclaimerLabel.text = NSLocalizedString(@"disclaimer_verification_code", nil);
+    self.disclaimerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"disclaimer_verification_code", nil),self.phoneNumber];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -79,10 +79,7 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)nextButtonClicked:(id)sender {
-    [self.codeTextField1 resignFirstResponder];
-    [self.codeTextField2 resignFirstResponder];
-    [self.codeTextField3 resignFirstResponder];
+- (void)validateCode {
     [self.codeTextField4 resignFirstResponder];
     self.code = [NSString stringWithFormat:@"%@%@%@%@",self.codeTextField1.text, self.codeTextField2.text, self.codeTextField3.text, self.codeTextField4.text];
     if ([self.code isEqualToString:self.verificationCode]) {
@@ -103,7 +100,12 @@
                           [GeneralUtils showAlertMessage:NSLocalizedString(@"authentification_error_message", nil) withTitle:NSLocalizedString(@"authentification_error_title", nil)];
                       }];
     } else {
+        self.codeTextField1.text = @"";
+        self.codeTextField2.text = @"";
+        self.codeTextField3.text = @"";
+        self.codeTextField4.text = @"";
         [GeneralUtils showAlertMessage:NSLocalizedString(@"invalid_code_error_message", nil) withTitle:nil];
+        [self.codeTextField1 becomeFirstResponder];
     }
 }
 
@@ -122,6 +124,8 @@
             [self.codeTextField3 becomeFirstResponder];
         } else if (self.codeTextField3.isFirstResponder) {
             [self.codeTextField4 becomeFirstResponder];
+        } else if (self.codeTextField4.isFirstResponder) {
+            [self validateCode];
         }
         return NO;
     }

@@ -19,7 +19,7 @@
 "phone_number_error_message" = "Invalid phone number.";
 "number_text_field_placeholder" = "Phone Number";
 "disclaimer_phone_number" = "Please pick your country code and enter your phone number.";
-"disclaimer_verification_code" = "We sent you a verication code. Please enter it below.";
+"disclaimer_verification_code" = "We just sent a code to %@. Please enter it below.";
 
 // Code
 "confirmation_code_error_message" = "We failed to send your confirmation code, the provided phone number might be invalid.";

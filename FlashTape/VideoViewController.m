@@ -862,6 +862,7 @@
         }
 
         [self exportRecordingAndExecuteSuccess:^(VideoPost *post) {
+            [post.videoProperties setObject:[NSNumber numberWithBool:_longPressRunning] forKey:@"preview"];
             _isExporting = NO;
             if (_longPressRunning) {
                 self.postToSend = post;
@@ -891,7 +892,7 @@
         BOOL isEmoji = belongsToEmojiArray(self.moodTextView.text);
         BOOL isCaption = self.moodTextView.text.length > 0 && !isEmoji;
         NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:isCaption], @"emoji": [NSNumber numberWithBool:isEmoji]};
-        post.videoProperties = properties;
+        post.videoProperties = [NSMutableDictionary dictionaryWithDictionary:properties];
         
         AVAsset *asset = recordSession.assetRepresentingSegments;
         SCAssetExportSession *exporter = [[SCAssetExportSession alloc] initWithAsset:asset];

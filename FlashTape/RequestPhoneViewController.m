@@ -35,7 +35,6 @@
 @property (strong, nonatomic) IBOutlet UICustomLineLabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
 @property (strong, nonatomic) IBOutlet UILabel *disclaimerLabel;
-@property (strong, nonatomic) IBOutlet UIImageView *separatorImage;
 
 @end
 
@@ -71,10 +70,6 @@
         UIColor *color = [UIColor lightTextColor];
         self.numberTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.numberTextField.placeholder attributes:@{NSForegroundColorAttributeName: color}];
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
     [[UITextField appearance] setTintColor:[UIColor whiteColor]];
 }
 
@@ -86,7 +81,6 @@
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = YES;
         self.countryNameButton.translatesAutoresizingMaskIntoConstraints = YES;
         self.colorView.translatesAutoresizingMaskIntoConstraints = YES;
-        self.separatorImage.hidden = YES;
         self.disclaimerLabel.hidden = YES;
         CGRect colorFrame = self.colorView.frame;
         colorFrame.origin.y -= 100;
@@ -95,7 +89,6 @@
         countryFrame.origin.y -= 70;
         self.countryNameButton.frame = countryFrame;
     }
-    self.separatorImage.translatesAutoresizingMaskIntoConstraints = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -246,17 +239,6 @@
     return NO;
 }
 
-- (void)keyboardWasShown:(NSNotification *)notification
-{
-    
-    // Get the size of the keyboard.
-    CGRect keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
-    //Show the separator
-    CGRect frame = self.separatorImage.frame;
-    frame.origin.y = keyboardFrame.origin.y - frame.size.height;
-    self.separatorImage.frame = frame;
-}
 
 // --------------------------------------------
 #pragma mark - Background Color Cycle

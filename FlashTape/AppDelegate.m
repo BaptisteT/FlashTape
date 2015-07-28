@@ -9,6 +9,7 @@
 #import "Branch.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "Flurry.h"
 #import "Mixpanel.h"
 #import <Parse/Parse.h>
@@ -138,11 +139,15 @@
         WelcomeViewController* welcomeViewController = (WelcomeViewController *)  self.window.rootViewController.childViewControllers[0];
         [welcomeViewController performSegueWithIdentifier:@"Video From Welcome" sender:notifOpening];
     }
-    return YES;
+    
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                    didFinishLaunchingWithOptions:launchOptions];;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     self.sessionStartDate = [NSDate date];
+    
+    [FBSDKAppEvents activateApp];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -228,7 +233,10 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     [[Branch getInstance] handleDeepLink:url];
-    return YES;
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                sourceApplication:sourceApplication
+                                                       annotation:annotation];
 }
 
 // --------------------------------------------

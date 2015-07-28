@@ -22,7 +22,7 @@
 @property (nonatomic) NSInteger downloadProgress;
 @property (nonatomic) BOOL isDownloading;
 @property (retain) UIImage *thumbmail;
-@property (retain) NSDictionary *videoProperties;
+@property (retain) NSMutableDictionary *videoProperties;
 
 + (VideoPost *)createCurrentUserPost ;
 
