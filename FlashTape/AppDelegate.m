@@ -26,6 +26,7 @@
 #import "ConstantUtils.h"
 #import "DatastoreUtils.h"
 #import "GeneralUtils.h"
+#import "InviteUtils.h"
 #import "NotifUtils.h"
 #import "TrackingUtils.h"
 
@@ -103,8 +104,13 @@
             }
             [self createObsoleteAPIAlertView];
         }
-        else if (resultDictionnary && [resultDictionnary valueForKey:@"hide_skip_signup"]) {
-            [GeneralUtils setSkipContactPref];
+        else {
+            if (resultDictionnary && [resultDictionnary valueForKey:@"hide_skip_signup"]) {
+                [GeneralUtils setSkipContactPref];
+            }
+            if (resultDictionnary && [resultDictionnary valueForKey:@"ghost_invite_count"]) {
+                [InviteUtils setGhostInviteCount:[[resultDictionnary valueForKey:@"ghost_invite_count"] integerValue]];
+            }
         }
     }];
     

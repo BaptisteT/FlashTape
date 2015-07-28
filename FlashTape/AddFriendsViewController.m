@@ -326,7 +326,7 @@
     
     [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"sms" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
         
-        [ApiManager sendInviteTo:number
+        [ApiManager sendInviteTo:contact
                             name:name ? [name componentsSeparatedByString:@" "].firstObject : @""
                        inviteURL:url
                          success:nil

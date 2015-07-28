@@ -69,7 +69,8 @@
 #pragma mark - Actions
 // --------------------------------------------
 - (void)handleTap {
-    NSString *number = ((ABContact *)self.contactArray.firstObject).number;
+    ABContact *contact = (ABContact *)self.contactArray.firstObject;
+    NSString *number = contact.number;
     NSString *name = self.contactDictionnary[number];
     if (name) {
         name = [name componentsSeparatedByString:@" "].firstObject;
@@ -79,7 +80,7 @@
     
     [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"sms" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
         
-        [ApiManager sendInviteTo:number
+        [ApiManager sendInviteTo:contact
                             name:name
                        inviteURL:url
                          success:nil

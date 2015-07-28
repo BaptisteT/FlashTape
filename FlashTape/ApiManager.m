@@ -19,6 +19,7 @@
 #import "ConstantUtils.h"
 #import "DatastoreUtils.h"
 #import "GeneralUtils.h"
+#import "InviteUtils.h"
 #import "TrackingUtils.h"
 
 @implementation ApiManager
@@ -669,17 +670,17 @@
 #pragma mark - Invite
 // --------------------------------------------
 
-+ (void)sendInviteTo:(NSString *)phoneNumber
++ (void)sendInviteTo:(ABContact *)contact
                 name:(NSString *)name
            inviteURL:(NSString *)inviteURL
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock
 {
-    if (!phoneNumber || phoneNumber.length == 0) {
+    if (!contact || !contact.number || contact.number.length == 0) {
         return;
     }
     
-    NSMutableDictionary *parameters =[NSMutableDictionary dictionaryWithDictionary: @{ @"phoneNumber" : phoneNumber, @"name" : name}];
+    NSMutableDictionary *parameters =[NSMutableDictionary dictionaryWithDictionary: @{ @"phoneNumber" : contact.number, @"name" : name}];
     if (inviteURL) {
         [parameters setObject:inviteURL forKey:@"inviteURL"];
     }
@@ -691,6 +692,7 @@
                                             failureBlock();
                                     } else {
                                         [TrackingUtils trackEvent:EVENT_INVITE_SENT properties:@{@"type":@"twillio"}];
+                                        [contact fetchIfNeededInBackground];
                                         if (successBlock) {
                                             successBlock([object integerValue]);
                                         }
@@ -702,6 +704,36 @@
 {
     [contact incrementKey:@"inviteSeenCount" byAmount:[NSNumber numberWithInt:1]];
     [contact saveInBackground];
+}
+
+
++ (void)sendGhostInviteAmongContacts:(NSArray *)contacts
+                       abDictionnary:(NSDictionary *)abDictionnary
+{
+    NSInteger count = [InviteUtils getGhostInviteCount];
+    
+    NSMutableArray *candidates = [NSMutableArray new];
+    for (ABContact *contact in contacts) {
+        if (contact.inviteCount == 0 && !contact.isFlasher) {
+            [candidates addObject:contact];
+        }
+    }
+    NSArray *sortedCandidates = [ABContact sortABContacts:candidates contactDictionnary:nil];
+    
+    NSArray *invitedContacts;
+    if (sortedCandidates.count < count) {
+        invitedContacts = sortedCandidates;
+    } else {
+        invitedContacts = [sortedCandidates subarrayWithRange:NSMakeRange(0, count)];
+    }
+    
+    for (ABContact *contact in invitedContacts) {
+        [ApiManager sendInviteTo:contact
+                            name:abDictionnary[contact.number]
+                       inviteURL:nil
+                         success:nil
+                         failure:nil];
+    }
 }
 
 

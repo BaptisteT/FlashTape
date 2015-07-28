@@ -14,6 +14,8 @@
 
 #define VIDEO_SEEN_SINCE_LAST_INVITE @"Video Seen Since Last Invite Presented Count"
 
+#define GHOST_INVITE_COUNT @"Ghost Invite Count Pref"
+
 @implementation InviteUtils
 
 + (void)pickContactsToPresent:(NSInteger)count
@@ -64,6 +66,19 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithInteger:0] forKey:VIDEO_SEEN_SINCE_LAST_INVITE];
     [prefs synchronize];
+}
+
++ (void)setGhostInviteCount:(NSInteger)count
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithInteger:count] forKey:GHOST_INVITE_COUNT];
+    [prefs synchronize];
+}
+
++ (NSInteger)getGhostInviteCount
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [prefs objectForKey:GHOST_INVITE_COUNT] ? [[prefs objectForKey:GHOST_INVITE_COUNT] integerValue] : 0;
 }
 
 @end

@@ -123,7 +123,10 @@
 #pragma mark - Invite
 // --------------------------------------------
 
-+ (void)sendInviteTo:(NSString *)phoneNumber
++ (void)sendGhostInviteAmongContacts:(NSArray *)contacts
+                       abDictionnary:(NSDictionary *)abDictionnary;
+
++ (void)sendInviteTo:(ABContact *)contact
                 name:(NSString *)name
            inviteURL:(NSString *)inviteURL
              success:(void(^)())successBlock

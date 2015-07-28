@@ -243,4 +243,6 @@
     return [[prefs objectForKey:HIDE_SKIP_CONTACT] boolValue];
 }
 
+
+
 @end

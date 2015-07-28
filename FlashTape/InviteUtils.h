@@ -22,5 +22,8 @@
 
 + (void)resetVideoSeenSinceLastInvitePresentedCount;
 
++ (void)setGhostInviteCount:(NSInteger)count;
+
++ (NSInteger)getGhostInviteCount;
 
 @end
