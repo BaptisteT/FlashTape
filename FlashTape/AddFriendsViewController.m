@@ -324,7 +324,7 @@
     NSString *name = self.addressBookDictionnary[contact.number];
     NSString *number = contact.number;
     
-    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"sms" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"twilio.add_friends_screen" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
         
         [ApiManager sendInviteTo:contact
                             name:name ? [name componentsSeparatedByString:@" "].firstObject : @""

@@ -5,6 +5,8 @@
 //  Created by Baptiste Truchot on 7/28/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "Branch.h"
+
 #import "ABContact.h"
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
@@ -76,16 +78,21 @@
             [GeneralUtils showAlertMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
             return;
         }
-        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-        messageController.messageComposeDelegate = self;
-        [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeInviteLink]];
         
-        NSMutableArray *numbers = [NSMutableArray new];
-        for (ABContact *contact in self.contactsToInviteArray) {
-            [numbers addObject:contact.number];
-        }
-        [messageController setRecipients:numbers];
-        [self presentViewController:messageController animated:YES completion:nil];
+        
+        [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"SMS.unlock_emojis" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+            
+            MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+            messageController.messageComposeDelegate = self;
+            [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeInviteLink]];
+            
+            NSMutableArray *numbers = [NSMutableArray new];
+            for (ABContact *contact in self.contactsToInviteArray) {
+                [numbers addObject:contact.number];
+            }
+            [messageController setRecipients:numbers];
+            [self presentViewController:messageController animated:YES completion:nil];
+        }];
     }
 }
 

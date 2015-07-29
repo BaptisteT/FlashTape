@@ -78,7 +78,10 @@
         name = @"";
     }
     
-    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"sms" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId}
+                                     andChannel:@"twilio.invite_pop_up"
+                                     andFeature:BRANCH_FEATURE_TAG_SHARE
+                                    andCallback:^(NSString *url, NSError *error) {
         
         [ApiManager sendInviteTo:contact
                             name:name

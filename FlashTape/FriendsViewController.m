@@ -7,6 +7,7 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 #import <AddressBook/AddressBook.h>
+#import "Branch.h"
 
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
@@ -721,8 +722,12 @@
     }
     MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
     messageController.messageComposeDelegate = self;
-    [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeInviteLink]];
-    [self presentViewController:messageController animated:YES completion:nil];
+    
+    [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"SMS.friends_screen" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+        [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),url]];
+        [self presentViewController:messageController animated:YES completion:nil];
+    }];
+   
 }
 
 // Dismiss message after finish
