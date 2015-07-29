@@ -8,6 +8,11 @@
 
 #import "ABContact.h"
 
+#import "ConstantUtils.h"
+#import "FlashLogger.h"
+
+#define FLASHABCONTACTLOG YES && GLOBALLOGENABLED
+
 @implementation ABContact
 
 @dynamic users;
@@ -47,18 +52,17 @@
         } else if ([obj1 contactScore] < [obj2 contactScore]) {
             return NSOrderedDescending;
         } else {
-            NSString *name1 = contactDictionnary ? contactDictionnary[obj1.number] : nil;
-            NSString *name2 = contactDictionnary ? contactDictionnary[obj2.number] : nil;
-            if (!name1) {
+            NSString *name1 = contactDictionnary ? contactDictionnary[obj1.number] : @"?";
+            NSString *name2 = contactDictionnary ? contactDictionnary[obj2.number] : @"?";
+            if (!name1 || [name1 isEqualToString:@"?"]) {
                return NSOrderedDescending;
-            } else if (!name2) {
+            } else if (!name2 || [name2 isEqualToString:@"?"]) {
                 return NSOrderedAscending;
             } else
                 return [name1 caseInsensitiveCompare:name2];
         }
     }];
 }
-
 
 
 @end

@@ -72,7 +72,7 @@
     self.resultTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Reset new flasher / follower at 0
-    [GeneralUtils setNewNewAddressbookFlasherCount:0];
+    [GeneralUtils setNewAddressbookFlasherCount:0];
     [GeneralUtils setNewUnfollowedFollowerCount:0];
     
     // Reload

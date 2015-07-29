@@ -9,6 +9,9 @@
 #import "Message.h"
 
 #import "ConstantUtils.h"
+#import "FlashLogger.h"
+
+#define FLASHMESSAGELOG YES && GLOBALLOGENABLED
 
 @implementation Message
 
@@ -52,7 +55,6 @@
     message.sentAt = [NSDate date];
     return message;
 }
-
 
 
 

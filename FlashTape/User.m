@@ -12,6 +12,9 @@
 #import "DatastoreUtils.h"
 
 #import "ConstantUtils.h"
+#import "FlashLogger.h"
+
+#define FLASHUSERLOG YES && GLOBALLOGENABLED
 
 @implementation User
 
@@ -68,5 +71,6 @@
     }
     return NO;
 }
+
 
 @end

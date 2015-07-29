@@ -18,9 +18,12 @@
 
 #import "ConstantUtils.h"
 #import "DatastoreUtils.h"
+#import "FlashLogger.h"
 #import "GeneralUtils.h"
 #import "InviteUtils.h"
 #import "TrackingUtils.h"
+
+#define FLASHAPIMANAGERLOG YES && GLOBALLOGENABLED
 
 @implementation ApiManager
 
@@ -115,6 +118,7 @@
              success:(void(^)())successBlock
              failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Save username for %@", username);
     NSString *transformedUsername = [GeneralUtils transformedUsernameFromOriginal:username];
     
     [ApiManager findUserByUsername:transformedUsername
@@ -149,6 +153,7 @@
 
 + (void)saveAddressbookName:(NSString *)abName
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Save addressbook name for %@", abName);
     User *currentUser = [User currentUser];
     currentUser.addressbookName = abName;
     [currentUser saveInBackground];
@@ -156,11 +161,14 @@
 
 + (void)unlockEmoji
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Unlock Emojis");
     User *currentUser = [User currentUser];
     currentUser.emojiUnlocked = true;
     [currentUser saveInBackgroundWithBlock:^(BOOL result, NSError *error) {
         if (result) {
             [TrackingUtils setPeopleProperties:@{PROPERTY_EMOJI_UNLOCKED: [NSNumber numberWithBool:YES]}];
+        } else {
+            FlashLog(FLASHAPIMANAGERLOG,@"Fail => Unlock Emojis");
         }
     }];
 }
@@ -193,6 +201,8 @@
 + (void)getRelationshipsRemotelyAndExecuteSuccess:(void(^)())successBlock
                                           failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Get relationships");
+    
     // set up the query on the Follow table
     PFQuery *followerQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [followerQuery whereKey:@"to" equalTo:[User currentUser]];
@@ -209,6 +219,8 @@
     // execute the query
     [relationshipQuery findObjectsInBackgroundWithBlock:^(NSArray *relations, NSError *error) {
         if (!error) {
+            FlashLog(FLASHAPIMANAGERLOG,@"%lu relationships found",relations.count);
+            
             [Follow unpinAllObjectsInBackgroundWithName:kParseRelationshipsName block:^void(BOOL success, NSError *error) {
                 // Cache the new results.
                 [Follow pinAllInBackground:relations withName:kParseRelationshipsName block:^void(BOOL success, NSError *error) {
@@ -244,7 +256,7 @@
                                                               userInfo:nil];
         } else {
             // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            FlashLog(FLASHAPIMANAGERLOG,@"Error: %@ %@", error, [error userInfo]);
             if (failureBlock)
                 failureBlock(error);
         }
@@ -255,11 +267,16 @@
                                      success:(void(^)(NSArray *userArray))successBlock
                                      failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Find flashers in addressbook");
+    
     PFQuery *query = [User query];
-    [query whereKey:@"username" notEqualTo:[User currentUser].username];
-    [query whereKey:@"username" containedIn:phoneNumbers];
+    NSMutableArray *numbers = [NSMutableArray arrayWithArray:phoneNumbers];
+    [numbers removeObject:[User currentUser].username];
+    [query whereKey:@"username" containedIn:numbers];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            FlashLog(FLASHAPIMANAGERLOG,@"%lu flashers found in addressbook",objects.count);
+            
             // Pin and return
             [PFObject unpinAllObjectsInBackgroundWithName:kParseAddressbookFlashers block:^(BOOL succeeded, NSError *error) {
                 [PFObject pinAllInBackground:objects withName:kParseAddressbookFlashers block:^(BOOL succeeded, NSError *error) {
@@ -270,7 +287,7 @@
             }];
             
             // Check if new user in our addressbok
-            [DatastoreUtils getUnrelatedUserInAddressBook:phoneNumbers success:^(NSArray *unrelatedUser) {
+            [DatastoreUtils getUnrelatedUserInAddressBook:numbers success:^(NSArray *unrelatedUser) {
                 NSDate *previousDate = [GeneralUtils getLastAddressBookFlasherRetrieveDate];
                 int count = 0;
                 for (PFObject *object in unrelatedUser) {
@@ -278,7 +295,7 @@
                         count ++;
                     }
                 }
-                [GeneralUtils setNewNewAddressbookFlasherCount:count];
+                [GeneralUtils setNewAddressbookFlasherCount:count];
                 [GeneralUtils setLastAddressBookFlasherRetrieveDate:[NSDate date]];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"reset_notif_count"
                                                                     object:nil
@@ -298,6 +315,8 @@
                              success:(void(^)(NSArray *abContacts))successBlock
                              failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Fill Contact tables");
+    
     PFQuery *query = [PFQuery queryWithClassName:[ABContact parseClassName]];
     [query whereKey:@"number" containedIn:contacts];
     [query setLimit:1000];
@@ -316,10 +335,13 @@
                     contactObject = [ABContact createRelationWithNumber:contact];
                 }
                 contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers] || [contactObject.number isEqualToString:[User currentUser].username];
-                [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
+                if (![contactObject.users containsObject:[User currentUser]]) {
+                    [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
+                }
                 [contactObjectArray addObject:contactObject];
             }
             [PFObject saveAllInBackground:contactObjectArray block:^(BOOL completed, NSError *error) {
+                FlashLog(FLASHAPIMANAGERLOG,@"ABContact completed :%d",completed);
                 if (completed) {
                     [PFObject unpinAllObjectsInBackgroundWithName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
                         [PFObject pinAllInBackground:contactObjectArray withName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
@@ -345,6 +367,7 @@
              success:(void(^)())successBlock
              failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"save relation");
     [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             if (successBlock) {
@@ -362,6 +385,7 @@
                             success:(void(^)(Follow *follow))successBlock
                             failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Create relationship");
     Follow *follow = [Follow createRelationWithFollowing:following];
     [follow saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
@@ -382,6 +406,7 @@
                              success:(void(^)())successBlock
                              failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Create multiple relationships");
     if (!followings || followings.count == 0) {
         if (successBlock) successBlock();
         return;
@@ -412,6 +437,7 @@
                success:(void(^)())successBlock
                failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"delete relation");
     [follow deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             [follow unpinInBackgroundWithName:kParseRelationshipsName];
@@ -437,6 +463,7 @@
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error, BOOL addToFailArray))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Save video");
     NSURL *url = post.localUrl;
     if (!url || !post.user) {
         failureBlock(nil, NO);
@@ -496,6 +523,7 @@
                      success:(void(^)(NSArray *posts))successBlock
                      failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Retrieving video");
     PFQuery *query = [PFQuery queryWithClassName:[VideoPost parseClassName]];
     [query whereKey:@"recordedAt" greaterThan:[[NSDate date] dateByAddingTimeInterval:-3600*kFeedHistoryInHours]];
     [query whereKey:@"user" containedIn:friends];
@@ -504,6 +532,8 @@
     [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            FlashLog(FLASHAPIMANAGERLOG,@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
+            
             // Download video
             [VideoPost downloadVideoFromPosts:objects];
             
@@ -514,13 +544,12 @@
             if (successBlock) {
                 successBlock(objects);
             }
-            NSLog(@"Successfully retrieved %lu videos.", (unsigned long)objects.count);
             
             // Clean local datastore
             [DatastoreUtils deleteLocalPostsNotInRemotePosts:objects];
         } else {
             // Log details of the failure
-            NSLog(@"Get Video Error: %@ %@", error, [error userInfo]);
+            FlashLog(FLASHAPIMANAGERLOG,@"Get Video Error: %@ %@", error, [error userInfo]);
             if (failureBlock)
                 failureBlock(error);
         }
@@ -529,6 +558,7 @@
 
 // Update post (get latest list of viewers)
 + (void)updateVideoPosts:(NSArray *)videoPosts {
+    FlashLog(FLASHAPIMANAGERLOG,@"Update video");
     // Remove Admin video
     NSMutableArray *videosArray = [NSMutableArray new];
     for (VideoPost *post in videoPosts) {
@@ -544,6 +574,7 @@
            success:(void(^)())successBlock
            failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Delete video");
     [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             [TrackingUtils trackEvent:EVENT_VIDEO_DELETED properties:nil];
@@ -584,6 +615,7 @@
 + (void)retrieveUnreadMessagesAndExecuteSuccess:(void(^)(NSArray *messagesArray))successBlock
                                         failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Retrieving unread messages");
     PFQuery *innerQuery = [PFQuery queryWithClassName:[Follow parseClassName]];
     [innerQuery whereKey:@"to" equalTo:[User currentUser]];
     [innerQuery whereKey:@"blocked" equalTo:[NSNumber numberWithBool:YES]];
@@ -597,6 +629,8 @@
     [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
+            FlashLog(FLASHAPIMANAGERLOG,@"%lu messages retrieved",objects.count);
+            
             // Pin
             [Message unpinAllObjectsWithName:kParseMessagesName];
             [Message pinAll:objects withName:kParseMessagesName];
@@ -610,6 +644,7 @@
                 successBlock(objects);
             }
         } else {
+            FlashLog(FLASHAPIMANAGERLOG,@"Error retrieving unread messages");
             if (failureBlock) {
                 failureBlock(error);
             }
@@ -622,6 +657,7 @@
                   success:(void(^)())successBlock
                   failure:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Message read");
     message.read = [NSNumber numberWithBool:YES];
     // Save as read on parse
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -642,6 +678,7 @@
                                success:(void(^)())successBlock
                           failureBlock:(void(^)(NSError *error))failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Create admin message");
     User *sender = [User objectWithoutDataWithObjectId:kAdminUserObjectId];
     NSMutableArray *array = [NSMutableArray new];
     int i = 0;
@@ -672,8 +709,9 @@
 + (void)updateBadge:(NSInteger)count {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (!currentInstallation.objectId || currentInstallation.badge != count) {
+        FlashLog(FLASHAPIMANAGERLOG,@"Update Badge");
         currentInstallation.badge = count;
-        [currentInstallation saveInBackground];
+        [currentInstallation saveEventually];
     }
 }
 
@@ -687,6 +725,7 @@
              success:(void(^)())successBlock
              failure:(void(^)())failureBlock
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Send invite");
     if (!contact || !contact.number || contact.number.length == 0) {
         return;
     }
@@ -713,6 +752,7 @@
 
 + (void)incrementInviteSeenCount:(ABContact *)contact
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Increment invite seen");
     [contact incrementKey:@"inviteSeenCount" byAmount:[NSNumber numberWithInt:1]];
     [contact saveInBackground];
 }
@@ -721,6 +761,7 @@
 + (void)sendGhostInviteAmongContacts:(NSArray *)contacts
                        abDictionnary:(NSDictionary *)abDictionnary
 {
+    FlashLog(FLASHAPIMANAGERLOG,@"Send ghost invite");
     NSInteger count = [InviteUtils getGhostInviteCount];
     
     NSMutableArray *candidates = [NSMutableArray new];

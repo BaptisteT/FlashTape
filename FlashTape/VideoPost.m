@@ -11,6 +11,9 @@
 
 #import "ConstantUtils.h"
 #import "GeneralUtils.h"
+#import "FlashLogger.h"
+
+#define FLASHVIDEOPOSTLOG YES && GLOBALLOGENABLED
 
 @implementation VideoPost
 
@@ -158,5 +161,6 @@ static int downloadingCount = 0;
         }
     }];
 }
+
 
 @end

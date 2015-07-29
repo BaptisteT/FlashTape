@@ -27,8 +27,8 @@
         self.buttons = [NSMutableArray new];
     }
     
-    CGFloat width = self.contentView.frame.size.width;
-    CGFloat height = self.contentView.frame.size.height;
+    CGFloat width = self.frame.size.width;
+    CGFloat height = self.frame.size.height;
     
     CGFloat marginFactor = [GeneralUtils isiPhone4] ? 4 : 3;
     CGFloat marginRatio = 1. / marginFactor;
@@ -42,7 +42,7 @@
         for (int row = 0; row < numberOfRows; row ++) {
             CGRect frame = CGRectMake(verticalMargin + row * (verticalMargin + buttonSize), horizontalMargin, buttonSize, buttonSize);
             UIButton *button = (UIButton *)self.buttons[row];
-            button.frame = frame;
+            [button setFrame:frame];
             if (flag && row == 0) {
                 [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
                 [button setTitle:@"" forState:UIControlStateNormal];
@@ -53,6 +53,7 @@
                 [button setTitle:emoji forState:UIControlStateNormal];
                 [button setImage:nil forState:UIControlStateNormal];
             }
+            button.titleLabel.font = [UIFont systemFontOfSize:120];
         }
         return;
     }
@@ -70,8 +71,6 @@
         button.titleLabel.font = [UIFont systemFontOfSize:120.0];
         button.titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
         button.titleLabel.adjustsFontSizeToFitWidth = YES;
-        button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-        [button.titleLabel setTextAlignment: NSTextAlignmentCenter];
         if (flag && row == 0) {
             [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
             [button setTitle:@"" forState:UIControlStateNormal];

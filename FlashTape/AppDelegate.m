@@ -27,10 +27,12 @@
 #import "ConstantUtils.h"
 #import "DatastoreUtils.h"
 #import "GeneralUtils.h"
+#import "FlashLogger.h"
 #import "InviteUtils.h"
 #import "NotifUtils.h"
 #import "TrackingUtils.h"
 
+#define FLASHAPPDELEGATELOG YES && GLOBALLOGENABLED
 
 @interface AppDelegate ()
 
@@ -156,6 +158,8 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    FlashLog(FLASHAPPDELEGATELOG,@"Register for remote notif");
+    
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];

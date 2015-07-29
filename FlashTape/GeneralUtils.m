@@ -205,7 +205,7 @@
     return [prefs objectForKey:NEW_ADDRESSBOOK_FLASHER_COUNT] ? [[prefs objectForKey:NEW_ADDRESSBOOK_FLASHER_COUNT] integerValue]: 0;
 }
 
-+ (void)setNewNewAddressbookFlasherCount:(NSInteger)count
++ (void)setNewAddressbookFlasherCount:(NSInteger)count
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithInteger:count] forKey:NEW_ADDRESSBOOK_FLASHER_COUNT];

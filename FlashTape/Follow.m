@@ -8,6 +8,11 @@
 
 #import "Follow.h"
 
+#import "ConstantUtils.h"
+#import "FlashLogger.h"
+
+#define FLASHFOLLOWLOG YES && GLOBALLOGENABLED
+
 @implementation Follow
 
 @dynamic to;
@@ -32,5 +37,6 @@
     follow.blocked = NO;
     return follow;
 }
+
 
 @end

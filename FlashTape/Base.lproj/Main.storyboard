@@ -1576,7 +1576,9 @@
                         <constraints>
                             <constraint firstItem="ZSA-hz-LCJ" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" id="2kJ-hD-FcW"/>
                             <constraint firstAttribute="trailing" secondItem="ZSA-hz-LCJ" secondAttribute="trailing" id="2mb-LR-Uxu"/>
+                            <constraint firstItem="5uH-OJ-Xuh" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" id="4wU-x5-tUc"/>
                             <constraint firstItem="YBS-wd-gmG" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leadingMargin" constant="-16" id="5I8-ga-gZL"/>
+                            <constraint firstAttribute="trailing" secondItem="5uH-OJ-Xuh" secondAttribute="trailing" id="5Lz-5v-Xt8"/>
                             <constraint firstItem="kk1-Ns-MDQ" firstAttribute="leading" secondItem="RIw-BT-qC9" secondAttribute="leading" id="7tF-QJ-59z"/>
                             <constraint firstItem="5uH-OJ-Xuh" firstAttribute="top" secondItem="LqB-To-ITe" secondAttribute="bottom" id="8Xf-wG-6Sp"/>
                             <constraint firstItem="LqB-To-ITe" firstAttribute="top" secondItem="ZSA-hz-LCJ" secondAttribute="bottom" id="9mU-kd-uod"/>
@@ -1623,6 +1625,8 @@
                                 <exclude reference="aLa-p7-NS9"/>
                                 <exclude reference="b3E-yV-0HW"/>
                                 <exclude reference="8Xf-wG-6Sp"/>
+                                <exclude reference="F6w-Ig-ezj"/>
+                                <exclude reference="z6f-D7-ICm"/>
                                 <exclude reference="JTD-vS-2iM"/>
                             </mask>
                         </variation>
@@ -1960,6 +1964,7 @@
                             <constraint firstAttribute="trailing" secondItem="2xh-cH-MdI" secondAttribute="trailing" id="Eok-JE-5i4"/>
                             <constraint firstAttribute="centerX" secondItem="CVs-Xs-emZ" secondAttribute="centerX" id="I0p-w4-uDA"/>
                             <constraint firstItem="vDv-83-YOU" firstAttribute="top" secondItem="2xh-cH-MdI" secondAttribute="bottom" id="Lib-Ta-Q2q"/>
+                            <constraint firstItem="2xh-cH-MdI" firstAttribute="top" secondItem="HJz-QN-pDF" secondAttribute="bottom" id="Nuv-dM-TXe"/>
                             <constraint firstItem="w02-fv-jhy" firstAttribute="leading" secondItem="EEh-F7-Hot" secondAttribute="leading" constant="20" id="P1F-5q-72k"/>
                             <constraint firstItem="CVs-Xs-emZ" firstAttribute="top" secondItem="nqQ-K1-tCF" secondAttribute="top" constant="20" id="UdS-I5-yrT"/>
                             <constraint firstItem="CVs-Xs-emZ" firstAttribute="top" secondItem="nqQ-K1-tCF" secondAttribute="bottom" constant="20" id="UfJ-O7-uH3"/>
@@ -1967,6 +1972,7 @@
                             <constraint firstAttribute="centerX" secondItem="kNk-UL-YDO" secondAttribute="centerX" id="WCA-db-8iA"/>
                             <constraint firstItem="2xh-cH-MdI" firstAttribute="top" secondItem="HJz-QN-pDF" secondAttribute="bottom" id="fdA-sF-kqr"/>
                             <constraint firstItem="kNk-UL-YDO" firstAttribute="leading" secondItem="EEh-F7-Hot" secondAttribute="leading" constant="25" id="gwY-NQ-BLy"/>
+                            <constraint firstItem="bq5-hg-Iib" firstAttribute="top" secondItem="2xh-cH-MdI" secondAttribute="bottom" constant="50" id="ihA-Es-Mou"/>
                             <constraint firstAttribute="trailing" secondItem="vDv-83-YOU" secondAttribute="trailing" id="lb7-1j-093"/>
                             <constraint firstItem="bq5-hg-Iib" firstAttribute="top" secondItem="vDv-83-YOU" secondAttribute="bottom" id="oo5-oF-VIG"/>
                             <constraint firstItem="HJz-QN-pDF" firstAttribute="centerY" secondItem="CVs-Xs-emZ" secondAttribute="centerY" id="pSB-HF-Fq4"/>
@@ -1976,7 +1982,9 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="fdA-sF-kqr"/>
                                 <exclude reference="UdS-I5-yrT"/>
+                                <exclude reference="Lib-Ta-Q2q"/>
                             </mask>
                         </variation>
                     </view>

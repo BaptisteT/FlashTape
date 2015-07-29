@@ -55,7 +55,7 @@
 
 + (NSInteger)getNewAddressbookFlasherCount;
 
-+ (void)setNewNewAddressbookFlasherCount:(NSInteger)count;
++ (void)setNewAddressbookFlasherCount:(NSInteger)count;
 
 + (void)setRatingAlertAccepted;
 

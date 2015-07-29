@@ -78,6 +78,7 @@
     [super viewDidLayoutSubviews];
     self.messageTypeContainerView.translatesAutoresizingMaskIntoConstraints = YES;
     [self adjustTextViewOffset];
+    
     [self.emojiController reloadEmojis];
 }
 
@@ -100,8 +101,10 @@
 #pragma mark Actions
 // ----------------------------------------------------------
 - (IBAction)emojiButtonClicked:(id)sender {
+    [self.emojiController reloadEmojis];
     [self setEmojiState:YES];
 }
+
 - (IBAction)textButtonClicked:(id)sender {
     [self setEmojiState:NO];
 }
@@ -153,13 +156,13 @@
 - (void)setEmojiState:(BOOL)emojiFlag
 {
     if (emojiFlag) {
+        [self.textView resignFirstResponder];
         self.emojiButton.backgroundColor = [UIColor whiteColor];
         self.textButton.backgroundColor = [UIColor clearColor];
         self.textButton.titleLabel.textColor = [UIColor whiteColor];
         self.textView.hidden = YES;
         self.textViewPlaceholder.hidden = YES;
         self.emojiView.hidden = NO;
-        [self.textView resignFirstResponder];
     } else {
         self.emojiButton.backgroundColor = [UIColor clearColor];
         self.textButton.backgroundColor = [UIColor whiteColor];

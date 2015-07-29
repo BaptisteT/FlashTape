@@ -9,9 +9,12 @@
 @import Foundation;
 @import UIKit;
 
+#define GLOBALLOGENABLED NO
+
 @interface ConstantUtils : NSObject
 
 @end
+
 
 // System
 static NSString * const kFlashTapeInviteLink = @"http://get.flashtape.co";

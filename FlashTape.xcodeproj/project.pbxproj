@@ -40,6 +40,8 @@
 		3C1BB95A1B67DCBD009781D3 /* EmojiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9591B67DCBD009781D3 /* EmojiViewController.m */; };
 		3C1BB9601B67E157009781D3 /* EmojiTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB95F1B67E157009781D3 /* EmojiTableViewCell.m */; };
 		3C1BB9631B681CFC009781D3 /* UnlockEmojisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9621B681CFC009781D3 /* UnlockEmojisViewController.m */; };
+		3C1BB9651B68EF58009781D3 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1BB9641B68EF58009781D3 /* Parse.framework */; };
+		3C1BB9681B68FFDC009781D3 /* FlashLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9671B68FFDC009781D3 /* FlashLogger.m */; };
 		3C1ECE4C1B0BD4D7004F7F02 /* CaptionTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */; };
 		3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A071AFA2A1600E0E4BF /* User.m */; };
 		3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */; };
@@ -195,7 +197,6 @@
 		3C95F2221B678BD900A28A16 /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F21B1B678BD900A28A16 /* FBSDKMessengerShareKit.framework */; };
 		3C95F2231B678BD900A28A16 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F21C1B678BD900A28A16 /* FBSDKShareKit.framework */; };
 		3C95F22A1B678D5400A28A16 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2241B678D5400A28A16 /* Bolts.framework */; };
-		3C95F22B1B678D5400A28A16 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2251B678D5400A28A16 /* Parse.framework */; };
 		3C95F22C1B678D5400A28A16 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2261B678D5400A28A16 /* ParseCrashReporting.framework */; };
 		3C95F22D1B678D5400A28A16 /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2271B678D5400A28A16 /* ParseFacebookUtils.framework */; };
 		3C95F22E1B678D5400A28A16 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2281B678D5400A28A16 /* ParseFacebookUtilsV4.framework */; };
@@ -325,6 +326,9 @@
 		3C1BB95F1B67E157009781D3 /* EmojiTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiTableViewCell.m; sourceTree = "<group>"; };
 		3C1BB9611B681CFC009781D3 /* UnlockEmojisViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnlockEmojisViewController.h; sourceTree = "<group>"; };
 		3C1BB9621B681CFC009781D3 /* UnlockEmojisViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnlockEmojisViewController.m; sourceTree = "<group>"; };
+		3C1BB9641B68EF58009781D3 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		3C1BB9661B68FFDC009781D3 /* FlashLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashLogger.h; sourceTree = "<group>"; };
+		3C1BB9671B68FFDC009781D3 /* FlashLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlashLogger.m; sourceTree = "<group>"; };
 		3C1ECE4A1B0BD4D7004F7F02 /* CaptionTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptionTextView.h; sourceTree = "<group>"; };
 		3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptionTextView.m; sourceTree = "<group>"; };
 		3C2C4A061AFA2A1600E0E4BF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -581,7 +585,6 @@
 		3C95F21B1B678BD900A28A16 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKMessengerShareKit.framework; path = ../../../FacebookSDK/FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
 		3C95F21C1B678BD900A28A16 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		3C95F2241B678D5400A28A16 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
-		3C95F2251B678D5400A28A16 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		3C95F2261B678D5400A28A16 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
 		3C95F2271B678D5400A28A16 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
 		3C95F2281B678D5400A28A16 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
@@ -702,7 +705,6 @@
 				3C5F98A61AED16810098F70F /* libsqlite3.dylib in Frameworks */,
 				3C4ABC8C1B2889D500897DF9 /* libFlurry_6.4.0.a in Frameworks */,
 				3C5F98A41AED16760098F70F /* libz.dylib in Frameworks */,
-				3C95F22B1B678D5400A28A16 /* Parse.framework in Frameworks */,
 				3C5F98A21AED16670098F70F /* SystemConfiguration.framework in Frameworks */,
 				3C95F2221B678BD900A28A16 /* FBSDKMessengerShareKit.framework in Frameworks */,
 				3C5F98A01AED165D0098F70F /* StoreKit.framework in Frameworks */,
@@ -721,6 +723,7 @@
 				3C5F982F1AECDFE50098F70F /* AudioToolbox.framework in Frameworks */,
 				3C5F982D1AECDFDA0098F70F /* CoreVideo.framework in Frameworks */,
 				3C4ABC931B28957300897DF9 /* Crashlytics.framework in Frameworks */,
+				3C1BB9651B68EF58009781D3 /* Parse.framework in Frameworks */,
 				3C5F982B1AECDFD30098F70F /* GLKit.framework in Frameworks */,
 				3C95F2211B678BD900A28A16 /* FBSDKLoginKit.framework in Frameworks */,
 				3C4ABC921B28957300897DF9 /* Fabric.framework in Frameworks */,
@@ -1074,6 +1077,8 @@
 		3C5F97FB1AEBB3990098F70F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				3C1BB9661B68FFDC009781D3 /* FlashLogger.h */,
+				3C1BB9671B68FFDC009781D3 /* FlashLogger.m */,
 				3C5F980F1AEC1CFF0098F70F /* ConstantUtils.h */,
 				3C5F98101AEC1CFF0098F70F /* ConstantUtils.m */,
 				3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */,
@@ -1214,8 +1219,8 @@
 				3C5F98A71AED168B0098F70F /* Accounts.framework */,
 				3C5F98A51AED16810098F70F /* libsqlite3.dylib */,
 				3C5F98A31AED16760098F70F /* libz.dylib */,
+				3C1BB9641B68EF58009781D3 /* Parse.framework */,
 				3C95F2241B678D5400A28A16 /* Bolts.framework */,
-				3C95F2251B678D5400A28A16 /* Parse.framework */,
 				3C95F2261B678D5400A28A16 /* ParseCrashReporting.framework */,
 				3C95F2271B678D5400A28A16 /* ParseFacebookUtils.framework */,
 				3C95F2281B678D5400A28A16 /* ParseFacebookUtilsV4.framework */,
@@ -1575,6 +1580,7 @@
 				3C4ABD151B299B2500897DF9 /* Mixpanel.m in Sources */,
 				3C4ABD201B299B2500897DF9 /* MPABTestDesignerSnapshotResponseMessage.m in Sources */,
 				3CD6EE6C1B623943008FACC4 /* BranchSetIdentityRequest.m in Sources */,
+				3C1BB9681B68FFDC009781D3 /* FlashLogger.m in Sources */,
 				3C4ABD581B299B2500897DF9 /* UIImage+MPImageEffects.m in Sources */,
 				3C4ABD271B299B2500897DF9 /* MPCGColorRefToNSStringValueTransformer.m in Sources */,
 				3C081CFA1B1B54C70036D6B2 /* SCRecorderFocusTargetView.m in Sources */,
@@ -1753,8 +1759,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1774,7 +1780,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
 			};
 			name = Debug;
 		};
@@ -1783,8 +1789,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1804,7 +1810,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
 			};
 			name = Release;
 		};
