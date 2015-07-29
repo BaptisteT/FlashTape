@@ -81,6 +81,8 @@
     [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId}
                                      andChannel:@"twilio.invite_pop_up"
                                      andFeature:BRANCH_FEATURE_TAG_SHARE
+                                       andStage:nil
+                                       andAlias:@"Flashtape"
                                     andCallback:^(NSString *url, NSError *error) {
         
         [ApiManager sendInviteTo:contact

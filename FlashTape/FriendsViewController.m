@@ -723,7 +723,12 @@
     MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
     messageController.messageComposeDelegate = self;
     
-    [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"SMS.friends_screen" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+    [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId}
+                                     andChannel:@"SMS.friends_screen"
+                                     andFeature:BRANCH_FEATURE_TAG_SHARE
+                                       andStage:nil
+                                       andAlias:@"Flashtape"
+                                    andCallback:^(NSString *url, NSError *error) {
         [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),url]];
         [self presentViewController:messageController animated:YES completion:nil];
     }];

@@ -199,7 +199,12 @@
     NSString *name = self.contactDictionnary[contact.number];
     NSString *number = contact.number;
     
-    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"twilio.signup_add_friends_screen" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
+    [[Branch getInstance] getShortURLWithParams:@{@"referredName": name, @"referredNumber": number, @"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId}
+                                     andChannel:@"twilio.signup_add_friends_screen"
+                                     andFeature:BRANCH_FEATURE_TAG_SHARE
+                                       andStage:nil
+                                       andAlias:@"Flashtape"
+                                    andCallback:^(NSString *url, NSError *error) {
         
         [ApiManager sendInviteTo:contact
                             name:name ? [name componentsSeparatedByString:@" "].firstObject : @""

@@ -80,8 +80,13 @@
         }
         
         
-        [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId} andChannel:@"SMS.unlock_emojis" andFeature:BRANCH_FEATURE_TAG_SHARE andCallback:^(NSString *url, NSError *error) {
-            
+        [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId}
+                                         andChannel:@"SMS.unlock_emojis"
+                                         andFeature:BRANCH_FEATURE_TAG_SHARE
+                                           andStage:nil
+                                           andAlias:@"Flashtape"
+                                        andCallback:^(NSString *url, NSError *error)
+         {
             MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
             messageController.messageComposeDelegate = self;
             [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeInviteLink]];
