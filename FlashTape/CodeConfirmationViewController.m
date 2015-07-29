@@ -53,6 +53,8 @@
     self.titleLabel.lineType = LineTypeDown;
     self.titleLabel.lineHeight = 4.0f;
     self.disclaimerLabel.numberOfLines = 0;
+    self.disclaimerLabel.adjustsFontSizeToFitWidth = YES;
+    self.disclaimerLabel.lineBreakMode = NSLineBreakByClipping;
     self.disclaimerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"disclaimer_verification_code", nil),self.phoneNumber];
 }
 

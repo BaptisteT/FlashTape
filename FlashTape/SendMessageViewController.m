@@ -22,17 +22,14 @@
 @property (weak, nonatomic) IBOutlet UIView *messageTypeContainerView;
 @property (weak, nonatomic) IBOutlet UIButton *emojiButton;
 @property (weak, nonatomic) IBOutlet UIButton *textButton;
+@property (strong, nonatomic) EmojiViewController *emojiController;
 
 @end
 
-@implementation SendMessageViewController {
-    BOOL _emojiViewInitialized;
-}
+@implementation SendMessageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    _emojiViewInitialized = NO;
     
     // Labels
     self.textView.tintColor = [UIColor blackColor];
@@ -79,9 +76,9 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    [self initEmojiView];
     self.messageTypeContainerView.translatesAutoresizingMaskIntoConstraints = YES;
     [self adjustTextViewOffset];
+    [self.emojiController reloadEmojis];
 }
 
 - (void)adjustTextViewOffset {
@@ -89,6 +86,15 @@
     topoffset = ( topoffset < 0.0 ? 0.0 : topoffset );
     self.textView.contentOffset = (CGPoint){.x = 0, .y = -topoffset};
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSString * segueName = segue.identifier;
+    if ([segueName isEqualToString: @"Emoji From Send"]) {
+        self.emojiController = (EmojiViewController *) [segue destinationViewController];
+        self.emojiController.delegate = self;
+    }
+}
+
 
 // ----------------------------------------------------------
 #pragma mark Actions
@@ -104,9 +110,9 @@
     [self.delegate closeReadAndMessageViews];
 }
 
-- (void)emojiClicked:(UIButton *)sender {
+- (void)emojiClicked:(NSString *)emoji {
     [TrackingUtils trackEvent:EVENT_MESSAGE_SENT properties:@{@"type": @"emoji"}];
-    [self sendMessage:sender.titleLabel.text];
+    [self sendMessage:emoji];
 }
 
 - (void)sendMessage:(NSString *)message {
@@ -144,45 +150,6 @@
 // ----------------------------------------------------------
 #pragma mark UI
 // ----------------------------------------------------------
-- (void)initEmojiView {
-    if (!_emojiViewInitialized) {
-        CGFloat width = self.emojiView.frame.size.width;
-        CGFloat height = self.emojiView.frame.size.height;
-        
-        // assumption : horizontal margin = 1/3 of side
-        NSInteger numberOfColumns = 4;
-        CGFloat buttonSize = 3. / (4. * numberOfColumns + 1.) * width;
-        CGFloat horizontalMargin = 1. / 3. * buttonSize;
-
-        NSInteger numberOfRows = floor(height / (buttonSize * 4. / 3.));
-        CGFloat verticalMargin = (height - numberOfRows * buttonSize) / (numberOfRows + 1.);
-        
-        // Get gray image for background
-        UIGraphicsBeginImageContext(CGSizeMake(buttonSize, buttonSize));
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [UIColor lightGrayColor].CGColor);
-        CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0,0,buttonSize,buttonSize));
-        UIImage *colorImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        for (int row = 0; row < numberOfRows; row ++) {
-            for (int column = 0; column < numberOfColumns; column ++) {
-                CGRect frame = CGRectMake(horizontalMargin + column * (buttonSize + horizontalMargin), verticalMargin + row * (verticalMargin + buttonSize), buttonSize, buttonSize);
-                UIButton *button = [[UIButton alloc] initWithFrame:frame];
-                [button setTitle:getEmojiAtIndex(row + column * numberOfRows) forState:UIControlStateNormal];
-                button.titleLabel.numberOfLines = 1;
-                button.titleLabel.font = [UIFont systemFontOfSize:100];
-                button.titleLabel.adjustsFontSizeToFitWidth = YES;
-                [button.titleLabel setTextAlignment: NSTextAlignmentCenter];
-                button.contentEdgeInsets = UIEdgeInsetsMake(-buttonSize/2.75, 0.0, 0.0, 0.0);
-                [button setBackgroundImage:colorImage forState:UIControlStateHighlighted];
-                [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
-                [self.emojiView addSubview:button];
-            }
-        }
-        _emojiViewInitialized = YES;
-    }
-}
-
 - (void)setEmojiState:(BOOL)emojiFlag
 {
     if (emojiFlag) {

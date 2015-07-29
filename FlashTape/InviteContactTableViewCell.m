@@ -18,14 +18,15 @@
 @end
 
 @implementation InviteContactTableViewCell {
-    BOOL _idented;
+    BOOL _selected;
 }
 
 - (void)initWithName:(NSString *)name
              contact:(ABContact *)contact
-            indexPath:(NSIndexPath *)indexPath
+           indexPath:(NSIndexPath *)indexPath
+            selected:(BOOL)selected
 {
-    _idented = NO;
+    [self setInviteFriendState:selected];
     self.inviteButton.userInteractionEnabled = YES;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.nameLabel.text = name ? name : @"?";
@@ -36,7 +37,21 @@
 
 - (IBAction)inviteButtonClicked:(id)sender {
     self.inviteButton.enabled = NO;
-    [self.delegate inviteUser:self.contact];
+    [self setInviteFriendState:!_selected];
+    if (_selected) {
+        [self.delegate inviteContact:self.contact];
+    } else {
+        [self.delegate removeContact:self.contact];
+    }
+    self.inviteButton.enabled = YES;
 }
+
+- (void)setInviteFriendState:(BOOL)flag
+{
+    _selected = flag;
+    UIImage *image = flag ? [UIImage imageNamed:@"check_icon"] : nil;
+    [self.inviteButton setImage:image forState:UIControlStateNormal];
+}
+
 
 @end

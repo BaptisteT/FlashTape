@@ -19,6 +19,7 @@
 @dynamic flashUsername;
 @dynamic transformedUsername;
 @dynamic addressbookName;
+@dynamic emojiUnlocked;
 
 @synthesize lastMessageDate;
 
@@ -34,6 +35,7 @@
     user.transformedUsername = @"";
     user.password = @"";
     user.score = kUserInitialScore;
+    user.emojiUnlocked = NO;
     return user;
 }
 

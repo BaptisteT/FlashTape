@@ -36,6 +36,10 @@
 		3C0AC2961B244F700056C59C /* AddUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C0AC2941B244F700056C59C /* AddUserTableViewCell.xib */; };
 		3C0AC2991B24B1F50056C59C /* SendMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0AC2981B24B1F50056C59C /* SendMessageViewController.m */; };
 		3C0AC29C1B24D3930056C59C /* ReadMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0AC29B1B24D3930056C59C /* ReadMessageViewController.m */; };
+		3C1BB9561B67DC84009781D3 /* PTEHorizontalTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9551B67DC84009781D3 /* PTEHorizontalTableView.m */; };
+		3C1BB95A1B67DCBD009781D3 /* EmojiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9591B67DCBD009781D3 /* EmojiViewController.m */; };
+		3C1BB9601B67E157009781D3 /* EmojiTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB95F1B67E157009781D3 /* EmojiTableViewCell.m */; };
+		3C1BB9631B681CFC009781D3 /* UnlockEmojisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9621B681CFC009781D3 /* UnlockEmojisViewController.m */; };
 		3C1ECE4C1B0BD4D7004F7F02 /* CaptionTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */; };
 		3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A071AFA2A1600E0E4BF /* User.m */; };
 		3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */; };
@@ -313,6 +317,14 @@
 		3C0AC2981B24B1F50056C59C /* SendMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendMessageViewController.m; sourceTree = "<group>"; };
 		3C0AC29A1B24D3930056C59C /* ReadMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadMessageViewController.h; sourceTree = "<group>"; };
 		3C0AC29B1B24D3930056C59C /* ReadMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadMessageViewController.m; sourceTree = "<group>"; };
+		3C1BB9541B67DC84009781D3 /* PTEHorizontalTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTEHorizontalTableView.h; sourceTree = "<group>"; };
+		3C1BB9551B67DC84009781D3 /* PTEHorizontalTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTEHorizontalTableView.m; sourceTree = "<group>"; };
+		3C1BB9581B67DCBD009781D3 /* EmojiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiViewController.h; sourceTree = "<group>"; };
+		3C1BB9591B67DCBD009781D3 /* EmojiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiViewController.m; sourceTree = "<group>"; };
+		3C1BB95E1B67E157009781D3 /* EmojiTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiTableViewCell.h; sourceTree = "<group>"; };
+		3C1BB95F1B67E157009781D3 /* EmojiTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiTableViewCell.m; sourceTree = "<group>"; };
+		3C1BB9611B681CFC009781D3 /* UnlockEmojisViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnlockEmojisViewController.h; sourceTree = "<group>"; };
+		3C1BB9621B681CFC009781D3 /* UnlockEmojisViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnlockEmojisViewController.m; sourceTree = "<group>"; };
 		3C1ECE4A1B0BD4D7004F7F02 /* CaptionTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptionTextView.h; sourceTree = "<group>"; };
 		3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptionTextView.m; sourceTree = "<group>"; };
 		3C2C4A061AFA2A1600E0E4BF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -719,6 +731,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C1BB9571B67DC8C009781D3 /* PTEHorizontalTableView */ = {
+			isa = PBXGroup;
+			children = (
+				3C1BB9541B67DC84009781D3 /* PTEHorizontalTableView.h */,
+				3C1BB9551B67DC84009781D3 /* PTEHorizontalTableView.m */,
+			);
+			name = PTEHorizontalTableView;
+			sourceTree = "<group>";
+		};
 		3C2C4A281AFB592100E0E4BF /* RMPhoneFormat */ = {
 			isa = PBXGroup;
 			children = (
@@ -1021,6 +1042,10 @@
 				3C0AC2901B231A5F0056C59C /* AddFriendsViewController.m */,
 				3C5BD82E1B419F8000B3FCB8 /* InviteContactViewController.h */,
 				3C5BD82F1B419F8000B3FCB8 /* InviteContactViewController.m */,
+				3C1BB9581B67DCBD009781D3 /* EmojiViewController.h */,
+				3C1BB9591B67DCBD009781D3 /* EmojiViewController.m */,
+				3C1BB9611B681CFC009781D3 /* UnlockEmojisViewController.h */,
+				3C1BB9621B681CFC009781D3 /* UnlockEmojisViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -1097,6 +1122,8 @@
 				3CBD0D4F1B404A30001DFE17 /* ABFlasherTableViewCell.m */,
 				3C70CAB61B4C21BF006E71D7 /* BackwardTextField.h */,
 				3C70CAB71B4C21BF006E71D7 /* BackwardTextField.m */,
+				3C1BB95E1B67E157009781D3 /* EmojiTableViewCell.h */,
+				3C1BB95F1B67E157009781D3 /* EmojiTableViewCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1104,6 +1131,7 @@
 		3C5F98141AEC343B0098F70F /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				3C1BB9571B67DC8C009781D3 /* PTEHorizontalTableView */,
 				3CD6EE121B623943008FACC4 /* Branch-SDK */,
 				3C4ABC941B299B2400897DF9 /* Mixpanel */,
 				3C4ABC901B28957300897DF9 /* Fabric.framework */,
@@ -1431,8 +1459,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "
-";
+			shellScript = "./Fabric.framework/run f9ca597e689ec6ddf7ea7adc3fc05ea4f9ce6fb9 0a81e712325d94f766791e99f62e1bac477d6dfc753e67864ec3521c5ca4b210\\\\n\\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1514,6 +1541,7 @@
 				3C4ABD1C1B299B2500897DF9 /* MPABTestDesignerDeviceInfoRequestMessage.m in Sources */,
 				3C4ABD421B299B2500897DF9 /* MPSurveyNavigationController.m in Sources */,
 				3CBD0D441B401687001DFE17 /* InternalNotifView.m in Sources */,
+				3C1BB95A1B67DCBD009781D3 /* EmojiViewController.m in Sources */,
 				3CD6EE6F1B623943008FACC4 /* BranchUserCompletedActionRequest.m in Sources */,
 				3C4ABD401B299B2500897DF9 /* MPSurvey.m in Sources */,
 				3C4ABD121B299B2500897DF9 /* _MPTweakBindObserver.m in Sources */,
@@ -1541,6 +1569,7 @@
 				3C70CAB81B4C21BF006E71D7 /* BackwardTextField.m in Sources */,
 				3C2C4A411AFB5A3B00E0E4BF /* NBPhoneMetaDataGenerator.m in Sources */,
 				3CD6EE601B623943008FACC4 /* BranchCloseRequest.m in Sources */,
+				3C1BB9631B681CFC009781D3 /* UnlockEmojisViewController.m in Sources */,
 				3C4ABD2B1B299B2500897DF9 /* MPClassDescription.m in Sources */,
 				3CD6EE6A1B623943008FACC4 /* BranchOpenRequest.m in Sources */,
 				3C4ABD151B299B2500897DF9 /* Mixpanel.m in Sources */,
@@ -1589,6 +1618,7 @@
 				3C4ABD3D1B299B2500897DF9 /* MPPassThroughValueTransformer.m in Sources */,
 				3C2C4A401AFB5A3B00E0E4BF /* NBPhoneMetaData.m in Sources */,
 				3C62A5951B14E01B009CCD2A /* FriendTableViewCell.m in Sources */,
+				3C1BB9601B67E157009781D3 /* EmojiTableViewCell.m in Sources */,
 				3C081CFE1B1B54C70036D6B2 /* SCRecordSessionSegment.m in Sources */,
 				3CD6EE6E1B623943008FACC4 /* BranchShortUrlSyncRequest.m in Sources */,
 				3C4ABD361B299B2500897DF9 /* MPNSAttributedStringToNSDictionaryValueTransformer.m in Sources */,
@@ -1609,6 +1639,7 @@
 				3CD6EE651B623943008FACC4 /* BranchInstallRequest.m in Sources */,
 				3CBD0D411B3AE932001DFE17 /* AddFriendTableViewCell.m in Sources */,
 				3C081CF81B1B54C70036D6B2 /* SCPlayer.m in Sources */,
+				3C1BB9561B67DC84009781D3 /* PTEHorizontalTableView.m in Sources */,
 				3C4ABD491B299B2500897DF9 /* MPTypeDescription.m in Sources */,
 				3C2C4A2B1AFB592C00E0E4BF /* RMPhoneFormat.m in Sources */,
 				3C081D001B1B54C70036D6B2 /* SCSwipeableFilterView.m in Sources */,

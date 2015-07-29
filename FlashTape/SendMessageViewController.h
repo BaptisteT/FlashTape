@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import "EmojiViewController.h"
 #import "FlashTapeParentViewController.h"
 
 @protocol SendMessageVCDelegate;
 
 @class User;
 
-@interface SendMessageViewController : FlashTapeParentViewController <UITextViewDelegate>
+@interface SendMessageViewController : FlashTapeParentViewController <UITextViewDelegate, EmojiVCDelegate>
 
 @property (strong, nonatomic) User *messageRecipient;
 @property (strong, nonatomic) id<SendMessageVCDelegate> delegate;

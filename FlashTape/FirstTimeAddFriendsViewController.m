@@ -11,13 +11,13 @@
 #import "ApiManager.h"
 #import "DatastoreUtils.h"
 #import "User.h"
-#import "ColorUtils.h"
 
 #import "FirstTimeAddFriendsViewController.h"
+#import "VideoViewController.h"
 
 #import "AddressbookUtils.h"
 #import "MBProgressHUD.h"
-#import "VideoViewController.h"
+#import "ColorUtils.h"
 
 @interface FirstTimeAddFriendsViewController ()
 
@@ -81,18 +81,6 @@
     return UIStatusBarStyleLightContent; // Set status bar color to white
 }
 
-- (void)navigateToVideoController {
-    if (self.initialViewController) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_following"
-                                                            object:nil
-                                                          userInfo:nil];
-        // dismiss modally
-        [self.initialViewController dismissViewControllerAnimated:NO completion:nil];
-    } else {
-        [self performSegueWithIdentifier:@"Video From ABFlashers" sender:nil];
-    }
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"Video From ABFlashers"]) {
@@ -114,6 +102,18 @@
                                          [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
                                          [self navigateToVideoController];
                                      }];
+}
+
+- (void)navigateToVideoController {
+    if (self.initialViewController) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"retrieve_following"
+                                                            object:nil
+                                                          userInfo:nil];
+        // dismiss modally
+        [self.initialViewController dismissViewControllerAnimated:NO completion:nil];
+    } else {
+        [self performSegueWithIdentifier:@"Video From ABFlashers" sender:nil];
+    }
 }
 
 // ----------------------------------------------------------
@@ -146,7 +146,7 @@
             cell.delegate = self;
         }
         ABContact *contact = (ABContact *)self.abContactArray[indexPath.row];
-        [cell initWithName:self.contactDictionnary[contact.number] contact:contact indexPath:indexPath];
+        [cell initWithName:self.contactDictionnary[contact.number] contact:contact indexPath:indexPath selected:NO];
         return cell;
     }
 }
@@ -194,7 +194,7 @@
 // ----------------------------------------------------------
 #pragma mark InviteContactTVC delegate
 // ----------------------------------------------------------
-- (void)inviteUser:(ABContact *)contact
+- (void)inviteContact:(ABContact *)contact
 {
     NSString *name = self.contactDictionnary[contact.number];
     NSString *number = contact.number;
@@ -220,6 +220,9 @@
     }
 }
 
+- (void)removeContact:(ABContact *)contact {
+    // should not happen
+}
 
 // --------------------------------------------
 #pragma mark - Background Color Cycle

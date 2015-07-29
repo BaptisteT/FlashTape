@@ -38,6 +38,8 @@
 
 + (void)saveAddressbookName:(NSString *)abName;
 
++ (void)unlockEmoji;
+
 // --------------------------------------------
 #pragma mark - Follow
 // --------------------------------------------

@@ -42,12 +42,15 @@
 #define EVENT_ALLOW_CONTACT_SKIPPED @"allow_contact.skipped"
 #define EVENT_CONTACT_ALLOWED @"contact.allowed"
 #define EVENT_CONTACT_DENIED @"contact.denied"
+#define EVENT_EMOJI_INVITE_SENT @"emoji.invite.sent"
+#define EVENT_EMOJI_INVITE_CANCELED @"emoji.invite.canceled"
 
 #define PROPERTY_ALLOW_CONTACT @"contact.allowed"
 #define PROPERTY_ALLOW_NOTIF @"notif.allowed"
 #define PROPERTY_ALLOW_MICRO @"micro.allowed"
 #define PROPERTY_ALLOW_CAMERA @"camera.allowed"
 #define PROPERTY_FRIENDS_COUNT @"friends.count"
+#define PROPERTY_EMOJI_UNLOCKED @"emoji.unlocked"
 
 
 @interface TrackingUtils : NSObject

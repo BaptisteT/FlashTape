@@ -186,7 +186,7 @@
             cell.delegate = self;
         }
         ABContact *contact = (ABContact *)self.autocompleteAbContactArray[indexPath.row];
-        [cell initWithName:self.addressBookDictionnary[contact.number] contact:contact indexPath:indexPath];
+        [cell initWithName:self.addressBookDictionnary[contact.number] contact:contact indexPath:indexPath selected:NO];
         return cell;
     } else {
         AddUserTableViewCell *cell = (AddUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"AddUserTableViewCell"];
@@ -320,7 +320,7 @@
 #pragma mark - Invite user Cell Delegate
 // --------------------------------------------
 
-- (void)inviteUser:(ABContact *)contact {
+- (void)inviteContact:(ABContact *)contact {
     NSString *name = self.addressBookDictionnary[contact.number];
     NSString *number = contact.number;
     
@@ -347,5 +347,8 @@
     }
 }
 
+- (void)removeContact:(ABContact *)contact {
+    // should not happen
+}
 
 @end

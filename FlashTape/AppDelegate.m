@@ -77,13 +77,13 @@
 //        }
     }];
     
+    // Fabrick
+    [Fabric with:@[CrashlyticsKit]];
+    
     if (!DEBUG) {
         // Flurry
         [Flurry startSession:kProdFlurryToken];
         [Flurry setBackgroundSessionEnabled:NO];
-        
-        // Fabrick
-        [Fabric with:@[CrashlyticsKit]];
         
         // Mixpanel
         [Mixpanel sharedInstanceWithToken:kProdMixpanelToken launchOptions:launchOptions];

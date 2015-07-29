@@ -18,12 +18,14 @@
 
 - (void)initWithName:(NSString *)name
              contact:(ABContact *)contact
-           indexPath:(NSIndexPath *)indexPath;
+           indexPath:(NSIndexPath *)indexPath
+            selected:(BOOL)selected;
 
 @end
 
 @protocol InviteContactTVCDelegate
 
-- (void)inviteUser:(ABContact *)contact;
+- (void)inviteContact:(ABContact *)contact;
+- (void)removeContact:(ABContact *)contact;
 
 @end

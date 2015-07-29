@@ -178,3 +178,9 @@
 
 "close_button" = "Close";
 
+// Emojis
+"unlock_emojis_title" = "Unlock all emojis by inviting your friends";
+"invite_friends_button" = "Invite ❯";
+"invite_missing_button" = "Invite %lu more friends";
+
+

@@ -21,6 +21,7 @@
 
 #import "ABAccessViewController.h"
 #import "CaptionTextView.h"
+#import "EmojiViewController.h"
 #import "FriendsViewController.h"
 #import "InviteContactViewController.h"
 #import "VideoViewController.h"
@@ -78,6 +79,7 @@
 
 // Mood
 @property (weak, nonatomic) IBOutlet UIButton *moodButton;
+@property (strong, nonatomic) EmojiViewController *emojiController;
 @property (strong, nonatomic) CaptionTextView *moodTextView;
 @property (weak, nonatomic) IBOutlet UIView *emojiView;
 @property (weak, nonatomic) IBOutlet UIView *moodContainerView;
@@ -124,7 +126,6 @@
     int _metadataColorIndex;
     NSDate *_longPressStartDate;
     BOOL _createTutoAdminMessages;
-    BOOL _emojiViewInitialized;
 }
 
 // --------------------------------------------
@@ -140,7 +141,6 @@
     _longPressRunning = NO;
     _recordingRunning = NO;
     _cancelRecording = NO;
-    _emojiViewInitialized = NO;
     _metadataColorIndex = 0;
     self.isSendingCount = 0;
     self.unreadVideoCount = 0;
@@ -430,6 +430,9 @@
     } else if ([segueName isEqualToString: @"Invite From Video"]) {
         ((InviteContactViewController *) [segue destinationViewController]).contactArray = sender;
         ((InviteContactViewController *) [segue destinationViewController]).colorArray = self.metadataColorArray;
+    } else if ([segueName isEqualToString: @"Emoji From Video"]) {
+        self.emojiController = (EmojiViewController *) [segue destinationViewController];
+        self.emojiController.delegate = self;
     }
 }
 
@@ -529,9 +532,6 @@
 
 - (IBAction)moodButtonClicked:(id)sender
 {
-    if (!_emojiViewInitialized)
-        [self initMoodView];
-
     // show
     [self showMoodView];
 
@@ -1294,42 +1294,10 @@
 // --------------------------------------------
 #pragma mark - Mood
 // --------------------------------------------
-- (void)initMoodView {
-    if (_emojiViewInitialized) {
-        return;
-    }
-    _emojiViewInitialized = YES;
-    
-    // Add emojis
-    CGFloat width = self.emojiView.frame.size.width;
-    CGFloat height = self.emojiView.frame.size.height;
-    
-    // assumption : horizontal margin = 1/3 of side
-    NSInteger numberOfColumns = 4;
-    CGFloat buttonSize = 3. / (4. * numberOfColumns + 1.) * width;
-    CGFloat horizontalMargin = 1. / 3. * buttonSize;
-    
-    NSInteger numberOfRows = floor(height / (buttonSize * 4. / 3.));
-    CGFloat verticalMargin = (height - numberOfRows * buttonSize) / (numberOfRows + 1.);
-    
-    for (int row = 0; row < numberOfRows; row ++) {
-        for (int column = 0; column < numberOfColumns; column ++) {
-            CGRect frame = CGRectMake(horizontalMargin + column * (buttonSize + horizontalMargin), verticalMargin + row * (verticalMargin + buttonSize), buttonSize, buttonSize);
-            UIButton *button = [[UIButton alloc] initWithFrame:frame];
-            [button setTitle:getEmojiAtIndex(row + column * numberOfRows) forState:UIControlStateNormal];
-            button.titleLabel.numberOfLines = 1;
-            button.titleLabel.font = [UIFont systemFontOfSize:100];
-            button.titleLabel.adjustsFontSizeToFitWidth = YES;
-            [button.titleLabel setTextAlignment: NSTextAlignmentCenter];
-            [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [self.emojiView addSubview:button];
-        }
-    }
-}
 
-- (void)emojiClicked:(UIButton *)sender {
+- (void)emojiClicked:(NSString *)emoji {
     self.moodTextView.transform = CGAffineTransformIdentity;
-    self.moodTextView.text = sender.titleLabel.text;
+    self.moodTextView.text = emoji;
     self.moodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:250.0];
     [self textViewDidChange:self.moodTextView];
     self.moodTextView.center = self.view.center;
@@ -1339,6 +1307,7 @@
 // Show mood
 - (void)showMoodView
 {
+    [self.emojiController reloadEmojis];
     [self hideUIElementOnCamera:YES];
     self.moodContainerView.hidden = NO;
     if (self.emojiView.hidden) {

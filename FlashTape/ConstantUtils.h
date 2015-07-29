@@ -77,7 +77,13 @@ static float const kInternalNotifDuration = 3;
 static NSInteger const kInternalNotifHeight = 60;
 static float const kNotifAnimationDuration = 0.5;
 
+// Emoji
+static NSInteger const kNumberOfInviteToUnlockEmojis = 5;
+static NSInteger const kNumberOfEmojisByColumn = 6;
+static NSInteger const kNumberOfColumns = 4;
 NSString * getEmojiAtIndex(NSInteger index);
+NSInteger emojiArrayCount();
+NSArray * getEmojiAtRange(NSRange range);
 BOOL belongsToEmojiArray(NSString *emoji) ;
 
 // Invite

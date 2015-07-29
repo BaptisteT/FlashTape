@@ -154,6 +154,17 @@
     [currentUser saveInBackground];
 }
 
++ (void)unlockEmoji
+{
+    User *currentUser = [User currentUser];
+    currentUser.emojiUnlocked = true;
+    [currentUser saveInBackgroundWithBlock:^(BOOL result, NSError *error) {
+        if (result) {
+            [TrackingUtils setPeopleProperties:@{PROPERTY_EMOJI_UNLOCKED: [NSNumber numberWithBool:YES]}];
+        }
+    }];
+}
+
 
 // --------------------------------------------
 #pragma mark - Follow

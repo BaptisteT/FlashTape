@@ -68,6 +68,13 @@
     self.messagesSentDictionnary = [NSMutableDictionary new];
     self.followerRelations = [NSMutableArray new];
     
+    // Labels
+    [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
+    self.inviteButton.titleLabel.numberOfLines = 1;
+    self.inviteButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.inviteButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
+    self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
+    
     // Notif
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(retrieveUnreadMessagesLocally)
@@ -114,13 +121,6 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
     self.sendMessageController = [storyboard instantiateViewControllerWithIdentifier:@"SendMessageController"];
     self.sendMessageController.delegate = self;
-    
-    // Labels
-    self.inviteButton.titleLabel.numberOfLines = 1;
-    self.inviteButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    self.inviteButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
-    [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
-    self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
