@@ -1314,6 +1314,7 @@
 // Show mood
 - (void)showMoodView
 {
+    [self.emojiController reloadEmojis];
     [self hideUIElementOnCamera:YES];
     self.moodContainerView.hidden = NO;
     if (self.emojiView.hidden) {
