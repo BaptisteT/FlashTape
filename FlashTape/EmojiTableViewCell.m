@@ -27,33 +27,38 @@
 
 - (void)initWithEmojis:(NSArray *)emojis isUnlockRow:(BOOL)flag
 {
-    if (!emojis || emojis.count < kNumberOfEmojisByColumn) {
+    if (!emojis) {
         return;
     }
     self.backgroundColor = [UIColor clearColor];
     self.contentView.backgroundColor = [ UIColor clearColor];
     
-    self.buttons = [NSArray arrayWithObjects:self.emojiButton1,self.emojiButton2,self.emojiButton3,self.emojiButton4,self.emojiButton5,self.emojiButton6,nil];
+    if (!self.buttons || self.buttons.count != kNumberOfEmojisByColumn) {
+        self.buttons = [NSArray arrayWithObjects:self.emojiButton1,self.emojiButton2,self.emojiButton3,self.emojiButton4,self.emojiButton5,self.emojiButton6,nil];
+    }
    
     for (UIButton *button in self.buttons) {
+        button.backgroundColor = [UIColor clearColor];
         button.titleLabel.numberOfLines = 1;
-        button.titleLabel.font = [UIFont systemFontOfSize:120.0];
-        button.titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-        button.titleLabel.adjustsFontSizeToFitWidth = YES;
+        button.transform = CGAffineTransformMakeRotation(M_PI/2);
         if (flag && button == self.buttons.firstObject) {
             [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
             [button setTitle:@"" forState:UIControlStateNormal];
             [button setImage:[UIImage imageNamed:@"Add_icon"] forState:UIControlStateNormal];
         } else {
-            NSString *emoji = emojis[[self.buttons indexOfObject:button] - (flag ? 1 : 0)];
-            [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
+            NSString *emoji = emojis[MAX(0,emojis.count - 1 - [self.buttons indexOfObject:button] + (flag ? 1 : 0))];
             [button setTitle:emoji forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
             [button setImage:nil forState:UIControlStateNormal];
         }
-        button.transform = CGAffineTransformMakeRotation(M_PI/2);
+        button.titleLabel.lineBreakMode = NSLineBreakByClipping;
+        button.titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+        button.titleLabel.font = [UIFont systemFontOfSize:120.];
+        button.titleLabel.adjustsFontSizeToFitWidth = YES;
     }
     
 }
+
 
 - (IBAction)emojiClicked:(id)sender {
     [self.delegate emojiClicked:((UIButton *)sender).titleLabel.text];

@@ -82,7 +82,7 @@
                                      andChannel:@"twilio.invite_pop_up"
                                      andFeature:BRANCH_FEATURE_TAG_SHARE
                                        andStage:nil
-                                       andAlias:@"Flashtape"
+                                       andAlias:nil
                                     andCallback:^(NSString *url, NSError *error) {
         
         [ApiManager sendInviteTo:contact

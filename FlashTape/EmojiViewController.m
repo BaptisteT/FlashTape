@@ -23,6 +23,11 @@
 #pragma mark - Life cycle
 // --------------------------------------------
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self reloadEmojis];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self reloadEmojis];

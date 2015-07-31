@@ -328,7 +328,7 @@
                                      andChannel:@"twilio.add_friends_screen"
                                      andFeature:BRANCH_FEATURE_TAG_SHARE
                                        andStage:nil
-                                       andAlias:@"Flashtape"
+                                       andAlias:nil
                                     andCallback:^(NSString *url, NSError *error) {
         
         [ApiManager sendInviteTo:contact

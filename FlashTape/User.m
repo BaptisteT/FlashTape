@@ -72,6 +72,10 @@
     return NO;
 }
 
+- (BOOL)isDirtyForKey:(NSString * __nonnull)key {
+    return [super isDirtyForKey:key];
+}
+
 - (BOOL)isDirty {
     FlashLog(FLASHUSERLOG,@"User isDirty");
     return [super isDirty];

@@ -411,6 +411,10 @@
 
 - (void)didBecomeActiveCallback {
     self.cameraBlackOverlay.hidden = YES;
+    
+    if (!self.recorder.captureSession.isRunning) {
+        [self.recorder startRunning];
+    }
 }
 
 - (void)willBecomeActiveCallback {

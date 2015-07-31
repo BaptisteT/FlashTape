@@ -90,6 +90,8 @@
     [DatastoreUtils getVideoLocallyFromUsers:@[[User currentUser]]
                                      success:^(NSArray *videos) {
                                          self.currentUserPosts = [NSMutableArray arrayWithArray:videos];
+                                         
+                                         // todo bt put this in api manager
                                          [VideoPost fetchAllInBackground:self.currentUserPosts block:^(NSArray *objects, NSError *error) {
                                              [self.friendsTableView reloadData];
                                          }];
@@ -727,9 +729,9 @@
                                      andChannel:@"SMS.friends_screen"
                                      andFeature:BRANCH_FEATURE_TAG_SHARE
                                        andStage:nil
-                                       andAlias:@"Flashtape"
+                                       andAlias:nil
                                     andCallback:^(NSString *url, NSError *error) {
-        [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),url]];
+                                        [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),[User currentUser].flashUsername,url ? url : kFlashTapeInviteLink]];
         [self presentViewController:messageController animated:YES completion:nil];
     }];
    

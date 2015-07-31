@@ -80,16 +80,16 @@
         }
         
         
-        [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId}
+        [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId, @"date": [NSDate date]}
                                          andChannel:@"SMS.unlock_emojis"
                                          andFeature:BRANCH_FEATURE_TAG_SHARE
                                            andStage:nil
-                                           andAlias:@"Flashtape"
+                                           andAlias:nil
                                         andCallback:^(NSString *url, NSError *error)
          {
             MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
             messageController.messageComposeDelegate = self;
-            [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),url]];
+             [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),[User currentUser].flashUsername,url ? url : kFlashTapeInviteLink]];
             
             NSMutableArray *numbers = [NSMutableArray new];
             for (ABContact *contact in self.contactsToInviteArray) {

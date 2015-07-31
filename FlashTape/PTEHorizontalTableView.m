@@ -36,7 +36,7 @@
     
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.autoresizingMask	= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    _tableView.autoresizingMask	= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:_tableView];
 }
 

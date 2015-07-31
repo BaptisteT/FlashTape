@@ -2023,34 +2023,28 @@
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="479"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <prototypes>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EmojiTableViewCell" id="Vt8-zP-dmd" customClass="EmojiTableViewCell">
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EmojiTableViewCell" rowHeight="100" id="Vt8-zP-dmd" customClass="EmojiTableViewCell">
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Vt8-zP-dmd" id="jKl-Zu-RSU">
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8y5-ca-aVM">
-                                                            <rect key="frame" x="0.0" y="0.0" width="60" height="44"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="snx-Es-9Jf">
-                                                            <rect key="frame" x="60" y="7" width="30" height="30"/>
+                                                            <rect key="frame" x="8.5" y="5" width="90" height="90"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="snx-Es-9Jf" secondAttribute="height" multiplier="1:1" id="dvm-bR-gGF"/>
                                                             </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                         </button>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ClX-z5-muj">
-                                                            <rect key="frame" x="90" y="0.0" width="60" height="44"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BI2-vq-epz">
-                                                            <rect key="frame" x="150" y="7" width="30" height="30"/>
+                                                            <rect key="frame" x="107" y="5" width="90" height="90"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="BI2-vq-epz" secondAttribute="height" multiplier="1:1" id="3OU-Ex-Dfw"/>
                                                             </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
@@ -2058,63 +2052,75 @@
                                                                 <action selector="emojiClicked:" destination="Vt8-zP-dmd" eventType="touchUpInside" id="NGA-p9-uMx"/>
                                                             </connections>
                                                         </button>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l4h-hb-2jl">
-                                                            <rect key="frame" x="180" y="0.0" width="60" height="44"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VFd-5o-iLb">
-                                                            <rect key="frame" x="240" y="7" width="30" height="30"/>
+                                                            <rect key="frame" x="205.5" y="5" width="90" height="90"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="VFd-5o-iLb" secondAttribute="height" multiplier="1:1" id="8xh-lH-Rdu"/>
                                                             </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                         </button>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aUc-2t-rAf">
-                                                            <rect key="frame" x="270" y="0.0" width="60" height="44"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="nk7-Jx-2NR"/>
-                                                            </constraints>
-                                                        </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQg-sT-Xcw">
-                                                            <rect key="frame" x="330" y="7" width="30" height="30"/>
+                                                            <rect key="frame" x="304.5" y="5" width="90" height="90"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="xQg-sT-Xcw" secondAttribute="height" multiplier="1:1" id="4w6-vb-M6p"/>
                                                             </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                         </button>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mcr-B9-LC7">
-                                                            <rect key="frame" x="360" y="0.0" width="60" height="44"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="djH-aN-Rjt">
-                                                            <rect key="frame" x="420" y="7" width="30" height="30"/>
+                                                            <rect key="frame" x="403" y="5" width="90" height="90"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="djH-aN-Rjt" secondAttribute="height" multiplier="1:1" id="orv-ye-Q2z"/>
                                                             </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                         </button>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3MU-4n-wPd">
-                                                            <rect key="frame" x="450" y="0.0" width="60" height="44"/>
+                                                            <rect key="frame" x="493" y="0.0" width="8.5" height="100"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YkC-pe-9H6">
-                                                            <rect key="frame" x="510" y="7" width="30" height="30"/>
+                                                            <rect key="frame" x="501.5" y="5" width="90" height="90"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="YkC-pe-9H6" secondAttribute="height" multiplier="1:1" id="2kD-Fi-jjC"/>
                                                             </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                         </button>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lic-QP-oMU">
-                                                            <rect key="frame" x="540" y="0.0" width="60" height="44"/>
+                                                            <rect key="frame" x="591.5" y="0.0" width="8.5" height="100"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8y5-ca-aVM">
+                                                            <rect key="frame" x="0.0" y="0.0" width="8.5" height="100"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ClX-z5-muj">
+                                                            <rect key="frame" x="98.5" y="0.0" width="8.5" height="100"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l4h-hb-2jl">
+                                                            <rect key="frame" x="197" y="0.0" width="8.5" height="100"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aUc-2t-rAf">
+                                                            <rect key="frame" x="295.5" y="0.0" width="9" height="100"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="nk7-Jx-2NR"/>
+                                                            </constraints>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mcr-B9-LC7">
+                                                            <rect key="frame" x="394.5" y="0.0" width="8.5" height="100"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         </view>
                                                     </subviews>
@@ -2183,7 +2189,7 @@
                                                         <constraint firstItem="BI2-vq-epz" firstAttribute="leading" secondItem="ClX-z5-muj" secondAttribute="trailing" id="ue1-Dc-8l7"/>
                                                         <constraint firstItem="8y5-ca-aVM" firstAttribute="top" secondItem="jKl-Zu-RSU" secondAttribute="top" id="yHj-Pn-hYL"/>
                                                         <constraint firstItem="YkC-pe-9H6" firstAttribute="width" secondItem="snx-Es-9Jf" secondAttribute="width" id="z1N-zQ-Ca8"/>
-                                                        <constraint firstItem="BI2-vq-epz" firstAttribute="top" secondItem="jKl-Zu-RSU" secondAttribute="top" constant="7" id="zxH-eG-Zk1"/>
+                                                        <constraint firstItem="BI2-vq-epz" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jKl-Zu-RSU" secondAttribute="top" constant="5" id="zxH-eG-Zk1"/>
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
