@@ -72,5 +72,9 @@
     return NO;
 }
 
+- (BOOL)isDirty {
+    FlashLog(FLASHUSERLOG,@"User isDirty");
+    return [super isDirty];
+}
 
 @end

@@ -13,6 +13,7 @@
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchRecognizer;
 @property (nonatomic, strong) UIRotationGestureRecognizer *rotationRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer *panningRecognizer;
+//@property (nonatomic, strong) UILongPressGestureRecognizer *longPressRecogniser;
 @property (nonatomic, strong) NSMutableSet *activeRecognizers;
 @property(nonatomic) CGAffineTransform referenceTransform;
 
@@ -32,13 +33,17 @@
          self.rotationRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
          self.panningRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanningGesture:)];
          
+//         self.longPressRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+         
          [self addGestureRecognizer:self.pinchRecognizer];
          [self addGestureRecognizer:self.rotationRecognizer];
          [self addGestureRecognizer:self.panningRecognizer];
+//         [self addGestureRecognizer:self.longPressRecogniser];
          
          self.pinchRecognizer.delegate = self;
          self.rotationRecognizer.delegate = self;
          self.panningRecognizer.delegate = self;
+//         self.longPressRecogniser.delegate = self;
          self.activeRecognizers = [NSMutableSet set];
          
          // User interaction
@@ -109,6 +114,7 @@
     recognizer.view.center = CGPointMake(initialCenter.x + translation.x,
                                          initialCenter.y + translation.y);
 }
+
 
 - (CGAffineTransform)applyRecognizer:(UIGestureRecognizer *)recognizer toTransform:(CGAffineTransform)transform
 {

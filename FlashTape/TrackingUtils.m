@@ -17,11 +17,14 @@
 {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [self setPeopleProperties:@{@"name": user.flashUsername ? user.flashUsername : @"", @"number": user.username, @"score": [NSNumber numberWithInteger:user.score]}];
-    [mixpanel identify:user.objectId];
     
     if (flag) {
+        [mixpanel createAlias:user.objectId forDistinctID:mixpanel.distinctId];
+        [mixpanel identify:mixpanel.distinctId];
         [TrackingUtils trackEvent:EVENT_USER_SIGNUP properties:nil];
         [TrackingUtils setPeopleProperties:@{@"signup.date": [NSDate date]}];
+    } else {
+        [mixpanel identify:user.objectId];
     }
 }
 

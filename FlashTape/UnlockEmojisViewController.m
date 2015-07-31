@@ -89,7 +89,7 @@
          {
             MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
             messageController.messageComposeDelegate = self;
-            [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),kFlashTapeInviteLink]];
+            [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),url]];
             
             NSMutableArray *numbers = [NSMutableArray new];
             for (ABContact *contact in self.contactsToInviteArray) {

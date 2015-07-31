@@ -84,6 +84,7 @@
     
     if (!DEBUG) {
         // Flurry
+        [Flurry setCrashReportingEnabled:NO];
         [Flurry startSession:kProdFlurryToken];
         [Flurry setBackgroundSessionEnabled:NO];
         
@@ -166,7 +167,7 @@
     currentInstallation[@"user"] = [PFUser currentUser];
     
     currentInstallation[@"iosSettings"] = [NSNumber numberWithInteger:[NotifUtils getUserNotificationSettings]];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveEventually];
     [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_NOTIF: currentInstallation[@"iosSettings"]}];
     
     // This sends the deviceToken to Mixpanel

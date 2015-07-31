@@ -8,11 +8,18 @@
 
 #import "EmojiTableViewCell.h"
 
+#import "ConstantUtils.h"
 #import "GeneralUtils.h"
 
 @interface EmojiTableViewCell()
 
-@property (strong, nonatomic) NSMutableArray *buttons;
+@property (strong, nonatomic) NSArray *buttons;
+@property (weak, nonatomic) IBOutlet UIButton *emojiButton1;
+@property (weak, nonatomic) IBOutlet UIButton *emojiButton2;
+@property (weak, nonatomic) IBOutlet UIButton *emojiButton3;
+@property (weak, nonatomic) IBOutlet UIButton *emojiButton4;
+@property (weak, nonatomic) IBOutlet UIButton *emojiButton5;
+@property (weak, nonatomic) IBOutlet UIButton *emojiButton6;
 
 @end
 
@@ -20,75 +27,36 @@
 
 - (void)initWithEmojis:(NSArray *)emojis isUnlockRow:(BOOL)flag
 {
-    self.backgroundColor = [UIColor clearColor];
-    NSInteger numberOfRows = emojis.count + (flag ? 1 : 0);
-    
-    if (!self.buttons) {
-        self.buttons = [NSMutableArray new];
-    }
-    
-    CGFloat width = self.frame.size.width;
-    CGFloat height = self.frame.size.height;
-    
-    CGFloat marginFactor = [GeneralUtils isiPhone4] ? 4 : 3;
-    CGFloat marginRatio = 1. / marginFactor;
-    CGFloat buttonSize = width / ((marginFactor + 1) * numberOfRows * marginRatio + marginRatio);
-    
-    CGFloat verticalMargin = marginRatio * buttonSize;
-    CGFloat horizontalMargin = (height - buttonSize) / 2.;
-    
-    // Case where buttons exist
-    if (self.buttons.count == numberOfRows) {
-        for (int row = 0; row < numberOfRows; row ++) {
-            CGRect frame = CGRectMake(verticalMargin + row * (verticalMargin + buttonSize), horizontalMargin, buttonSize, buttonSize);
-            UIButton *button = (UIButton *)self.buttons[row];
-            [button setFrame:frame];
-            if (flag && row == 0) {
-                [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
-                [button setTitle:@"" forState:UIControlStateNormal];
-                [button setImage:[UIImage imageNamed:@"Add_icon"] forState:UIControlStateNormal];
-            } else {
-                NSString *emoji = emojis[row - (flag ? 1 : 0)];
-                [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
-                [button setTitle:emoji forState:UIControlStateNormal];
-                [button setImage:nil forState:UIControlStateNormal];
-            }
-            button.titleLabel.font = [UIFont systemFontOfSize:120];
-        }
+    if (!emojis || emojis.count < kNumberOfEmojisByColumn) {
         return;
     }
-
-    // Clean
-    for (UIView *view in self.buttons) {
-        [view removeFromSuperview];
-    }
-    [self.buttons removeAllObjects];
+    self.backgroundColor = [UIColor clearColor];
+    self.contentView.backgroundColor = [ UIColor clearColor];
     
-    for (int row = 0; row < numberOfRows; row ++) {
-        CGRect frame = CGRectMake(verticalMargin + row * (verticalMargin + buttonSize), horizontalMargin, buttonSize, buttonSize);
-        UIButton *button = [[UIButton alloc] initWithFrame:frame];
+    self.buttons = [NSArray arrayWithObjects:self.emojiButton1,self.emojiButton2,self.emojiButton3,self.emojiButton4,self.emojiButton5,self.emojiButton6,nil];
+   
+    for (UIButton *button in self.buttons) {
         button.titleLabel.numberOfLines = 1;
         button.titleLabel.font = [UIFont systemFontOfSize:120.0];
         button.titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
         button.titleLabel.adjustsFontSizeToFitWidth = YES;
-        if (flag && row == 0) {
+        if (flag && button == self.buttons.firstObject) {
             [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
             [button setTitle:@"" forState:UIControlStateNormal];
             [button setImage:[UIImage imageNamed:@"Add_icon"] forState:UIControlStateNormal];
         } else {
-            NSString *emoji = emojis[row - (flag ? 1 : 0)];
+            NSString *emoji = emojis[[self.buttons indexOfObject:button] - (flag ? 1 : 0)];
             [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
             [button setTitle:emoji forState:UIControlStateNormal];
             [button setImage:nil forState:UIControlStateNormal];
         }
         button.transform = CGAffineTransformMakeRotation(M_PI/2);
-        [self addSubview:button];
-        [self.buttons addObject:button];
     }
+    
 }
 
-- (void)emojiClicked:(UIButton *)sender {
-    [self.delegate emojiClicked:sender.titleLabel.text];
+- (IBAction)emojiClicked:(id)sender {
+    [self.delegate emojiClicked:((UIButton *)sender).titleLabel.text];
 }
 
 - (void)unlockClicked {

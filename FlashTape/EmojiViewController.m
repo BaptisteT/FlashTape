@@ -23,7 +23,6 @@
 #pragma mark - Life cycle
 // --------------------------------------------
 
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self reloadEmojis];

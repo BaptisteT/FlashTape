@@ -31,7 +31,7 @@
 - (void)setTableView:(UITableView *)tableView
 {
     _tableView = tableView;
-    
+    tableView.backgroundColor = [UIColor clearColor];
     [self refreshOrientation];
     
     _tableView.delegate = self;
@@ -195,13 +195,15 @@
     UITableViewCell * cell = [self.delegate tableView:self cellForRowAtIndexPath:indexPath];
     
     // Rotate if needed
-    if (CGAffineTransformEqualToTransform(cell.contentView.transform, CGAffineTransformIdentity))
-    {
-        int xOrigin	= (cell.bounds.size.width - cell.bounds.size.height) / 2.0;
-        int yOrigin	= (cell.bounds.size.height - cell.bounds.size.width) / 2.0;
-        cell.contentView.frame = CGRectMake(xOrigin, yOrigin, cell.bounds.size.height, cell.bounds.size.width);
-        cell.contentView.transform = CGAffineTransformMakeRotation(M_PI/2.0);
-    }
+    // todo BT
+    // ever remove PTE or change emoji TVC
+//    if (CGAffineTransformEqualToTransform(cell.contentView.transform, CGAffineTransformIdentity))
+//    {
+//        int xOrigin	= (cell.bounds.size.width - cell.bounds.size.height) / 2.0;
+//        int yOrigin	= (cell.bounds.size.height - cell.bounds.size.width) / 2.0;
+//        cell.contentView.frame = CGRectMake(xOrigin, yOrigin, cell.bounds.size.height, cell.bounds.size.width);
+//        cell.contentView.transform = CGAffineTransformMakeRotation(M_PI/2.0);
+//    }
     return cell;
 }
 

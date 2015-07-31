@@ -182,6 +182,9 @@
 		3C5F98AA1AED168F0098F70F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A91AED168F0098F70F /* Social.framework */; };
 		3C5F98AD1AED1A930098F70F /* ApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98AC1AED1A930098F70F /* ApiManager.m */; };
 		3C5F98C51AEE7D8D0098F70F /* GeneralUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */; };
+		3C61A95F1B6ACCFC00EA90A6 /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C61A9571B6ACCFC00EA90A6 /* ALView+PureLayout.m */; };
+		3C61A9601B6ACCFC00EA90A6 /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C61A9591B6ACCFC00EA90A6 /* NSArray+PureLayout.m */; };
+		3C61A9611B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C61A95B1B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.m */; };
 		3C62A5951B14E01B009CCD2A /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */; };
 		3C70CAAC1B4690F0006E71D7 /* tuto_video_1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAA81B4690F0006E71D7 /* tuto_video_1.mp4 */; };
 		3C70CAAE1B4690F0006E71D7 /* tuto_video_3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAAA1B4690F0006E71D7 /* tuto_video_3.mp4 */; };
@@ -566,6 +569,15 @@
 		3C5F98AC1AED1A930098F70F /* ApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiManager.m; sourceTree = "<group>"; };
 		3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralUtils.h; sourceTree = "<group>"; };
 		3C5F98C41AEE7D8D0098F70F /* GeneralUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralUtils.m; sourceTree = "<group>"; };
+		3C61A9561B6ACCFC00EA90A6 /* ALView+PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALView+PureLayout.h"; sourceTree = "<group>"; };
+		3C61A9571B6ACCFC00EA90A6 /* ALView+PureLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALView+PureLayout.m"; sourceTree = "<group>"; };
+		3C61A9581B6ACCFC00EA90A6 /* NSArray+PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PureLayout.h"; sourceTree = "<group>"; };
+		3C61A9591B6ACCFC00EA90A6 /* NSArray+PureLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PureLayout.m"; sourceTree = "<group>"; };
+		3C61A95A1B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLayoutConstraint+PureLayout.h"; sourceTree = "<group>"; };
+		3C61A95B1B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+PureLayout.m"; sourceTree = "<group>"; };
+		3C61A95C1B6ACCFC00EA90A6 /* PureLayout+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PureLayout+Internal.h"; sourceTree = "<group>"; };
+		3C61A95D1B6ACCFC00EA90A6 /* PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayout.h; sourceTree = "<group>"; };
+		3C61A95E1B6ACCFC00EA90A6 /* PureLayoutDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayoutDefines.h; sourceTree = "<group>"; };
 		3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTableViewCell.h; sourceTree = "<group>"; };
 		3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 		3C70CAA81B4690F0006E71D7 /* tuto_video_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_1.mp4; sourceTree = "<group>"; };
@@ -1136,6 +1148,7 @@
 		3C5F98141AEC343B0098F70F /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				3C61A9551B6ACCFC00EA90A6 /* PureLayout */,
 				3C1BB9571B67DC8C009781D3 /* PTEHorizontalTableView */,
 				3CD6EE121B623943008FACC4 /* Branch-SDK */,
 				3C4ABC941B299B2400897DF9 /* Mixpanel */,
@@ -1245,6 +1258,22 @@
 				3C5F982A1AECDFD30098F70F /* GLKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3C61A9551B6ACCFC00EA90A6 /* PureLayout */ = {
+			isa = PBXGroup;
+			children = (
+				3C61A9561B6ACCFC00EA90A6 /* ALView+PureLayout.h */,
+				3C61A9571B6ACCFC00EA90A6 /* ALView+PureLayout.m */,
+				3C61A9581B6ACCFC00EA90A6 /* NSArray+PureLayout.h */,
+				3C61A9591B6ACCFC00EA90A6 /* NSArray+PureLayout.m */,
+				3C61A95A1B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.h */,
+				3C61A95B1B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.m */,
+				3C61A95C1B6ACCFC00EA90A6 /* PureLayout+Internal.h */,
+				3C61A95D1B6ACCFC00EA90A6 /* PureLayout.h */,
+				3C61A95E1B6ACCFC00EA90A6 /* PureLayoutDefines.h */,
+			);
+			path = PureLayout;
 			sourceTree = "<group>";
 		};
 		3CBD0D471B402EB8001DFE17 /* Signup / Onboarding */ = {
@@ -1388,7 +1417,7 @@
 				TargetAttributes = {
 					3C5F97C91AEBB1F30098F70F = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 86N86JY2JG;
+						DevelopmentTeam = WGTUBR2K4F;
 					};
 				};
 			};
@@ -1504,6 +1533,7 @@
 				3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */,
 				3C2C4A721AFE231F00E0E4BF /* DTTimePeriodChain.m in Sources */,
 				3C2C4A711AFE231F00E0E4BF /* DTTimePeriod.m in Sources */,
+				3C61A95F1B6ACCFC00EA90A6 /* ALView+PureLayout.m in Sources */,
 				3C4ABD171B299B2500897DF9 /* MPABTestDesignerChangeRequestMessage.m in Sources */,
 				3C081CF31B1B54C70036D6B2 /* SCFilterAnimation.m in Sources */,
 				3C081CF41B1B54C70036D6B2 /* SCFilterSelectorView.m in Sources */,
@@ -1593,6 +1623,7 @@
 				3CD6D0F91B1CA00000E923D2 /* Message.m in Sources */,
 				3C4ABD521B299B2500897DF9 /* NSData+MPBase64.m in Sources */,
 				3C0AC2911B231A5F0056C59C /* AddFriendsViewController.m in Sources */,
+				3C61A9601B6ACCFC00EA90A6 /* NSArray+PureLayout.m in Sources */,
 				3C4ABD1E1B299B2500897DF9 /* MPABTestDesignerDisconnectMessage.m in Sources */,
 				3CD6EE5D1B623943008FACC4 /* Branch.m in Sources */,
 				3CD6EE5A1B623943008FACC4 /* BNCServerRequestQueue.m in Sources */,
@@ -1650,6 +1681,7 @@
 				3C2C4A2B1AFB592C00E0E4BF /* RMPhoneFormat.m in Sources */,
 				3C081D001B1B54C70036D6B2 /* SCSwipeableFilterView.m in Sources */,
 				3C4ABD371B299B2500897DF9 /* MPNSNumberToCGFloatValueTransformer.m in Sources */,
+				3C61A9611B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.m in Sources */,
 				3C2C4A821B036F7500E0E4BF /* FriendsViewController.m in Sources */,
 				3CD6EE641B623943008FACC4 /* BranchGetPromoCodeRequest.m in Sources */,
 				3C2C4A171AFA635800E0E4BF /* WelcomeViewController.m in Sources */,
@@ -1790,7 +1822,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

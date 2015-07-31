@@ -15,7 +15,6 @@
 
 @end
 
-
 // System
 static NSString * const kFlashTapeInviteLink = @"http://get.flashtape.co";
 static NSString * const kFlashTapeWebsiteLink = @"http://flashtape.co/";

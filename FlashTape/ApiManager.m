@@ -797,7 +797,7 @@
     PFObject *report = [PFObject objectWithClassName:@"Report"];
     report[@"reported"] = user;
     report[@"reporter"] = [User currentUser];
-    [report saveInBackground];
+    [report saveEventually];
 }
 
 @end

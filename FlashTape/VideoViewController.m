@@ -180,6 +180,8 @@
     // Mood
     self.moodContainerView.hidden = YES;
     self.moodTextView = [[CaptionTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
+    UILongPressGestureRecognizer *moodLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    [self.moodTextView addGestureRecognizer:moodLongPress];
     [self.cameraView insertSubview:self.moodTextView belowSubview:self.replayButton];
     self.moodTextView.text = @"";
     self.moodTextView.delegate = self;
