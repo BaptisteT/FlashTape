@@ -393,6 +393,7 @@
     [super viewDidLayoutSubviews];
     // Camera
     self.recorder.previewView = self.cameraView;
+    [self.emojiController viewDidLayoutSubviews];
 }
 
 - (void)willResignActive {
@@ -1313,7 +1314,6 @@
 // Show mood
 - (void)showMoodView
 {
-    [self.emojiController reloadEmojis];
     [self hideUIElementOnCamera:YES];
     self.moodContainerView.hidden = NO;
     if (self.emojiView.hidden) {
