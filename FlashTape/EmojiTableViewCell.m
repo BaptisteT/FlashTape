@@ -44,12 +44,14 @@
         if (flag && button == self.buttons.firstObject) {
             [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
             [button setTitle:@"" forState:UIControlStateNormal];
-            [button setImage:[UIImage imageNamed:@"Add_icon"] forState:UIControlStateNormal];
+            UIImage *image = [[UIImage imageNamed:@"unlock_icon"] imageWithAlignmentRectInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
+            [button setBackgroundImage:image forState:UIControlStateNormal];
         } else {
             NSString *emoji = emojis[MAX(0,emojis.count - 1 - [self.buttons indexOfObject:button] + (flag ? 1 : 0))];
             [button setTitle:emoji forState:UIControlStateNormal];
+            [button removeTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
             [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [button setImage:nil forState:UIControlStateNormal];
+            [button setBackgroundImage:nil forState:UIControlStateNormal];
         }
         button.titleLabel.lineBreakMode = NSLineBreakByClipping;
         button.titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
