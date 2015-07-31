@@ -79,6 +79,7 @@
             return;
         }
         
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
         [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId, @"date": [NSDate date]}
                                          andChannel:@"SMS.unlock_emojis"
@@ -96,7 +97,9 @@
                 [numbers addObject:contact.number];
             }
             [messageController setRecipients:numbers];
-            [self presentViewController:messageController animated:YES completion:nil];
+             [self presentViewController:messageController animated:YES completion:^() {
+                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+             }];
         }];
     }
 }

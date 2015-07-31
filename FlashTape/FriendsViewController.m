@@ -722,6 +722,8 @@
         [GeneralUtils showAlertMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
         return;
     }
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
     messageController.messageComposeDelegate = self;
     
@@ -731,8 +733,10 @@
                                        andStage:nil
                                        andAlias:nil
                                     andCallback:^(NSString *url, NSError *error) {
-                                        [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),[User currentUser].flashUsername,url ? url : kFlashTapeInviteLink]];
-        [self presentViewController:messageController animated:YES completion:nil];
+            [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),[User currentUser].flashUsername,url ? url : kFlashTapeInviteLink]];
+            [self presentViewController:messageController animated:YES completion:^() {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            }];
     }];
    
 }

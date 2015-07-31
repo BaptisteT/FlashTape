@@ -152,9 +152,12 @@ static int downloadingCount = 0;
             VideoPost *post1 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_1" ofType:@"mp4"]]];
             VideoPost *post2 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_2" ofType:@"mp4"]]];
             VideoPost *post3 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_3" ofType:@"mp4"]]];
-            VideoPost *post4 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_4" ofType:@"mp4"]]];
+            VideoPost *post4 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_4" ofType:@"mov"]]];
+            VideoPost *post5 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_5" ofType:@"mp4"]]];
+            VideoPost *post6 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_6" ofType:@"mov"]]];
+            VideoPost *post7 = [VideoPost createPostWithUser:(User *)user ressourceUrl:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"tuto_video_7" ofType:@"mp4"]]];
             if (successBlock) {
-                successBlock(@[post1,post2, post3, post4]);
+                successBlock(@[post1,post2, post3, post4, post5, post6, post7]);
             }
         } else {
             if (failureBlock) failureBlock(error);

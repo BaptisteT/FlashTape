@@ -49,6 +49,9 @@
     
     // Label
     self.ABExplanationLabel.numberOfLines = 0;
+    self.ABExplanationLabel.minimumScaleFactor = 0.1;
+    self.ABExplanationLabel.adjustsFontSizeToFitWidth = YES;
+    self.ABExplanationLabel.lineBreakMode = NSLineBreakByClipping;
     self.ABAccessContactLabel.lineHeight = 4.0f;
     self.ABAccessContactLabel.lineType = LineTypeDown;
     self.ABAccessContactLabel.text = NSLocalizedString(@"allow_contact_label", nil);

@@ -185,14 +185,17 @@
 		3C61A95F1B6ACCFC00EA90A6 /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C61A9571B6ACCFC00EA90A6 /* ALView+PureLayout.m */; };
 		3C61A9601B6ACCFC00EA90A6 /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C61A9591B6ACCFC00EA90A6 /* NSArray+PureLayout.m */; };
 		3C61A9611B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C61A95B1B6ACCFC00EA90A6 /* NSLayoutConstraint+PureLayout.m */; };
+		3C61A9651B6BB4A100EA90A6 /* tuto_video_4.mov in Resources */ = {isa = PBXBuildFile; fileRef = 3C61A9641B6BB4A100EA90A6 /* tuto_video_4.mov */; };
+		3C61A9671B6BB4C100EA90A6 /* tuto_video_6.mov in Resources */ = {isa = PBXBuildFile; fileRef = 3C61A9661B6BB4C100EA90A6 /* tuto_video_6.mov */; };
 		3C62A5951B14E01B009CCD2A /* FriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */; };
 		3C70CAAC1B4690F0006E71D7 /* tuto_video_1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAA81B4690F0006E71D7 /* tuto_video_1.mp4 */; };
-		3C70CAAE1B4690F0006E71D7 /* tuto_video_3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAAA1B4690F0006E71D7 /* tuto_video_3.mp4 */; };
-		3C70CAB31B46D1B7006E71D7 /* tuto_video_4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB21B46D1B7006E71D7 /* tuto_video_4.mp4 */; };
-		3C70CAB51B46D936006E71D7 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB41B46D936006E71D7 /* tuto_video_2.mp4 */; };
+		3C70CAAE1B4690F0006E71D7 /* tuto_video_7.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAAA1B4690F0006E71D7 /* tuto_video_7.mp4 */; };
+		3C70CAB31B46D1B7006E71D7 /* tuto_video_3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB21B46D1B7006E71D7 /* tuto_video_3.mp4 */; };
+		3C70CAB51B46D936006E71D7 /* tuto_video_5.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB41B46D936006E71D7 /* tuto_video_5.mp4 */; };
 		3C70CAB81B4C21BF006E71D7 /* BackwardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C70CAB71B4C21BF006E71D7 /* BackwardTextField.m */; };
 		3C7BF5261B15B84700E66537 /* VideoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */; };
 		3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5281B15D93700E66537 /* VideoUtils.m */; };
+		3C84544F1B6BB6C600B55E25 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */; };
 		3C95F21E1B678BD900A28A16 /* FacebookSDKStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3C95F2171B678BD900A28A16 /* FacebookSDKStrings.bundle */; };
 		3C95F21F1B678BD900A28A16 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2181B678BD900A28A16 /* FBAudienceNetwork.framework */; };
 		3C95F2201B678BD900A28A16 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2191B678BD900A28A16 /* FBSDKCoreKit.framework */; };
@@ -578,18 +581,21 @@
 		3C61A95C1B6ACCFC00EA90A6 /* PureLayout+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PureLayout+Internal.h"; sourceTree = "<group>"; };
 		3C61A95D1B6ACCFC00EA90A6 /* PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayout.h; sourceTree = "<group>"; };
 		3C61A95E1B6ACCFC00EA90A6 /* PureLayoutDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayoutDefines.h; sourceTree = "<group>"; };
+		3C61A9641B6BB4A100EA90A6 /* tuto_video_4.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = tuto_video_4.mov; sourceTree = "<group>"; };
+		3C61A9661B6BB4C100EA90A6 /* tuto_video_6.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = tuto_video_6.mov; sourceTree = "<group>"; };
 		3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTableViewCell.h; sourceTree = "<group>"; };
 		3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTableViewCell.m; sourceTree = "<group>"; };
 		3C70CAA81B4690F0006E71D7 /* tuto_video_1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_1.mp4; sourceTree = "<group>"; };
-		3C70CAAA1B4690F0006E71D7 /* tuto_video_3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_3.mp4; sourceTree = "<group>"; };
-		3C70CAB21B46D1B7006E71D7 /* tuto_video_4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_4.mp4; sourceTree = "<group>"; };
-		3C70CAB41B46D936006E71D7 /* tuto_video_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_2.mp4; sourceTree = "<group>"; };
+		3C70CAAA1B4690F0006E71D7 /* tuto_video_7.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_7.mp4; sourceTree = "<group>"; };
+		3C70CAB21B46D1B7006E71D7 /* tuto_video_3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_3.mp4; sourceTree = "<group>"; };
+		3C70CAB41B46D936006E71D7 /* tuto_video_5.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_5.mp4; sourceTree = "<group>"; };
 		3C70CAB61B4C21BF006E71D7 /* BackwardTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackwardTextField.h; sourceTree = "<group>"; };
 		3C70CAB71B4C21BF006E71D7 /* BackwardTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackwardTextField.m; sourceTree = "<group>"; };
 		3C7BF5241B15B84700E66537 /* VideoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTableViewCell.h; sourceTree = "<group>"; };
 		3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTableViewCell.m; sourceTree = "<group>"; };
 		3C7BF5271B15D93700E66537 /* VideoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoUtils.h; sourceTree = "<group>"; };
 		3C7BF5281B15D93700E66537 /* VideoUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoUtils.m; sourceTree = "<group>"; };
+		3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_2.mp4; sourceTree = "<group>"; };
 		3C95F2171B678BD900A28A16 /* FacebookSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKStrings.bundle; path = ../../../FacebookSDK/FacebookSDKStrings.bundle; sourceTree = "<group>"; };
 		3C95F2181B678BD900A28A16 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBAudienceNetwork.framework; path = ../../../FacebookSDK/FBAudienceNetwork.framework; sourceTree = "<group>"; };
 		3C95F2191B678BD900A28A16 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -1030,9 +1036,12 @@
 				3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */,
 				3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */,
 				3C70CAA81B4690F0006E71D7 /* tuto_video_1.mp4 */,
-				3C70CAB41B46D936006E71D7 /* tuto_video_2.mp4 */,
-				3C70CAAA1B4690F0006E71D7 /* tuto_video_3.mp4 */,
-				3C70CAB21B46D1B7006E71D7 /* tuto_video_4.mp4 */,
+				3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */,
+				3C70CAB21B46D1B7006E71D7 /* tuto_video_3.mp4 */,
+				3C61A9641B6BB4A100EA90A6 /* tuto_video_4.mov */,
+				3C70CAB41B46D936006E71D7 /* tuto_video_5.mp4 */,
+				3C61A9661B6BB4C100EA90A6 /* tuto_video_6.mov */,
+				3C70CAAA1B4690F0006E71D7 /* tuto_video_7.mp4 */,
 				A4CE87581B09133800DC20DC /* Fonts */,
 				A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */,
 			);
@@ -1417,7 +1426,6 @@
 				TargetAttributes = {
 					3C5F97C91AEBB1F30098F70F = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 86N86JY2JG;
 					};
 				};
 			};
@@ -1450,28 +1458,31 @@
 				A4CE875A1B0913DE00DC20DC /* NHaasGroteskDSPro-65Md.ttf in Resources */,
 				A4CE875B1B0913DE00DC20DC /* NHaasGroteskDSPro-75Bd.ttf in Resources */,
 				3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */,
-				3C70CAB51B46D936006E71D7 /* tuto_video_2.mp4 in Resources */,
+				3C70CAB51B46D936006E71D7 /* tuto_video_5.mp4 in Resources */,
 				3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */,
 				3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */,
+				3C61A9651B6BB4A100EA90A6 /* tuto_video_4.mov in Resources */,
 				3C2C4A521AFB6F8E00E0E4BF /* PhoneNumberMetaData.json in Resources */,
 				3C42DF761B308ED200C956A0 /* green.png in Resources */,
 				3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */,
 				3C4ABD541B299B2500897DF9 /* snapshot_config.json in Resources */,
+				3C61A9671B6BB4C100EA90A6 /* tuto_video_6.mov in Resources */,
 				3C4ABD141B299B2500897DF9 /* Media.xcassets in Resources */,
 				3C70CAAC1B4690F0006E71D7 /* tuto_video_1.mp4 in Resources */,
 				3C4ABC871B28777500897DF9 /* InfoPlist.strings in Resources */,
 				3C4ABD411B299B2500897DF9 /* MPSurvey.storyboard in Resources */,
 				A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */,
 				3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */,
-				3C70CAAE1B4690F0006E71D7 /* tuto_video_3.mp4 in Resources */,
+				3C70CAAE1B4690F0006E71D7 /* tuto_video_7.mp4 in Resources */,
 				3CD6EE751B6290EB008FACC4 /* InviteContactTableViewCell.xib in Resources */,
 				3C95F21E1B678BD900A28A16 /* FacebookSDKStrings.bundle in Resources */,
 				3C4ABD2C1B299B2500897DF9 /* MPCloseBtn.png in Resources */,
+				3C84544F1B6BB6C600B55E25 /* tuto_video_2.mp4 in Resources */,
 				A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */,
 				3C4ABD551B299B2500897DF9 /* test_variant.json in Resources */,
 				3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */,
 				3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */,
-				3C70CAB31B46D1B7006E71D7 /* tuto_video_4.mp4 in Resources */,
+				3C70CAB31B46D1B7006E71D7 /* tuto_video_3.mp4 in Resources */,
 				3C2C4A6F1AFE231F00E0E4BF /* DateTools.bundle in Resources */,
 				3C2C4C221B05F73A00E0E4BF /* whiteNoise.wav in Resources */,
 				3C4ABD2D1B299B2500897DF9 /* MPCloseBtn@2x.png in Resources */,
@@ -1822,7 +1833,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

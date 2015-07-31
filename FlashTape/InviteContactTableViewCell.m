@@ -53,5 +53,11 @@
     [self.inviteButton setImage:image forState:UIControlStateNormal];
 }
 
+//- (void)setSelected:(BOOL)selected {
+//    if (selected) {
+//        [self inviteButtonClicked:nil];
+//    }
+//}
+
 
 @end
