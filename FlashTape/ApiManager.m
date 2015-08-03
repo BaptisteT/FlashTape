@@ -515,7 +515,10 @@
             if (failureBlock)
                 failureBlock(error, YES);
         }
+    } progressBlock:^(int percentDone) {
+        self.downloadProgress = percentDone;
     }];
+
 }
 
 // Get video

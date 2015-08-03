@@ -83,6 +83,8 @@ static int downloadingCount = 0;
     downloadingCount ++;
     NSLog(@"%d",downloadingCount);
     self.isDownloading = YES;
+    // todo BT
+    // put this in api ?
     [self.videoFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         self.isDownloading = NO;
         downloadingCount --;

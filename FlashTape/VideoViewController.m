@@ -623,7 +623,7 @@
     [DatastoreUtils getFollowingRelationsLocallyAndExecuteSuccess:^(NSArray *followingRelations) {
         [self setObjectsFromFollowingRelationsArray:followingRelations];
         
-        // todo BT v1.2 add to device
+        // todo BT v2 add to device
         [TrackingUtils setPeopleProperties:@{PROPERTY_FRIENDS_COUNT: [NSNumber numberWithInteger:followingRelations.count]}];
     } failure:nil];
 }
@@ -684,7 +684,7 @@
             }
         }
         
-        // todo BT v1.2 add to user
+        // todo BT v2 add to user
         [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_CONTACT: [NSNumber numberWithBool:granted]}];
     });
 }
