@@ -100,8 +100,9 @@
 @property (strong, nonatomic) VideoPost *postToSend; // preview post
 @property (strong, nonatomic) NSMutableArray *failedVideoPostArray;
 @property (nonatomic) NSInteger isSendingCount;
-@property (weak, nonatomic) IBOutlet UIView *sendingLoaderView;
-@property (strong, nonatomic) MBProgressHUD* sendingHud;
+@property (nonatomic) NSInteger cumulatedProgress;
+@property (weak, nonatomic) IBOutlet UIView *sendingBarContainerView;
+@property (strong, nonatomic) UIView *sendingBarView;
 
 // Messages
 @property (nonatomic) NSInteger messageCount;
@@ -166,11 +167,12 @@
         NSLog(@"AVAudioSession error setting category:%@",error);
     [audioSession setActive:YES error:nil];
     
-    // HUD
-    self.sendingHud = [[MBProgressHUD alloc] initWithView:self.sendingLoaderView];
-    self.sendingHud.color = [UIColor clearColor];
-    self.sendingHud.activityIndicatorColor = [UIColor whiteColor];
-    [self.sendingLoaderView addSubview:self.sendingHud];
+    // Sending
+    self.cumulatedProgress = 0;
+    self.sendingBarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.sendingBarContainerView.frame.size.height)];
+    self.sendingBarView.backgroundColor = [ColorUtils purple];
+    [self.sendingBarContainerView addSubview:self.sendingBarView];
+    self.sendingBarContainerView.hidden = YES;
     
     // Recording gesture
     self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
@@ -958,9 +960,11 @@
     self.isSendingCount ++;
     
     // Send video
+    __block int previousProgress = 0;
     [ApiManager saveVideoPost:post
             andExecuteSuccess:^() {
                 [DatastoreUtils unpinVideoAsUnsend:post];
+                [self incrementSendingProgressBy:- previousProgress duration:0];
                 self.isSendingCount --;
                 [self.allVideosArray addObject:post];
                 [self.allVideosArray sortUsingComparator:^NSComparisonResult(VideoPost *obj1, VideoPost *obj2) {
@@ -983,6 +987,7 @@
                                       otherButtonTitles:NSLocalizedString(@"no_thanks_button_title", nil),NSLocalizedString(@"rate_button_title", nil), nil] show];
                 }
             } failure:^(NSError *error, BOOL addToFailArray) {
+                [self incrementSendingProgressBy:- previousProgress duration:0];
                 self.isSendingCount --;
                 if (addToFailArray) {
                     [self.failedVideoPostArray addObject:post];
@@ -990,6 +995,10 @@
                     [DatastoreUtils unpinVideoAsUnsend:post];
                 }
                 [self setReplayButtonUI];
+            } completionBlock:^(int progress) {
+                // todo BT
+                [self incrementSendingProgressBy:progress - previousProgress duration:3];
+                previousProgress = progress;
             }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1019,13 +1028,43 @@
 - (void)setIsSendingCount:(NSInteger)isSendingCount {
     _isSendingCount = isSendingCount;
     dispatch_async(dispatch_get_main_queue(), ^{
-        // sending anim
-        if (_isSendingCount > 0) {
-            [self.sendingHud show:YES];
+        __weak __typeof__(self) weakSelf = self;
+        if (_isSendingCount == 0) {
+            [self setSendingBarWidthTo:self.sendingBarContainerView.frame.size.width
+                              duration:0.75
+                            completion:^(BOOL completed) {
+                                weakSelf.sendingBarContainerView.hidden = YES;
+                                [weakSelf setSendingBarWidthTo:0 duration:0 completion:nil];
+            }];
+            self.cumulatedProgress = 0;
         } else {
-            [self.sendingHud hide:YES];
+            self.sendingBarContainerView.hidden = NO;
+            [self incrementSendingProgressBy:0 duration:0];
         }
     });
+}
+
+- (void)setSendingBarWidthTo:(CGFloat)width
+                    duration:(int)duration
+                  completion:(void(^)(BOOL completed))completionBlock
+{
+    CGRect frame = self.sendingBarView.frame;
+    self.sendingBarView.frame = frame;
+    frame.size.width = width;
+    
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         [self.sendingBarView setFrame:frame];
+                     } completion:completionBlock];
+}
+
+- (void)incrementSendingProgressBy:(NSInteger)progress duration:(float)duration {
+    self.cumulatedProgress += progress;
+    [self setSendingBarWidthTo:(self.cumulatedProgress * self.sendingBarContainerView.frame.size.width / (float)_isSendingCount / 110.)
+                      duration:duration
+                    completion:nil];
 }
 
 

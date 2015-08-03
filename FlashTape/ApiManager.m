@@ -462,6 +462,7 @@
 + (void)saveVideoPost:(VideoPost *)post
     andExecuteSuccess:(void(^)())successBlock
               failure:(void(^)(NSError *error, BOOL addToFailArray))failureBlock
+      completionBlock:(void(^)(int completion))completionBlock
 {
     FlashLog(FLASHAPIMANAGERLOG,@"Save video");
     NSURL *url = post.localUrl;
@@ -477,6 +478,7 @@
         failureBlock(nil, NO);
         return;
     }
+    
     PFFile *file = [PFFile fileWithName:@"video.mp4" data:videoData];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
@@ -516,7 +518,9 @@
                 failureBlock(error, YES);
         }
     } progressBlock:^(int percentDone) {
-        self.downloadProgress = percentDone;
+        if (completionBlock) {
+            completionBlock(percentDone);
+        }
     }];
 
 }
