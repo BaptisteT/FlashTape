@@ -121,6 +121,10 @@
                   forControlEvents:UIControlEventValueChanged];
     [self.friendsTableView addSubview:self.refreshControl];
     
+    // Instantiate send message controller
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+    self.sendMessageController = [storyboard instantiateViewControllerWithIdentifier:@"SendMessageController"];
+    self.sendMessageController.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -146,6 +150,9 @@
     // background color animation
     _stopAnimation = NO;
     [self doBackgroundColorAnimation];
+    
+    // Sort and reload
+    [self sortFriendsAndReload];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -207,12 +214,6 @@
 }
 
 - (void)presentSendViewController:(User *)friend {
-    if (!self.sendMessageController) {
-        // Instantiate send message controller
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-        self.sendMessageController = [storyboard instantiateViewControllerWithIdentifier:@"SendMessageController"];
-        self.sendMessageController.delegate = self;
-    }
     self.sendMessageController.messageRecipient = friend;
     [self presentViewController:self.sendMessageController animated:NO completion:nil];
 }
@@ -649,6 +650,7 @@
                        success:^{
                            [MBProgressHUD hideHUDForView:self.view animated:YES];
                            [self.followingRelations removeObject:follow];
+                           self.postToDetailIndexPath = nil;
                            [self.friendsTableView reloadData];
                            [self reloadFeedVideo];
                        } failure:^(NSError *error) {

@@ -23,6 +23,7 @@
         [mixpanel identify:mixpanel.distinctId];
         [TrackingUtils trackEvent:EVENT_USER_SIGNUP properties:nil];
         [TrackingUtils setPeopleProperties:@{@"signup.date": [NSDate date]}];
+        [mixpanel flush];
     } else {
         [mixpanel identify:user.objectId];
     }

@@ -41,12 +41,12 @@
     for (UIButton *button in self.buttons) {
         button.backgroundColor = [UIColor clearColor];
         button.transform = CGAffineTransformMakeRotation(M_PI/2);
-        NSInteger fontSize = IS_IPHONE_4_OR_LESS || IS_IPHONE_5 ? 60 : 80;
+        NSInteger fontSize = (IS_IPHONE_4_OR_LESS || IS_IPHONE_5) ? 60 : (IS_IPHONE_6P ? 80 : 70);
         button.titleLabel.font = [UIFont systemFontOfSize:fontSize];
         if (flag && button == self.buttons.firstObject) {
             [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
             [button setTitle:@"" forState:UIControlStateNormal];
-            UIImage *image = [[UIImage imageNamed:@"unlock_icon"] imageWithAlignmentRectInsets:UIEdgeInsetsMake(-15, -15, -15, -15)];
+            UIImage *image = [[UIImage imageNamed:@"unlock_icon"] imageWithAlignmentRectInsets:UIEdgeInsetsMake(-18, -18, -18, -18)];
             [button setBackgroundImage:image forState:UIControlStateNormal];
         } else {
             NSString *emoji = emojis[MAX(0,emojis.count - 1 - [self.buttons indexOfObject:button] + (flag ? 1 : 0))];

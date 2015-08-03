@@ -170,7 +170,7 @@
     // Sending
     self.cumulatedProgress = 0;
     self.sendingBarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.sendingBarContainerView.frame.size.height)];
-    self.sendingBarView.backgroundColor = [ColorUtils purple];
+    self.sendingBarView.backgroundColor = [UIColor whiteColor];
     [self.sendingBarContainerView addSubview:self.sendingBarView];
     self.sendingBarContainerView.hidden = YES;
     
@@ -964,7 +964,7 @@
     [ApiManager saveVideoPost:post
             andExecuteSuccess:^() {
                 [DatastoreUtils unpinVideoAsUnsend:post];
-                [self incrementSendingProgressBy:- previousProgress duration:0];
+                self.cumulatedProgress -= previousProgress;
                 self.isSendingCount --;
                 [self.allVideosArray addObject:post];
                 [self.allVideosArray sortUsingComparator:^NSComparisonResult(VideoPost *obj1, VideoPost *obj2) {
@@ -987,7 +987,7 @@
                                       otherButtonTitles:NSLocalizedString(@"no_thanks_button_title", nil),NSLocalizedString(@"rate_button_title", nil), nil] show];
                 }
             } failure:^(NSError *error, BOOL addToFailArray) {
-                [self incrementSendingProgressBy:- previousProgress duration:0];
+                self.cumulatedProgress -= previousProgress;
                 self.isSendingCount --;
                 if (addToFailArray) {
                     [self.failedVideoPostArray addObject:post];
@@ -996,7 +996,6 @@
                 }
                 [self setReplayButtonUI];
             } completionBlock:^(int progress) {
-                // todo BT
                 [self incrementSendingProgressBy:progress - previousProgress duration:3];
                 previousProgress = progress;
             }];
@@ -1031,7 +1030,7 @@
         __weak __typeof__(self) weakSelf = self;
         if (_isSendingCount == 0) {
             [self setSendingBarWidthTo:self.sendingBarContainerView.frame.size.width
-                              duration:0.75
+                              duration:0.5
                             completion:^(BOOL completed) {
                                 weakSelf.sendingBarContainerView.hidden = YES;
                                 [weakSelf setSendingBarWidthTo:0 duration:0 completion:nil];
@@ -1045,7 +1044,7 @@
 }
 
 - (void)setSendingBarWidthTo:(CGFloat)width
-                    duration:(int)duration
+                    duration:(float)duration
                   completion:(void(^)(BOOL completed))completionBlock
 {
     CGRect frame = self.sendingBarView.frame;

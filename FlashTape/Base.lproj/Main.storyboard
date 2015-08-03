@@ -567,10 +567,10 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nJU-WH-rKM">
-                                        <rect key="frame" x="0.0" y="597" width="600" height="3"/>
+                                        <rect key="frame" x="0.0" y="594" width="600" height="6"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="3" id="JXV-O8-NHL"/>
+                                            <constraint firstAttribute="height" constant="6" id="JXV-O8-NHL"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" restorationIdentifier="recording" translatesAutoresizingMaskIntoConstraints="NO" id="ZCy-IZ-pCQ">
