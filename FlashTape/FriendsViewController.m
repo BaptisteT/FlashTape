@@ -120,10 +120,6 @@
                   forControlEvents:UIControlEventValueChanged];
     [self.friendsTableView addSubview:self.refreshControl];
     
-    // Instantiate send message controller
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-    self.sendMessageController = [storyboard instantiateViewControllerWithIdentifier:@"SendMessageController"];
-    self.sendMessageController.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -210,6 +206,12 @@
 }
 
 - (void)presentSendViewController:(User *)friend {
+    if (!self.sendMessageController) {
+        // Instantiate send message controller
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+        self.sendMessageController = [storyboard instantiateViewControllerWithIdentifier:@"SendMessageController"];
+        self.sendMessageController.delegate = self;
+    }
     self.sendMessageController.messageRecipient = friend;
     [self presentViewController:self.sendMessageController animated:NO completion:nil];
 }
