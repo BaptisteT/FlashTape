@@ -196,6 +196,7 @@
 		3C7BF5261B15B84700E66537 /* VideoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */; };
 		3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5281B15D93700E66537 /* VideoUtils.m */; };
 		3C84544F1B6BB6C600B55E25 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */; };
+		3C8454521B6F698A00B55E25 /* DesignUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8454511B6F698A00B55E25 /* DesignUtils.m */; };
 		3C95F21E1B678BD900A28A16 /* FacebookSDKStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3C95F2171B678BD900A28A16 /* FacebookSDKStrings.bundle */; };
 		3C95F21F1B678BD900A28A16 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2181B678BD900A28A16 /* FBAudienceNetwork.framework */; };
 		3C95F2201B678BD900A28A16 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C95F2191B678BD900A28A16 /* FBSDKCoreKit.framework */; };
@@ -596,6 +597,8 @@
 		3C7BF5271B15D93700E66537 /* VideoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoUtils.h; sourceTree = "<group>"; };
 		3C7BF5281B15D93700E66537 /* VideoUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoUtils.m; sourceTree = "<group>"; };
 		3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_2.mp4; sourceTree = "<group>"; };
+		3C8454501B6F698A00B55E25 /* DesignUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesignUtils.h; sourceTree = "<group>"; };
+		3C8454511B6F698A00B55E25 /* DesignUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesignUtils.m; sourceTree = "<group>"; };
 		3C95F2171B678BD900A28A16 /* FacebookSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKStrings.bundle; path = ../../../FacebookSDK/FacebookSDKStrings.bundle; sourceTree = "<group>"; };
 		3C95F2181B678BD900A28A16 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBAudienceNetwork.framework; path = ../../../FacebookSDK/FBAudienceNetwork.framework; sourceTree = "<group>"; };
 		3C95F2191B678BD900A28A16 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -1098,8 +1101,6 @@
 		3C5F97FB1AEBB3990098F70F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				3C1BB9661B68FFDC009781D3 /* FlashLogger.h */,
-				3C1BB9671B68FFDC009781D3 /* FlashLogger.m */,
 				3C5F980F1AEC1CFF0098F70F /* ConstantUtils.h */,
 				3C5F98101AEC1CFF0098F70F /* ConstantUtils.m */,
 				3C5F98C31AEE7D8D0098F70F /* GeneralUtils.h */,
@@ -1120,6 +1121,10 @@
 				3C42DF781B316DEB00C956A0 /* ImageUtils.m */,
 				3C5BD8311B41B7DF00B3FCB8 /* InviteUtils.h */,
 				3C5BD8321B41B7DF00B3FCB8 /* InviteUtils.m */,
+				3C1BB9661B68FFDC009781D3 /* FlashLogger.h */,
+				3C1BB9671B68FFDC009781D3 /* FlashLogger.m */,
+				3C8454501B6F698A00B55E25 /* DesignUtils.h */,
+				3C8454511B6F698A00B55E25 /* DesignUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1680,6 +1685,7 @@
 				3C081CF61B1B54C70036D6B2 /* SCMediaTypeConfiguration.m in Sources */,
 				3C4ABD501B299B2500897DF9 /* MPVariant.m in Sources */,
 				3CD6EE581B623943008FACC4 /* BNCServerInterface.m in Sources */,
+				3C8454521B6F698A00B55E25 /* DesignUtils.m in Sources */,
 				3C4ABD441B299B2500897DF9 /* MPSurveyQuestionViewController.m in Sources */,
 				3CD6EE691B623943008FACC4 /* BranchLogRequest.m in Sources */,
 				3CBD0D3E1B39D140001DFE17 /* InviteContactTableViewCell.m in Sources */,

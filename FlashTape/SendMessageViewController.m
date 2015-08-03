@@ -78,7 +78,6 @@
     [super viewDidLayoutSubviews];
     self.messageTypeContainerView.translatesAutoresizingMaskIntoConstraints = YES;
     [self adjustTextViewOffset];
-    
     [self.emojiController reloadEmojis];
 }
 
@@ -101,7 +100,6 @@
 #pragma mark Actions
 // ----------------------------------------------------------
 - (IBAction)emojiButtonClicked:(id)sender {
-    [self.emojiController reloadEmojis];
     [self setEmojiState:YES];
 }
 

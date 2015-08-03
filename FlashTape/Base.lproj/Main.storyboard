@@ -2028,7 +2028,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="snx-Es-9Jf" secondAttribute="height" multiplier="1:1" id="dvm-bR-gGF"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
@@ -2038,7 +2038,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="BI2-vq-epz" secondAttribute="height" multiplier="1:1" id="3OU-Ex-Dfw"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
@@ -2051,7 +2051,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="VFd-5o-iLb" secondAttribute="height" multiplier="1:1" id="8xh-lH-Rdu"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
@@ -2061,7 +2061,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="xQg-sT-Xcw" secondAttribute="height" multiplier="1:1" id="4w6-vb-M6p"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
@@ -2071,7 +2071,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="djH-aN-Rjt" secondAttribute="height" multiplier="1:1" id="orv-ye-Q2z"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
@@ -2085,7 +2085,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="YkC-pe-9H6" secondAttribute="height" multiplier="1:1" id="2kD-Fi-jjC"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="120"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                                             <state key="normal" title="😀">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>

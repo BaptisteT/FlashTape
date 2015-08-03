@@ -9,6 +9,7 @@
 #import "EmojiTableViewCell.h"
 
 #import "ConstantUtils.h"
+#import "DesignUtils.h"
 #import "GeneralUtils.h"
 
 @interface EmojiTableViewCell()
@@ -39,8 +40,9 @@
    
     for (UIButton *button in self.buttons) {
         button.backgroundColor = [UIColor clearColor];
-        button.titleLabel.numberOfLines = 1;
         button.transform = CGAffineTransformMakeRotation(M_PI/2);
+        NSInteger fontSize = IS_IPHONE_4_OR_LESS || IS_IPHONE_5 ? 60 : 80;
+        button.titleLabel.font = [UIFont systemFontOfSize:fontSize];
         if (flag && button == self.buttons.firstObject) {
             [button addTarget:self action:@selector(unlockClicked) forControlEvents:UIControlEventTouchUpInside];
             [button setTitle:@"" forState:UIControlStateNormal];
@@ -53,10 +55,6 @@
             [button addTarget:self action:@selector(emojiClicked:) forControlEvents:UIControlEventTouchUpInside];
             [button setBackgroundImage:nil forState:UIControlStateNormal];
         }
-        button.titleLabel.lineBreakMode = NSLineBreakByClipping;
-        button.titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-        button.titleLabel.font = [UIFont systemFontOfSize:120.];
-        button.titleLabel.adjustsFontSizeToFitWidth = YES;
     }
     
 }

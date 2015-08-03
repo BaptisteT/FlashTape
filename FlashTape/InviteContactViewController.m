@@ -14,6 +14,7 @@
 
 #import "AddressbookUtils.h"
 #import "ColorUtils.h"
+#import "DesignUtils.h"
 #import "GeneralUtils.h"
 #import "InviteUtils.h"
 #import "UICustomLineLabel.h"
@@ -59,7 +60,7 @@
     // Name label
     [self setNameLabelWithContact:self.contactArray.firstObject];
     
-    if ([GeneralUtils isiPhone4]) {
+    if (IS_IPHONE_4_OR_LESS) {
         self.emojiLabel.font = [UIFont systemFontOfSize:180];
     }
 }

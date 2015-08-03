@@ -29,6 +29,7 @@
 #import "AddressbookUtils.h"
 #import "ConstantUtils.h"
 #import "ColorUtils.h"
+#import "DesignUtils.h"
 #import "GeneralUtils.h"
 #import "KeyboardUtils.h"
 #import "InviteUtils.h"
@@ -221,7 +222,7 @@
     self.filter = [SCFilter filterWithCIFilterName:@"CIColorCube"];
     [self.filter setParameterValue:@64 forKey:@"inputCubeDimension"];
     [self.filter setParameterValue:UIImageJPEGRepresentation([UIImage imageNamed:@"green"],1) forKey:@"inputCubeData"];
-    if (![GeneralUtils isiPhone4]) {
+    if (!IS_IPHONE_4_OR_LESS) {
         self.recorder.videoConfiguration.filter = self.filter;
     }
     
@@ -1314,7 +1315,7 @@
 // Show mood
 - (void)showMoodView
 {
-    [self.emojiController reloadEmojis];
+    [self.emojiController resetFrame];
     [self hideUIElementOnCamera:YES];
     self.moodContainerView.hidden = NO;
     if (self.emojiView.hidden) {

@@ -20,28 +20,16 @@
 @implementation EmojiViewController
 
 // --------------------------------------------
-#pragma mark - Life cycle
-// --------------------------------------------
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    [self reloadEmojis];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self reloadEmojis];
-}
-
-
-
-// --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
 
 - (void)reloadEmojis {
-    self.horizontalTableView.frame = self.view.frame;
+    [self resetFrame];
     [self.horizontalTableView.tableView reloadData];
+}
+
+- (void)resetFrame {
+    self.horizontalTableView.frame = self.view.frame;
 }
 
 - (NSInteger)tableView:(PTEHorizontalTableView *)horizontalTableView numberOfRowsInSection:(NSInteger)section

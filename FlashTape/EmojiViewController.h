@@ -15,6 +15,7 @@
 
 @interface EmojiViewController : UIViewController <PTETableViewDelegate, EmojiTVCDelegate>
 
+- (void)resetFrame;
 - (void)reloadEmojis;
 
 @property (weak, nonatomic) id<EmojiVCDelegate> delegate;

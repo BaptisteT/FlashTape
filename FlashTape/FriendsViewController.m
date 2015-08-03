@@ -25,6 +25,7 @@
 
 #import "ColorUtils.h"
 #import "ConstantUtils.h"
+#import "DesignUtils.h"
 #import "GeneralUtils.h"
 #import "KeyboardUtils.h"
 #import "MBProgressHUD.h"
@@ -469,7 +470,7 @@
 
 // Edit only friend cells
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return ![GeneralUtils isIOS7] && [self isFollowingUserSection:indexPath.section];
+    return !IS_IOS_7 && [self isFollowingUserSection:indexPath.section];
 }
 
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath

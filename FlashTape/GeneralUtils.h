@@ -21,10 +21,6 @@
 
 + (void)removeFile:(NSURL *)fileURL;
 
-+ (BOOL)isiPhone4;
-
-+ (BOOL)isIOS7;
-
 + (NSString *)transformedUsernameFromOriginal:(NSString *)original;
 
 + (void)openSettings;
