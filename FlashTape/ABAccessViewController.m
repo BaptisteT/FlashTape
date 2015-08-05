@@ -99,7 +99,16 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (granted) {
                     [TrackingUtils trackEvent:EVENT_CONTACT_ALLOWED properties:nil];
+                    
+                    // Parse contacts
                     NSMutableDictionary *contactDictionnary = [AddressbookUtils getFormattedPhoneNumbersFromAddressBook:self.addressBook];
+                    
+                    // Current user real name
+                    NSString *abName = contactDictionnary[[User currentUser].username];
+                    if (abName && abName.length > 0) {
+                        [ApiManager saveAddressbookName:contactDictionnary[[User currentUser].username]];
+                    }
+                    
                     // Get flashers in my Addressbook
                     [ApiManager findFlashUsersContainedInAddressBook:[contactDictionnary allKeys]
                      success:^(NSArray *flashersArray) {
@@ -120,6 +129,7 @@
                     [TrackingUtils trackEvent:EVENT_CONTACT_DENIED properties:nil];
                     [self navigateToVideoController];
                 }
+                [TrackingUtils setPeopleProperties:@{PROPERTY_ALLOW_CONTACT: [NSNumber numberWithBool:granted]}];
             });
         });
     }

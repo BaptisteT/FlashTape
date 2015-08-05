@@ -391,6 +391,7 @@
         if (succeeded) {
             [follow pinInBackgroundWithName:kParseRelationshipsName];
             [TrackingUtils trackEvent:EVENT_FRIEND_ADD properties:nil];
+            [TrackingUtils  incrementPeopleProperty:PROPERTY_FRIENDS_COUNT];
             if (successBlock) {
                 successBlock(follow);
             }
@@ -693,7 +694,7 @@
         Message *message = [Message createMessageWithContent:messageContent sender:sender];
         message.sentAt = [NSDate dateWithTimeInterval:i sinceDate:message.sentAt];
         [array addObject:message];
-        [TrackingUtils trackEvent:EVENT_MESSAGE_SENT properties:@{@"type": @"tuto"}];
+        [TrackingUtils trackEvent:EVENT_TUTO_MESSAGE_SENT properties:@{@"type": @"tuto"}];
         i++;
     }
     [PFObject saveAllInBackground:array block:^(BOOL succeeded, NSError *error) {

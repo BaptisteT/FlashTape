@@ -22,6 +22,7 @@
 #define EVENT_INVITE_PRESENTED @"invite.presented"
 #define EVENT_MESSAGE_SENT @"message.sent"
 #define EVENT_MESSAGE_READ @"message.read"
+#define EVENT_TUTO_MESSAGE_SENT @"tuto.message.sent"
 #define EVENT_MESSAGE_FAILED @"message.failed"
 #define EVENT_FRIEND_ADD @"friend.add"
 #define EVENT_FRIEND_DELETE @"friend.delete"
@@ -61,5 +62,7 @@
 + (void)trackEvent:(NSString *)eventName properties:(NSDictionary *)properties;
 
 + (void)setPeopleProperties:(NSDictionary *)properties;
+
++ (void)incrementPeopleProperty:(NSString *)property;
 
 @end

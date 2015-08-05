@@ -54,6 +54,10 @@
     [mixpanel.people set:properties];
 }
 
++ (void)incrementPeopleProperty:(NSString *)property {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel.people increment:property by:[NSNumber numberWithInt:1]];
+}
 
 
 

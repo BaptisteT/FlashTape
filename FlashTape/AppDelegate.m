@@ -72,11 +72,12 @@
     
     // Branch
     [[Branch getInstance] initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {
-        // personalize launch ?
-//        NSString *referredName = [params objectForKey:@"referredName"];
-//        if (referredName) {
-//            [[[UIAlertView alloc] initWithTitle:referredName message:@"" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil] show];
-//        }
+        if (!error) {
+            if ([params[@"referred"] boolValue]) {
+                // Add call here to let MP know a Branch-driven install occurred
+//                [Mixpanel track :@"install" properties:params];
+            }
+        }
     }];
     
     // Fabrick

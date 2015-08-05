@@ -22,6 +22,14 @@
 // --------------------------------------------
 #pragma mark - Tableview
 // --------------------------------------------
+- (void)viewDidAppear:(BOOL)animated {
+    [self resetFrame];
+    [super viewDidAppear:animated];
+}
+
+// --------------------------------------------
+#pragma mark - Tableview
+// --------------------------------------------
 
 - (void)reloadEmojis {
     [self resetFrame];
