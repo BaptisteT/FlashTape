@@ -45,6 +45,7 @@
 #define EVENT_CONTACT_DENIED @"contact.denied"
 #define EVENT_EMOJI_INVITE_SENT @"emoji.invite.sent"
 #define EVENT_EMOJI_INVITE_CANCELED @"emoji.invite.canceled"
+#define EVENT_BRANCH_APP_LAUNCH @"branch.app.launch"
 
 #define PROPERTY_ALLOW_CONTACT @"contact.allowed"
 #define PROPERTY_ALLOW_NOTIF @"notif.allowed"

@@ -74,8 +74,7 @@
     [[Branch getInstance] initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {
         if (!error) {
             if ([params[@"referred"] boolValue]) {
-                // Add call here to let MP know a Branch-driven install occurred
-//                [Mixpanel track :@"install" properties:params];
+                [TrackingUtils trackEvent:EVENT_BRANCH_APP_LAUNCH properties:params];
             }
         }
     }];

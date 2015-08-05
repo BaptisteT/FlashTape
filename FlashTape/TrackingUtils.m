@@ -5,6 +5,7 @@
 //  Created by Baptiste Truchot on 5/10/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
+#import "Branch.h"
 #import "Mixpanel.h"
 #import <Parse/parse.h>
 
@@ -23,6 +24,11 @@
         [mixpanel identify:mixpanel.distinctId];
         [TrackingUtils trackEvent:EVENT_USER_SIGNUP properties:nil];
         [TrackingUtils setPeopleProperties:@{@"signup.date": [NSDate date]}];
+        
+        NSDictionary *sessionParams = [[Branch getInstance] getFirstReferringParams];
+        if (sessionParams) {
+            [TrackingUtils setPeopleProperties:sessionParams];
+        }
         [mixpanel flush];
     } else {
         [mixpanel identify:user.objectId];
