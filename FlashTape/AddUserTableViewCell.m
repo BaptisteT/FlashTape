@@ -64,7 +64,7 @@
         NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
         NSRange abNameRange = [string rangeOfString:addressbookName];
         
-        NSDictionary *attrs = @{NSForegroundColorAttributeName : [UIColor lightGrayColor], NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-55Rg" size:14]};
+        NSDictionary *attrs = @{NSForegroundColorAttributeName : [UIColor lightGrayColor], NSFontAttributeName: [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:14]};
         [attrString addAttributes:attrs range:abNameRange];
         self.usernameLabel.attributedText = attrString;
     } else {

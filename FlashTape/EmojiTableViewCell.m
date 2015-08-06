@@ -41,6 +41,7 @@
     for (UIButton *button in self.buttons) {
         button.backgroundColor = [UIColor clearColor];
         button.transform = CGAffineTransformMakeRotation(M_PI/2);
+        button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         NSInteger fontSize = (IS_IPHONE_4_OR_LESS || IS_IPHONE_5) ? 60 : (IS_IPHONE_6P ? 80 : 70);
         button.titleLabel.font = [UIFont systemFontOfSize:fontSize];
         if (flag && button == self.buttons.firstObject) {

@@ -6,21 +6,21 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 
-#import "CaptionTextView.h"
+#import "MoodTextView.h"
 
-@interface CaptionTextView()
+@interface MoodTextView()
 
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchRecognizer;
 @property (nonatomic, strong) UIRotationGestureRecognizer *rotationRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer *panningRecognizer;
-//@property (nonatomic, strong) UILongPressGestureRecognizer *longPressRecogniser;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecogniser;
 @property (nonatomic, strong) NSMutableSet *activeRecognizers;
 @property(nonatomic) CGAffineTransform referenceTransform;
 
 @end
 
 
-@implementation CaptionTextView
+@implementation MoodTextView
 
 // -------------------
 // Life Cycle
@@ -33,17 +33,17 @@
          self.rotationRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
          self.panningRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanningGesture:)];
          
-//         self.longPressRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+         self.tapGestureRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture)];
          
          [self addGestureRecognizer:self.pinchRecognizer];
          [self addGestureRecognizer:self.rotationRecognizer];
          [self addGestureRecognizer:self.panningRecognizer];
-//         [self addGestureRecognizer:self.longPressRecogniser];
+         [self addGestureRecognizer:self.tapGestureRecogniser];
          
          self.pinchRecognizer.delegate = self;
          self.rotationRecognizer.delegate = self;
          self.panningRecognizer.delegate = self;
-//         self.longPressRecogniser.delegate = self;
+         self.tapGestureRecogniser.delegate = self;
          self.activeRecognizers = [NSMutableSet set];
          
          // User interaction
@@ -143,5 +143,8 @@
     return YES;
 }
 
+- (void)handleTapGesture {
+    [self removeFromSuperview];
+}
 
 @end

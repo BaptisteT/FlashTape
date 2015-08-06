@@ -20,7 +20,7 @@
 #import "VideoPost.h"
 
 #import "ABAccessViewController.h"
-#import "CaptionTextView.h"
+#import "MoodTextView.h"
 #import "EmojiViewController.h"
 #import "FriendsViewController.h"
 #import "InviteContactViewController.h"
@@ -79,11 +79,12 @@
 @property (strong, nonatomic) SCFilter *filter;
 
 // Mood
+@property (weak, nonatomic) IBOutlet UIView *moodsContainerView;
+@property (strong, nonatomic) MoodTextView *inProgressMoodTextView;
 @property (weak, nonatomic) IBOutlet UIButton *moodButton;
 @property (strong, nonatomic) EmojiViewController *emojiController;
-@property (strong, nonatomic) CaptionTextView *moodTextView;
 @property (weak, nonatomic) IBOutlet UIView *emojiView;
-@property (weak, nonatomic) IBOutlet UIView *moodContainerView;
+@property (weak, nonatomic) IBOutlet UIView *moodCreationContainerView;
 @property (weak, nonatomic) IBOutlet UIView *moodButtonContainerView;
 @property (weak, nonatomic) IBOutlet UIButton *emojiButton;
 @property (weak, nonatomic) IBOutlet UIButton *captionButton;
@@ -95,6 +96,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *cancelTutoLabel;
 @property (weak, nonatomic) IBOutlet UIView *cancelConfirmView;
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *cancelConfirmTutoLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *moodPreviewImageView;
 
 // Sending
 @property (strong, nonatomic) VideoPost *postToSend; // preview post
@@ -181,17 +183,9 @@
     [self.cameraView addGestureRecognizer:self.longPressGestureRecogniser];
     
     // Mood
-    self.moodContainerView.hidden = YES;
-    self.moodTextView = [[CaptionTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
-    UILongPressGestureRecognizer *moodLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-    [self.moodTextView addGestureRecognizer:moodLongPress];
-    [self.cameraView insertSubview:self.moodTextView belowSubview:self.replayButton];
-    self.moodTextView.text = @"";
-    self.moodTextView.delegate = self;
+    self.moodCreationContainerView.hidden = YES;
     UITapGestureRecognizer *moodTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMoodView)];
-    [self.moodContainerView addGestureRecognizer:moodTap];
-    UITapGestureRecognizer *textViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMoodView)];
-    [self.moodTextView addGestureRecognizer:textViewTap];
+    [self.moodCreationContainerView addGestureRecognizer:moodTap];
     [self.emojiButton setTitle:NSLocalizedString(@"close_button", nil) forState:UIControlStateNormal];
     
     // Create the recorder
@@ -477,8 +471,7 @@
         if ([self isPreviewMode]) {
             BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
             self.cancelAreaView.hidden = cancelMode;
-            self.releaseToSendTuto.hidden = cancelMode || self.moodTextView.text.length != 0;
-            self.moodTextView.hidden = cancelMode || self.moodTextView.text.length == 0;
+            self.releaseToSendTuto.hidden = cancelMode || ![self moodIsEmpty];
             self.cancelConfirmView.hidden = !cancelMode;
         }
     } else {
@@ -899,9 +892,7 @@
         VideoPost *post = [VideoPost createCurrentUserPost];
         
         // Tracking
-        BOOL isEmoji = belongsToEmojiArray(self.moodTextView.text);
-        BOOL isCaption = self.moodTextView.text.length > 0 && !isEmoji;
-        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"caption": [NSNumber numberWithBool:isCaption], @"emoji": [NSNumber numberWithBool:isEmoji]};
+        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"mood": [NSNumber numberWithBool:![self moodIsEmpty]]};
         post.videoProperties = [NSMutableDictionary dictionaryWithDictionary:properties];
         
         AVAsset *asset = recordSession.assetRepresentingSegments;
@@ -910,9 +901,9 @@
         exporter.outputFileType = AVFileTypeMPEG4;
         
         // Add mood
-        if (self.moodTextView.text.length > 0) {
+        if (![self moodIsEmpty]) {
             AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-            exporter.videoConfiguration.watermarkImage = [self getImageFromMood];
+            exporter.videoConfiguration.watermarkImage = self.moodPreviewImageView.image;
             exporter.videoConfiguration.watermarkFrame = CGRectMake(0,0,videoAssetTrack.naturalSize.width,videoAssetTrack.naturalSize.height);
         }
 
@@ -1002,8 +993,9 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // Hide textview
-        self.moodTextView.text = @"";
-        self.moodTextView.hidden = YES;
+        for (UIView *view in self.moodsContainerView.subviews) {
+            [view removeFromSuperview];
+        }
         
         // 1st flash
         if (userScore == kUserInitialScore) {
@@ -1157,13 +1149,14 @@
     
     [self hideUIElementOnCamera:YES];
     
-    // Show caption on camera
-    self.moodTextView.hidden = (self.moodTextView.text.length == 0);
-    
     // 1st flash
-    if ([User currentUser].score < kMaxScoreBeforeHidingOtherTutos) {
-        self.recordTutoLabel.text = NSLocalizedString(@"keep_holding_label", nil);
-        self.recordTutoLabel.hidden = !self.moodTextView.hidden;
+    if ([self moodIsEmpty]) {
+        if ([User currentUser].score < kMaxScoreBeforeHidingOtherTutos) {
+            self.recordTutoLabel.text = NSLocalizedString(@"keep_holding_label", nil);
+            self.recordTutoLabel.hidden = NO;
+        }
+    } else {
+        self.moodsContainerView.hidden = NO;
     }
     
     // Start UI + progress bar anim
@@ -1177,21 +1170,22 @@
                      } completion:nil];
 }
 
-- (void)endPreviewMode {
-    [self.cameraView insertSubview:self.moodTextView belowSubview:self.replayButton];
+- (void)endPreviewMode
+{
     self.previewView.hidden = YES;
     [self.previewView.player pause];
 }
 
 - (void)setPreviewMode {
     [self setPlayingMode:NO];
-    
+    self.moodPreviewImageView.hidden = YES;
     self.cancelConfirmView.hidden = YES;
     self.cancelAreaView.hidden = NO;
     self.previewView.hidden = NO;
-    if (self.moodTextView.text.length != 0) {
+    if (![self moodIsEmpty]) {
         self.releaseToSendTuto.hidden = YES;
-        [self.previewView insertSubview:self.moodTextView belowSubview:self.cancelConfirmView];
+        self.moodPreviewImageView.image = [self getImageFromMood];
+        self.moodPreviewImageView.hidden = NO;
     } else {
         self.releaseToSendTuto.hidden = NO;
     }
@@ -1297,13 +1291,13 @@
         self.replayButton.alpha = 0;
         self.replayButton.hidden = YES;
         self.recordTutoLabel.hidden = YES;
-        self.moodTextView.hidden = YES;
+        self.moodsContainerView.hidden = YES;
     } else {
         self.replayButton.alpha = 1;
         [self setReplayButtonUI];
-        self.moodTextView.hidden = (self.moodTextView.text.length == 0);
+        self.moodsContainerView.hidden = NO;
         self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
-        self.recordTutoLabel.hidden = !self.moodTextView.hidden || [self.moodTextView isFirstResponder] || !self.replayTutoLabel.hidden;
+        self.recordTutoLabel.hidden = ![self moodIsEmpty];
     }
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;
@@ -1331,7 +1325,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     // Disallow recognition of tap gestures in the segmented control.
-    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.moodButton || touch.view == self.moodTextView) {
+    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.moodButton || [touch.view isKindOfClass:[MoodTextView class]]) {
         return NO;
     }
     return YES;
@@ -1340,37 +1334,49 @@
 // --------------------------------------------
 #pragma mark - Mood
 // --------------------------------------------
+- (void)initMoodTextView {
+    self.inProgressMoodTextView = [[MoodTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
+    UILongPressGestureRecognizer *moodLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    [self.inProgressMoodTextView addGestureRecognizer:moodLongPress];
+    [self.moodsContainerView addSubview:self.inProgressMoodTextView];
+    self.inProgressMoodTextView.delegate = self;
+}
+
+- (BOOL)moodIsEmpty {
+    return self.moodsContainerView.subviews.count == 0;
+}
 
 - (void)emojiClicked:(NSString *)emoji {
-    self.moodTextView.transform = CGAffineTransformIdentity;
-    self.moodTextView.text = emoji;
-    self.moodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:250.0];
-    [self textViewDidChange:self.moodTextView];
-    self.moodTextView.center = self.view.center;
+    self.inProgressMoodTextView.text = emoji;
+    self.inProgressMoodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:250.0];
+    [self textViewDidChange:self.inProgressMoodTextView];
     [self hideMoodView];
 }
 
 // Show mood
 - (void)showMoodView
 {
+    [self initMoodTextView];
     [self.emojiController resetFrame];
     [self hideUIElementOnCamera:YES];
-    self.moodContainerView.hidden = NO;
+    self.moodCreationContainerView.hidden = NO;
     if (self.emojiView.hidden) {
         // caption mode => keyboard
-        [self.moodTextView becomeFirstResponder];
-    } else {
-        self.moodTextView.transform = CGAffineTransformIdentity;
-        self.moodTextView.center = self.view.center;
-        self.moodTextView.text = @"";
+        [self.inProgressMoodTextView becomeFirstResponder];
     }
 }
 
 // hide mood
 - (void)hideMoodView {
-    [self.moodTextView resignFirstResponder];
+    if (self.inProgressMoodTextView) {
+        [self.inProgressMoodTextView resignFirstResponder];
+        if (self.inProgressMoodTextView.text.length == 0) {
+            [self.inProgressMoodTextView removeFromSuperview];
+        }
+        self.inProgressMoodTextView = nil;
+    }
     [self hideUIElementOnCamera:NO];
-    self.moodContainerView.hidden = YES;
+    self.moodCreationContainerView.hidden = YES;
 }
 
 // Emoji button
@@ -1378,9 +1384,9 @@
     if (!self.emojiView.hidden) {
         [self hideMoodView];
     } else {
-        [self.moodTextView resignFirstResponder];
+        [self.inProgressMoodTextView resignFirstResponder];
         self.emojiView.hidden = NO;
-        self.moodTextView.hidden = YES;
+        self.inProgressMoodTextView.hidden = YES;
         
         self.captionButton.backgroundColor = [UIColor lightGrayColor];
         [self.captionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -1397,8 +1403,9 @@
     if (self.emojiView.hidden) {
         [self hideMoodView];
     } else {
-        self.moodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:50.0];
-        [self.moodTextView becomeFirstResponder];
+        self.inProgressMoodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:50.0];
+        [self.inProgressMoodTextView becomeFirstResponder];
+        self.inProgressMoodTextView.hidden = NO;
         self.emojiView.hidden = YES;
         
         self.captionButton.backgroundColor = [UIColor whiteColor];
@@ -1419,13 +1426,13 @@
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-    CGSize size = [self.moodTextView sizeThatFits:CGSizeMake(self.view.frame.size.width, 1000)];
-    CGRect previousFrame = self.moodTextView.frame;
-    self.moodTextView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
+    CGSize size = [textView sizeThatFits:CGSizeMake(self.view.frame.size.width, 1000)];
+    CGRect previousFrame = textView.frame;
+    textView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    return !self.moodContainerView.hidden;
+    return !self.moodCreationContainerView.hidden;
 }
 
 
@@ -1434,19 +1441,18 @@
 // ----------------------------------------------------------
 // Caption editing UI
 - (void)keyboardWillShow:(NSNotification *)notification {
-    self.moodTextView.hidden = NO;
+    self.moodsContainerView.hidden = NO;
     
     // Move button
     [KeyboardUtils pushUpTopView:self.moodButtonContainerView whenKeyboardWillShowNotification:notification];
     
     // Editing UI
-    [self.moodTextView setTransform:CGAffineTransformIdentity];
     NSDictionary *userInfo = [notification userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
     CGFloat width = self.view.frame.size.width;
-    CGSize size = [self.moodTextView sizeThatFits:CGSizeMake(width, 1000)];
-    self.moodTextView.frame = CGRectMake(0, keyboardRect.origin.y - self.moodButtonContainerView.frame.size.height - size.height, width, size.height);
+    CGSize size = [self.inProgressMoodTextView sizeThatFits:CGSizeMake(width, 1000)];
+    self.inProgressMoodTextView.frame = CGRectMake(0, keyboardRect.origin.y - self.moodButtonContainerView.frame.size.height - size.height, width, size.height);
 }
 
 
@@ -1459,21 +1465,10 @@
 // Screenschot caption
 - (UIImage *)getImageFromMood
 {
-    UIView *containerView = [[UIView alloc] initWithFrame:self.view.frame];
-    containerView.backgroundColor = [UIColor clearColor];
-    UIView *superView = self.moodTextView.superview;
-    NSInteger index = [superView.subviews indexOfObject:self.moodTextView];
-    [superView insertSubview:containerView belowSubview:self.moodTextView];
-    [containerView addSubview:self.moodTextView];
-    
-    UIGraphicsBeginImageContextWithOptions(containerView.bounds.size, NO, 0.0);
-    [containerView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    
+    UIGraphicsBeginImageContextWithOptions(self.moodsContainerView.bounds.size, NO, 0.0);
+    [self.moodsContainerView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
-    
     UIGraphicsEndImageContext();
-    [superView insertSubview:self.moodTextView atIndex:index];
-    [containerView removeFromSuperview];
     return img;
 }
 

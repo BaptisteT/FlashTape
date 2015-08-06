@@ -10,7 +10,7 @@
 @import UIKit;
 
 
-@interface CaptionTextView : UITextView <UIGestureRecognizerDelegate>
+@interface MoodTextView : UITextView <UIGestureRecognizerDelegate>
 
 
 @end

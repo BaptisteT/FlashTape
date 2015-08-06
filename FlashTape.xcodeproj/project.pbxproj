@@ -42,7 +42,7 @@
 		3C1BB9631B681CFC009781D3 /* UnlockEmojisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9621B681CFC009781D3 /* UnlockEmojisViewController.m */; };
 		3C1BB9651B68EF58009781D3 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1BB9641B68EF58009781D3 /* Parse.framework */; };
 		3C1BB9681B68FFDC009781D3 /* FlashLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1BB9671B68FFDC009781D3 /* FlashLogger.m */; };
-		3C1ECE4C1B0BD4D7004F7F02 /* CaptionTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */; };
+		3C1ECE4C1B0BD4D7004F7F02 /* MoodTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1ECE4B1B0BD4D7004F7F02 /* MoodTextView.m */; };
 		3C2C4A081AFA2A1600E0E4BF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A071AFA2A1600E0E4BF /* User.m */; };
 		3C2C4A0B1AFA5CD000E0E4BF /* ColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A0A1AFA5CD000E0E4BF /* ColorUtils.m */; };
 		3C2C4A171AFA635800E0E4BF /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C4A161AFA635800E0E4BF /* WelcomeViewController.m */; };
@@ -336,8 +336,8 @@
 		3C1BB9641B68EF58009781D3 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		3C1BB9661B68FFDC009781D3 /* FlashLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashLogger.h; sourceTree = "<group>"; };
 		3C1BB9671B68FFDC009781D3 /* FlashLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlashLogger.m; sourceTree = "<group>"; };
-		3C1ECE4A1B0BD4D7004F7F02 /* CaptionTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptionTextView.h; sourceTree = "<group>"; };
-		3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptionTextView.m; sourceTree = "<group>"; };
+		3C1ECE4A1B0BD4D7004F7F02 /* MoodTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoodTextView.h; sourceTree = "<group>"; };
+		3C1ECE4B1B0BD4D7004F7F02 /* MoodTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoodTextView.m; sourceTree = "<group>"; };
 		3C2C4A061AFA2A1600E0E4BF /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		3C2C4A071AFA2A1600E0E4BF /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		3C2C4A091AFA5CD000E0E4BF /* ColorUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorUtils.h; sourceTree = "<group>"; };
@@ -1132,8 +1132,8 @@
 		3C5F97FC1AEBB3B60098F70F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3C1ECE4A1B0BD4D7004F7F02 /* CaptionTextView.h */,
-				3C1ECE4B1B0BD4D7004F7F02 /* CaptionTextView.m */,
+				3C1ECE4A1B0BD4D7004F7F02 /* MoodTextView.h */,
+				3C1ECE4B1B0BD4D7004F7F02 /* MoodTextView.m */,
 				3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */,
 				3C62A5941B14E01B009CCD2A /* FriendTableViewCell.m */,
 				3C7BF5241B15B84700E66537 /* VideoTableViewCell.h */,
@@ -1601,7 +1601,7 @@
 				3CD6EE5C1B623943008FACC4 /* BNCSystemObserver.m in Sources */,
 				3C081D011B1B54C70036D6B2 /* SCVideoConfiguration.m in Sources */,
 				3C4ABD3A1B299B2500897DF9 /* MPObjectSerializer.m in Sources */,
-				3C1ECE4C1B0BD4D7004F7F02 /* CaptionTextView.m in Sources */,
+				3C1ECE4C1B0BD4D7004F7F02 /* MoodTextView.m in Sources */,
 				3C2C4A3F1AFB5A3B00E0E4BF /* NBNumberFormat.m in Sources */,
 				3C4ABD431B299B2500897DF9 /* MPSurveyQuestion.m in Sources */,
 				3C081CF01B1B54C70036D6B2 /* SCAudioTools.m in Sources */,
@@ -1809,8 +1809,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1830,7 +1830,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -1839,8 +1839,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1860,7 +1860,7 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
