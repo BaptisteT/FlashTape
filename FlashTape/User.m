@@ -23,6 +23,7 @@
 @dynamic transformedUsername;
 @dynamic addressbookName;
 @dynamic emojiUnlocked;
+@dynamic this;
 
 @synthesize lastMessageDate;
 

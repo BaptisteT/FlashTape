@@ -16,6 +16,7 @@
 @property (retain) NSString *transformedUsername;
 @property (retain) NSDate *lastMessageDate; // last message received or sent with current user
 @property (retain) NSString *addressbookName;
+@property (retain) User *this;
 @property (nonatomic) BOOL emojiUnlocked;
 
 + (User *)createUserWithNumber:(NSString *)phoneNumber;

@@ -335,10 +335,12 @@
 }
 
 + (void)unpinVideoAsUnsend:(VideoPost *)post {
+    FlashLog(FLASHDATASTORELOG,@"Datastore => unpin video failed");
     [post unpinInBackgroundWithName:kParseFailedPostsName];
 }
 
 + (void)pinVideoAsUnsend:(VideoPost *)post {
+    FlashLog(FLASHDATASTORELOG,@"Datastore => pin video failed");
     [post pinInBackgroundWithName:kParseFailedPostsName];
 }
 

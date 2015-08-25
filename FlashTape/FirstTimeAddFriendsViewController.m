@@ -120,7 +120,7 @@
 #pragma mark Tableview
 // ----------------------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1 + (self.abContactArray.count > 0 ? 1 : 0);
+    return 1 + (self.contactDictionnary.count > 0 ? 1 : 0);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

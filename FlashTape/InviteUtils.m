@@ -51,7 +51,7 @@
 + (NSInteger)getVideoSeenSinceLastInvitePresentedCount
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    return [prefs objectForKey:VIDEO_SEEN_SINCE_LAST_INVITE] ? [[prefs objectForKey:VIDEO_SEEN_SINCE_LAST_INVITE] integerValue]: 12;
+    return [prefs objectForKey:VIDEO_SEEN_SINCE_LAST_INVITE] ? [[prefs objectForKey:VIDEO_SEEN_SINCE_LAST_INVITE] integerValue]: 0;
 }
 
 + (void)incrementVideoSeenSinceLastInvitePresentedCount

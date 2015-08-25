@@ -814,6 +814,7 @@
                                    [self.delegate removeVideoFromVideosArray:self.postToDelete];
                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
                                    self.postToDelete = nil;
+                                   self.postToDetailIndexPath = nil;
                                    [self reloadSection:[self currentUserSection]];
                                } failure:^(NSError *error) {
                                    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];

@@ -475,7 +475,7 @@
     NSError *error;
     NSData *videoData = [NSData dataWithContentsOfURL:url options:0 error:&error];
     if (!videoData) {
-        NSLog(@"%@",error);
+        FlashLog(FLASHAPIMANAGERLOG,error.description);
         failureBlock(nil, NO);
         return;
     }
@@ -486,12 +486,14 @@
             post.videoFile = file;
             [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
+                    FlashLog(FLASHAPIMANAGERLOG,@"Save Video Success");
+                    
                     // save the data to a permanent url
                     [post migrateDataFromTemporaryToPermanentURL];
                     
                     // Increment user score
                     [post.user incrementKey:@"score"];
-                    [post.user saveInBackground];
+                    [post.user saveEventually];
                     
                     // Pin
                     [post pinInBackgroundWithName:kParsePostsName];
@@ -501,7 +503,7 @@
                         successBlock();
                 } else {
                     // Log details of the failure
-                    NSLog(@"Error: %@ %@", error, [error userInfo]);
+                    FlashLog(FLASHAPIMANAGERLOG,@"Error: %@ %@", error, [error userInfo]);
                     if (failureBlock)
                         failureBlock(error, YES);
                     
@@ -762,7 +764,7 @@
 {
     FlashLog(FLASHAPIMANAGERLOG,@"Increment invite seen");
     [contact incrementKey:@"inviteSeenCount" byAmount:[NSNumber numberWithInt:1]];
-    [contact saveInBackground];
+    [contact saveEventually];
 }
 
 

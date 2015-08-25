@@ -81,7 +81,7 @@ static int downloadingCount = 0;
                                      failure:(void(^)(NSError *error))failureBlock
 {
     downloadingCount ++;
-    NSLog(@"%d",downloadingCount);
+    FlashLog(FLASHVIDEOPOSTLOG,@"Downloading count: %d",downloadingCount);
     self.isDownloading = YES;
     // todo BT
     // put this in api manager ?

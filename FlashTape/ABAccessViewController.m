@@ -114,9 +114,6 @@
                      success:^(NSArray *flashersArray) {
                          // Fill AB contacts
                          [ApiManager fillContactTableWithContacts:[contactDictionnary allKeys] aBFlasher:flashersArray success:^(NSArray *abContacts) {
-                             // send x ghost invite
-                             [ApiManager sendGhostInviteAmongContacts:abContacts abDictionnary:contactDictionnary];
-                             
                              [self navigateToABFlashersController:flashersArray];
                          } failure:^(NSError *error) {
                              [self navigateToABFlashersController:flashersArray];

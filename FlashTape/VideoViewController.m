@@ -892,7 +892,7 @@
         VideoPost *post = [VideoPost createCurrentUserPost];
         
         // Tracking
-        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"mood": [NSNumber numberWithBool:![self moodIsEmpty]]};
+        NSDictionary *properties = @{@"length":[NSNumber numberWithFloat:CMTimeGetSeconds(recordSession.duration)], @"selfie": [NSNumber numberWithBool:(self.recorder.device == AVCaptureDevicePositionFront)], @"moodCount": [NSNumber numberWithInteger:self.moodsContainerView.subviews.count]};
         post.videoProperties = [NSMutableDictionary dictionaryWithDictionary:properties];
         
         AVAsset *asset = recordSession.assetRepresentingSegments;
@@ -1157,6 +1157,7 @@
         }
     } else {
         self.moodsContainerView.hidden = NO;
+        self.moodPreviewImageView.image = [self getImageFromMood]; 
     }
     
     // Start UI + progress bar anim
@@ -1178,15 +1179,14 @@
 
 - (void)setPreviewMode {
     [self setPlayingMode:NO];
-    self.moodPreviewImageView.hidden = YES;
     self.cancelConfirmView.hidden = YES;
     self.cancelAreaView.hidden = NO;
     self.previewView.hidden = NO;
     if (![self moodIsEmpty]) {
         self.releaseToSendTuto.hidden = YES;
-        self.moodPreviewImageView.image = [self getImageFromMood];
         self.moodPreviewImageView.hidden = NO;
     } else {
+        self.moodPreviewImageView.hidden = YES;
         self.releaseToSendTuto.hidden = NO;
     }
 }

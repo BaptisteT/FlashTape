@@ -9,7 +9,7 @@
 @import Foundation;
 @import UIKit;
 
-#define GLOBALLOGENABLED NO
+#define GLOBALLOGENABLED YES
 
 @interface ConstantUtils : NSObject
 
@@ -89,6 +89,6 @@ NSArray * getEmojiAtRange(NSRange range);
 BOOL belongsToEmojiArray(NSString *emoji) ;
 
 // Invite
-static NSInteger const kMaxVideoSeenBetweenInvite = 10;
-static NSInteger const kMinInviteCount = 4;
-static NSInteger const kMaxInviteCount = 5;
+static NSInteger const kMaxVideoSeenBetweenInvite = 15;
+static NSInteger const kMinInviteCount = 2;
+static NSInteger const kMaxInviteCount = 3;
