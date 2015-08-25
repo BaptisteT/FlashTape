@@ -74,9 +74,12 @@
 "authentification_error_message" = "Please, sign in again";
 
 // Record
-"hold_ro_record_label" = "Hold to record";
-"keep_holding_label" = "Keep holding to preview";
+"tap_to_record_label" = "Tap to record";
+"recording_label" = "Recording...";
 "replay_label" = "Replay";
+"no_video_label" = "No flashes to see. Add more friends!";
+"replay_flash_label" = "Replay %lu flash";
+"replay_flashes_label" = "Replay %lu flashes";
 "downloading_label" = "Downloading";
 "new_videos_label" = "new flashes";
 "new_video_label" = "new flash";
@@ -87,14 +90,12 @@
 "videos_sending_failed" = "%lu Videos Failed";
 
 // Preview
-"release_to_send" = "Release to post";
-"release_to_cancel" = "Release to cancel";
+"tap_to_send" = "Tap to post";
 "message_canceled" = "Message canceled";
-"move_your_finger_to_cancel" = "Move your finger here to cancel";
+"tap_here_to_cancel" = "Tap here to cancel";
 
 // Friends
-"friend_controller_title" = "😀 Invite your friends 😀";
-"friend_score_label" = "Flashtape is more fun with buddies!";
+"friend_controller_title" = "😀   Your Group   😀";
 "sharing_wording" = "Add me on Flashtape! Username: %@\n%@";
 "follow_or_block_alert_title" = "%@ does not belong to your friends";
 "follow_or_block_alert_message" = "You need to add him to read his message.";

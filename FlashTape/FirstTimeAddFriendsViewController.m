@@ -53,8 +53,12 @@
     
     // Fill Contacts
     [DatastoreUtils  getAllABContactsLocallySuccess:^(NSArray *contacts) {
-        self.abContactArray = [NSMutableArray arrayWithArray:[ABContact sortABContacts:contacts contactDictionnary:self.contactDictionnary]];
-        [self.flashersTableView reloadData];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            self.abContactArray = [NSMutableArray arrayWithArray:[ABContact sortABContacts:contacts contactDictionnary:self.contactDictionnary]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                 [self.flashersTableView reloadData];
+            });
+        });
     } failure:nil];
     
     // Tableview

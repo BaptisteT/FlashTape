@@ -34,10 +34,9 @@
 #import "VideoUtils.h"
 
 @interface FriendsViewController ()
-@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITableView *friendsTableView;
 @property (strong, nonatomic) IBOutlet UIView *colorView;
-@property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 @property (strong, nonatomic) NSMutableArray *currentUserPosts;
 @property (strong, nonatomic) VideoPost *postToDelete;
 @property (strong, nonatomic) NSIndexPath *postToDetailIndexPath;
@@ -71,11 +70,7 @@
     self.followerRelations = [NSMutableArray new];
     
     // Labels
-    [self.inviteButton setTitle:NSLocalizedString(@"friend_controller_title", nil) forState:UIControlStateNormal];
-    self.inviteButton.titleLabel.numberOfLines = 1;
-    self.inviteButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    self.inviteButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
-    self.scoreLabel.text = NSLocalizedString(@"friend_score_label", nil);
+    self.titleLabel.text = NSLocalizedString(@"friend_controller_title", nil);
     
     // Notif
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -716,46 +711,6 @@
 }
 
 
-// ----------------------------------------------------------
-#pragma mark SMS controller
-// ----------------------------------------------------------
-- (IBAction)inviteButtonClicked:(id)sender{
-    [TrackingUtils trackEvent:EVENT_INVITE_CLICKED properties:nil];
-    
-    // Redirect to sms
-    if(![MFMessageComposeViewController canSendText]) {
-        [GeneralUtils showAlertMessage:NSLocalizedString(@"no_sms_error_message", nil) withTitle:nil];
-        return;
-    }
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-    messageController.messageComposeDelegate = self;
-    
-    [[Branch getInstance] getShortURLWithParams:@{@"referringUsername":[User currentUser].flashUsername, @"referringUserId":[User currentUser].objectId}
-                                     andChannel:@"SMS.friends_screen"
-                                     andFeature:BRANCH_FEATURE_TAG_SHARE
-                                       andStage:nil
-                                       andAlias:nil
-                                    andCallback:^(NSString *url, NSError *error) {
-            [messageController setBody:[NSString stringWithFormat:NSLocalizedString(@"sharing_wording", nil),[User currentUser].flashUsername,url ? url : kFlashTapeInviteLink]];
-            [self presentViewController:messageController animated:YES completion:^() {
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-            }];
-    }];
-   
-}
-
-// Dismiss message after finish
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
-{
-    if (result == MessageComposeResultSent) {
-        [TrackingUtils trackEvent:EVENT_INVITE_SENT properties:@{@"type":@"sms"}];
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 // --------------------------------------------
 #pragma mark - Friend TVC Delegate
 // --------------------------------------------
@@ -888,7 +843,7 @@
     }
     [UIView animateWithDuration:1.5f animations:^{
         self.colorView.backgroundColor = [colors objectAtIndex:i];
-        [self.inviteButton setTitleColor:[colors objectAtIndex:i] forState:UIControlStateNormal];
+        self.titleLabel.textColor = [colors objectAtIndex:i];
     } completion:^(BOOL finished) {
         ++i;
         [self doBackgroundColorAnimation];

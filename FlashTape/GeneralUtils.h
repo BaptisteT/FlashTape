@@ -61,4 +61,8 @@
 
 + (BOOL)getSkipContactPref;
 
++ (void)setSlideTutoPref;
+
++ (BOOL)getSlideTutoPref;
+
 @end

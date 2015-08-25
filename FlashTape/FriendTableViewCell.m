@@ -53,6 +53,8 @@
         self.storyVideosCountLabel.backgroundColor = [ColorUtils pink];
         self.storyVideosCountLabel.clipsToBounds=YES;
         self.storyVideosCountLabel.layer.cornerRadius = self.storyVideosCountLabel.frame.size.height / 2;
+    } else {
+        self.accessoryImage.hidden = YES;
     }
     
     if (self.savingCircleShape) {

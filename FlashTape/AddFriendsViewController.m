@@ -82,8 +82,14 @@
 - (void)getContactAndFollowers {
     // AB Contacts
     [DatastoreUtils getAllABContactsLocallySuccess:^(NSArray *contacts) {
-        self.abContactArray = [NSMutableArray arrayWithArray:[ABContact sortABContacts:contacts contactDictionnary:self.addressBookDictionnary]];
+        self.abContactArray = [NSMutableArray arrayWithArray:contacts];
         [self reloadTableView];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            self.abContactArray = [NSMutableArray arrayWithArray:[ABContact sortABContacts:contacts contactDictionnary:self.addressBookDictionnary]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadTableView];
+            });
+        });
     } failure:nil];
 
     // Get unfollowed follower

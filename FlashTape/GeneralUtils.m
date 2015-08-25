@@ -25,6 +25,8 @@
 
 #define HIDE_SKIP_CONTACT @"Hide Skip Contact Pref"
 
+#define HIDE_SLIDE_TUTO @"Hide Slide Tuto Pref"
+
 
 @implementation GeneralUtils
 
@@ -233,6 +235,18 @@
     return [[prefs objectForKey:HIDE_SKIP_CONTACT] boolValue];
 }
 
++ (void)setSlideTutoPref
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithBool:true] forKey:HIDE_SLIDE_TUTO];
+    [prefs synchronize];
+}
+
++ (BOOL)getSlideTutoPref
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    return [[prefs objectForKey:HIDE_SLIDE_TUTO] boolValue];
+}
 
 
 @end

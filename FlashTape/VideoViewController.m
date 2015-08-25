@@ -70,7 +70,7 @@
 @property (strong, nonatomic) NSTimer *recordingMaxDurationTimer;
 @property (weak, nonatomic) IBOutlet UIView *recordingProgressContainer;
 @property (strong, nonatomic) SCRecorder *recorder;
-@property (strong, nonatomic) UILongPressGestureRecognizer *longPressGestureRecogniser;
+//@property (strong, nonatomic) UILongPressGestureRecognizer *longPressGestureRecogniser;
 @property (weak, nonatomic) IBOutlet UIView *cameraView;
 @property (strong, nonatomic) UIView *recordingProgressBar;
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *recordTutoLabel;
@@ -91,11 +91,11 @@
 
 // Preview Playing
 @property (weak, nonatomic) IBOutlet SCVideoPlayerView *previewView;
-@property (weak, nonatomic) IBOutlet UICustomLineLabel *releaseToSendTuto;
+@property (weak, nonatomic) IBOutlet UICustomLineLabel *tapToSendTuto;
 @property (weak, nonatomic) IBOutlet UIView *cancelAreaView;
 @property (weak, nonatomic) IBOutlet UILabel *cancelTutoLabel;
-@property (weak, nonatomic) IBOutlet UIView *cancelConfirmView;
-@property (weak, nonatomic) IBOutlet UICustomLineLabel *cancelConfirmTutoLabel;
+//@property (weak, nonatomic) IBOutlet UIView *cancelConfirmView;
+//@property (weak, nonatomic) IBOutlet UICustomLineLabel *cancelConfirmTutoLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *moodPreviewImageView;
 
 // Sending
@@ -124,9 +124,9 @@
 
 @implementation VideoViewController {
     BOOL _isExporting;
-    BOOL _longPressRunning;
+//    BOOL _longPressRunning;
     BOOL _recordingRunning;
-    BOOL _cancelRecording;
+//    BOOL _cancelRecording;
     int _metadataColorIndex;
     NSDate *_longPressStartDate;
     BOOL _createTutoAdminMessages;
@@ -142,9 +142,9 @@
     // Logic
     _createTutoAdminMessages = NO;
     _isExporting = NO;
-    _longPressRunning = NO;
+//    _longPressRunning = NO;
     _recordingRunning = NO;
-    _cancelRecording = NO;
+//    _cancelRecording = NO;
     _metadataColorIndex = 0;
     self.isSendingCount = 0;
     self.unreadVideoCount = 0;
@@ -177,10 +177,12 @@
     self.sendingBarContainerView.hidden = YES;
     
     // Recording gesture
-    self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-    self.longPressGestureRecogniser.delegate = self;
-    self.longPressGestureRecogniser.minimumPressDuration = 0;
-    [self.cameraView addGestureRecognizer:self.longPressGestureRecogniser];
+    UITapGestureRecognizer *recordingTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleRecordingTapGesture:)];
+//    self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+//    self.longPressGestureRecogniser.delegate = self;
+//    self.longPressGestureRecogniser.minimumPressDuration = 0;
+//    [self.cameraView addGestureRecognizer:self.longPressGestureRecogniser];
+    [self.cameraView addGestureRecognizer:recordingTapGesture];
     
     // Mood
     self.moodCreationContainerView.hidden = YES;
@@ -252,28 +254,25 @@
     self.slideHereTutoLabel.hidden = YES;
     
      // Labels
-    if ([User currentUser].score >= kMaxScoreBeforeHidingImportantTutos) {
-        [self.recordTutoLabel removeFromSuperview];
-        [self.releaseToSendTuto removeFromSuperview];
-    } else {
-        self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
-        self.recordTutoLabel.lineType = LineTypeDown;
-        self.recordTutoLabel.lineHeight = 4.0f;
-    }
+//    if ([User currentUser].score >= kMaxScoreBeforeHidingImportantTutos) {
+//        [self.recordTutoLabel removeFromSuperview];
+//    }
+    self.recordTutoLabel.text = NSLocalizedString(@"tap_to_record_label", nil);
+    self.recordTutoLabel.lineType = LineTypeDown;
+    self.recordTutoLabel.lineHeight = 4.0f;
     self.replayButton.hidden = YES;
     self.messageCount = 0;
     
     // Preview
-    self.releaseToSendTuto.text = NSLocalizedString(@"release_to_send", nil);
-    self.releaseToSendTuto.lineType = LineTypeDown;
-    self.releaseToSendTuto.lineHeight = 4.0f;
-    self.cancelTutoLabel.text = NSLocalizedString(@"move_your_finger_to_cancel", nil);
-    self.cancelConfirmTutoLabel.text = NSLocalizedString(@"release_to_cancel", nil);
-    self.cancelConfirmTutoLabel.lineType = LineTypeDown;
-    self.cancelConfirmTutoLabel.lineHeight = 4.0f;
+    self.tapToSendTuto.text = NSLocalizedString(@"tap_to_send", nil);
+    self.tapToSendTuto.lineType = LineTypeDown;
+    self.tapToSendTuto.lineHeight = 4.0f;
+    self.cancelTutoLabel.text = NSLocalizedString(@"tap_here_to_cancel", nil);
     self.previewView.player.loopEnabled = YES;
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     self.previewView.hidden = YES;
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnPreview:)];
+    [self.previewView addGestureRecognizer:tapGesture];
     
     // Retrieve friends from local datastore
     _followingRelations = [NSMutableOrderedSet new];
@@ -456,31 +455,15 @@
 // --------------------------------------------
 #pragma mark - Actions
 // --------------------------------------------
-- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateBegan) {
+- (void)handleRecordingTapGesture:(UITapGestureRecognizer *)gesture {
+    if ([self isRecordingMode]) {
+        [self terminateSessionAndPreview];
+    } else if (!_isExporting) {
         if ([gesture locationInView:self.cameraView].y < 60 || [self cameraOrMicroAccessDenied]) {
             return; // don't start if we press above
         }
-        if (!_isExporting) {
-            _longPressRunning = YES;
-            [self startRecording];
-            _longPressStartDate = [NSDate date];
-        }
-    } else if (gesture.state == UIGestureRecognizerStateChanged) {
-        if ([self isPreviewMode]) {
-            BOOL cancelMode = CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
-            self.cancelAreaView.hidden = cancelMode;
-            self.releaseToSendTuto.hidden = cancelMode || ![self moodIsEmpty];
-            self.cancelConfirmView.hidden = !cancelMode;
-        }
-    } else {
-        if (_longPressRunning) {
-            _longPressRunning = NO;
-            _cancelRecording = [self isPreviewMode] && CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView]);
-            [self terminateSessionAndExport];
-            [self setCameraMode];
-        }
+        [self startRecording];
+        _longPressStartDate = [NSDate date];
     }
 }
 
@@ -491,6 +474,7 @@
     [self.playingProgressView setFrame:CGRectMake(0, 0, widthRatio * self.metadataView.frame.size.width, self.metadataView.frame.size.height)];
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [TrackingUtils trackEvent:EVENT_PLAYING_SLIDE properties:nil];
+        [GeneralUtils setSlideTutoPref];
         [self showMetaData:NO];
         [self.friendVideoView.player pause];
         [self.whiteNoisePlayer pause];
@@ -518,7 +502,7 @@
         if (unseenArray.count == 0) {
             [TrackingUtils trackEvent:EVENT_VIDEO_REPLAY properties:nil];
             
-            self.slideHereTutoLabel.hidden = [User currentUser].score > kMaxScoreBeforeHidingOtherTutos;
+            self.slideHereTutoLabel.hidden = [GeneralUtils getSlideTutoPref];
         }
     }
 }
@@ -830,7 +814,7 @@
 }
 
 - (void)recordMaxDurationReached {
-    [self terminateSessionAndExport];
+    [self terminateSessionAndPreview];
 }
 
 - (void)playPreviewWithAsset:(AVAsset *)asset {
@@ -840,16 +824,10 @@
 }
 
 
-- (void)terminateSessionAndExport
+- (void)terminateSessionAndPreview
 {
     // Logic to avoid double case
-    if (_isExporting) {
-        return;
-    } else if (!_recordingRunning){
-        if (!_longPressRunning && self.postToSend && !_cancelRecording) {
-            [self sendVideoPost:self.postToSend];
-            self.postToSend = nil;
-        }
+    if (_isExporting || !_recordingRunning) {
         return;
     }
     _isExporting = YES;
@@ -860,18 +838,11 @@
     [self endRecordingMode];
     [self.recorder pause: ^{
         // Preview UI
-        if (_longPressRunning) {
-            [self playPreviewWithAsset:self.recorder.session.assetRepresentingSegments];
-        }
+        [self playPreviewWithAsset:self.recorder.session.assetRepresentingSegments];
 
         [self exportRecordingAndExecuteSuccess:^(VideoPost *post) {
-            [post.videoProperties setObject:[NSNumber numberWithBool:_longPressRunning] forKey:@"preview"];
             _isExporting = NO;
-            if (_longPressRunning) {
-                self.postToSend = post;
-            } else if (!_cancelRecording) {
-               [self sendVideoPost:post];
-            }
+            self.postToSend = post;
         } failure:^{
             _isExporting = NO;
             [self setCameraMode];
@@ -918,6 +889,13 @@
             }
         }];
     }
+}
+
+- (void)tapOnPreview:(UITapGestureRecognizer *)gesture {
+    if (!CGRectContainsPoint(self.cancelAreaView.frame, [gesture locationInView:self.previewView])) {
+        [self sendVideoPost:self.postToSend];
+    }
+    [self setCameraMode];
 }
 
 - (BOOL)cameraOrMicroAccessDenied {
@@ -1149,13 +1127,11 @@
     
     [self hideUIElementOnCamera:YES];
     
+//    self.recordTutoLabel.text = NSLocalizedString(@"recording_label", nil);
+//    self.recordTutoLabel.hidden = NO;
+    
     // 1st flash
-    if ([self moodIsEmpty]) {
-        if ([User currentUser].score < kMaxScoreBeforeHidingOtherTutos) {
-            self.recordTutoLabel.text = NSLocalizedString(@"keep_holding_label", nil);
-            self.recordTutoLabel.hidden = NO;
-        }
-    } else {
+    if (![self moodIsEmpty]) {
         self.moodsContainerView.hidden = NO;
         self.moodPreviewImageView.image = [self getImageFromMood]; 
     }
@@ -1179,16 +1155,17 @@
 
 - (void)setPreviewMode {
     [self setPlayingMode:NO];
-    self.cancelConfirmView.hidden = YES;
+//    self.cancelConfirmView.hidden = YES;
     self.cancelAreaView.hidden = NO;
     self.previewView.hidden = NO;
     if (![self moodIsEmpty]) {
-        self.releaseToSendTuto.hidden = YES;
+//        self.releaseToSendTuto.hidden = YES;
         self.moodPreviewImageView.hidden = NO;
     } else {
         self.moodPreviewImageView.hidden = YES;
-        self.releaseToSendTuto.hidden = NO;
+//        self.releaseToSendTuto.hidden = NO;
     }
+    self.tapToSendTuto.hidden = NO;
 }
 
 
@@ -1224,31 +1201,36 @@
         NSString *title = self.failedVideoPostArray.count > 1 ? [NSString stringWithFormat: NSLocalizedString(@"videos_sending_failed", nil), self.failedVideoPostArray.count] : NSLocalizedString(@"video_sending_failed", nil);
         [self.replayButton setTitle:title forState:UIControlStateNormal];
         self.replayButton.hidden = NO;
-    } else if (self.allVideosArray.count == 0) {
-        // No button state
-        self.replayButton.hidden = YES;
-        self.unreadVideoCount = 0;
     } else {
-        // Replay or new state
-        NSMutableArray *unseenVideos = [self unseenVideosArray];
-        self.unreadVideoCount = unseenVideos.count;
         NSString *buttonTitle;
-        if (self.unreadVideoCount == 0) {
-            self.replayButton.backgroundColor = [ColorUtils black];
-            buttonTitle = [NSString stringWithFormat:NSLocalizedString(@"replay_label", nil)];
+        
+        if (self.allVideosArray.count == 0) {
+            buttonTitle = NSLocalizedString(@"no_video_label", nil);
         } else {
-            self.replayButton.backgroundColor = [ColorUtils purple];
-            BOOL videoFromCurrentUserOnly = YES;
-            for (VideoPost *post in unseenVideos) {
-                if (post.user != [User currentUser]) {
-                    videoFromCurrentUserOnly = NO;
-                    break;
+            // Replay or new state
+            NSMutableArray *unseenVideos = [self unseenVideosArray];
+            self.unreadVideoCount = unseenVideos.count;
+            if (self.unreadVideoCount == 0) {
+                self.replayButton.backgroundColor = [ColorUtils black];
+                if ([User currentUser].score > kMaxScoreBeforeHidingImportantTutos) {
+                    buttonTitle = NSLocalizedString(@"replay_label", nil);
+                } else {
+                    buttonTitle = [NSString stringWithFormat:self.allVideosArray.count < 2 ? NSLocalizedString(@"replay_flash_label", nil) : NSLocalizedString(@"replay_flashes_label", nil),self.allVideosArray.count];
                 }
-            }
-            if (videoFromCurrentUserOnly) {
-                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)self.unreadVideoCount,self.unreadVideoCount < 2 ? NSLocalizedString(@"video_sent_label", nil) : NSLocalizedString(@"videos_sent_label", nil)];
             } else {
-                buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)self.unreadVideoCount,self.unreadVideoCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+                self.replayButton.backgroundColor = [ColorUtils purple];
+                BOOL videoFromCurrentUserOnly = YES;
+                for (VideoPost *post in unseenVideos) {
+                    if (post.user != [User currentUser]) {
+                        videoFromCurrentUserOnly = NO;
+                        break;
+                    }
+                }
+                if (videoFromCurrentUserOnly) {
+                    buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)self.unreadVideoCount,self.unreadVideoCount < 2 ? NSLocalizedString(@"video_sent_label", nil) : NSLocalizedString(@"videos_sent_label", nil)];
+                } else {
+                    buttonTitle = [NSString stringWithFormat:@"%lu %@",(long)self.unreadVideoCount,self.unreadVideoCount < 2 ? NSLocalizedString(@"new_video_label", nil) : NSLocalizedString(@"new_videos_label", nil)];
+                }
             }
         }
         [self.replayButton setTitle:buttonTitle forState:UIControlStateNormal];
@@ -1256,7 +1238,6 @@
         
         // Update Badge
         [ApiManager updateBadge:self.messageCount + self.unreadVideoCount];
-
     }
 }
 
@@ -1296,8 +1277,7 @@
         self.replayButton.alpha = 1;
         [self setReplayButtonUI];
         self.moodsContainerView.hidden = NO;
-        self.recordTutoLabel.text = NSLocalizedString(@"hold_ro_record_label", nil);
-        self.recordTutoLabel.hidden = ![self moodIsEmpty];
+        self.recordTutoLabel.hidden = NO;
     }
     self.cameraSwitchButton.hidden = flag;
     self.friendListButton.hidden = flag;
@@ -1322,24 +1302,21 @@
     return YES;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    // Disallow recognition of tap gestures in the segmented control.
-    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.moodButton || [touch.view isKindOfClass:[MoodTextView class]]) {
-        return NO;
-    }
-    return YES;
-}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+//{
+//    // Disallow recognition of tap gestures in the segmented control.
+//    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.moodButton || [touch.view isKindOfClass:[MoodTextView class]]) {
+//        return NO;
+//    }
+//    return YES;
+//}
 
 // --------------------------------------------
 #pragma mark - Mood
 // --------------------------------------------
 - (void)initMoodTextView {
     self.inProgressMoodTextView = [[MoodTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
-    UILongPressGestureRecognizer *moodLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-    [self.inProgressMoodTextView addGestureRecognizer:moodLongPress];
     [self.moodsContainerView addSubview:self.inProgressMoodTextView];
-    self.inProgressMoodTextView.delegate = self;
 }
 
 - (BOOL)moodIsEmpty {

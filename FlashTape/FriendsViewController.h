@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
 
-#import <MessageUI/MessageUI.h>
 #import <UIKit/UIKit.h>
 
 #import "FlashTapeParentViewController.h"
@@ -18,7 +17,7 @@
 @class VideoPost;
 @protocol FriendsVCProtocol;
 
-@interface FriendsViewController : FlashTapeParentViewController <UITableViewDataSource, UITableViewDelegate, MFMessageComposeViewControllerDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate, ReadMessageVCDelegate>
+@interface FriendsViewController : FlashTapeParentViewController <UITableViewDataSource, UITableViewDelegate, VideoTVCDelegate, FriendTVCDelegate, UIAlertViewDelegate, SendMessageVCDelegate, ReadMessageVCDelegate>
 
 @property (weak, nonatomic) id<FriendsVCProtocol> delegate;
 @property (strong, nonatomic) NSMutableOrderedSet *followingRelations;

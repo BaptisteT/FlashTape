@@ -105,6 +105,7 @@
 
 - (void)handlePanningGesture:(UIPanGestureRecognizer *)recognizer
 {
+    [self.superview bringSubviewToFront:self];
     static CGPoint initialCenter;
     if (recognizer.state == UIGestureRecognizerStateBegan)
     {

@@ -31,4 +31,6 @@
 
 + (UIColor *)green;
 
++ (UIColor *)transparentBlack;
+
 @end
