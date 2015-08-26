@@ -1423,7 +1423,9 @@
 - (void)textViewDidChange:(UITextView *)textView {
     CGSize size = [textView sizeThatFits:CGSizeMake(self.view.frame.size.width, 1000)];
     CGRect previousFrame = textView.frame;
-    textView.frame = CGRectMake(0, previousFrame.origin.y + previousFrame.size.height - size.height, self.view.frame.size.width, size.height);
+    
+    CGFloat width = belongsToEmojiArrayMood(textView.text) ? size.width : self.view.frame.size.width;
+    textView.frame = CGRectMake((self.view.frame.size.width - width)/2, previousFrame.origin.y + previousFrame.size.height - size.height, width, size.height);
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {

@@ -45,7 +45,7 @@ static NSInteger const kDelayBeforeRetryDownload = 3;
 static const NSInteger kFeedHistoryInHours = 24;
 
 // Recording
-static const float kRecordSessionMaxDuration = 3.0;
+static const float kRecordSessionMaxDuration = 2.0;
 static const float kRecordMinDuration = 0.05;
 static const float kCaptionTapMaxDuration = 0.25;
 static const float kVideoEndCutDuration = 0.1;
@@ -85,6 +85,7 @@ static NSInteger const kNumberOfColumns = 4;
 NSArray * getEmojiMoodArray();
 NSArray * getEmojiMessageArray();
 BOOL belongsToEmojiArrayMessage(NSString *emoji);
+BOOL belongsToEmojiArrayMood(NSString *emoji);
 
 // Invite
 static NSInteger const kMaxVideoSeenBetweenInvite = 15;

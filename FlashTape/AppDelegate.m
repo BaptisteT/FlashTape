@@ -62,7 +62,7 @@
     [Parse enableLocalDatastore];
     
     // Initialize Parse.
-    if (!DEBUG) {
+    if (0 && !DEBUG) {
         [Parse setApplicationId:@"mn69Nl3gxgRzsKqJkx6YlIMgJAT2zZwMLokBF8xj"
                       clientKey:@"lhOVSqnmPBhitovjldmyTXht3OKuVFZhLrmLH0d7"];
     } else {

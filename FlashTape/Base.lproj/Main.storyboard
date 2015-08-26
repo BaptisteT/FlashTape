@@ -730,7 +730,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tap_to_send" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFv-lg-Y52" customClass="UICustomLineLabel">
-                                        <rect key="frame" x="0.0" y="280" width="600" height="40"/>
+                                        <rect key="frame" x="0.0" y="40" width="600" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="toV-sP-uU5"/>
                                         </constraints>
@@ -767,6 +767,7 @@
                                     <constraint firstAttribute="centerX" secondItem="mFv-lg-Y52" secondAttribute="centerX" id="SFv-85-Hie"/>
                                     <constraint firstAttribute="trailing" secondItem="lDu-56-nFj" secondAttribute="trailing" id="SvF-qG-YWP"/>
                                     <constraint firstItem="mFv-lg-Y52" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="top" constant="30" id="Tti-NI-5mv"/>
+                                    <constraint firstItem="mFv-lg-Y52" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="top" constant="40" id="aAR-yv-3E2"/>
                                     <constraint firstAttribute="bottom" secondItem="lDu-56-nFj" secondAttribute="bottom" id="aVu-BO-7Dp"/>
                                     <constraint firstItem="CtR-qe-pzg" firstAttribute="top" secondItem="PDc-f0-A0f" secondAttribute="top" id="hgT-sz-iZy"/>
                                     <constraint firstAttribute="centerY" secondItem="mFv-lg-Y52" secondAttribute="centerY" id="t1N-LR-DGc"/>
@@ -778,6 +779,7 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="6gn-0U-wBb"/>
+                                        <exclude reference="Jpj-91-HoH"/>
                                         <exclude reference="Tti-NI-5mv"/>
                                         <exclude reference="t1N-LR-DGc"/>
                                         <exclude reference="x07-Ki-8fa"/>

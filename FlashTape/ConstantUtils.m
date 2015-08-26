@@ -27,4 +27,8 @@ BOOL belongsToEmojiArrayMessage(NSString *emoji) {
     return [EMOJI_ARRAY_MESSAGE containsObject:emoji];
 }
 
+BOOL belongsToEmojiArrayMood(NSString *emoji) {
+    return [EMOJI_ARRAY_MOOD containsObject:emoji];
+}
+
 @end
