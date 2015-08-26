@@ -173,7 +173,6 @@
 		3C5F989A1AED16430098F70F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98991AED16430098F70F /* MobileCoreServices.framework */; };
 		3C5F989C1AED164B0098F70F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F989B1AED164B0098F70F /* QuartzCore.framework */; };
 		3C5F989E1AED16500098F70F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F989D1AED16500098F70F /* Security.framework */; };
-		3C5F98A01AED165D0098F70F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F989F1AED165D0098F70F /* StoreKit.framework */; };
 		3C5F98A21AED16670098F70F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A11AED16670098F70F /* SystemConfiguration.framework */; };
 		3C5F98A41AED16760098F70F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A31AED16760098F70F /* libz.dylib */; };
 		3C5F98A61AED16810098F70F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F98A51AED16810098F70F /* libsqlite3.dylib */; };
@@ -196,6 +195,30 @@
 		3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5281B15D93700E66537 /* VideoUtils.m */; };
 		3C84544F1B6BB6C600B55E25 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */; };
 		3C8454521B6F698A00B55E25 /* DesignUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8454511B6F698A00B55E25 /* DesignUtils.m */; };
+		3C86E1201B8E004E005AD52B /* 🌌_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E11A1B8E004E005AD52B /* 🌌_sound.wav */; };
+		3C86E1211B8E004E005AD52B /* 🐔_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E11B1B8E004E005AD52B /* 🐔_sound.wav */; };
+		3C86E1221B8E004E005AD52B /* 💦_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E11C1B8E004E005AD52B /* 💦_sound.wav */; };
+		3C86E1231B8E004E005AD52B /* 🔪_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E11D1B8E004E005AD52B /* 🔪_sound.wav */; };
+		3C86E1241B8E004E005AD52B /* 😵_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E11E1B8E004E005AD52B /* 😵_sound.wav */; };
+		3C86E1251B8E004E005AD52B /* 🙊_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E11F1B8E004E005AD52B /* 🙊_sound.wav */; };
+		3C86E1271B8E011A005AD52B /* 🎶_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1261B8E011A005AD52B /* 🎶_sound.wav */; };
+		3C86E1291B8E01B7005AD52B /* 🚨_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1281B8E01B7005AD52B /* 🚨_sound.wav */; };
+		3C86E12F1B8E03E5005AD52B /* 🎉_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E12A1B8E03E5005AD52B /* 🎉_sound.wav */; };
+		3C86E1301B8E03E5005AD52B /* 👏_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E12B1B8E03E5005AD52B /* 👏_sound.wav */; };
+		3C86E1311B8E03E5005AD52B /* 🔫_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E12C1B8E03E5005AD52B /* 🔫_sound.wav */; };
+		3C86E1331B8E03E5005AD52B /* 🙏_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E12E1B8E03E5005AD52B /* 🙏_sound.wav */; };
+		3C86E13D1B8E071E005AD52B /* 👾_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1341B8E071E005AD52B /* 👾_sound.wav */; };
+		3C86E13E1B8E071E005AD52B /* 📷_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1351B8E071E005AD52B /* 📷_sound.wav */; };
+		3C86E13F1B8E071E005AD52B /* 😂_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1361B8E071E005AD52B /* 😂_sound.wav */; };
+		3C86E1401B8E071E005AD52B /* 😆_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1371B8E071E005AD52B /* 😆_sound.wav */; };
+		3C86E1411B8E071E005AD52B /* 😍_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1381B8E071E005AD52B /* 😍_sound.wav */; };
+		3C86E1421B8E071E005AD52B /* 😎_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1391B8E071E005AD52B /* 😎_sound.wav */; };
+		3C86E1431B8E071E005AD52B /* 😏_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E13A1B8E071E005AD52B /* 😏_sound.wav */; };
+		3C86E1441B8E071E005AD52B /* 😒_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E13B1B8E071E005AD52B /* 😒_sound.wav */; };
+		3C86E1451B8E071E005AD52B /* 😡_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E13C1B8E071E005AD52B /* 😡_sound.wav */; };
+		3C86E1471B8E0736005AD52B /* 😱_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1461B8E0736005AD52B /* 😱_sound.wav */; };
+		3C86E14A1B8E0B2F005AD52B /* 😌_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1481B8E0B2F005AD52B /* 😌_sound.wav */; };
+		3C86E14B1B8E0B2F005AD52B /* 😩_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3C86E1491B8E0B2F005AD52B /* 😩_sound.wav */; };
 		3C9130541B8C708600177309 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C9130531B8C708600177309 /* Parse.framework */; };
 		3C91305A1B8C70B600177309 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C9130551B8C70B600177309 /* Bolts.framework */; };
 		3C91305B1B8C70B600177309 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C9130561B8C70B600177309 /* ParseCrashReporting.framework */; };
@@ -562,7 +585,6 @@
 		3C5F98991AED16430098F70F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		3C5F989B1AED164B0098F70F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		3C5F989D1AED16500098F70F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		3C5F989F1AED165D0098F70F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		3C5F98A11AED16670098F70F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3C5F98A31AED16760098F70F /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		3C5F98A51AED16810098F70F /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -598,6 +620,30 @@
 		3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = tuto_video_2.mp4; sourceTree = "<group>"; };
 		3C8454501B6F698A00B55E25 /* DesignUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesignUtils.h; sourceTree = "<group>"; };
 		3C8454511B6F698A00B55E25 /* DesignUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesignUtils.m; sourceTree = "<group>"; };
+		3C86E11A1B8E004E005AD52B /* 🌌_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🌌_sound.wav"; sourceTree = "<group>"; };
+		3C86E11B1B8E004E005AD52B /* 🐔_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🐔_sound.wav"; sourceTree = "<group>"; };
+		3C86E11C1B8E004E005AD52B /* 💦_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "💦_sound.wav"; sourceTree = "<group>"; };
+		3C86E11D1B8E004E005AD52B /* 🔪_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🔪_sound.wav"; sourceTree = "<group>"; };
+		3C86E11E1B8E004E005AD52B /* 😵_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😵_sound.wav"; sourceTree = "<group>"; };
+		3C86E11F1B8E004E005AD52B /* 🙊_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🙊_sound.wav"; sourceTree = "<group>"; };
+		3C86E1261B8E011A005AD52B /* 🎶_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🎶_sound.wav"; sourceTree = "<group>"; };
+		3C86E1281B8E01B7005AD52B /* 🚨_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🚨_sound.wav"; sourceTree = "<group>"; };
+		3C86E12A1B8E03E5005AD52B /* 🎉_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🎉_sound.wav"; sourceTree = "<group>"; };
+		3C86E12B1B8E03E5005AD52B /* 👏_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "👏_sound.wav"; sourceTree = "<group>"; };
+		3C86E12C1B8E03E5005AD52B /* 🔫_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🔫_sound.wav"; sourceTree = "<group>"; };
+		3C86E12E1B8E03E5005AD52B /* 🙏_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "🙏_sound.wav"; sourceTree = "<group>"; };
+		3C86E1341B8E071E005AD52B /* 👾_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "👾_sound.wav"; sourceTree = "<group>"; };
+		3C86E1351B8E071E005AD52B /* 📷_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "📷_sound.wav"; sourceTree = "<group>"; };
+		3C86E1361B8E071E005AD52B /* 😂_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😂_sound.wav"; sourceTree = "<group>"; };
+		3C86E1371B8E071E005AD52B /* 😆_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😆_sound.wav"; sourceTree = "<group>"; };
+		3C86E1381B8E071E005AD52B /* 😍_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😍_sound.wav"; sourceTree = "<group>"; };
+		3C86E1391B8E071E005AD52B /* 😎_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😎_sound.wav"; sourceTree = "<group>"; };
+		3C86E13A1B8E071E005AD52B /* 😏_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😏_sound.wav"; sourceTree = "<group>"; };
+		3C86E13B1B8E071E005AD52B /* 😒_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😒_sound.wav"; sourceTree = "<group>"; };
+		3C86E13C1B8E071E005AD52B /* 😡_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😡_sound.wav"; sourceTree = "<group>"; };
+		3C86E1461B8E0736005AD52B /* 😱_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😱_sound.wav"; sourceTree = "<group>"; };
+		3C86E1481B8E0B2F005AD52B /* 😌_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😌_sound.wav"; sourceTree = "<group>"; };
+		3C86E1491B8E0B2F005AD52B /* 😩_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "😩_sound.wav"; sourceTree = "<group>"; };
 		3C9130531B8C708600177309 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		3C9130551B8C70B600177309 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		3C9130561B8C70B600177309 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
@@ -733,7 +779,6 @@
 				3C5F98A41AED16760098F70F /* libz.dylib in Frameworks */,
 				3C5F98A21AED16670098F70F /* SystemConfiguration.framework in Frameworks */,
 				3C95F2221B678BD900A28A16 /* FBSDKMessengerShareKit.framework in Frameworks */,
-				3C5F98A01AED165D0098F70F /* StoreKit.framework in Frameworks */,
 				3C4ABD131B299B2500897DF9 /* libMPCategoryHelpers.a in Frameworks */,
 				3C5F989E1AED16500098F70F /* Security.framework in Frameworks */,
 				3C5F989C1AED164B0098F70F /* QuartzCore.framework in Frameworks */,
@@ -1030,6 +1075,8 @@
 		3C5F97F61AEBB3140098F70F /* Ressources */ = {
 			isa = PBXGroup;
 			children = (
+				3C86E1191B8DF7B9005AD52B /* emoji */,
+				3C86E1181B8DF7AF005AD52B /* tuto */,
 				3C5F97DA1AEBB1F30098F70F /* Main.storyboard */,
 				A4A087EF1B0E4F5700292202 /* Images.xcassets */,
 				3C2C4A591AFBD04600E0E4BF /* PushNoAnimationSegue.h */,
@@ -1038,13 +1085,6 @@
 				3C42DF751B308ED200C956A0 /* green.png */,
 				3C2C4A4E1AFB5EB000E0E4BF /* PhoneFormats.dat */,
 				3C2C4C211B05F73A00E0E4BF /* whiteNoise.wav */,
-				3C70CAA81B4690F0006E71D7 /* tuto_video_1.mp4 */,
-				3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */,
-				3C70CAB21B46D1B7006E71D7 /* tuto_video_3.mp4 */,
-				3C61A9641B6BB4A100EA90A6 /* tuto_video_4.mov */,
-				3C70CAB41B46D936006E71D7 /* tuto_video_5.mp4 */,
-				3C61A9661B6BB4C100EA90A6 /* tuto_video_6.mov */,
-				3C70CAAA1B4690F0006E71D7 /* tuto_video_7.mp4 */,
 				A4CE87581B09133800DC20DC /* Fonts */,
 				A4A087ED1B0E4C9C00292202 /* Launch Screen.xib */,
 			);
@@ -1259,7 +1299,6 @@
 				3C95F21B1B678BD900A28A16 /* FBSDKMessengerShareKit.framework */,
 				3C95F21C1B678BD900A28A16 /* FBSDKShareKit.framework */,
 				3C5F98A11AED16670098F70F /* SystemConfiguration.framework */,
-				3C5F989F1AED165D0098F70F /* StoreKit.framework */,
 				3C5F989D1AED16500098F70F /* Security.framework */,
 				3C5F989B1AED164B0098F70F /* QuartzCore.framework */,
 				3C5F98991AED16430098F70F /* MobileCoreServices.framework */,
@@ -1288,6 +1327,51 @@
 				3C61A95E1B6ACCFC00EA90A6 /* PureLayoutDefines.h */,
 			);
 			path = PureLayout;
+			sourceTree = "<group>";
+		};
+		3C86E1181B8DF7AF005AD52B /* tuto */ = {
+			isa = PBXGroup;
+			children = (
+				3C70CAA81B4690F0006E71D7 /* tuto_video_1.mp4 */,
+				3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */,
+				3C70CAB21B46D1B7006E71D7 /* tuto_video_3.mp4 */,
+				3C61A9641B6BB4A100EA90A6 /* tuto_video_4.mov */,
+				3C70CAB41B46D936006E71D7 /* tuto_video_5.mp4 */,
+				3C61A9661B6BB4C100EA90A6 /* tuto_video_6.mov */,
+				3C70CAAA1B4690F0006E71D7 /* tuto_video_7.mp4 */,
+			);
+			name = tuto;
+			sourceTree = "<group>";
+		};
+		3C86E1191B8DF7B9005AD52B /* emoji */ = {
+			isa = PBXGroup;
+			children = (
+				3C86E11A1B8E004E005AD52B /* 🌌_sound.wav */,
+				3C86E11B1B8E004E005AD52B /* 🐔_sound.wav */,
+				3C86E11C1B8E004E005AD52B /* 💦_sound.wav */,
+				3C86E11D1B8E004E005AD52B /* 🔪_sound.wav */,
+				3C86E11E1B8E004E005AD52B /* 😵_sound.wav */,
+				3C86E11F1B8E004E005AD52B /* 🙊_sound.wav */,
+				3C86E1261B8E011A005AD52B /* 🎶_sound.wav */,
+				3C86E1281B8E01B7005AD52B /* 🚨_sound.wav */,
+				3C86E12A1B8E03E5005AD52B /* 🎉_sound.wav */,
+				3C86E12B1B8E03E5005AD52B /* 👏_sound.wav */,
+				3C86E12C1B8E03E5005AD52B /* 🔫_sound.wav */,
+				3C86E1461B8E0736005AD52B /* 😱_sound.wav */,
+				3C86E12E1B8E03E5005AD52B /* 🙏_sound.wav */,
+				3C86E1341B8E071E005AD52B /* 👾_sound.wav */,
+				3C86E1351B8E071E005AD52B /* 📷_sound.wav */,
+				3C86E1361B8E071E005AD52B /* 😂_sound.wav */,
+				3C86E1371B8E071E005AD52B /* 😆_sound.wav */,
+				3C86E1381B8E071E005AD52B /* 😍_sound.wav */,
+				3C86E1391B8E071E005AD52B /* 😎_sound.wav */,
+				3C86E13A1B8E071E005AD52B /* 😏_sound.wav */,
+				3C86E13B1B8E071E005AD52B /* 😒_sound.wav */,
+				3C86E13C1B8E071E005AD52B /* 😡_sound.wav */,
+				3C86E1481B8E0B2F005AD52B /* 😌_sound.wav */,
+				3C86E1491B8E0B2F005AD52B /* 😩_sound.wav */,
+			);
+			name = emoji;
 			sourceTree = "<group>";
 		};
 		3CBD0D471B402EB8001DFE17 /* Signup / Onboarding */ = {
@@ -1432,6 +1516,11 @@
 					3C5F97C91AEBB1F30098F70F = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 86N86JY2JG;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -1458,26 +1547,46 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C86E1451B8E071E005AD52B /* 😡_sound.wav in Resources */,
 				3C0AC2961B244F700056C59C /* AddUserTableViewCell.xib in Resources */,
+				3C86E13F1B8E071E005AD52B /* 😂_sound.wav in Resources */,
+				3C86E1251B8E004E005AD52B /* 🙊_sound.wav in Resources */,
+				3C86E13D1B8E071E005AD52B /* 👾_sound.wav in Resources */,
 				A4CE87591B0913DE00DC20DC /* NHaasGroteskDSPro-55Rg.ttf in Resources */,
+				3C86E1431B8E071E005AD52B /* 😏_sound.wav in Resources */,
 				3C4ABD341B299B2500897DF9 /* MPNotification.storyboard in Resources */,
 				A4CE875A1B0913DE00DC20DC /* NHaasGroteskDSPro-65Md.ttf in Resources */,
 				A4CE875B1B0913DE00DC20DC /* NHaasGroteskDSPro-75Bd.ttf in Resources */,
+				3C86E1221B8E004E005AD52B /* 💦_sound.wav in Resources */,
 				3C5F97DC1AEBB1F30098F70F /* Main.storyboard in Resources */,
 				3C70CAB51B46D936006E71D7 /* tuto_video_5.mp4 in Resources */,
+				3C86E1301B8E03E5005AD52B /* 👏_sound.wav in Resources */,
+				3C86E1471B8E0736005AD52B /* 😱_sound.wav in Resources */,
 				3C2C4A571AFB701D00E0E4BF /* NBPhoneNumberMetadata.plist in Resources */,
+				3C86E1441B8E071E005AD52B /* 😒_sound.wav in Resources */,
 				3C5F97F81AEBB3530098F70F /* Localizable.strings in Resources */,
+				3C86E1241B8E004E005AD52B /* 😵_sound.wav in Resources */,
+				3C86E14A1B8E0B2F005AD52B /* 😌_sound.wav in Resources */,
 				3C61A9651B6BB4A100EA90A6 /* tuto_video_4.mov in Resources */,
+				3C86E1291B8E01B7005AD52B /* 🚨_sound.wav in Resources */,
 				3C2C4A521AFB6F8E00E0E4BF /* PhoneNumberMetaData.json in Resources */,
 				3C42DF761B308ED200C956A0 /* green.png in Resources */,
 				3C2C4A4F1AFB5EB000E0E4BF /* PhoneCountries.txt in Resources */,
+				3C86E13E1B8E071E005AD52B /* 📷_sound.wav in Resources */,
 				3C4ABD541B299B2500897DF9 /* snapshot_config.json in Resources */,
+				3C86E1411B8E071E005AD52B /* 😍_sound.wav in Resources */,
+				3C86E1231B8E004E005AD52B /* 🔪_sound.wav in Resources */,
 				3C61A9671B6BB4C100EA90A6 /* tuto_video_6.mov in Resources */,
 				3C4ABD141B299B2500897DF9 /* Media.xcassets in Resources */,
+				3C86E1421B8E071E005AD52B /* 😎_sound.wav in Resources */,
 				3C70CAAC1B4690F0006E71D7 /* tuto_video_1.mp4 in Resources */,
 				3C4ABC871B28777500897DF9 /* InfoPlist.strings in Resources */,
+				3C86E1311B8E03E5005AD52B /* 🔫_sound.wav in Resources */,
 				3C4ABD411B299B2500897DF9 /* MPSurvey.storyboard in Resources */,
 				A4A087EE1B0E4C9C00292202 /* Launch Screen.xib in Resources */,
+				3C86E1401B8E071E005AD52B /* 😆_sound.wav in Resources */,
+				3C86E1331B8E03E5005AD52B /* 🙏_sound.wav in Resources */,
+				3C86E1211B8E004E005AD52B /* 🐔_sound.wav in Resources */,
 				3C2C4A541AFB6FDB00E0E4BF /* PhoneNumberMetaDataForTesting.json in Resources */,
 				3C70CAAE1B4690F0006E71D7 /* tuto_video_7.mp4 in Resources */,
 				3CD6EE751B6290EB008FACC4 /* InviteContactTableViewCell.xib in Resources */,
@@ -1485,12 +1594,16 @@
 				3C4ABD2C1B299B2500897DF9 /* MPCloseBtn.png in Resources */,
 				3C84544F1B6BB6C600B55E25 /* tuto_video_2.mp4 in Resources */,
 				A4A087F01B0E4F5700292202 /* Images.xcassets in Resources */,
+				3C86E1271B8E011A005AD52B /* 🎶_sound.wav in Resources */,
 				3C4ABD551B299B2500897DF9 /* test_variant.json in Resources */,
 				3C2C4A501AFB5EB000E0E4BF /* PhoneFormats.dat in Resources */,
 				3C2C4A581AFB701D00E0E4BF /* NBPhoneNumberMetadataForTesting.plist in Resources */,
+				3C86E12F1B8E03E5005AD52B /* 🎉_sound.wav in Resources */,
 				3C70CAB31B46D1B7006E71D7 /* tuto_video_3.mp4 in Resources */,
 				3C2C4A6F1AFE231F00E0E4BF /* DateTools.bundle in Resources */,
 				3C2C4C221B05F73A00E0E4BF /* whiteNoise.wav in Resources */,
+				3C86E14B1B8E0B2F005AD52B /* 😩_sound.wav in Resources */,
+				3C86E1201B8E004E005AD52B /* 🌌_sound.wav in Resources */,
 				3C4ABD2D1B299B2500897DF9 /* MPCloseBtn@2x.png in Resources */,
 				3CBD0D461B40169A001DFE17 /* InternalNotifView.xib in Resources */,
 			);
@@ -1840,7 +1953,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Mitch Buchannon (86N86JY2JG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

@@ -12,6 +12,8 @@
 
 @interface MoodTextView : UITextView <UIGestureRecognizerDelegate>
 
+- (void)setEmoji:(NSString *)emoji;
+- (void)playSound:(BOOL)flag;
 
 @end
 

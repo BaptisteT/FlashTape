@@ -103,7 +103,7 @@
         // Message
         Message *message = self.messagesArray.firstObject;
         self.messageLabel.text = message.messageContent;
-        NSInteger fontSize = belongsToEmojiArray(message.messageContent) ? kEmojiMaxFontSize : kMessageReceivedMaxFontSize;
+        NSInteger fontSize = belongsToEmojiArrayMessage(message.messageContent) ? kEmojiMaxFontSize : kMessageReceivedMaxFontSize;
         self.messageLabel.font = [UIFont fontWithName:@"NHaasGroteskDSPro-65Md" size:fontSize];
         
         // Date

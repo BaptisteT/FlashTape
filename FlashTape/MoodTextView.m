@@ -5,7 +5,7 @@
 //  Created by Baptiste Truchot on 5/19/15.
 //  Copyright (c) 2015 Mindie. All rights reserved.
 //
-
+#import <AVFoundation/AVFoundation.h>
 #import "MoodTextView.h"
 
 @interface MoodTextView()
@@ -16,6 +16,8 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecogniser;
 @property (nonatomic, strong) NSMutableSet *activeRecognizers;
 @property(nonatomic) CGAffineTransform referenceTransform;
+
+@property (nonatomic, strong) AVAudioPlayer *soundPlayer;
 
 @end
 
@@ -64,6 +66,35 @@
          self.autocorrectionType = UITextAutocorrectionTypeNo;
      }
     return self;
+}
+
+- (void)setEmoji:(NSString *)emoji {
+    self.text = emoji;
+    NSError* error;
+    NSString *soundPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@_sound",emoji] ofType:@"wav"];
+    if (soundPath) {
+        NSURL *soundURL = [NSURL fileURLWithPath:soundPath];
+        self.soundPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundURL error:&error];
+        if (!error) {
+            [self playSound:YES];
+        }
+    }
+}
+
+- (void)playSound:(BOOL)flag {
+    if (self.soundPlayer) {
+        [self stopSound];
+        if (flag) {
+            [self.soundPlayer play];
+        }
+    }
+}
+
+- (void)stopSound {
+    if ([self.soundPlayer isPlaying]) {
+        [self.soundPlayer stop];
+        self.soundPlayer.currentTime = 0.;
+    }
 }
 
 // -------------------

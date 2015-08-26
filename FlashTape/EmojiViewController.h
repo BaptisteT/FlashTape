@@ -19,6 +19,7 @@
 - (void)reloadEmojis;
 
 @property (weak, nonatomic) id<EmojiVCDelegate> delegate;
+@property (strong, nonatomic) NSArray *emojiArray;
 
 @end
 

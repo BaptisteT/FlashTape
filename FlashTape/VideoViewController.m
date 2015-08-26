@@ -435,6 +435,7 @@
         ((InviteContactViewController *) [segue destinationViewController]).colorArray = self.metadataColorArray;
     } else if ([segueName isEqualToString: @"Emoji From Video"]) {
         self.emojiController = (EmojiViewController *) [segue destinationViewController];
+        self.emojiController.emojiArray = getEmojiMoodArray();
         self.emojiController.delegate = self;
     }
 }
@@ -458,6 +459,7 @@
 - (void)handleRecordingTapGesture:(UITapGestureRecognizer *)gesture {
     if ([self isRecordingMode]) {
         [self terminateSessionAndPreview];
+        [self playEmojisSound:[NSNumber numberWithBool:NO]];
     } else if (!_isExporting) {
         if ([gesture locationInView:self.cameraView].y < 60 || [self cameraOrMicroAccessDenied]) {
             return; // don't start if we press above
@@ -800,7 +802,6 @@
 // --------------------------------------------
 #pragma mark - Recording
 // --------------------------------------------
-
 - (void)startRecording {
     if (!self.recorder.captureSession.isRunning) {
         [self.recorder startRunning];
@@ -810,7 +811,20 @@
     [self.recorder.session removeAllSegments];
     [self setRecordingMode];
     self.recordingMaxDurationTimer = [NSTimer scheduledTimerWithTimeInterval:kRecordSessionMaxDuration + kVideoEndCutDuration target:self selector:@selector(recordMaxDurationReached) userInfo:nil repeats:NO];
+    
+    // Record
     [self.recorder record];
+    
+    // Play emojis
+    [self performSelector:@selector(playEmojisSound:) withObject:[NSNumber numberWithBool:YES] afterDelay:0.25];
+}
+
+- (void)playEmojisSound:(NSNumber *)flag {
+    for (UIView *view in self.moodsContainerView.subviews) {
+        if ([view isKindOfClass:[MoodTextView class]]) {
+            [(MoodTextView *)view playSound:[flag boolValue]];
+        }
+    }
 }
 
 - (void)recordMaxDurationReached {
@@ -1324,9 +1338,13 @@
 }
 
 - (void)emojiClicked:(NSString *)emoji {
-    self.inProgressMoodTextView.text = emoji;
-    self.inProgressMoodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:250.0];
+    [self.inProgressMoodTextView setEmoji:emoji];
+    self.inProgressMoodTextView.font = [UIFont fontWithName:@"NHaasGroteskDSPro-75Bd" size:220.0];
     [self textViewDidChange:self.inProgressMoodTextView];
+    
+    CGRect frame = self.inProgressMoodTextView.frame;
+    frame.origin.y += 10 * self.moodsContainerView.subviews.count;
+    self.inProgressMoodTextView.frame = frame;
     [self hideMoodView];
 }
 

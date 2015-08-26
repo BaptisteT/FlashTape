@@ -42,16 +42,22 @@
 
 - (NSInteger)tableView:(PTEHorizontalTableView *)horizontalTableView numberOfRowsInSection:(NSInteger)section
 {
-    return [User currentUser].emojiUnlocked ? (NSInteger)(emojiArrayCount() / kNumberOfEmojisByColumn) : kNumberOfColumns;
+//    return [User currentUser].emojiUnlocked ? (NSInteger)(self.emojiArray.count / kNumberOfEmojisByColumn) : kNumberOfColumns;
+    return (NSInteger)(self.emojiArray.count / kNumberOfEmojisByColumn);
 }
 
 - (UITableViewCell *)tableView:(PTEHorizontalTableView *)horizontalTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     EmojiTableViewCell * cell = [horizontalTableView.tableView dequeueReusableCellWithIdentifier:@"EmojiTableViewCell"];
     
-    BOOL isUnlockRow = ![User currentUser].emojiUnlocked && (indexPath.row == kNumberOfColumns - 1);
+//    BOOL isUnlockRow = ![User currentUser].emojiUnlocked && (indexPath.row == kNumberOfColumns - 1);
+    BOOL isUnlockRow = NO;
     
-    NSArray *emojis = getEmojiAtRange(NSMakeRange(indexPath.row * kNumberOfEmojisByColumn, kNumberOfEmojisByColumn - (isUnlockRow ? 1 : 0)));
+    NSRange range = NSMakeRange(indexPath.row * kNumberOfEmojisByColumn, kNumberOfEmojisByColumn - (isUnlockRow ? 1 : 0));
+    if (range.length + range.location > self.emojiArray.count) {
+        range = NSMakeRange(range.location, self.emojiArray.count - range.location);
+    }
+    NSArray *emojis = [self.emojiArray subarrayWithRange:range];
     [cell initWithEmojis:emojis isUnlockRow:isUnlockRow];
     cell.delegate = self;
     return cell;

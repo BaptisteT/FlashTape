@@ -91,6 +91,7 @@
     NSString * segueName = segue.identifier;
     if ([segueName isEqualToString: @"Emoji From Send"]) {
         self.emojiController = (EmojiViewController *) [segue destinationViewController];
+        self.emojiController.emojiArray = getEmojiMessageArray();
         self.emojiController.delegate = self;
     }
 }
