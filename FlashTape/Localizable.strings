@@ -74,7 +74,7 @@
 "authentification_error_message" = "Please, sign in again";
 
 // Record
-"tap_to_record_label" = "Tap to record";
+"tap_to_record_label" = "Hold to record";
 "recording_label" = "Recording...";
 "replay_label" = "Replay";
 "no_video_label" = "No flashes to see. Add more friends!";

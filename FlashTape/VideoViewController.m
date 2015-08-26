@@ -94,8 +94,6 @@
 @property (weak, nonatomic) IBOutlet UICustomLineLabel *tapToSendTuto;
 @property (weak, nonatomic) IBOutlet UIView *cancelAreaView;
 @property (weak, nonatomic) IBOutlet UILabel *cancelTutoLabel;
-//@property (weak, nonatomic) IBOutlet UIView *cancelConfirmView;
-//@property (weak, nonatomic) IBOutlet UICustomLineLabel *cancelConfirmTutoLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *moodPreviewImageView;
 
 // Sending
@@ -177,12 +175,12 @@
     self.sendingBarContainerView.hidden = YES;
     
     // Recording gesture
-    UITapGestureRecognizer *recordingTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleRecordingTapGesture:)];
-//    self.longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-//    self.longPressGestureRecogniser.delegate = self;
-//    self.longPressGestureRecogniser.minimumPressDuration = 0;
-//    [self.cameraView addGestureRecognizer:self.longPressGestureRecogniser];
-    [self.cameraView addGestureRecognizer:recordingTapGesture];
+//    UITapGestureRecognizer *recordingTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleRecordingTapGesture:)];
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleRecordingPressGesture:)];
+    longPressGesture.delegate = self;
+    longPressGesture.minimumPressDuration = 0;
+    [self.cameraView addGestureRecognizer:longPressGesture];
+//    [self.cameraView addGestureRecognizer:recordingTapGesture];
     
     // Mood
     self.moodCreationContainerView.hidden = YES;
@@ -456,16 +454,20 @@
 // --------------------------------------------
 #pragma mark - Actions
 // --------------------------------------------
-- (void)handleRecordingTapGesture:(UITapGestureRecognizer *)gesture {
-    if ([self isRecordingMode]) {
-        [self terminateSessionAndPreview];
-        [self playEmojisSound:[NSNumber numberWithBool:NO]];
-    } else if (!_isExporting) {
+
+- (void)handleRecordingPressGesture:(UILongPressGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
         if ([gesture locationInView:self.cameraView].y < 60 || [self cameraOrMicroAccessDenied]) {
             return; // don't start if we press above
         }
-        [self startRecording];
-        _longPressStartDate = [NSDate date];
+        if (!_isExporting) {
+            [self startRecording];
+            _longPressStartDate = [NSDate date];
+        }
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
+
+    } else {
+        [self terminateSessionAndPreview];
     }
 }
 
@@ -849,10 +851,14 @@
     [self.recordingMaxDurationTimer invalidate];
     
     // Pause and export
+    [self playEmojisSound:[NSNumber numberWithBool:NO]];
     [self endRecordingMode];
+
     [self.recorder pause: ^{
         // Preview UI
-        [self playPreviewWithAsset:self.recorder.session.assetRepresentingSegments];
+        if (CMTimeGetSeconds(self.recorder.session.assetRepresentingSegments.duration) > kRecordMinDuration) {
+            [self playPreviewWithAsset:self.recorder.session.assetRepresentingSegments];
+        }
 
         [self exportRecordingAndExecuteSuccess:^(VideoPost *post) {
             _isExporting = NO;
@@ -1316,20 +1322,25 @@
     return YES;
 }
 
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-//{
-//    // Disallow recognition of tap gestures in the segmented control.
-//    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.moodButton || [touch.view isKindOfClass:[MoodTextView class]]) {
-//        return NO;
-//    }
-//    return YES;
-//}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    // Disallow recognition of tap gestures in the segmented control.
+    if ((touch.view == self.replayButton || touch.view == self.cameraSwitchButton) || touch.view == self.friendListButton || touch.view == self.moodButton || [touch.view isKindOfClass:[MoodTextView class]]) {
+        return NO;
+    }
+    return YES;
+}
 
 // --------------------------------------------
 #pragma mark - Mood
 // --------------------------------------------
 - (void)initMoodTextView {
     self.inProgressMoodTextView = [[MoodTextView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height/2, self.view.frame.size.width, 0)];
+    UILongPressGestureRecognizer *moodLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleRecordingPressGesture:)];
+    [self.inProgressMoodTextView addGestureRecognizer:moodLongPress];
+    self.inProgressMoodTextView.delegate = self;
+
+
     [self.moodsContainerView addSubview:self.inProgressMoodTextView];
 }
 

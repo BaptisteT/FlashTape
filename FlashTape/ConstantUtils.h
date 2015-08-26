@@ -46,7 +46,7 @@ static const NSInteger kFeedHistoryInHours = 24;
 
 // Recording
 static const float kRecordSessionMaxDuration = 2.0;
-static const float kRecordMinDuration = 0.05;
+static const float kRecordMinDuration = 0.1;
 static const float kCaptionTapMaxDuration = 0.25;
 static const float kVideoEndCutDuration = 0.1;
 static const NSInteger kMaxScoreBeforeHidingImportantTutos = 5;
