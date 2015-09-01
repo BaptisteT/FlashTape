@@ -198,6 +198,8 @@
     _recorder.videoConfiguration.preset = SCPresetHighestQuality;
     
     // Start running the flow of buffers
+    [self.recorder prepare:nil];
+    self.recorder.captureSession.automaticallyConfiguresApplicationAudioSession = NO;
     if (![self.recorder startRunning]) {
         NSLog(@"Something wrong there: %@", self.recorder.error);
     }

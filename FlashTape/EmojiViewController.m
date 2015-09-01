@@ -42,15 +42,12 @@
 
 - (NSInteger)tableView:(PTEHorizontalTableView *)horizontalTableView numberOfRowsInSection:(NSInteger)section
 {
-//    return [User currentUser].emojiUnlocked ? (NSInteger)(self.emojiArray.count / kNumberOfEmojisByColumn) : kNumberOfColumns;
     return (NSInteger)(self.emojiArray.count / kNumberOfEmojisByColumn);
 }
 
 - (UITableViewCell *)tableView:(PTEHorizontalTableView *)horizontalTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     EmojiTableViewCell * cell = [horizontalTableView.tableView dequeueReusableCellWithIdentifier:@"EmojiTableViewCell"];
-    
-//    BOOL isUnlockRow = ![User currentUser].emojiUnlocked && (indexPath.row == kNumberOfColumns - 1);
     BOOL isUnlockRow = NO;
     
     NSRange range = NSMakeRange(indexPath.row * kNumberOfEmojisByColumn, kNumberOfEmojisByColumn - (isUnlockRow ? 1 : 0));
