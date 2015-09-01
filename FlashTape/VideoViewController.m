@@ -248,6 +248,7 @@
      // Labels
     self.recordTutoLabel.text = NSLocalizedString(@"tap_to_record_label", nil);
     self.recordTutoLabel.lineType = LineTypeDown;
+    self.recordTutoLabel.lineColor = [UIColor whiteColor];
     self.recordTutoLabel.lineHeight = 4.0f;
     self.replayButton.hidden = YES;
     self.messageCount = 0;
