@@ -78,22 +78,9 @@
     if (self.lineType != LineTypeNone) {
         
         CGContextRef context = UIGraphicsGetCurrentContext();
-        CGFloat R, G, B, A;
         UIColor *uiColor = self.lineColor;
         CGColorRef color = [uiColor CGColor];
-        int numComponents = (int)CGColorGetNumberOfComponents(color);
-        
-        if( numComponents == 4)
-        {
-            const CGFloat *components = CGColorGetComponents(color);
-            R = components[0];
-            G = components[1];
-            B = components[2];
-            A = components[3];
-            
-            CGContextSetRGBFillColor(context, R, G, B, 1.0);
-
-        }
+        CGContextSetFillColorWithColor(context, color);
         
         CGContextFillRect(context, lineRect);
     }

@@ -167,39 +167,39 @@
 		3C70CAB31B46D1B7006E71D7 /* tuto_video_3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB21B46D1B7006E71D7 /* tuto_video_3.mp4 */; };
 		3C70CAB51B46D936006E71D7 /* tuto_video_5.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C70CAB41B46D936006E71D7 /* tuto_video_5.mp4 */; };
 		3C70CAB81B4C21BF006E71D7 /* BackwardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C70CAB71B4C21BF006E71D7 /* BackwardTextField.m */; };
-		3C73861C1B95EE970035D9A5 /* CIImageRendererUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385E71B95EE970035D9A5 /* CIImageRendererUtils.m */; settings = {ASSET_TAGS = (); }; };
-		3C73861D1B95EE970035D9A5 /* SCAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385E91B95EE970035D9A5 /* SCAssetExportSession.m */; settings = {ASSET_TAGS = (); }; };
-		3C73861E1B95EE970035D9A5 /* SCAudioConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385EB1B95EE970035D9A5 /* SCAudioConfiguration.m */; settings = {ASSET_TAGS = (); }; };
-		3C73861F1B95EE970035D9A5 /* SCAudioTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385ED1B95EE970035D9A5 /* SCAudioTools.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386201B95EE970035D9A5 /* SCContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F01B95EE970035D9A5 /* SCContext.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386211B95EE970035D9A5 /* SCFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F21B95EE970035D9A5 /* SCFilter.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386221B95EE970035D9A5 /* SCFilterAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F41B95EE970035D9A5 /* SCFilterAnimation.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386231B95EE970035D9A5 /* SCFilterSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F61B95EE970035D9A5 /* SCFilterSelectorView.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386241B95EE970035D9A5 /* SCImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F91B95EE970035D9A5 /* SCImageView.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386251B95EE970035D9A5 /* SCIOPixelBuffers.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385FB1B95EE970035D9A5 /* SCIOPixelBuffers.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386261B95EE970035D9A5 /* SCMediaTypeConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385FD1B95EE970035D9A5 /* SCMediaTypeConfiguration.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386271B95EE970035D9A5 /* SCPhotoConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385FF1B95EE970035D9A5 /* SCPhotoConfiguration.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386281B95EE970035D9A5 /* SCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386011B95EE970035D9A5 /* SCPlayer.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386291B95EE970035D9A5 /* SCProcessingQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386031B95EE970035D9A5 /* SCProcessingQueue.m */; settings = {ASSET_TAGS = (); }; };
-		3C73862A1B95EE970035D9A5 /* SCRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386051B95EE970035D9A5 /* SCRecorder.m */; settings = {ASSET_TAGS = (); }; };
-		3C73862B1B95EE970035D9A5 /* SCRecorderFocusTargetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386081B95EE970035D9A5 /* SCRecorderFocusTargetView.m */; settings = {ASSET_TAGS = (); }; };
-		3C73862C1B95EE970035D9A5 /* SCRecorderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73860A1B95EE970035D9A5 /* SCRecorderTools.m */; settings = {ASSET_TAGS = (); }; };
-		3C73862D1B95EE970035D9A5 /* SCRecorderToolsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73860C1B95EE970035D9A5 /* SCRecorderToolsView.m */; settings = {ASSET_TAGS = (); }; };
-		3C73862E1B95EE970035D9A5 /* SCRecordSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73860F1B95EE970035D9A5 /* SCRecordSession.m */; settings = {ASSET_TAGS = (); }; };
-		3C73862F1B95EE970035D9A5 /* SCRecordSessionSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386111B95EE970035D9A5 /* SCRecordSessionSegment.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386301B95EE970035D9A5 /* SCSampleBufferHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386131B95EE970035D9A5 /* SCSampleBufferHolder.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386311B95EE970035D9A5 /* SCSwipeableFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386151B95EE970035D9A5 /* SCSwipeableFilterView.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386321B95EE970035D9A5 /* SCVideoConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386171B95EE970035D9A5 /* SCVideoConfiguration.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386331B95EE970035D9A5 /* SCVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386191B95EE970035D9A5 /* SCVideoPlayerView.m */; settings = {ASSET_TAGS = (); }; };
-		3C7386341B95EE970035D9A5 /* SCWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73861B1B95EE970035D9A5 /* SCWeakSelectorTarget.m */; settings = {ASSET_TAGS = (); }; };
-		3C73863C1B95F2F40035D9A5 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386351B95F2F40035D9A5 /* Bolts.framework */; settings = {ASSET_TAGS = (); }; };
-		3C73863D1B95F2F40035D9A5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386361B95F2F40035D9A5 /* Parse.framework */; settings = {ASSET_TAGS = (); }; };
-		3C73863E1B95F2F40035D9A5 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386371B95F2F40035D9A5 /* ParseCrashReporting.framework */; settings = {ASSET_TAGS = (); }; };
-		3C73863F1B95F2F40035D9A5 /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386381B95F2F40035D9A5 /* ParseFacebookUtils.framework */; settings = {ASSET_TAGS = (); }; };
-		3C7386401B95F2F40035D9A5 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386391B95F2F40035D9A5 /* ParseFacebookUtilsV4.framework */; settings = {ASSET_TAGS = (); }; };
-		3C7386411B95F2F40035D9A5 /* ParseTwitterUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C73863A1B95F2F40035D9A5 /* ParseTwitterUtils.framework */; settings = {ASSET_TAGS = (); }; };
-		3C7386421B95F2F40035D9A5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C73863B1B95F2F40035D9A5 /* ParseUI.framework */; settings = {ASSET_TAGS = (); }; };
-		3C7386461B95FC2B0035D9A5 /* libFlurry_7.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386451B95FC2B0035D9A5 /* libFlurry_7.0.0.a */; settings = {ASSET_TAGS = (); }; };
+		3C73861C1B95EE970035D9A5 /* CIImageRendererUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385E71B95EE970035D9A5 /* CIImageRendererUtils.m */; };
+		3C73861D1B95EE970035D9A5 /* SCAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385E91B95EE970035D9A5 /* SCAssetExportSession.m */; };
+		3C73861E1B95EE970035D9A5 /* SCAudioConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385EB1B95EE970035D9A5 /* SCAudioConfiguration.m */; };
+		3C73861F1B95EE970035D9A5 /* SCAudioTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385ED1B95EE970035D9A5 /* SCAudioTools.m */; };
+		3C7386201B95EE970035D9A5 /* SCContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F01B95EE970035D9A5 /* SCContext.m */; };
+		3C7386211B95EE970035D9A5 /* SCFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F21B95EE970035D9A5 /* SCFilter.m */; };
+		3C7386221B95EE970035D9A5 /* SCFilterAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F41B95EE970035D9A5 /* SCFilterAnimation.m */; };
+		3C7386231B95EE970035D9A5 /* SCFilterSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F61B95EE970035D9A5 /* SCFilterSelectorView.m */; };
+		3C7386241B95EE970035D9A5 /* SCImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385F91B95EE970035D9A5 /* SCImageView.m */; };
+		3C7386251B95EE970035D9A5 /* SCIOPixelBuffers.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385FB1B95EE970035D9A5 /* SCIOPixelBuffers.m */; };
+		3C7386261B95EE970035D9A5 /* SCMediaTypeConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385FD1B95EE970035D9A5 /* SCMediaTypeConfiguration.m */; };
+		3C7386271B95EE970035D9A5 /* SCPhotoConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7385FF1B95EE970035D9A5 /* SCPhotoConfiguration.m */; };
+		3C7386281B95EE970035D9A5 /* SCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386011B95EE970035D9A5 /* SCPlayer.m */; };
+		3C7386291B95EE970035D9A5 /* SCProcessingQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386031B95EE970035D9A5 /* SCProcessingQueue.m */; };
+		3C73862A1B95EE970035D9A5 /* SCRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386051B95EE970035D9A5 /* SCRecorder.m */; };
+		3C73862B1B95EE970035D9A5 /* SCRecorderFocusTargetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386081B95EE970035D9A5 /* SCRecorderFocusTargetView.m */; };
+		3C73862C1B95EE970035D9A5 /* SCRecorderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73860A1B95EE970035D9A5 /* SCRecorderTools.m */; };
+		3C73862D1B95EE970035D9A5 /* SCRecorderToolsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73860C1B95EE970035D9A5 /* SCRecorderToolsView.m */; };
+		3C73862E1B95EE970035D9A5 /* SCRecordSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73860F1B95EE970035D9A5 /* SCRecordSession.m */; };
+		3C73862F1B95EE970035D9A5 /* SCRecordSessionSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386111B95EE970035D9A5 /* SCRecordSessionSegment.m */; };
+		3C7386301B95EE970035D9A5 /* SCSampleBufferHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386131B95EE970035D9A5 /* SCSampleBufferHolder.m */; };
+		3C7386311B95EE970035D9A5 /* SCSwipeableFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386151B95EE970035D9A5 /* SCSwipeableFilterView.m */; };
+		3C7386321B95EE970035D9A5 /* SCVideoConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386171B95EE970035D9A5 /* SCVideoConfiguration.m */; };
+		3C7386331B95EE970035D9A5 /* SCVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7386191B95EE970035D9A5 /* SCVideoPlayerView.m */; };
+		3C7386341B95EE970035D9A5 /* SCWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C73861B1B95EE970035D9A5 /* SCWeakSelectorTarget.m */; };
+		3C73863C1B95F2F40035D9A5 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386351B95F2F40035D9A5 /* Bolts.framework */; };
+		3C73863D1B95F2F40035D9A5 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386361B95F2F40035D9A5 /* Parse.framework */; };
+		3C73863E1B95F2F40035D9A5 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386371B95F2F40035D9A5 /* ParseCrashReporting.framework */; };
+		3C73863F1B95F2F40035D9A5 /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386381B95F2F40035D9A5 /* ParseFacebookUtils.framework */; };
+		3C7386401B95F2F40035D9A5 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386391B95F2F40035D9A5 /* ParseFacebookUtilsV4.framework */; };
+		3C7386411B95F2F40035D9A5 /* ParseTwitterUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C73863A1B95F2F40035D9A5 /* ParseTwitterUtils.framework */; };
+		3C7386421B95F2F40035D9A5 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C73863B1B95F2F40035D9A5 /* ParseUI.framework */; };
+		3C7386461B95FC2B0035D9A5 /* libFlurry_7.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7386451B95FC2B0035D9A5 /* libFlurry_7.0.0.a */; };
 		3C7BF5261B15B84700E66537 /* VideoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5251B15B84700E66537 /* VideoTableViewCell.m */; };
 		3C7BF5291B15D93700E66537 /* VideoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BF5281B15D93700E66537 /* VideoUtils.m */; };
 		3C84544F1B6BB6C600B55E25 /* tuto_video_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3C84544E1B6BB6C600B55E25 /* tuto_video_2.mp4 */; };
@@ -985,15 +985,6 @@
 			name = DateTools;
 			sourceTree = "<group>";
 		};
-		3C2C4C231B09D2DC00E0E4BF /* CustomLine */ = {
-			isa = PBXGroup;
-			children = (
-				A4CE87651B0920A900DC20DC /* UICustomLineLabel.h */,
-				A4CE87661B0920A900DC20DC /* UICustomLineLabel.m */,
-			);
-			name = CustomLine;
-			sourceTree = "<group>";
-		};
 		3C4ABC881B2889D500897DF9 /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
@@ -1282,6 +1273,8 @@
 		3C5F97FC1AEBB3B60098F70F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A4CE87651B0920A900DC20DC /* UICustomLineLabel.h */,
+				A4CE87661B0920A900DC20DC /* UICustomLineLabel.m */,
 				3C1ECE4A1B0BD4D7004F7F02 /* MoodTextView.h */,
 				3C1ECE4B1B0BD4D7004F7F02 /* MoodTextView.m */,
 				3C62A5931B14E01B009CCD2A /* FriendTableViewCell.h */,
@@ -1319,7 +1312,6 @@
 				3C4ABC901B28957300897DF9 /* Fabric.framework */,
 				3C4ABC911B28957300897DF9 /* Crashlytics.framework */,
 				3C4ABC881B2889D500897DF9 /* Flurry */,
-				3C2C4C231B09D2DC00E0E4BF /* CustomLine */,
 				3C2C4A5F1AFE231500E0E4BF /* DateTools */,
 				3C2C4A461AFB5A7C00E0E4BF /* MBProgressHUD */,
 				3C2C4A2C1AFB5A2C00E0E4BF /* libPhoneNumber-iOS */,

@@ -257,6 +257,7 @@
     self.tapToSendTuto.text = NSLocalizedString(@"tap_to_send", nil);
     self.tapToSendTuto.lineType = LineTypeDown;
     self.tapToSendTuto.lineHeight = 4.0f;
+    self.tapToSendTuto.lineColor = [UIColor whiteColor];
     self.cancelTutoLabel.text = NSLocalizedString(@"tap_here_to_cancel", nil);
     self.previewView.player.loopEnabled = YES;
     self.previewView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;

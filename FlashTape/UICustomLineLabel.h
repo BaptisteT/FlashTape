@@ -21,7 +21,7 @@ typedef enum{
 
 @property (assign, nonatomic) LineType lineType;
 @property (assign, nonatomic) CGFloat lineHeight;
-@property (assign, nonatomic) UIColor * lineColor;
+@property (strong, nonatomic) UIColor * lineColor;
 
 
 @end
