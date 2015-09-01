@@ -322,38 +322,44 @@
     [query setLimit:1000];
     [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
         if (!error) {
-            NSMutableArray *contactObjectArray = [NSMutableArray new];
-            for (NSString *contact in contacts) {
-                ABContact *contactObject = nil;
-                for (ABContact *resultContactObject in results) {
-                    if ([resultContactObject.number isEqualToString:contact]) {
-                        contactObject = resultContactObject;
-                        break;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                FlashLog(FLASHAPIMANAGERLOG,@"%lu ABContacts found",results.count);
+                NSMutableArray *contactObjectArray = [NSMutableArray new];
+                NSInteger count = 0;
+                for (NSString *contact in contacts) {
+                    ABContact *contactObject = nil;
+                    for (ABContact *resultContactObject in results) {
+                        count ++;
+                        if ([resultContactObject.number isEqualToString:contact]) {
+                            contactObject = resultContactObject;
+                            break;
+                        }
                     }
+                    if (!contactObject) {
+                        contactObject = [ABContact createRelationWithNumber:contact];
+                    }
+                    contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers] || [contactObject.number isEqualToString:[User currentUser].username];
+                    if (![contactObject.users containsObject:[User currentUser]]) {
+                        [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
+                    }
+                    [contactObjectArray addObject:contactObject];
                 }
-                if (!contactObject) {
-                    contactObject = [ABContact createRelationWithNumber:contact];
-                }
-                contactObject.isFlasher = [User contactNumber:contact belongsToUsers:aBFlashers] || [contactObject.number isEqualToString:[User currentUser].username];
-                if (![contactObject.users containsObject:[User currentUser]]) {
-                    [contactObject addUniqueObject:[User currentUser] forKey:@"users"];
-                }
-                [contactObjectArray addObject:contactObject];
-            }
-            [PFObject saveAllInBackground:contactObjectArray block:^(BOOL completed, NSError *error) {
-                FlashLog(FLASHAPIMANAGERLOG,@"ABContact completed :%d",completed);
-                if (completed) {
-                    [PFObject unpinAllObjectsInBackgroundWithName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
-                        [PFObject pinAllInBackground:contactObjectArray withName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
-                            if (successBlock) {
-                                successBlock(contactObjectArray);
-                            }
+                FlashLog(FLASHAPIMANAGERLOG,@"%lu loops",count);
+                [PFObject saveAllInBackground:contactObjectArray block:^(BOOL completed, NSError *error) {
+                    FlashLog(FLASHAPIMANAGERLOG,@"ABContact completed :%d",completed);
+                    if (completed) {
+                        [PFObject unpinAllObjectsInBackgroundWithName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
+                            [PFObject pinAllInBackground:contactObjectArray withName:kParseABContacts block:^(BOOL succeeded, NSError *error) {
+                                if (successBlock) {
+                                    successBlock(contactObjectArray);
+                                }
+                            }];
                         }];
-                    }];
-                } else if (failureBlock) {
-                    failureBlock(error);
-                }
-            }];
+                    } else if (failureBlock) {
+                        failureBlock(error);
+                    }
+                }];
+            });
         } else {
             if (failureBlock) {
                 failureBlock(error);

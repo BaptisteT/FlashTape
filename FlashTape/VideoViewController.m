@@ -122,9 +122,7 @@
 
 @implementation VideoViewController {
     BOOL _isExporting;
-//    BOOL _longPressRunning;
     BOOL _recordingRunning;
-//    BOOL _cancelRecording;
     int _metadataColorIndex;
     NSDate *_longPressStartDate;
     BOOL _createTutoAdminMessages;
@@ -140,9 +138,7 @@
     // Logic
     _createTutoAdminMessages = NO;
     _isExporting = NO;
-//    _longPressRunning = NO;
     _recordingRunning = NO;
-//    _cancelRecording = NO;
     _metadataColorIndex = 0;
     self.isSendingCount = 0;
     self.unreadVideoCount = 0;
@@ -175,12 +171,10 @@
     self.sendingBarContainerView.hidden = YES;
     
     // Recording gesture
-//    UITapGestureRecognizer *recordingTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleRecordingTapGesture:)];
     UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleRecordingPressGesture:)];
     longPressGesture.delegate = self;
     longPressGesture.minimumPressDuration = 0;
     [self.cameraView addGestureRecognizer:longPressGesture];
-//    [self.cameraView addGestureRecognizer:recordingTapGesture];
     
     // Mood
     self.moodCreationContainerView.hidden = YES;
@@ -252,9 +246,6 @@
     self.slideHereTutoLabel.hidden = YES;
     
      // Labels
-//    if ([User currentUser].score >= kMaxScoreBeforeHidingImportantTutos) {
-//        [self.recordTutoLabel removeFromSuperview];
-//    }
     self.recordTutoLabel.text = NSLocalizedString(@"tap_to_record_label", nil);
     self.recordTutoLabel.lineType = LineTypeDown;
     self.recordTutoLabel.lineHeight = 4.0f;
@@ -818,7 +809,7 @@
     [self.recorder record];
     
     // Play emojis
-    [self performSelector:@selector(playEmojisSound:) withObject:[NSNumber numberWithBool:YES] afterDelay:0.25];
+    [self performSelector:@selector(playEmojisSound:) withObject:[NSNumber numberWithBool:YES] afterDelay:0.10];
 }
 
 - (void)playEmojisSound:(NSNumber *)flag {
@@ -1147,9 +1138,6 @@
     
     [self hideUIElementOnCamera:YES];
     
-//    self.recordTutoLabel.text = NSLocalizedString(@"recording_label", nil);
-//    self.recordTutoLabel.hidden = NO;
-    
     // 1st flash
     if (![self moodIsEmpty]) {
         self.moodsContainerView.hidden = NO;
@@ -1225,6 +1213,7 @@
         NSString *buttonTitle;
         
         if (self.allVideosArray.count == 0) {
+            self.replayButton.backgroundColor = [ColorUtils black];
             buttonTitle = NSLocalizedString(@"no_video_label", nil);
         } else {
             // Replay or new state

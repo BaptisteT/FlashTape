@@ -8,6 +8,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import "MoodTextView.h"
 
+#import "AudioUtils.h"
+
 @interface MoodTextView()
 
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchRecognizer;
@@ -84,7 +86,7 @@
 - (void)playSound:(BOOL)flag {
     if (self.soundPlayer) {
         [self stopSound];
-        if (flag) {
+        if (flag && ![AudioUtils usingHeadsetInAudioSession:[AVAudioSession sharedInstance]]) {
             [self.soundPlayer play];
         }
     }

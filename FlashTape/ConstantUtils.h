@@ -9,7 +9,7 @@
 @import Foundation;
 @import UIKit;
 
-#define GLOBALLOGENABLED NO
+#define GLOBALLOGENABLED YES
 
 @interface ConstantUtils : NSObject
 
