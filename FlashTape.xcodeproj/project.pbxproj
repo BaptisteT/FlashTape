@@ -2152,7 +2152,7 @@
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_BUNDLE_IDENTIFIER = FlashTape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
+				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
 			};
 			name = Debug;
 		};
@@ -2184,7 +2184,7 @@
 				"OTHER_LDFLAGS[arch=*]" = "-licucore";
 				PRODUCT_BUNDLE_IDENTIFIER = FlashTape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b8a71403-e4f2-43ae-8fc7-311ef08344a8";
+				PROVISIONING_PROFILE = "995e59c0-0d45-4c40-bc4f-29c1a60c407f";
 			};
 			name = Release;
 		};
